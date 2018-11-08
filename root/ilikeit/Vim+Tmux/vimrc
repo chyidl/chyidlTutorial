@@ -13,12 +13,15 @@ call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
 
 " All of your Plugins must be added before the following line
+Plugin 'vim-scripts/mru.vim'    " Plugin to manage Most Recently Used (MRU) files 
+Plugin 'scrooloose/nerdtree'    " A Tree explore plugin for Vim
+Plugin 'junegunn/goyo.vim'      " Distraction-free writing in Vim 
+Plugin 'mileszs/ack.vim'        " Vim Plugin for the Perl module / CLI script 'ack'
 
-
-call vundle#end()            " required
+call vundle#end()               " required
 
 "
-" Brief help
+"  Brief help
 " :PluginList       - lists configured plugins
 " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
 " :PluginSearch foo - searches for foo; append `!` to refresh local cache
@@ -289,7 +292,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 set laststatus=2
 
 " Format the status line 
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ PWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -410,3 +413,41 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern 
     let @" = l:saved_reg
 endfunction
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => FILETYPES
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Shell Section 
+if exists('$TMUX')
+    if has('mvim')
+        set termguicolors
+    else
+        set term=screen-256color
+    endif
+endif
+
+" Python section 
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => PLUGINS CONFIG
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" MRU Plugin Config 
+"
+" The Most Recently Used (MRU) plugin provides an easy access to a list of
+" recently opened/edited files in Vim. This plugin automatically stores the 
+" file names as you open/edit them in Vim. 
+"
+" To list and edit files from the MRU list, you can use the ':MRU' command.
+" The ':MRU' command displays the MRU file list in a temporary Vim Window.
+map <leader>f :MRU<CR>
+"
+" By default, the plugin will remember the names of the last 100 used files.
+" You can set the 'MRU_Max_Entries' variable to remember more file namess.
+let MRU_Max_Entries = 100
+
+" The NERDTree 
