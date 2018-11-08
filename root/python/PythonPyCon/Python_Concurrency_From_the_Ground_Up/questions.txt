@@ -1,0 +1,6 @@
+Questions:
+	Q: The multiProcessing module helped at all with this thing?
+	A: This multiprocessing module is essentially the same as like the futures
+		module like concurrent futures so it would achieve the same effect
+		essentially okay, I find the concurrent futures is a little bit easier
+		to work with 

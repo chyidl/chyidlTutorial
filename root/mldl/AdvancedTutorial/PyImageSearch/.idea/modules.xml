@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../App/.idea/App.iml" filepath="$PROJECT_DIR$/../App/.idea/App.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../GUI/.idea/GUI.iml" filepath="$PROJECT_DIR$/../GUI/.idea/GUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PyImageSearch.iml" filepath="$PROJECT_DIR$/.idea/PyImageSearch.iml" />
+    </modules>
+  </component>
+</project>
