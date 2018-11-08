@@ -157,6 +157,23 @@ Inverse 逆矩阵 and transpose 转制
     h(x) = 0₀x₀ + 0₁x₁ + 0₂x₂ + ... 
 
     How to use gradient descent for linear regression with multiple features 
+    Practical tricks: 练习技巧
+        Feature Scalling:
+            Idea: Make sure features are on a similar scale 
+            Get every feature into approcimately a {-1,1} range 
+        Mean normalization: Replace x with x-u to make features have approximately zero mean 
+        "Debugging": How to make sure gradient descent is working correctly.
+        How to choose learning rate α :
+            For sufficiently small α, J(0) should decrease on every iteration.
+            But if α is too small, gradient descent can be slow to converge.
+        Summary:
+            If α is too small: slow converagence.
+            If α is too large: J(0) may not decrease on every iteration, may not converge
+    Features and polynomial regression多项式回归:
+        Polynomial regression: h0(x) = 0₀ + 0₁x₁ + 0₂x₂ + 0₃x₃
+                                     = 0₀ + 0₁(size) + 0₂(size)² + 0₃(size)³ 
+
+    Normal equation method:正规方程法Method to solve for 0 analytically.         
 ```
 
 
