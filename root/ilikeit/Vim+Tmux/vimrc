@@ -15,8 +15,15 @@ Plugin 'VundleVim/Vundle.vim'
 " All of your Plugins must be added before the following line
 Plugin 'vim-scripts/mru.vim'    " Plugin to manage Most Recently Used (MRU) files 
 Plugin 'scrooloose/nerdtree'    " A Tree explore plugin for Vim
+Plugin 'Xuyuanp/nerdtree-git-plugin'    " A Plugin of NERDTree showing git status 
 Plugin 'junegunn/goyo.vim'      " Distraction-free writing in Vim 
 Plugin 'mileszs/ack.vim'        " Vim Plugin for the Perl module / CLI script 'ack'
+Plugin 'ctrlpvim/ctrlp.vim'     " Active fork of kien/ctrlp.vim—Fuzzy file, buffer, mru, tag, etc finder. 
+Plugin 'itchyny/lightline.vim'  " A light and configurable statusline/tabline plugin for Vim
+Plugin 'MarcWeber/vim-addon-mw-utils' "
+Plugin 'tomtom/tlib_vim'
+Plugin 'garbas/vim-snipmate'    " snipMate.vim aims to be a concise vim script that implements some of TextMate's snippets features in Vim 
+Plugin 'w0rp/ale'               " Asynchronous linting/fixing for Vim and Language Server Protocol (LSP) integration
 
 call vundle#end()               " required
 
@@ -160,7 +167,7 @@ set foldcolumn=1
 syntax enable 
 
 " Enable 256 colors palette in Gnome Terminal 
-if $COLORTERM == 'gnome-terminal'
+if !has('gui_running')
 	set t_Co=256
 endif
 
@@ -450,4 +457,116 @@ map <leader>f :MRU<CR>
 " You can set the 'MRU_Max_Entries' variable to remember more file namess.
 let MRU_Max_Entries = 100
 
-" The NERDTree 
+" NERDTree Plugin Config
+"
+" The NERDTree is a file system explorer for the Vim editor. Using this 
+" plugin, users can visually browse complex directory hierarchies
+" quickly open files for reading or editing, and perform basic file system
+" operations.
+" 
+" Open NERDTree when start vim with no command line arguments
+autocmd StdinReadPre * let s:std_in=1
+autocmd vimenter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+"
+" Open and Close NERDTree 
+map <leader>nn :NERDTreeToggle<cr>
+"
+" Quickly perform operations with NERDTreeFind
+map <leader>nf :NERDTreeFind<cr>
+"
+" automatically close NERDTree When you open a file
+let NERDTreeQuitOnOpen = 1
+"
+" automatically delete the buffer of the file just deleted with NERDTree
+let NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeWinPos = "left"
+let NERDTreeShowHidden=0
+let NERDTreeIgnore = ['\.pyc$','__pycache__']
+let g:NERDTreeWinSize=35
+
+" NERDTree-git Plugin Config 
+"
+" A plugin of NEERDTree showing git status flags.
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+
+" CTRL-P Plugin Config 
+" Full path fuzzy file, buffer, mru, tag,...finder for Vim 
+"
+" mapping command to invoke CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+"
+" CtrlP working directory according to this variable
+let g:ctrlp_working_path_mode = 0   " disable this feature 
+let g:ctrlp_max_height = 20
+"
+" open it again in a new pane instead of switching to the existing pane 
+let g:ctrlp_switch_buffer = 'et'
+"
+" if custom listing command is being used, exclusions are ignored
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip    " MacOSX/Linux 
+set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe " Windows 
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let g:ctrlp_custom_ignore = {
+    \   'dir':  '\v[\/]\.(git|hg|svn)$',
+    \   'file': '\v\.(exe|so|dll)$',
+    \   'link': 'some_bad_symbolic_clinks',
+    \   }
+
+" lightline Plugin Config 
+"
+" A light and configurable statusline/tabline plugin for Vim 
+"
+" Colorscheme configuration. using wombat colorscheme
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ }
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ ['mode', 'paste'],
+      \             ['fugitive', 'readonly', 'filename', 'modified'] ],
+      \   'right': [ [ 'lineinfo' ], ['percent'] ]
+      \ },
+      \ 'component': {
+      \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
+      \   'modified': '%{&filetype=="help"?"":&modified?"+":&modifiable?"":"-"}',
+      \   'fugitive': '%{exists("*fugitive#head")?fugitive#head():""}'
+      \ },
+      \ 'component_visible_condition': {
+      \   'readonly': '(&filetype!="help"&& &readonly)',
+      \   'modified': '(&filetype!="help"&&(&modified||!&modifiable))',
+      \   'fugitive': '(exists("*fugitive#head") && ""!=fugitive#head())'
+      \ },
+      \ 'separator': { 'left': ' ', 'right': ' ' },
+      \ 'subseparator': { 'left': ' ', 'right': ' ' }
+      \ }
+
+" snipMate Plugin Config 
+"
+" snipMate.vim aims to be a concise vim script that implements some of TextMate's snippets features in Vim 
+" SnipMate aims to provide support for textual snippets, similar to TextMate or other Vim Plugins like UltiSnips.
+"
+" show available snips by default bound to <C-R><Tab>in insert model
+ino <c-j> <c-r>=snipMate#TriggerSnippet()<cr>
+snor <c-j> <esc>i<right><c-r>=snipMate#TriggerSnippet()<cr>
+
+" ALE (Asynchronous Lint Engine) Plugin Config 
+"
+" Asynchronous Lint Engine is a plugin for providing linting in Vim 8 while you edit your text files,
+" and acts as a Vim Language Server Protocol client.
+"
+" By default, all available tools for all supported languages will be run.
+" If you want to only select a subset of the tools, you can define. g:ale_linters globally
+"
