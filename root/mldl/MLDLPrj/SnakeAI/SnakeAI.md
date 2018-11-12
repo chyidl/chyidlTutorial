@@ -1,6 +1,6 @@
 # Snake AI 
 
-## Neural Network 
+## Neural Network神经网络 and The Genetic algorithm 遗传算法
 
 Each snake contains a neural network. The neural network has an input layer of 24 neurons, a hidden layers of 18 neurons, and one output layer of 4 neurons.
 
