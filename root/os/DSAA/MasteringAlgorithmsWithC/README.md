@@ -160,6 +160,18 @@ A chained hash table is a good way to implement a symbol table because, in addit
 
 ### Trees
 
+![Trees](/imgs/os/DSAA/MasteringAlthorithmsWithC/trees.png?raw=true)
+
+**Preorder traversal**: first traverse its root,then to the left and then to the right. explore subtrees to the left and right.The preorder traversal is a depth-first exploration
+
+**Inorder traversal**: first traversae to the left, then to the root, and then to the right.
+
+**Postorder traversal**: first traverse to the left, then to the right, and then to the root.
+
+**Level-order traversal**: beginning at the root and proceed downward,visiting the nodes at each level from left to right. The level-order traversal is a breadth-first exploration.
+
+**Tree Balancing**: This means making sure that one level of the tree is completely full before allowing a node to exist at the next level. A tree is balanced if all leaf nodes are at the same level or, if not, all leaf nodes are in the last two levels and the second-to-last level is full.
+
 - [Binary Trees]()
 - [Binary Traversal Trees]()
 - [Binary Search Trees]()
