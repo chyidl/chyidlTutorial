@@ -29,7 +29,7 @@ void bitree_init(BiTree *tree, void (*destroy)(void *data)){
     // Initialize the binary tree.
     tree->size = 0;
     tree->destroy = destroy;
-    tree-root = NULL;
+    tree->root = NULL;
 
     return ;
 }
@@ -160,7 +160,7 @@ int bitree_ins_right(BiTree *tree, BiTreeNode *node, const void *data){
  *
  * @return None
  * */
-int bitree_rem_left(BiTree *tree, BiTreeNode *node){
+void bitree_rem_left(BiTree *tree, BiTreeNode *node){
     BiTreeNode **position;
 
     // Do not allow removal from an empty tree.
@@ -203,7 +203,7 @@ int bitree_rem_left(BiTree *tree, BiTreeNode *node){
  *
  * @return None
  * */
-int bitree_rem_right(BiTree *tree, BiTreeNode *node){
+void bitree_rem_right(BiTree *tree, BiTreeNode *node){
     BiTreeNode **position;
 
     // Do not allow removal from an empty tree.

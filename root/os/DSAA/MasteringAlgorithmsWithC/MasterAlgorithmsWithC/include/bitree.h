@@ -103,7 +103,7 @@ int bitree_ins_right(BiTree *tree, BiTreeNode *node, const void *data);
  *
  * @return None
  * */
-int bitree_rem_left(BiTree *tree, BiTreeNode *node);
+void bitree_rem_left(BiTree *tree, BiTreeNode *node);
 
 
 /**
@@ -116,7 +116,7 @@ int bitree_rem_left(BiTree *tree, BiTreeNode *node);
  *
  * @return None
  * */
-int bitree_rem_right(BiTree *tree, BiTreeNode *node);
+void bitree_rem_right(BiTree *tree, BiTreeNode *node);
 
 /**
  * Merges the two binary trees specified by left and right into the single binary tree merge.
