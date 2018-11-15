@@ -12,6 +12,7 @@
 #include "list.h"
 #include "chtbl.h"
 
+
 /************************************************
  * Public Interface 
  * *********************************************/
@@ -30,7 +31,10 @@
  * @return 0 if initializing the hash table is successful, or -1 otherwise.
  *
  * */
-int chtbl_init(CHTbl *htbl, int buckets, int (*h)(const void *key), int (*match)(const void *key1, const void *key2), void (*destroy)(void *data)) {
+int chtbl_init(CHTbl *htbl, int buckets, 
+        int (*h)(const void *key), 
+        int (*match)(const void *key1, const void *key2), 
+        void (*destroy)(void *data)) {
 
     int     i;
     
@@ -55,6 +59,7 @@ int chtbl_init(CHTbl *htbl, int buckets, int (*h)(const void *key), int (*match)
 
     return 0;
 }
+
 
 /*
  * Destroys the chained hash table specified by htbl.
@@ -84,6 +89,7 @@ void chtbl_destroy(CHTbl *htbl) {
     return;
 }
 
+
 /**
  * Inserts an element into the chained hash table specified by htbl.
  *
@@ -112,8 +118,10 @@ int chtbl_insert(CHTbl *htbl, const void *data) {
     if ((retval = list_ins_next(&htbl->table[bucket], NULL, data)) == 0) {
         htbl->size++;
     }
+
     return retval;
 }
+
 
 /**
  * Removes the element matching data from the chained hash table specified by htbl.
@@ -127,6 +135,7 @@ int chtbl_insert(CHTbl *htbl, const void *data) {
  *
  * */
 int chtbl_remove(CHTbl *htbl, void **data) {
+
     ListElmt    *element, *prev;
     int         bucket;
 
@@ -151,9 +160,11 @@ int chtbl_remove(CHTbl *htbl, void **data) {
         }
         prev = element;
     }
+
     // Return that the data was not found.
     return -1;
 }
+
 
 /**
  * Determines whether an element matches data in the chained hash table specified by htbl.
@@ -184,6 +195,7 @@ int chtbl_lookup(const CHTbl *htbl, void **data) {
             return 0;
         }
     }
+
     // Return that the data was not found.
     return -1;
 }

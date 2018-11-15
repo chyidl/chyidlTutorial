@@ -33,6 +33,7 @@ typedef struct CHTbl_ {
  * Public Interface 
  * *********************************************/
 
+
 /**
  * Initializes the chained hash table specified by htbl.
  *
@@ -47,7 +48,11 @@ typedef struct CHTbl_ {
  * @return 0 if initializing the hash table is successful, or -1 otherwise.
  *
  * */
-int chtbl_init(CHTbl *htbl, int buckets, int (*h)(const void *key), int (*match)(const void *key1, const void *key2), void (*destroy)(void *data));
+int chtbl_init(CHTbl *htbl, int buckets, 
+        int (*h)(const void *key), 
+        int (*match)(const void *key1, const void *key2), 
+        void (*destroy)(void *data));
+
 
 /*
  * Destroys the chained hash table specified by htbl.
@@ -58,6 +63,7 @@ int chtbl_init(CHTbl *htbl, int buckets, int (*h)(const void *key), int (*match)
  *
  * */
 void chtbl_destroy(CHTbl *htbl); 
+
 
 /**
  * Inserts an element into the chained hash table specified by htbl.
@@ -72,6 +78,7 @@ void chtbl_destroy(CHTbl *htbl);
  * */
  int chtbl_insert(CHTbl *htbl, const void *data);
 
+
 /**
  * Removes the element matching data from the chained hash table specified by htbl.
  *
@@ -84,6 +91,7 @@ void chtbl_destroy(CHTbl *htbl);
  *
  * */
  int chtbl_remove(CHTbl *htbl, void **data);
+
 
 /**
  * Determines whether an element matches data in the chained hash table specified by htbl.
@@ -98,6 +106,7 @@ void chtbl_destroy(CHTbl *htbl);
  * */
  int chtbl_lookup(const CHTbl *htbl, void **data);
 
+
 /**
  * Macro that evaluates to the number of elements in the chained hash table specified by htbl.
  *
@@ -109,5 +118,6 @@ void chtbl_destroy(CHTbl *htbl);
  *
  * */
 #define chtbl_size(htbl) ((htbl)->size)
+
 
 #endif /* chtbl_h */

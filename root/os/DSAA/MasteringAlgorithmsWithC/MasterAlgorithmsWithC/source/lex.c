@@ -6,15 +6,17 @@
 //  Copyright © 2018 Chyi Yaqing. All rights reserved.
 //
 
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "list.h"
+#include "lex.h"
 #include "chtbl.h"
+#include "symbol.h"
 
 /************************************************
  * Public Interface 
- * *********************************************/
+ ***********************************************/
 
 /**
  * Initializes the chained hash table specified by htbl.
@@ -30,160 +32,45 @@
  * @return 0 if initializing the hash table is successful, or -1 otherwise.
  *
  * */
-int chtbl_init(CHTbl *htbl, int buckets, int (*h)(const void *key), int (*match)(const void *key1, const void *key2), void (*destroy)(void *data)) {
+Token lex(const char *istream, CHTbl *symtbl) {
+    Token       token;
+    Symbol      *symbol;
+    int         length, retval, i;
 
-    int     i;
-    
-    // Allocate space for the hash table.
-    if ((htbl->table = (List *)malloc(buckets * sizeof(List))) == NULL)
-        return -1;
+    // Allocate space for a symbol 
+    if ((symbol = (Symbol *)malloc(sizeof(Symbol))) == NULL)
+        return error;
 
-    // Initialize the buckets
-    htbl->buckets = buckets; 
-
-    for (i = 0; i < htbl->buckets; i++) {
-        list_init(&htbl->table[i], destroy);
+    // Process the next token.
+    if ((symbol->lexeme = next_token(istream)) == NULL) {
+        // Return that there is no more input.
+        free(symbol);
+        return lexit;
     }
-    
-    // encapsulate the h, match, and destroy functions
-    htbl->h = h;
-    htbl->match = match;
-    htbl->destroy = destroy;
-    
-    // Initialize the number of elements in the table.
-    htbl->size = 0;
+    else {
+        // Determine the token type.
+        symbol->token = digit;
+        length = strlen(symbol->lexeme);
 
-    return 0;
-}
-
-/*
- * Destroys the chained hash table specified by htbl.
- *
- * @Complexity O(m), where m is the number of buckets in the hash table
- *
- * @param htbl 
- *
- * */
-void chtbl_destroy(CHTbl *htbl) {
-    
-    int         i;
-
-    // Destroy each bucket 
-    for (i = 0; i < htbl->buckets; i++) {
-
-        list_destroy(&htbl->table[i]);
-   
-    }
-    
-    // Free the storage allocated for the hash table 
-    free(htbl->table);
-
-    // No operations are allowed now, but clear the structure as a precaution.
-    memset(htbl, 0, sizeof(CHTbl));
-
-    return;
-}
-
-/**
- * Inserts an element into the chained hash table specified by htbl.
- *
- * @Complexity O(1)
- *
- * @param htbl
- * @param data 
- * 
- * @return 0 if inserting the element is successful, 1 if the element is already in the hash table, or -1 otherwise.
- *
- * */
-int chtbl_insert(CHTbl *htbl, const void *data) {
-    void        *temp;
-    int         bucket, retval;
-
-    // Do nothing if the data is already in the table
-    temp = (void *)data;
-
-    if (chtbl_lookup(htbl, &temp) == 0) 
-        return 1;
-
-    // Hash the key
-    bucket = htbl->h(data) % htbl->buckets;
-
-    // Insert the data into the bucket
-    if ((retval = list_ins_next(&htbl->table[bucket], NULL, data)) == 0) {
-        htbl->size++;
-    }
-    return retval;
-}
-
-/**
- * Removes the element matching data from the chained hash table specified by htbl.
- *
- * @Complexity O(1)
- *
- * @param htbl
- * @param data 
- * 
- * @return 0 if removing the element is successful, or -1 otherwise.
- *
- * */
-int chtbl_remove(CHTbl *htbl, void **data) {
-    ListElmt    *element, *prev;
-    int         bucket;
-
-    // Hash the key.
-    bucket = htbl->h(*data) % htbl->buckets;
-
-    // Search for the data in the bucket
-    prev = NULL;
-
-    for (element = list_head(&htbl->table[bucket]); element != NULL; element = list_next(element)) {
-
-        if (htbl->match(*data, list_data(element))) {
-            
-            // Remove the data from the bucket 
-            if (list_rem_next(&htbl->table[bucket], prev, data) == 0) {
-                htbl->size--;
-                return 0;
-            } else {
-                return -1;
-            }
-
+        for (i = 0; i < length; i++) {
+            if (!isdigit(symbol->lexeme[i]))
+                symbol->token = other;
         }
-        prev = element;
-    }
-    // Return that the data was not found.
-    return -1;
-}
 
-/**
- * Determines whether an element matches data in the chained hash table specified by htbl.
- *
- * @Complexity O(1)
- *
- * @param htbl
- * @param data 
- * 
- * @return 0 if the element is found in the hash table, or -1 otherwise.
- *
- * */
-int chtbl_lookup(const CHTbl *htbl, void **data) {
+        memcpy(&token, &symbol->token, sizeof(Token));
 
-    ListElmt    *element;
-    int         bucket;
+        // Insert the symbol into the symbol table.
 
-    // Hash the key
-    bucket = htbl->h(*data) % htbl->buckets;
-
-    // Search for the data in the bucket
-    for (element = list_head(&htbl->table[bucket]); element != NULL; element = list_next(element)) {
-
-        if (htbl->match(*data, list_data(element))) {
-            
-            // Pass back the data from the table 
-            *data = list_data(element);
-            return 0;
+        if ((retval = chtbl_insert(symtbl, symbol)) < 0) {
+            free(symbol);
+            return error;
+        }
+        else if (retval == 1) {
+            // The stmbol is already in the symbol table.
+            free(symbol);
         }
     }
-    // Return that the data was not found.
-    return -1;
+
+    // Return the token for the parser.
+    return token;
 }
