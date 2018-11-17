@@ -24,6 +24,9 @@ Plugin 'MarcWeber/vim-addon-mw-utils' "
 Plugin 'tomtom/tlib_vim'
 Plugin 'garbas/vim-snipmate'    " snipMate.vim aims to be a concise vim script that implements some of TextMate's snippets features in Vim 
 Plugin 'w0rp/ale'               " Asynchronous linting/fixing for Vim and Language Server Protocol (LSP) integration
+Plugin 'vim-syntastic/syntastic' " Syntax checking hacks for vim
+Plugin 'keith/swift.vim'        " Vim runtime files for Swift
+
 
 call vundle#end()               " required
 
@@ -92,6 +95,7 @@ command W w !sudo tee % > /dev/null
 
 " Set 7 lines to the cursor - when moving vertically using j/k 
 set so=7
+
 
 " Avoid grabled characters in Chinese Language windows OS
 let $LANG='en'
@@ -172,7 +176,15 @@ if !has('gui_running')
 endif
 
 try
-	colorscheme desert
+    color desert
+    " highlight the current line and the cursor
+    
+    set cursorline
+    set cursorcolumn
+
+    highlight CursorColumn guibg=lightblue ctermbg=lightgray
+    highlight CursorLine cterm=NONE ctermbg=8 ctermfg=NONE
+
 catch
 endtry
 
@@ -570,3 +582,19 @@ snor <c-j> <esc>i<right><c-r>=snipMate#TriggerSnippet()<cr>
 " By default, all available tools for all supported languages will be run.
 " If you want to only select a subset of the tools, you can define. g:ale_linters globally
 "
+
+" Syntastic Plugin Config 
+" Syntax checking hacks for vim 
+" Recommanded settings
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
+
+" swift.vim Plugin Config 
+" Vim runtime files for Swift 
+let g:syntastic_swift_checkers = ['swiftpm', 'swiftlint']
