@@ -12,11 +12,13 @@ $ ./run.sh sort
 
 ### Recursion
 
+```
 A resursive function is a function that calls itself.Each successive call works on a more refined set of inputs, bringing us closer and closer to the solution of a problem.
 
 Two basic phases of recursive process: winding and unwinding.
     1. In the winding phase, each recursive call perpetuates the recursion by making and additional recursive call itself. The winding phase terminates when one of the calls reaches a terminating condition.
     2. The unwinding phase, in which previous instances of the function are revistied in reverse order. This phase continues until the original call returns, at which point the resursive process is complete.
+```
 
 ![The Organization of a C program in memory](/imgs/os/DSAA/MasteringAlthorithmsWithC/organization_of_c_program_in_memory.png?raw=true)
 
