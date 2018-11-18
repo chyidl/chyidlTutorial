@@ -175,19 +175,6 @@ if !has('gui_running')
 	set t_Co=256
 endif
 
-try
-    color desert
-    " highlight the current line and the cursor
-    
-    set cursorline
-    set cursorcolumn
-
-    highlight CursorColumn guibg=lightblue ctermbg=lightgray
-    highlight CursorLine cterm=NONE ctermbg=8 ctermfg=NONE
-
-catch
-endtry
-
 set background=dark
 
 " Set extra options when running in GUI mode 
@@ -204,6 +191,17 @@ set encoding=utf8
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
+try
+    color desert
+    " highlight the current line and the cursor
+    
+    set cursorline
+    set cursorcolumn
+
+    highlight CursorColumn guibg=lightblue ctermbg=lightgray
+    highlight CursorLine cterm=NONE ctermbg=lightgray ctermfg=NONE
+catch
+endtry
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
