@@ -36,6 +36,32 @@ Two basic phases of recursive process: winding and unwinding.
 ![The Stack of a C program while computing 4! in a tail-recursive manner](/imgs/os/DSAA/MasteringAlthorithmsWithC/Tail_Recursive.png?raw=true)
 - [Tail Recursive Mannger](/root/os/DSAA/MasteringAlgorithmsWithC/MasterAlgorithmsWithC/source/facttail.c)
 
+### Analysis of Algorithms
+
+```
+O-Notation is the most common notation used to express an algorithm's performance in a formal manner.
+
+O-Notation expresses the upper bound of a function within a constant factor.
+
+Primarily we are interested only in the growth rate of f, which describes how quickly the algorithm's performance will degrade as the size of the data it processes becomes arbitrrily large.
+
+> Constant terms are expressed as O(1).
+> Multiplicative constants are ommitted.
+> Addition is performed by taking the maximum.
+> Multiplication is not changed but often is rewritten more copactly.
+
+In fact, complexities have no real units of measurement at all. They describe only how the resource being measured will be affected by a change in data size.
+
+Some Situations Wherein Common Complexities Occur.
+
+O(1)        : Fetching the first element from a set of data 
+O(lg n)     : Splitting a set of data in half, then splitting the halves in half,etc.
+O(n)        : Traversing a set of data 
+O(n lg n)   : Splitting a set of data in half repreatedly and traversing each half.
+O(n²)       : Traversing a set of data once for the member of another set of equal size  
+O(2ⁿ)       : Generating all possible subsets of a sets data 
+O(n!)       : Generating all possible permutations of a set of data.
+```
 
 ### Linked lists 
 
