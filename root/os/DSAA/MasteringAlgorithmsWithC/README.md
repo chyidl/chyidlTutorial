@@ -20,10 +20,15 @@ Two basic phases of recursive process: winding and unwinding.
 
 ![The Organization of a C program in memory](/imgs/os/DSAA/MasteringAlthorithmsWithC/organization_of_c_program_in_memory.png?raw=true)
 
+
 > C Program consist of four areas as it executes: 
+
 > > 1. A code area          -- contains the machine instructions that are executed as the program runs.
+
 > > 2. A static data area   -- contains the data that persists throughout the life of the program. such as global variables and static local variables.
+
 > > 3. A heap               -- contains dynamically allocated storage, such as memory allocated by malloc.
+
 > > 4. A stack              -- contains information about function calls.
 
 
