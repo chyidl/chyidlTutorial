@@ -121,9 +121,23 @@ DRY -- Don't Repeat Youself
     >>> s.imethod() # Instance method 
     >>> Spam.cmethod() # Class method 
     >>> Spam.smethod() # Staic method 
+    
+    # Special Methods
+
+    class Array:
+        def __getitem__(self, index):
+            ...
+        def __setitem__(self, index, value):
+            ...
+        def __delitem__(self, index):
+            ...
+        def __contains__(self, item):
+            ...
+
+    Almost everything can be customized.
 
     # Inheritance
-    
+
     class Base:
         def spam(self):
             pass 
@@ -135,7 +149,9 @@ DRY -- Don't Repeat Youself
             r = super().spam() 
 
     # Dictionaries 
+
     # *Objects are layered on dictionaries*
+    
     class Spam:
         def __init__(self, x, y):
             self.x = x 
@@ -178,7 +194,6 @@ DRY -- Don't Repeat Youself
     
     #!/usr/bin/env python3
     # -*- coding:utf-8 -*- 
-
     from functools import wraps 
 
     def debug(func):
@@ -217,6 +232,21 @@ DRY -- Don't Repeat Youself
     Evaluates as 
         func = decorator(args)(func)
     It's a little weired two levels of calls 
+
+*A Reformulation*
+    
+    from functools import wraps, partial 
+
+    def debug(func=None, *, prefix=''):
+        if func is None:
+            return partial(debug, prefix=prefix)
+
+        msg = prefix + func.__qualname__
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            print(msg)
+            return func(*args, **kwargs)
+        return wrapper
 
 *Usage*
     Use as a simple decorator 
