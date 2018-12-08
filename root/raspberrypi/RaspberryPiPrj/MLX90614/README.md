@@ -6,13 +6,13 @@ Internally, the MLX90614 is a pairing of two devices: an infrared thermopile det
 
 Per the Stefan-Boltzman law, any object that isn't below absolute zero (0⁰K) emits (non-human-eye-visible)light in the infrared spectrum that is directly proportional to its temperature.The special infrared themopile inside the MLX90614 senses how much infrared energy is being emiited by materials in its field of view, and produces an electrical signal proportional to that.
 
-![MLX90614 internal block digram](/imgs/raspberry/MLX90614_internal_block_digram.png?raw=true)
+![ MLX90614 internal block digram ](/imgs/raspberry/MLX90614_internal_block_digram.png?raw=true)
 
 ## MLX90614 Pinout 
 
 The MLX90614 comes in an TO-39 "can" package with four legs: two for power, and two for the SMBus interface. A "notch" on the package helps to indicate which pin is which.
 
-![MLX90614 pinout](/imgs/raspberry/mlx90614-pinout.png?raw=true)
+![ MLX90614 pinout ](/imgs/raspberry/mlx90614-pinout.png?raw=true)
 
 ## Capabilities
 
