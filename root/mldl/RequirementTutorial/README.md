@@ -6,3 +6,5 @@
 - [python opencv](/root/mldl/RequirementTutorial/OpenCV/PracticalPythonOpenCV/README.md)
 
 - [TensorFlow](/root/mldl/RequirementTutorial/Tensorflow/README.md)
+
+- [PyTorch](/root/mldl/RequirementTutorial/PyTorch/README.md)

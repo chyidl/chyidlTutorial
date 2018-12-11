@@ -1,6 +1,5 @@
 # 关于Python面试题
 
-
 ## Python 语言特性
 
 ### 1. Python Parameters Passed by Reference or Value?
@@ -109,9 +108,28 @@ A metaclass is the class of a class. Like a class defines how an instance of the
 
 **type** is the usual metaclass in Python. **type** is itself a class, and it is its own type. A metaclass is most commonly used as a class-factory. Combined with the normal __intit__ and __new__ methods, metaclasses therefor allow you to do 'extra things' when creating a class, like registering the new class with some registry, or even replace the class with something else entirely.
 
-metaclasses actually define the type of a class, not just a factory for it, so you can do much more with them. 
+metaclasses actually define the type of a class, not just a factory for it, so you can do much more with them. metaclass can define normal methods like classmethods, can be called on the class without an instance, but cannot called on an instance of the class.
 
 ```python
+
+```
+
+### 3. @staticmethod @classmethod  @instancemethod 
+
+```python
+class A(object):
+    def foo(self, x):
+        print("executing foo(%s, %s)"%(self, x))
+
+    @classmethod
+    def class_foo(cls, x):
+        print("executing class_foo(%s, %s)" %(cls, x))
+
+    @staticmethod 
+    def static_foo(x):
+        print("executing static_foo(%s)" %x)
+
+a = A(1)
 
 ```
 
