@@ -32,3 +32,5 @@ $ sudo i2cdetect -y 1
 60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- 
 70: -- -- -- -- -- -- -- 77   
 ```
+
+- [simpleTest.py](/root/raspberrypi/RaspberryPiPrj/BMP180/simpleTest.py)
