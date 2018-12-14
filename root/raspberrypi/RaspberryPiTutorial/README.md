@@ -38,3 +38,53 @@ $ make -j4
 $ sudo make install OR sudo make altinstall 
 $ sudo pip3 install --upgrade pip 
 ```
+
+### Change Raspberry Pi's Swapfile Size on Raspbian 
+
+**Reason Why**
+
+Ever get the dreaded error:
+
+```
+Virtual memory exhausted: Cannot allocate memory
+```
+
+With the first iterations of Raspberry Pi the Model A comes with 256mb of memory. While the Raspberry Pi B comes with a modeest 512mb of memory. For most applications this amount of memory is actually quiet a bit. As soon as you start compiling your own binaries this amount starts to seem dismal.
+
+**Limitations**
+
+The Raspbian distribution comes with a 100mb swapfile. This is actually a bit on the small side. A general rule of thumb if swapfile size should be acout twice as much as the available RAM on the machine. In the examples below I have a Raspbian Pi 2B. So the amount of swap I use is 1024mb.
+
+**Commands**
+
+We will change the configuration in the file */etc/dphys-swapfile*
+
+```
+$ sudo nano /etc/dphys-swapfile 
+
+# The default value is Raspbian is:
+CONF_SWAPSIZE=100 
+
+# We will need to change this to:
+CONF_SWAPSIZE=1024
+
+# Then you will need to stop and start the service that manages the swapfile own Rasbian:
+$ sudo/etc/init.d/dphys-swapfile stop 
+$ sudo /etc/init.d/dphys-swapfile start 
+
+# You can then verify the amount of memory + swap by issuing the following command:
+
+$ free -m 
+
+# The output should look like:
+
+$ free -m
+              total        used        free      shared  buff/cache   available
+Mem:            875          31          38          11         805         769
+Swap:          1023           0        1023
+```
+
+**Finished!**
+
+That should be enough swap to complete any future compiles I may do n the future.
+
