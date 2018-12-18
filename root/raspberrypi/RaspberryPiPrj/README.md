@@ -9,3 +9,4 @@
 Download all history Magpi Magazine PDF files
 
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)
+- [Send Email with IP-address](/root/raspberrypi/RaspberryPiPrj/EmailIP/README.md)
