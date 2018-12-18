@@ -1,0 +1,17 @@
+# emailip address on reboot 
+[Unit]
+Description= Daemon emailip address 
+After=network.target 
+
+[Service]
+Type=simple 
+# Another Type option: forking 
+User=vps
+ExecStart = /usr/bin/python3 /home/vps/EmailIP.py & 
+KillMode=process 
+Restart=always
+Restart=always
+# Other Restart options: or always, on-abort, etc 
+
+[Install]
+WantedBy=multi-user.target
