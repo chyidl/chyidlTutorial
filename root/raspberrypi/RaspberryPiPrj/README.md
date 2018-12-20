@@ -5,8 +5,12 @@
 - [AM2302 Temperature & Humidity](/root/raspberrypi/RaspberryPiPrj/AM2302/README.md)
 - [MLX90614 IR Sensor](/root/raspberrypi/RaspberryPiPrj/MLX90614/README.md)
 - [BMP180 Air Pressure Sensor](/root/raspberrypi/RaspberryPiPrj/BMP180/README.md)
+- [Send Email with IP-address](/root/raspberrypi/RaspberryPiPrj/EmailIP/README.md)
 
 Download all history Magpi Magazine PDF files
 
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)
-- [Send Email with IP-address](/root/raspberrypi/RaspberryPiPrj/EmailIP/README.md)
+
+FAQ - Frequently asked questions 
+
+- [FAQ](/root/raspberrypi/RaspberryPiPrj/FAQ.md)
