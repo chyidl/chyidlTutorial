@@ -216,8 +216,8 @@ A chained hash table is a good way to implement a symbol table because, in addit
 
 **Tree Balancing**: This means making sure that one level of the tree is completely full before allowing a node to exist at the next level. A tree is balanced if all leaf nodes are at the same level or, if not, all leaf nodes are in the last two levels and the second-to-last level is full.
 
-- [Binary Trees]()
-- [Binary Traversal Trees]()
+- [Binary Trees](/root/os/DSAA/MasteringAlgorithmsWithC/MasterAlgorithmsWithC/source/bitree.c)
+- [Binary Traversal Trees](/root/os/DSAA/MasteringAlgorithmsWithC/MasterAlgorithmsWithC/source/traverse.c)
 - [Binary Search Trees]()
 
 

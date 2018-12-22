@@ -15,4 +15,3 @@ Vim is rock stable and is continuously being developed to become even better. Am
 ## VIM Tips 
 
 - [Entering special characters in VIM]()
-

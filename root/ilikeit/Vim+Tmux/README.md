@@ -304,3 +304,11 @@ bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
 
 - [.tmux.conf](/root/ilikeit/Vim+Tmux/tmux.conf)
 - [.tmux.conf.local](/root/ilikeit/Vim+Tmux/tmux.conf.local)
+
+
+## Using template files in Vim 
+
+Vim templates or skeletons,allow you to specify a template to be used for new files with a certain extension.
+
+The Vim philosophy encourages users to automate repeated actions and provides a rich toolkit with great documentation to achieve that.One example of this type of micro-optimisation is having a template or skeleton file that populates the vim buffer when a new file is opened.
+
