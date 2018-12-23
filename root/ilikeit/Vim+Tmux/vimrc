@@ -593,3 +593,11 @@ let g:syntastic_check_on_wq = 0
 " swift.vim Plugin Config 
 " Vim runtime files for Swift 
 let g:syntastic_swift_checkers = ['swiftpm', 'swiftlint']
+
+" Using template files in Vim
+if has("autocmd")
+    augroup templates 
+        autocmd BufNewFile *.* silent! execute '0r ~/.vim/templates/skeleton.'.expand("<afile>:e")
+        autocmd BufNewFile * %substitute#\[:VIM_EVAL:\]\(.\{-\}\)\[:END_EVAL:\]#\=eval(submatch(1))#ge
+    augroup END 
+endif
