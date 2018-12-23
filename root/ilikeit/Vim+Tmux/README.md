@@ -312,3 +312,14 @@ Vim templates or skeletons,allow you to specify a template to be used for new fi
 
 The Vim philosophy encourages users to automate repeated actions and provides a rich toolkit with great documentation to achieve that.One example of this type of micro-optimisation is having a template or skeleton file that populates the vim buffer when a new file is opened.
 
+```
+# Add below code into .vimrc file 
+" Using template files in Vim 
+if has("autocmd")
+    augroup templates
+        autocmd BufNewFile *.* silent! execute '0r ~/.vim/templates/skeleton.'.expand("<afile>:e")
+        autocmd BufNewFile * %substitute#\[:VIM_EVAL:\]\(.\{-\}\)\[:END_EVAL:\]#\=eval(submatch(1))#ge
+    augroup END
+endif
+```
+- [templates](/root/ilikeit/Vim+Tmux/templates/)
