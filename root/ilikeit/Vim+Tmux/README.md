@@ -325,5 +325,5 @@ endif
 - [templates](/root/ilikeit/Vim+Tmux/templates/)
 ```
 # Create a vim templates file in your home directory and a vim/bundle directory 
-$ wget  https://raw.githubusercontent.com/chyidl/chyidlTutorial/master/root/ilikeit/Vim%2BTmux/templates -O ~/.vim/ 
+$ cp -r chyidlTutorial/root/ilikeit/Vim+Tmux/templates ~/.vim/
 ```
