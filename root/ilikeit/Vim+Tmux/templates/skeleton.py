@@ -1,6 +1,5 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
-# vim:encoding=utf-8
 #
 # [:VIM_EVAL:]expand('%:t')[:END_EVAL:]
 # [:VIM_EVAL:]expand('%:p:h:t')[:END_EVAL:]
