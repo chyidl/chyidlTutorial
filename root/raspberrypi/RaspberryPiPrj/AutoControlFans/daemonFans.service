@@ -1,0 +1,14 @@
+# daemon AutoControl Fans 
+[Unit]
+Description= Daemon AutoControl Fans
+After=network.target 
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/usr/bin/python3 /home/pi/chyidl.com/AutoControlFans/autofans.py &
+KillMode=process
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

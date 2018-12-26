@@ -6,6 +6,8 @@
 - [MLX90614 IR Sensor](/root/raspberrypi/RaspberryPiPrj/MLX90614/README.md)
 - [BMP180 Air Pressure Sensor](/root/raspberrypi/RaspberryPiPrj/BMP180/README.md)
 - [Send Email with IP-address](/root/raspberrypi/RaspberryPiPrj/EmailIP/README.md)
+- [Auto Control Fans CPU Temperature](/root/raspberrypi/RaspberryPiPrj/AutoControlFans/README.md)
+
 
 Download all history Magpi Magazine PDF files
 
