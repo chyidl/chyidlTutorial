@@ -83,7 +83,7 @@ def handleFan():
 
 if __name__ == '__main__':
     try:
-        with open('/home/pi/chyidl.com/AutoControlFans/autafans.csv', 'a+') as f:
+        with open('/home/pi/chyidl.com/AutoControlFans/autofans.csv', 'a+') as f:
             writer = csv.writer(f, quoting=csv.QUOTE_NONE)
             writer.writerow(['Timestamp','Temp', 'Speed'])
             while True:
