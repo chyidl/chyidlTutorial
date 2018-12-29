@@ -9,6 +9,7 @@ User=pi
 ExecStart=/usr/bin/python3 /home/pi/chyidl.com/AutoControlFans/autofans.py &
 KillMode=process
 Restart=always
+RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
