@@ -9,6 +9,7 @@
 - [Auto Control Fans CPU Temperature](/root/raspberrypi/RaspberryPiPrj/AutoControlFans/README.md)
 - [TI Sensor Tag CC2650](/root/raspberrypi/RaspberryPiPrj/TISensorTagCC2650/README.md)
 
+
 Download all history Magpi Magazine PDF files
 
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)
