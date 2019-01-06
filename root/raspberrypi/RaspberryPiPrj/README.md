@@ -7,6 +7,7 @@
 - [BMP180 Air Pressure Sensor](/root/raspberrypi/RaspberryPiPrj/BMP180/README.md)
 - [Send Email with IP-address](/root/raspberrypi/RaspberryPiPrj/EmailIP/README.md)
 - [Auto Control Fans CPU Temperature](/root/raspberrypi/RaspberryPiPrj/AutoControlFans/README.md)
+- [TI Sensor Tag CC2650](/root/raspberrypi/RaspberryPiPrj/TISensorTagCC2650/README.md)
 
 
 Download all history Magpi Magazine PDF files
