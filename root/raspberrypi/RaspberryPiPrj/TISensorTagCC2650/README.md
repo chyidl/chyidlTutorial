@@ -99,3 +99,4 @@ Raspberry Pi Install Bluez
     Characteristic value/descriptor: 04 00 ad 27 01 11 31
     ```    
 - [SensorTag CC2650](/root/raspberrypi/RaspberryPiPrj/TISensorTagCC2650/sensortag_weather.py)
+![# Sensor tag CC2650 Commit](/imgs/raspberrypi/SensorTagCC2650-Commit.png?raw=true)
