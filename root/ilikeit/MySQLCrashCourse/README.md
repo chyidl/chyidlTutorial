@@ -2,6 +2,24 @@
 
 The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
 
+MySQL Install and Manage
+-------------
+
+    1. Stop the MySQL Service ($ sudo systemctl stop mysql)
+    2. Start MySQL without a password ($ sudo mysqld_safe --skip-grant-tables &)
+    3. Connect to MySQL ($ mysql -uroot)
+    4. Set a new MySQL root password (mysql> use mysql; mysql> GRANT ALL PRIVILEGES ON *.* to 'root'@'localhost' IDENTIFIED BY 'your_password'; mysql> flush privileges; mysql> quit;)
+    5. Restart MySQL service ($ sudo systemctl restart mysql)
+    6. Create New Databases (mysql> CREATE DATABASE xx;)
+    7. Creating MySQL database and user ($ mysql -uroot -p; $ mysql> GRANT ALL PRIVILEGES ON xx.* TO 'username'@'%' IDENTIFIED BY 'your_password';)
+    8. (mysql> FLUSH PRIVILEGES; Privileges assigned through GRANT option do not need FLUSH PRIVILEGES to take effect - MySQL server will notice these changes and reload the grant tables immediately) 
+
+If you modify the grant tables directly using statements such as INSERT, UPDATE, or DELETE, your changes have no effect on privilege checking until you either restart the server 
+or tell it to reload the tables. If you change the grant tables directly but forget to reload them, your changes have no effect until you restart the server. This many leave you
+wondering why your changes seem to make no difference! If you modify the grant tables indirectly using account-management statement such as GRANT, REVOKE, SET PASSWORD, or RENAME USER
+the server notices these changes and loads the grant tables into memory again immediately.
+
+
 ## MySQL Infrastructure
 
 Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor --> Storage Engine.
