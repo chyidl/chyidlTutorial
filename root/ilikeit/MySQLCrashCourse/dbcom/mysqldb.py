@@ -4,6 +4,7 @@
 import mysql.connector
 # Using this module create, manage and use the connection pool
 import mysql.connector.pooling
+from mysql.connector import errorcode
 
 
 class MySQLDB:
@@ -12,7 +13,9 @@ class MySQLDB:
         'user':     config.mysql_user,
         'password': config.mysql_passwd,
         'host':     config.mysql_host,
-        'port':     config.mysql_port,               # TCP/IP port of the MySQL server. default Value 3306
+        'port':     config.mysql_port,
+
+                 # TCP/IP port of the MySQL server. default Value 3306
         'charset':  config.mysql_charset,            # default value of the charset argument is "utf8"
         'connection_timeout': config.mysql_connection_timeout,
         'pool_name': config.mysql_poolname,
@@ -22,25 +25,9 @@ class MySQLDB:
     }
     """
     def __init__(self, config, pool=True):
-        try:
-            self._pool = pool
-            if self._pool:
-                # mysql.connector.connect() method of MySQL Connector Python with required parameters to connect MySQL.
-                #self._conn = mysql.connector.connect(**config)  # return MySQLConnection
-                # Create a connection pool.
-                self._conn_pool = mysql.connector.pooling.MySQLConnectionPool(**config)
-                self._conn = self._conn_pool.get_connection() # Get connection object from a pool
-                print("Printing connection pool properties")
-                print(f'Connection Pool Name - {self._conn_pool.pool_name}')
-                print(f'Connection Pool Size - {self._conn_pool.pool_size}')
-            else:
-                self._conn = mysql.connector.connect(**config)
-            if self._conn.is_connected():  # verify is our python application is connected to MySQL
-                # need to buffered=True to avoid MySQL Unread result error
-                # need to prepared=True to allows the cursor to execute the prepared statement
-                self._cursor = self._conn.cursor(buffered=False, prepared=False)  # Using MySQLCursor can execute SQL queries
-        except mysql.connector.Error as err:
-            print("Error while connecting to MySQL", err)
+        self._config = config
+        self._pool = pool
+        self.connectDb()
 
     # Using the magic methods (__enter__, __exit__) allows you to implement
     # object which can be used easily with the with statement
@@ -64,6 +51,35 @@ class MySQLDB:
     def connection_pool(self):
         return self._conn_pool
 
+    def connectDb(self):
+        """Connect to database"""
+        try:
+            if self._pool:
+                # mysql.connector.connect() method of MySQL Connector Python with required parameters to connect MySQL.
+                #self._conn = mysql.connector.connect(**config)  # return MySQLConnection
+                # Create a connection pool.
+                self._conn_pool = mysql.connector.pooling.MySQLConnectionPool(**self._config)
+                self._conn = self._conn_pool.get_connection() # Get connection object from a pool
+                print("Printing connection pool properties")
+                print(f'Connection Pool Name - {self._conn_pool.pool_name}')
+                print(f'Connection Pool Size - {self._conn_pool.pool_size}')
+            else:
+                self._conn = mysql.connector.connect(**self._config)
+            if self._conn.is_connected():  # verify is our python application is connected to MySQL
+                # need to buffered=True to avoid MySQL Unread result error
+                # need to prepared=True to allows the cursor to execute the prepared statement
+                self._cursor = self._conn.cursor(buffered=False, prepared=False)  # Using MySQLCursor can execute SQL queries
+            else:
+                print('connection failed.')
+        except mysql.connector.Error as err:
+            if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+                print('Something is wrong with your user name or password, {}'.format(err))
+            elif err.errno == errorcode.ER_BAD_DB_ERROR:
+                print('Database does not exists, {}'.format(err))
+            else:
+                print("Error while connecting to MySQL: {}".format(err))
+            raise RuntimeError(err)
+
     def close(self):
         try:
             if self._conn.is_connected():
@@ -82,18 +98,27 @@ class MySQLDB:
         self.connection.rollback()
 
     def query(self, sql, params=None):
+
+        if not self.cursor or not self._conn.is_connected():
+            print('MySQL is not connected, Trying to reconnect')
+            self.connectDb()
+
         try:
             self.cursor.execute(sql, params or ())
-        except mysql.connector.errors.InterfaceError as error:
-            # When the connection is not available
-            print(f"mysql.connector.InterfaceError {error}, and reconnect...")
-            self.connection.reconnect(attempts=3, delay=5)
-            self.cursor.execute(sql, params or ())
+        # except mysql.connector.errors.InterfaceError as error:
+        #     # When the connection is not available
+        #     print(f"mysql.connector.InterfaceError {error}, and reconnect...")
+        #     self.connection.reconnect(attempts=3, delay=5)
+        #     self.cursor.execute(sql, params or ())
         except mysql.connector.Error as error:
             self.rollback() # rollback if any exception occured
             print(f'query Exception: {error} {sql} {params}')
 
     def querymany(self, sql, seq_of_params=None):
+        if not self.cursor or not self._conn.is_connected():
+            print('MySQL is not connected, Trying to reconnect')
+            self.connectDb()
+
         try:
             # use cursor's executemany() function to insert multiple records into a table
             self.cursor.executemany(sql, seq_of_params or [()])
@@ -151,10 +176,12 @@ if __name__ == '__main__':
 
     with MySQLDB(cfg, pool=True) as db:
         count = 10
-        while count > 0:
-            count -= 1
-            # db stuff
-            sql = 'SELECT VERSION()'
-            db.query(sql)
-            print(f'MySQL Version: {db.fetchone()[0]}')
-            time.sleep(5)
+        try:
+            while count > 0:
+                count -= 1
+                # db stuff
+                sql = 'SELECT VERSION()'
+                db.query(sql)
+                print(f'MySQL Version: {db.fetchone()[0]}')
+        except Exception as err:
+            print(err)
