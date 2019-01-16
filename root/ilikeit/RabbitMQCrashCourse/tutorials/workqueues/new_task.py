@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 """
-send.py will send a single messages to the queue.
+new_task.py to allow arbitrary messages to be sent from the command line. This program will schedule tasks to our work queue.
+
+The main idea behind Work Queues is to avoid doing a resource-intensive task immediately and having to wait for it to complete.
+Instead we schedule the task to be done later. We encapsulate a task as a message and send it to the queue. A worker
+processer running in the background will pop the tasks and eventually execute the job. When you run many works the tasks
+will be shared between them.
+
+This concept is especially useful in web applications where it's impossible to handle a complex task during a short HTTP request window
 """
 # Pika is a pure-Python implementation of the AMQP 0-9-1 protocol
 import pika
+import sys
 
 
 # guest user can only connect via localhost
@@ -17,9 +25,10 @@ connection = pika.BlockingConnection(pika.ConnectionParameters(host='192.168.31.
 channel = connection.channel()
 
 channel.queue_declare(queue='hello')
+message = ' '.join(sys.argv[1:]) or "Hello World!"
 channel.basic_publish(exchange='',
                       routing_key='hello',
-                      body='Hello World!')
+                      body=message)
 print("[x] Sent 'Hello World!'")
 connection.close()
 
