@@ -55,3 +55,4 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Git - Fast-Version-Control](/root/ilikeit/Git/README.md)
 - [The tutorl of Final Cut Pro X](root/ilikeit/FinalCutProX/README.md)
 - [MySQL Crash Course](root/ilikeit/MySQLCrashCourse/README.md)
+- [RabbitMQ Crash Course](root/ilikeit/RabbitMQCrashCourse/README.md)
