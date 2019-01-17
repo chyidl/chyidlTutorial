@@ -77,7 +77,13 @@ RabbitMQ Cluster[2 nodes]
     * rabbitmqctl list_connections : 
     * In a cluster with multiple nodes that have management plugin enabled, the operator can use any node to access management UI.
     * Every node stores and aggregates its own metrics and stats, and provides an API for other nodes to access it. 
-    
+    * RabbitMQ Cluster MetaData replication
+        - queue Metadata: queue name and queue Attribute
+        - exchange Metadata: exchange name, attribute and type 
+        - bing Metadata: Exchange -> binding -> Queue 
+        - virtual hosts: 
+    * Disk and RAM Nodes: In the vast majority of cases you want all your nodes to be disk nodes; RAM nodes are a special case that can be used to improve the performance clusters with high queue, exchange, or bingding churm.
+    * sudo rabbitmqctl join_cluster rabbit@RPi3B --ram (Set RAM node, default is Disk Node)
 ```
 # In order to link up our two nodes in a cluster.
 # We tell the node rabbit@RPi2B to join the cluster of the rabbit@RPi3B. Prior to that newly joining members must be reset.
