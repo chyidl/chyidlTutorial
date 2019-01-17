@@ -40,13 +40,29 @@ $ sudo rabbitmqctl set_permissions -p / myuser ".*" ".*" ".*"
     - (using the Pika Python client): 
     - RabbitMQ libraries: RabbitMQ speaks AMQP 0.9.1 which is an open, general-purpose protocol for messaging
 
-- [2. Work queues](/root/ilikeit/RabbitMQCrashCourse/tutorials/workqueues/worker_ack.py)
+- [2. Work queues](/root/ilikeit/RabbitMQCrashCourse/tutorials/workqueues/worker_ack_durability.py)
     - In order to make sure a message is never lost, RabbitMQ supports message acknowledgments. An ack(nowledgement) is sent back by te consumer to tell RabbitMQ that a particular message had been received, processed and that RabbitMQ is free to delete it. 
     - If a consumer dies(its channel is closed, connection is closed, or TCP connection is lost) without sending an ack. RabbitMQ will understand that a message wasn't processed fully and will re-queue it.
     - This way you can be sure that no message is lost, even if the worker occasionally die.
     - When RabbitMQ quites or crashes it will forget the queues and messages unless you tell it not to. Two things are required to make sure that messages aren't lost: we need to mark both the queue and messages as durable.
-    
 
+- [3. Publish/Subscribe](/root/ilikeit/RabbitMQCrashCourse/tutorials/publishsubscribe/emit_log.py)
+    - "publish/subscribe" : published log messages are going to be broacast to all the receivers.
+    - exchange : one side it receives messages from producers and the other side it pushes them to queues.
+    - exchange types: direct, topic, headers, fanout
+    - fanout exchange is just broadcast all the messages it receives to all the queues it knows.
+
+- [4. Routing](/root/ilikeit/RabbitMQCrashCourse/tutorials/routing/emit_log_direct.py)
+    - direct exchange: a message goes to the queue whose binding key exactly matches the routing key of the message.
+
+- [5. Topics](/root/ilikeit/RabbitMQCrashCourse/tutorials/topics/emit_log_topic.py)
+    - topic exchange: 
+    - (star) can substitute for exactly one word
+    - (hash) can substitute for zero or more words. it will receive all the messages, regradless of the routing key - like in fanout exchange
+
+- [6. RPC](/root/ilikeit/RabbitMQCrashCourse/tutorials/rpc/emit_log_topic.py)
+    - RPC: Remote Procedure Call.
+    
 
 Best Practices [最佳实践]
 ------------------------
@@ -180,3 +196,5 @@ RabbitMQ CTL
 
 * $ sudo rabbitmqctl list_queues # see what queues RabbitMQ has
 * $ sudo rabbitmqctl list_queues name messages_ready message_unacknowledged
+* $ sudo rabbitmqctl list_exchanges # listing exchanges on the server
+* $ sudo rabbitmqctl list_bindings # list existing bindings  

@@ -30,8 +30,9 @@ channel.queue_declare(queue='task_queue', durable=True)
 message = ' '.join(sys.argv[1:]) or "Hello World!"
 
 # make our message as persistent - by supplying a delivery_mode property with a value 2
+# default exchange, which we identify by the empty string("")
 channel.basic_publish(exchange='',
-                      routing_key='task_queue',
+                      routing_key='task_queue', # the queue name
                       body=message,
                       properties=pika.BasicProperties(
                           delivery_mode=2, # make message persistent
@@ -46,5 +47,7 @@ connection recovery, concurrency and metric collection are largely omitted for t
 should not be considered production ready.
 
 Note on message persistence
-    Making messages as persistent doesn't fully guarantee that a message won't be lost.
+    Making messages as persistent doesn't fully guarantee that a message won't be lost. Although it tells RabbitMQ to save
+    the message and hasn't saved it yet. Also, RabbitMQ doesn't do fsync(2) [synchronize a file's in-core state with storage device] 
+    for every message it may be just saved to cache and not really written to the disk.
 """

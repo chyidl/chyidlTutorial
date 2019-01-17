@@ -32,12 +32,14 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
+# never-ending loop that waits for data and runs callback whenever necessary
+print(' [*] Waiting for message. To exit press CTRL+C')
+# RabbitMQ not to give more than one message to a worker at a time.
+channel.basic_qos(prefetch_count=1)
 # tell RabbitMQ that this particular callback function should receive messages from our hello queue.
 channel.basic_consume(callback,
                       queue='hello')
 
-# never-ending loop that waits for data and runs callback whenever necessary
-print(' [*] Waiting for message. To exit press CTRL+C')
 channel.start_consuming()
 
 """
