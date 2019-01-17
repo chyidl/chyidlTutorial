@@ -60,7 +60,7 @@ $ sudo rabbitmqctl set_permissions -p / myuser ".*" ".*" ".*"
     - (star) can substitute for exactly one word
     - (hash) can substitute for zero or more words. it will receive all the messages, regradless of the routing key - like in fanout exchange
 
-- [6. RPC](/root/ilikeit/RabbitMQCrashCourse/tutorials/rpc/emit_log_topic.py)
+- [6. RPC](/root/ilikeit/RabbitMQCrashCourse/tutorials/rpc/rpc_client.py)
     - RPC: Remote Procedure Call.
     
 
