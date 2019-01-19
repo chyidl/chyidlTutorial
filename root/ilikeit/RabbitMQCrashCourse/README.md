@@ -204,3 +204,7 @@ RabbitMQ CTL
 * $ sudo rabbitmqctl list_queues name messages_ready message_unacknowledged
 * $ sudo rabbitmqctl list_exchanges # listing exchanges on the server
 * $ sudo rabbitmqctl list_bindings # list existing bindings  
+
+
+HAProxy
+-------
