@@ -36,6 +36,18 @@ $ wget http://raw.github.com/caiogondim/bullet-train-oh-my-zsh-theme/master/bull
 $ mv bullet-train.zsh $ZSH_CUSTOM/themes/
 $ vim ~/.zshrc
 # change ZSH_THEME="bullet-train"
+# add export LANGUAGE=en_US.UTF-8
+# add export LC_ALL=en_US.UTF-8
+# add export LANG=en_US.UTF-8
+# add export LC_TYPE=en_US.UTF-8
+
+6. Enabling Plugins
+$ vim ~/.zshrc
+plugins=(
+    extract
+    git 
+    zsh-autosuggestions
+)
 ```
 
 ## Vim 

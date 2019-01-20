@@ -147,3 +147,23 @@ ClientAliveCountMax 10000
 **Finally restart the ssh server**
 
 **service ssh restart** or **service sshd restart** depending on what system you are on.
+
+Keep SSH session alive
+----------------------
+
+sshd (the server) closes the connection if it doesn't hear anything from the client for a while. You ca tell your client to send a sign-of-life signal to the server once in a while.
+
+The configuration for this is in the file "~/.ssh/config", create it if the configuration file does not exist. To send the signal every four minutes (240 seconds) to the remote host, put the following in your "~/.ssh/config" file.
+
+```
+$ vim ~/.ssh/config
+# add below content to the "~/.ssh/config" file
+Host *
+    ServerALiveInterval 240 
+```
+
+Also make sure to run:
+```
+$ chmod 600 ~/.ssh/config 
+# Because the config file must not be world-readable
+```
