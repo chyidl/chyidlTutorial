@@ -22,12 +22,16 @@ $ cd .. && rm -rf fonts
 # Run zsh --version to confirm 
 # Expected result: zsh 5.1.1 or more recent 
 
+$ sudo apt-get install git curl wget 
 $ sudo apt-get install zsh 
 $ chsh -s $(which zsh) 
 
-3. Make sure terminal is using 256-colors mode with export TERM="xterm-256color"
+3. Install oh-my-zsh 
+$ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
-4. For oh-my-zsh users install bullet-train 
+4. Make sure terminal is using 256-colors mode with export TERM="xterm-256color"
+
+5. For oh-my-zsh users install bullet-train 
 $ wget http://raw.github.com/caiogondim/bullet-train-oh-my-zsh-theme/master/bullet-train.zsh-theme
 $ mv bullet-train.zsh $ZSH_CUSTOM/themes/
 $ vim ~/.zshrc
