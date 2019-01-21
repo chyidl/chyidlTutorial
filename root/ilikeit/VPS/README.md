@@ -27,3 +27,68 @@ $ sudo command_to_run # As the new user, verify that you can use sudo by prepend
 # For example. you can list the contents of the /root directory, which is normally only accessible to the root user.
 $ sudo ls -la /root
 ```
+
+2. How To Add Swap Space on Ubuntu 18.04
+--------------------------------------------
+One of the easiest way of increasing the responsiveness of your server and guarding against out-of-memory errors in applications is to add some swap space.
+Although swap is generally recommended for systems utilizing traditional spinning hard drives, using swap with SSDs can cause issues with hardware degradation over time.
+
+* What is Swap?
+    - Swap is an area on a hard drive that has been designated as a place where the operating system can temporarily store data that it can no longer hold in RAM.
+    - The infromation written to disk will be significantly slower than information kept in RAM, but the operating system will prefer to keep running application data in memory and use Swap for the older data.
+
+* Check the System for Swap Information
+    - $ sudo swapon --show  # check if the system has any configured swap by typing.
+    - $ free -h  # verify that there is active swap using the free utility 
+
+* Check Available Space on the Hard Drive Partition 
+    - The most common way of allocating space for swap is to use a separate partition devoted to the task. However, altering the partitioning scheme is not always possible. can just as easily a swap file that resides on an existing partition.
+    - $ df -h  # check the current disk usage by typing 
+    - Generally, an amount equal to or double the amount of RAM on your system is a good staring point.
+
+* How to empty swap
+    - The Linux kernel underlying Ubuntu will automatically "swap in" those pages from disk to RAM as needed, so in general I'd say just let it happen naturaly
+    - However, if you really feel that you need to force it you can momentarily disable and re-enable swap.
+    - $ sudo swapoff -a 
+    - $ sudo swapon -a 
+    - Be careful doing this, as you may make your system unstable, especially if its already low on RAM.
+
+* Create a Swap File
+    - creating a swap file within our filesystem. Create a file of the swap size called swapfile in our root(/) directory.
+    - The best way of creating a swap file is with the **fallocate** program. This command creates a file of a preallocated size instantly.
+    - $ sudo fallocate -l 1G /swapfile   # If **faillocate** is not installed or if you get an error message saying **fallocate failed: Operation not supported** then you can use the following command to create the swap file:
+    - $ sudo dd if=/dev/zero of=/swapfile bs=1024 count=1048576  
+    - verify that the correct amount of spaces was reserved by typing 
+    - $ ls -lh /swapfile 
+
+* Enabling the Swap File 
+    - Now that we have a file of the correct size available, we need to actually turn this into swap space.
+    - First, we need to lock down the permissions of the file so that only the users with **root** privileges can read the contents. This prevents normal users from being able to access the file, which would have significant security implications.
+    - $ sudo chmod 600 /swapfile #Make the file only accessible to **root** by typing.
+    - $ sudo mkswap /swapfile # mark the files as swap space 
+    - $ sudo swapon --show # verify that the swap is available 
+
+* Make the Swap File Permanent
+    - Our recent changes have enabled the swap file for the current session. However, if we reboot. the server will not retain the swap settings automatically. Can change this by adding the swap file to our **/etc/fstab** file.
+    - $ sudo cp /etc/fstab /etc/fstab.bak  # Back up the **/etc/fstab** file in case anything goes wrong
+    - $ echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab # add the swap file information to the end of your **/etc/fstab** file by typing
+    
+* Tweak your Swap Settings (There are a few options that you can configure how often your system swaps data out of RAM to the swap space.)
+    - Adjusting the **Swappiness** Property: The **swappiness** parameter configures how often your system swaps data out of RAM to the swap space.This is a value between 0 and 100 that represents a percentage.
+    - With values close to zero, the kernel will not swap data to the disk unless absolutely necessary.  Remember, interactions with the swap file are "expensive" in that they take a lot longer than interactions with RAM and they can cause a significant reduction in performance. Telling the system not to rely on the swap much will generally make your system faster.
+    - Values that are closer to 100 will try to put more data into swap in an effort to keep more RAM space free.
+    - $ cat /proc/sys/vm/swappiness  # For a Desktop, a swappiness setting of 60 is not a bad value. For a server, you might want to move it closer to 0
+    - $ sudo sysctl vm.swappiness=10 # This setting will persist until the next reboot. can set this value automatically at restart by adding the line to **/etc/sysctl.conf** file.
+    - $ sudo vim /etc/sysctl.conf  
+    - At the bottom, you can add:
+    - vm.swappiness=10  
+
+* Adjusting the Cache Pressure Setting 
+    - Another related value that you might want to modify is the **vfs_cache_pressure**. This setting configures how much the system will choose to cache inode and dentry information over other data.
+    - $ cat /proc/sys/vm/vfs_cache_pressure  #    
+    - $ sudo vim /etc/sysctl.conf 
+    - At the bottom, add the line that specifies your new value:
+    - vm.vfs_cache_pressure=50     
+* Conclusion
+    - Add Swap file give you some breathing room in cases that would otherwise lead to out-of-memory exceptions. Swap space can be incredibly useful in avoiding some of these common problem 
+    - If you are running into OOM(out of memory) errors, or if you find that system is unable to use the applications you need, the best solution is to optimize your application configurations or upgrade your server.                                                           
