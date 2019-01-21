@@ -64,9 +64,59 @@ $ sudo rabbitmqctl set_permissions -p / myuser ".*" ".*" ".*"
     - RPC: Remote Procedure Call.
     
 
-Best Practices [最佳实践]
-------------------------
+Best Practices
+--------------
+    * RabbitMQ
+        - Client side problems 
+        - Server side configurations 
+        
+    * Connections and channels
+        - Use separate connections for publish/consume
+            * Publishes may be TCP back-pressured 
+            * Then the server won't receive AMQP Acks either 
+        - Keep connection/channel count low 
+            * Reuse connections 
+            * 1 connection for publishing 
+            * 1 connection for consuming 
+            * 1 channel per thread (don't share)
+        - Every connection uses:
+            * TCP buffer space(auto-tuned, but may need to be decreased)
+            * CPU for metric collection by RabbitMQ mgmt UI
+        - Don't open and close connections or channels repeatedly
+            * TLS connection: 5 TCP packages
+            * AMQP connections: 7 TCP packages
+            * AMQP channel: 2 TCP packages 
+            * AMQP publish: 1 TCP package(more for larger message)
+            * AMQP close channel: 2 TCP packages
+            * Total 14-19 package (+Acks)
+            * To Build connection proxy keep connection open, local process can connect to this local proxy. and reuse the connection 
     
+    * Queues 
+        - Short queues are fast queues, because message can be cached or not hit the disk at all.
+        - Use lazy queue-mode if they're long (RabbitMQ >= 3.6) : Lazy Queue attempt to move messages to disk as early as practically possible.This means significantly fewer messages are kept in RAM in the majority of cause under normal operation.This comes at a cost of increaed disk I/O.
+        - Limit queue size, with TTL(Time to Live) or max-length 
+        - Problems with long queues
+            * Small msgs embedded in queue index 
+            * Take long time to sync between nodes
+            * Time consuming to start a server with many msgs.
+        - Queues are single-thread (throughput of about 50000 messages / seconds)
+        - Max performance: One queue per core
+            * Consistent hash exchange plugin 
+            * RabbitMQ sharing 
+        - Consume (push), don't poll (pull) for messages
+        - Auto-ack or ack every X msgs instead of every msg 
+        - RabbitMQ management interface collects and stores stats for all queues 
+    
+    * Persistent messages 
+        - For a message to survive a server restart
+            * Durable exchange (most are)
+            * Durable queue 
+            * Persistent message (delivery_mode=2)
+        - For throughput use temporary, or non-durable queues
+    
+    
+    
+        
 RabbitMQ Cluster[2 nodes]
 -------------------------
     * All data/state required for the operation of a RabbitMQ broker is replicated across all nodes.An exception to this are message queues, which by default reside on one node, though they are visible and readchable from all nodes.
@@ -207,4 +257,9 @@ RabbitMQ CTL
 
 
 HAProxy
+-------
+
+
+
+Erlang [Erlang Programming Function Language]((/root/ilikeit/RabbitMQCrashCourse/erlang/README.md)
 -------
