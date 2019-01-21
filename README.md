@@ -49,6 +49,7 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 ### ![Don't Repeat Yourself](/imgs/dontRepeatYourself.png?raw=true) I Like It
 
 - [VPS - Virtual Private Server](/root/ilikeit/VPS/README.md)
+- [Design Patterns](/root/ilikeit/DesignPatterns/README.md)
 - [SSH - Secure Shell](/root/ilikeit/SSH/README.md)
 - [Vim Tips](root/ilikeit/vim/README.md)
 - [Vim+Tmux OMG!](/root/ilikeit/Vim+Tmux/README.md)

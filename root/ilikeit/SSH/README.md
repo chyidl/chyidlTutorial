@@ -159,7 +159,7 @@ The configuration for this is in the file "~/.ssh/config", create it if the conf
 $ vim ~/.ssh/config
 # add below content to the "~/.ssh/config" file
 Host *
-    ServerALiveInterval 240 
+    ServerAliveInterval 240 
 ```
 
 Also make sure to run:

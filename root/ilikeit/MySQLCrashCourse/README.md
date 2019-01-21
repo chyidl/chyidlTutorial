@@ -275,3 +275,26 @@ sync_binlog = 1 表示每次事务的binlog都持久化到磁盘。这样保证m
 
 Redo log记录做了什么改动，binlog有两种模式statement格式是记录SQL语句，row格式会记录行的内容，更新前和更新后。
 ```
+
+## Transaction isolation [事务隔离]
+```
+A transaction is a single unit of work. If a transaction is successful, all of the data modifications made during the transaction are committed and become a permanent part of the database. If a transaction encounters errors and must be canceled or rolled back, then all of the data modifications are erased.
+
+Check MySQL Storage Engines:
+MariaDB [(none)]> SHOW ENGINES;
++--------------------+---------+--------------------------------------------------------------------------------------------------+--------------+------+------------+
+| Engine             | Support | Comment                                                                                          | Transactions | XA   | Savepoints |
++--------------------+---------+--------------------------------------------------------------------------------------------------+--------------+------+------------+
+| MRG_MyISAM         | YES     | Collection of identical MyISAM tables                                                            | NO           | NO   | NO         |
+| CSV                | YES     | Stores tables as CSV files                                                                       | NO           | NO   | NO         |
+| MEMORY             | YES     | Hash based, stored in memory, useful for temporary tables                                        | NO           | NO   | NO         |
+| MyISAM             | YES     | Non-transactional engine with good performance and small data footprint                          | NO           | NO   | NO         |
+| SEQUENCE           | YES     | Generated tables filled with sequential values                                                   | YES          | NO   | YES        |
+| Aria               | YES     | Crash-safe tables with MyISAM heritage                                                           | NO           | NO   | NO         |
+| PERFORMANCE_SCHEMA | YES     | Performance Schema                                                                               | NO           | NO   | NO         |
+| InnoDB             | DEFAULT | Percona-XtraDB, Supports transactions, row-level locking, foreign keys and encryption for tables | YES          | YES  | YES        |
++--------------------+---------+--------------------------------------------------------------------------------------------------+--------------+------+------------+
+8 rows in set (0.00 sec)
+
+ACID: Atomicity[原子性], Consistency[一致性], Isolation[隔离性] and Duration[持久性]
+```

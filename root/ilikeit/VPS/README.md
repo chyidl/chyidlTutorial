@@ -91,4 +91,23 @@ Although swap is generally recommended for systems utilizing traditional spinnin
     - vm.vfs_cache_pressure=50     
 * Conclusion
     - Add Swap file give you some breathing room in cases that would otherwise lead to out-of-memory exceptions. Swap space can be incredibly useful in avoiding some of these common problem 
-    - If you are running into OOM(out of memory) errors, or if you find that system is unable to use the applications you need, the best solution is to optimize your application configurations or upgrade your server.                                                           
+    - If you are running into OOM(out of memory) errors, or if you find that system is unable to use the applications you need, the best solution is to optimize your application configurations or upgrade your server.   
+
+
+3. Setup the Date and Timezone
+----------------------------------
+
+Setting the correct date, time, time zone and synchronization are the first basic steps that you should perform when previsioning your Ubuntu 18.04 server for the first time.
+* Step 1: Checking your local Ubuntu time settings 
+    - $ timedatectl # check Ubuntu local time, time zone and synchronization status                                             
+
+* Step 2: Checking the list of available time zones on Ubuntu server 
+    - $ timedatectl list-timezones | less #  Asia/Hong_Kong 
+
+* Step 3: Changing the time zone on Ubuntu 
+    - $ sudo timedatectl set-timezone Asia/Hong_Kong 
+
+* Step 4: Enabling/Disabling time synchronization 
+    - Ubuntu the time synced daemon which connects to a pool of Network Time Protocol servers to get constant and accurate time updates.
+    - $ timedatectl # check **systemd-timesyncd.service active** status is already set to "yes". 
+    - $ sudo timedatectl set-ntp on/off # can turn on/off timesynced daemon by typing the command below.
