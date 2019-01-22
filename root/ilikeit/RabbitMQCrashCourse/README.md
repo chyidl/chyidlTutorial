@@ -261,5 +261,5 @@ HAProxy
 
 
 
-Erlang [Erlang Programming Function Language]((/root/ilikeit/RabbitMQCrashCourse/erlang/README.md)
+Erlang [Erlang Programming Function Language](/root/ilikeit/RabbitMQCrashCourse/erlang/README.md)
 -------
