@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+"""
+Example 1 - Logger Classes
+    The Singleton pattern is used in the design of logger classes. This classes are ussualy implemented as a singleton, and provides
+    a global logging access point in all the application components without being necessary to create an object each time a logging
+    operations is performed.
+"""
 import logging
 import os, sys
 import datetime
