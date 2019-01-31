@@ -1,0 +1,47 @@
+#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# 1.7.Keeping_Dictionaries_in_Order.py
+# ch01
+#
+# 🎂"Here's to the crazy ones. The misfits. The rebels.
+# The troublemakers. The round pegs in the square holes.
+# The ones who see things differently. They're not found
+# of rules. And they have no respect for the status quo.
+# You can quote them, disagree with them, glority or vilify
+# them. About the only thing you can't do is ignore them.
+# Because they change things. They push the human race forward.
+# And while some may see them as the creazy ones, we see genius.
+# Because the poeple who are crazy enough to think thay can change
+# the world, are the ones who do."
+#
+# Created by Chyi Yaqing on 01/25/19 14:21.
+# Copyright © 2019. Chyi Yaqing.
+# All rights reserved.
+#
+# Distributed under terms of the
+# MIT
+"""
+Problem:
+    create a dictionary, want to control the order of items when
+    iterating or serializing.
+Solution:
+    use OrderedDict from the collections module. It exactly preserver
+    the original insertion order of data when iterating.
+"""
+from collections import OrderedDict
+import json
+
+
+d = OrderedDict()
+d['foo'] = 1
+d['bar'] = 2
+d['spam'] = 3
+d['grok'] = 4
+
+# Outputs "foo 1", "bar 2", "spam 3", "grok 4"
+for key in d:
+    print(key, d[key])
+
+# JSON encoding
+print(json.dumps(d))
