@@ -137,3 +137,19 @@ Enable Redis to Start at Boot
 ```
 $ sudo systemctl enable redis 
 ```
+
+# To set the password, edit your redis.conf file 
+```
+find this line 
+# requirepass foobared  
+
+Then uncomment it and change foobared to your password. Make sure you choose something pretty long, 32 characters or so would probably be good, it's easy for an outside user to guess upwards of 150k passwords a second, as the notes in the config file mention, 
+
+$ sudo systemctl restart redis  
+
+Example:
+$ redis-cli 
+redis 127.0.0.1:6379> AUTH PASSWORD 
+Ok 
+
+```
