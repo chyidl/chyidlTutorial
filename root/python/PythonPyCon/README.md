@@ -31,4 +31,6 @@ A delightfully devilish tour through various metaprogramming features of Python.
 - [Python 3 Metaprogramming README](/root/python/PythonPyCon/Python3_Metaprogramming/README.md)
 
 
+### [Transforming Code into Beautiful,Idiomatic Python](https://www.youtube.com/watch?v=OSGv2VnC0go) Transforming Code into Beautiful,Idiomatic Python 
 
+- [Transforming Code into Beautiful,Idionmatic Python README](/root/python/PythonPyCon/TransformingCodeIntoBeautifulPython/README.md)

@@ -27,4 +27,17 @@ Problem:
 Solution:
     str.startswith() or str.endswith()
 """
+import os
+
+
 filename = 'spam.txt'
+print(filename.endswith('.txt'))
+print(filename.startswith('file:'))
+url = 'http://www.python.org'
+url.startswith('http:')
+
+# check against multiple choices
+filenames = os.listdir('.')
+print(filenames)
+print([name for name in filenames if name.endswith(('.c', '.py'))])
+print(any(name.endswith('.py') for name in filenames))
