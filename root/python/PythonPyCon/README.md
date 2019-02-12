@@ -34,3 +34,5 @@ A delightfully devilish tour through various metaprogramming features of Python.
 ### [Transforming Code into Beautiful,Idiomatic Python](https://www.youtube.com/watch?v=OSGv2VnC0go) Transforming Code into Beautiful,Idiomatic Python 
 
 - [Transforming Code into Beautiful,Idionmatic Python README](/root/python/PythonPyCon/TransformingCodeIntoBeautifulPython/README.md)
+
+- [CS50 on Twitch - Spell Checker](/root/python/PythonPyCon/SpellChecker/README.md)
