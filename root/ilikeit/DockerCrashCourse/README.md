@@ -21,11 +21,15 @@ The Main Difference Between Containers And VMs Is In Their Architectural.
 
         "bare metal hypervisor" : interfaces directly with the underlying hardware, it doesn't need a host operating system to run on. 
 ```
+
 ![](imgs/ilikeit/DockerCrashCourse/VirtualMachineDiagram.png?raw=true) Virtual Machine Diagram image
+
 ```
 Container : provides operating-system-level virtualization by abstacting the "user space". The one big difference between containers and VMs is that containers *share* the host system's kernel with other containers. 
 ```
+
 ![](imgs/ilikeit/DockerCrashCourse/ContainerDiagram.png?raw=true)Container Diagram image
+
 ```
 Docker: a helperful tool for packing, shipping, and running applications within "containers."
 ```
