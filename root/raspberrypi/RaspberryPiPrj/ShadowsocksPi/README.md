@@ -25,3 +25,51 @@ Shadowsocks
 的最初设计目的只是为了绕过GFW，而不是提供密码学意义的安全，所以Shadowsocks自行设计的加密协议对双方的身份验证仅限于预共享密钥，Shadowsocks不能代替TLS或者VPN，本质上只是设置了密码的网络代理协议，不能用作匿名通信的方案，该协议的目标不在于提供完整的通信安全机制，主要是为了协助上网用户在严苛的网络环境中突破封锁。在某些极端的环境下，通过深度包检测DPI也有可能识别出协议特征，为了确保安全，用户应做好额外的加密和验证措施，以免泄漏信息，无论使用的服务器来源是否可靠。2017年9月21日，《The Random Forest
 based Detection of Shadowsock's Traffic》的论文在IEEE发表，该论文介绍通过随机森林算法检测到Shadowsocks流量的方法，并自称可达到85%的检测精度，机器学习配合GFW已经实现深度数据包检测来识别网络流量特征的做法实际可行，而且还适用于网络代理协议而不仅仅局限于Shadowsocks.
 
+Quick Guide
+------
+Shadowsocks: A secure socks5 proxy, designed to protect your Internet traffic. Bleeding edge techniques using Asynchronous I/O and Event-driven programming. 
+
+* Config File: Shadowsocks accepts JSON format configs like this:
+```
+// shadowsocks.json 
+{
+    "server":"server_ip",
+    "port_password":{
+        "25000":"25000PASSWORD",
+        "25001":"25001PASSWORD",
+    },
+    "local_address":"0.0.0.0",
+    "local_port":1080,
+    "timeout":600,
+    "method":"aes-256-cfb"
+}
+
+Explanation of each field: 
+    server: your hostname or server IP (IPV4/IPv6)
+    server_port: server port number.
+    port_password: multi port and password.
+    local_port: local port number.
+    password: a password used to encrypt transfer.
+    timeout: connections timeout in seconds.
+    method: encryption method.
+```
+
+* /etc/systemd/system/shadowsocks.service: Shadowsocks Systemd Unit Files 
+```
+A unit file contains configuration directives that describe the unit and define its behavior. Serveral systemctl commands work with unit files in the background. the /etc/systemd/system/ directory is reserved for unit files created or customized by the system administrator.
+
+[Unit]
+Description=Shadowsocks Server 
+After=network.target
+ 
+[Service]
+ExecStart=/usr/local/bin/ssserver -c /etc/shadowsocks/shadowsocks.json 
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target 
+
+$ sudo systemctl start shadowsocks.service 
+$ sudo systemctl status shadowsocks.service 
+$ sudo systemctl enable shadowsocks.service
+```

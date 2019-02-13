@@ -87,6 +87,7 @@ $ sudo systemctl restart sshd
 ```
 $ ssh-keygen -t 'rsa' -C 'vps@goku163'
 $ ssh-copy-id -p [vps ssh port] vps@[vps public ip]
+$ ssh-copy-id -i ~/.ssh/id_rsa.pub -p 22 vps@public ip
 ```
 
 6. autossh.service (/etc/systemd/system/)
