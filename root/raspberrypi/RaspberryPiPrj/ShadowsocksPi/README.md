@@ -73,3 +73,20 @@ $ sudo systemctl start shadowsocks.service
 $ sudo systemctl status shadowsocks.service 
 $ sudo systemctl enable shadowsocks.service
 ```
+
+Advanced - Optimize the shadowsocks server on Linux 
+---------------------------------------------------
+
+```
+# First of all, upgrade your Linux kernel to 3.5 or later.
+$ uname -a 
+Linux ubuntu 4.15.0-43-generic #46-Ubuntu SMP Thu Dec 6 14:45:28 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+# Step 1, increase the maximum number of open file descriptors 
+# To handle thousands of concurrent TCP connections, we should increase the limit of file descriptors opened. 
+$ sudo vim /etc/security/limits.conf 
+    # Add these two lines 
+    * soft nofile 51200 
+    * hard nofile 51200 
+
+```
