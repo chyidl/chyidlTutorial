@@ -215,4 +215,22 @@ $ convert photo.jpg -print "Size: %wx%h\n" /dev/null
 # You can get the image dimensions of any image type from PNG to JPG to GIF to even PSDs.
 ```
 
+Spoofing a Mac Address in macOS Mojave 
+--------------------------------------
+```
+spoof a MAC address on a macOS computer running Majave. This is a technique for changing the factory-assigned physical Media Access Control(MAC) address of a network interface on a networked device to a random address.
 
+1) Determine the name of the Wi-Fi interface on your Mac 
+    Depending on the Mac you're using, the Wi-Fi interface can have one of several names, usually en0 or en1. 
+    hold down the Option key and click on the Wi-Fi icon on the menu bar 
+        Interface Name: eh0 
+2) Temporarily disable Wi-Fi
+    When spoofing the MAC address on our Mac, Wi-Fi must be temporarily disabled. 
+3) Launch Terminal 
+4) Verify the existing MAC address 
+    $ ifconfig en0 | grep ether 
+5) Generate a random hexadecimal number to serve as the "new" MAC address 
+    $ openssl rand -hex 6 | sed 's/\(..\)/\1:/g; s/.$//'
+6) Copy the random address from Terminal, then type the following command and paste the random address at the end before pressing Return 
+    $ sudo ifconfig en0 ether bd:5d:26:d9:4a:b2 
+```

@@ -123,5 +123,15 @@ net.ipv4.tcp_mtu_probing = 1
 net.ipv4.tcp_congestion_control = hybla
 
 $ sysctl -p # to reload the config at runtime
+```
 
+Prohibited Ping
+---------------
+```
+#禁止PING 
+$ sysctl -w net.ipv4.icmp_echo_ignore_all=1
+$ sysctl -p 
+#恢复PING
+$ sysctl -w net.ipv4.icmp_echo_ignore_all=0
+$ sysctl -p 
 ```

@@ -86,5 +86,69 @@ for i in range(n):
 
 
 """
-
+Method 2 (O(n1 + n2) Time and O(n1 + n2) Extra Space)
+    The idea is to use Merge function of Merge sort.
+    1. Create an array ar3[] of size n1 + n2
+    2. Simultaneously traverse ar1[] and ar2[].
+        Pick smaller of current elements in ar1[] and ar2[], copy this
+        smaller element to next position in ar3[] and move ahead in ar3[]
+        and the array whose element is picked.
+    3. If these are remaining elements in ar1[] or ar2[], copy them also in
+    ar3[]
 """
+
+
+# Python program to merge two sorted arrays with O(n1 + n2) Extra Space
+# Merge arr1[0..m-1] and arr2[0..n-1] into arr3[0..n+m-1]
+def merge_method2(ar1, ar2, m, n):
+    ar3 = [None] * (m + n)
+    i, j, k = 0, 0, 0
+    # Traverse both array
+    while i < m and j < n:
+        # Check if current elemnt of first array is smaller then current
+        # element of second array. If yes, store first array element and
+        # increment first array index. Otherwise do same with second array
+        if ar1[i] < ar2[j]:
+            ar3[k] = ar1[i]
+            k += 1
+            i += 1
+        else:
+            ar3[k] = ar2[j]
+            k += 1
+            j += 1
+
+    # Store remaining elements of first array
+    while i < m:
+        ar3[k] = ar1[i]
+        k += 1
+        i += 1
+
+    # Store remaining elements of second array
+    while j < n:
+        ar3[k] = ar2[j]
+        k += 1
+        j += 1
+
+    return ar3
+
+
+# Driver program
+ar1 = [1, 5, 9, 10, 15, 20]
+ar2 = [2, 3, 8, 13]
+m, n = len(ar1), len(ar2)
+
+print("\nMethod 2: Before Merging \n First Array:", end="")
+for i in range(m):
+    print(ar1[i], " ", end="")
+
+print("\nSecond Array: ", end="")
+for i in range(n):
+    print(ar2[i], " ", end="")
+
+print()
+print('='*20)
+ar3 = merge_method2(ar1, ar2, m, n)
+
+print("Array after merging\n")
+for i in range(m + n):
+    print(ar3[i], " ", end="")

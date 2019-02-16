@@ -7,10 +7,14 @@ Array
 ![Python3 Implement](/root/os/DSAA/DataStructuresAndAlgorithms/python/array_dynamic_append_implement.py)
 * Implementation an ordered array of fixed size, support dynamic additions and deletions 
 * Implementation two ordered arrays into one ordered array. 
+![Python3 array_merge_sorted_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/array_merge_sorted_implement.py)
 
 Linked-list
 -----------
 * Implement single-linked list, circular linked list, and doubly linked list to support addition and deletion operations 
+![Python3 linked_list_singly_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py)
+![Python3 linked_list_doubly_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_doubly_implement.py)
+![Python3 linked_list_circular_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_circular_implement.py)
 * Implement single-linked list reversed
 * Implementing two ordered linked lists into one ordered list 
 * Implement the intermediate node of the linked list 
