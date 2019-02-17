@@ -22,6 +22,8 @@ Linked-list
 Stack
 -----
 * Implement a sequential stack with arrays 
+![Python3 stack_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/stack_array_implement.py)
+![Python3 stack_linked_list_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/stack_linked_list_implement.py)
 * Implement a chain stack with a linked list 
 * Programming simulation to implement a browser's forward and backward functions
 
