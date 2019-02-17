@@ -53,6 +53,66 @@ To delete a node from linked list
     1) Find previous node of the node to be deleted
     2) Change the next of previous node
     3) Free memory for the node to be deleted
+
+Find Length of a Linked List
+count number of nodes in a given singly linked list
+    1) Initialize count as 0
+    2) Initialize a node pointer, current = head
+    3) Do following while current is not NULL
+        a) current = current -> next
+        b) count++
+    4) Return count
+Recursive Solution int getCount(head)
+    1) If head is NULL, return 0
+    2) Else return 1 + getCount(head->next)
+
+Search an element in a Linked List
+    1) Initialize a node pointer, current = head.
+    2) Do following while current is not NULL
+        a) current->key is equal to the key being searched return true
+        b) current = current->next
+    3) Return false
+
+Reverse a Linked List
+    1) Initialize three pointers prev as NULL, curr as head and next as NULL
+    2) Iterate trough the linked list. In loop, do following.
+        // Before changing next of current store next node
+        next = curr->next
+        // Now change next of current, This is where actual reversing happens
+        curr->next = prev
+        // Move prev and curr one step forward
+        prev = curr
+        curr = next
+
+Detect loop in a linked list Following are different ways of doing this:
+    1) Use Hashing
+        Traverse the list one by one and keep putting the node addresses in a
+        Hash Table. At any point, if NULL is reached then return false and if
+        next of current node points to any of the previously stored nodes in
+        Hash then return true.
+    2) Mark Visited Nodes:
+        This solution requires modifications to basic linked list data
+        structure. Have a visited flag with each node. Traverse the linked list
+        and keep marking visited nodes. If you see a visited node again then
+        there is a loop. This solution works in O(n) but requires additional
+        information with each node.
+
+Floyd's Cycle-Finding Algorithm
+    This is the fastest method, Traverse linked list using two pointers. Move
+    one pointer by one and other pointer by two. If these pointers meet at same
+    node then there is a loop. if pointers do not meet then linked list doesn't
+    have loop
+
+Find the middle of a given linked list
+    1) Traverse the whole linked list and count the no. of nodes. Now traverse
+    the list again till count/2 and return the node at count/2
+
+    2) Traverse linked list using two pointers. Move one pointer by one and
+    other pointer by two. When the fast pointer reaches and slow pointer will
+    reach middle of the linked list.
+
+Merge two sorted lists (in-place)
+
 """
 
 
@@ -70,7 +130,7 @@ class Node:
 class LinkedList:
     # Function to initialize head
     def __init__(self):
-        self.head = None
+        self.head = None  # Initialize head as None
 
     # Function to insert a new node at the beginning
     def push(self, new_data):
@@ -145,6 +205,82 @@ class LinkedList:
         prev.next = temp.next
         temp = None
 
+    # This Function checks whether the value x present in the linked list
+    def search(self, x):
+        # Initialize current to head
+        current = self.head
+
+        # loop till current not equal to None
+        while current is not None:
+            if current.data == x:
+                return True  # data found
+
+            current = current.next
+
+        return False  # Data Not found
+
+    # Function to reverse the linked list
+    def reverse(self):
+        prev = None
+        current = self.head
+        while (current is not None):
+            next = current.next
+            current.next = prev
+            prev = current
+            current = next
+        self.head = prev
+
+    def detectLoop(self):
+        s = set()
+        temp = self.head
+        while (temp):
+            # If we have already has this node in hashmap it means their is
+            # cycle (Because you we encountering the node second time).
+            if (temp in s):
+                return True
+
+            # If we are seeing the node for the first time, insert it in
+            # hash
+            s.add(temp)
+
+            temp = temp.next
+
+    # Implementation of Floyd's Cycle-Finding Algorithm
+    def detectLoopFloyd(self):
+        slow_p = self.head
+        fast_p = self.head
+        while(slow_p and fast_p and fast_p.next):
+            slow_p = slow_p.next
+            fast_p = fast_p.next.next
+            if slow_p == fast_p:
+                print("Found Loop")
+                return
+
+    # This function counts number of nodes in Linked List iterative,
+    # given 'node' as starting node.
+    def getCount(self):
+        temp = self.head  # Initialise temp
+        count = 0  # Initialise count
+
+        # Loop while end of linked list is not reached
+        while (temp):
+            count += 1
+            temp = temp.next
+        return count
+
+    # Function to get the middle of the linked list
+    def middle(self):
+        slow_p = self.head
+        fast_p = self.head
+
+        if self.head is not None:
+            while fast_p is not None and fast_p.next is not None:
+                fast_p = fast_p.next.next
+                slow_p = slow_p.next
+            print("The middle element is [{}]\n".format(slow_p.data))
+        else:
+            print("the linked list is NULL, so no middle node")
+
     # Utility function to print the linked Linked List
     def printList(self):
         temp = self.head
@@ -177,6 +313,24 @@ if __name__ == '__main__':
 
     print("Created Linked list is:")
     llist.printList()
+    llist.reverse()
+    print("\nReversed Linked List")
+    llist.printList()
     llist.deleteNode(7)
     print("\nLinked List after Deletion of 1:")
     llist.printList()
+
+    if llist.search(1):
+        print("\nYes")
+    else:
+        print("\nNo")
+
+    if (llist.detectLoop()):
+        print("Loop found")
+    else:
+        print("No Loop")
+
+    llist.detectLoopFloyd()
+    llist.printList()
+    print("\nCount of nodes is :", llist.getCount())
+    llist.middle()

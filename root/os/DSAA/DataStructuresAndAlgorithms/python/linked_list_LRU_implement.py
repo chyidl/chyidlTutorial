@@ -52,31 +52,29 @@ $ python3 -m cProfile -o file.prof script.py  # SAVE
 RunSnakeRun is a small GUI utility that allows you to view (Python) cProfile or
 Profile profiler dumps in a sortable GUI view.
 """
+import collections
 
 
 class LRUCache:
     def __init__(self, capacity):
         self.capacity = capacity
-        self.tm = 0
-        self.cache = {}  # store the (key, value)
-        self.lru = {}
+        self.cache = collections.OrderedDict()  # store the (key, value)
 
     def get(self, key):
-        if key in self.cache:
-            self.lru[key] = self.tm
-            self.tm += 1
-            return self.cache[key]
-        return -1
+        try:
+            value = self.cache.pop(key)
+            self.cache[key] = value
+            return value
+        except KeyError:
+            return -1
 
     def set(self, key, value):
-        if len(self.cache) >= self.capacity:
-            # find the LRU entry
-            old_key = min(self.lru.keys(), key=lambda k: self.lru[k])
-            self.cache.pop(old_key)
-            self.lru.pop(old_key)
+        try:
+            self.cache.pop(key)
+        except KeyError:
+            if len(self.cache) >= self.capacity:
+                self.cache.popitem(last=False)
         self.cache[key] = value
-        self.lru[key] = self.tm
-        self.tm += 1
 
 
 def naive_lru_cache():
