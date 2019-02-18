@@ -42,6 +42,15 @@ Implementing Stack using Linked List
     Pros:The linked list implementation of stack can grow and shrink according
         to needs at runtime.
     Cons: Requires extra memory due to involvement of points
+
+Using a stack to evaluate postfix
+    1) Starting at the beginning of the expression, get one term (operator or
+    operand) at a time.
+        a) If the term is an operand, push it on the stack.
+        b) If the term is an operator, pop two operands off the stack, perform
+        the operation on them, and push the result back on the stack
+    2) When you get to the end of the expression, there should be exactly one
+    operand left on the stack. That operand is the result.
 """
 # Python program for linked list implementation of Stack
 
@@ -55,19 +64,24 @@ class StackNode:
 
 
 class Stack:
+
     # Constructor to initialize the root of linked list
     def __init__(self):
         self.root = None
 
+    # Check whether the stack is empty
     def isEmpty(self):
         return True if self.root is None else False
 
+    # Add a new item to the stack
     def push(self, data):
         newNode = StackNode(data)
         newNode.next = self.root
         self.root = newNode
         print("pushed {} to stack".format(data))
 
+    # Remove the return an item from the stack. The item that is returned is
+    # always the last one that was added.
     def pop(self):
         if (self.isEmpty()):
             return float("-inf")

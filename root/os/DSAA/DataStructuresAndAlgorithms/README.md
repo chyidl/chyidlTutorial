@@ -37,7 +37,9 @@ Heap
 Queue
 -----
 * Implement an order queue with arrays 
+![Python3 queue_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/queue_array_implement.py)
 * Implement a chained queue with a linked list 
+![Python3 queue_linked_list_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/queue_linked_list_implement.py)
 * Implement a circular queue 
 
 Binary Tree
@@ -56,12 +58,15 @@ Graph
 Recursive
 ---------
 * Programming to achieve Fibonacci sequence evaluation 
+![Python3 recursion_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/recursion_implement.py)
 * Programming to achieve factorial 
 * Programming implements a full array of data sets 
 
 Sort
 ----
 * Implement merge sort, quick sort, insert sort, bubble sort, select sort
+![Python3 sort_bubble_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_bubble_implement.py)
+![Python3 sort_insert_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_insert_implement.py)
 * Programming to achieve the Kth element of a set of data within O(n) time complexity
 
 Binary search 
