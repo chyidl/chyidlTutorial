@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# sort_quick_array_implement.py
+# sort_bucket_quicksort_array_implement.py
 # python
 #
 # 🎂"Here's to the crazy ones. The misfits. The rebels.
@@ -15,7 +15,7 @@
 # Because the poeple who are crazy enough to think thay can change
 # the world, are the ones who do."
 #
-# Created by Chyi Yaqing on 02/18/19 18:10.
+# Created by Chyi Yaqing on 02/19/19 10:34.
 # Copyright © 2019. Chyi Yaqing.
 # All rights reserved.
 #
@@ -23,33 +23,18 @@
 # MIT
 
 """
-QuickSort is a Divide and Conquer algorithm. It picks an element as pivot and
-partitions the given array around the picked pivot. There are many different
-versions of quickSort that pick pivot in different ways.
-    1. Always pick first element as pivot
-    2. Always pick last element as pivot (implemented below)
-    3. Pick a random element as pivot
-    4. Pick median as pivot.
+Bucket Sort is mainly useful when input is uniformly distributed over a range.
 
-Pseudo Code for recursive QuickSort function:
-    /* low --> Starting index, high --> Ending index */
-    quickSort(arr[], low, high)
-    {
-        if (low < high)
-        {
-            /* pi is partitioning index, arr[pi] is now
-            at right place */
-            pi = partition(arr, low, high)
-
-            quickSort(arr, low, pi- 1) // Before pi
-            quickSort(arr, pi + 1, high)// After pi
-        }
-    }
-
-Partition Algorithm:
+bucketSort(arr[], n)
+    1) Create n empty buckets (Or lists).
+    2) Do following for every array element arr[i].
+        Insert arr[]i into bucket[n*array[i]]
+    3) Sort indicidual buckets using quick sort
+    4) Concatenate all sorted buckets.
 """
 
 
+# Python3 program to sort an array using bucket sort
 # Python program for implementation of Quicksort Sort
 # This function takes last element as pivot, places the pivot element
 # at its correct position in sorted array, and places all smaller (smaller
@@ -85,8 +70,33 @@ def quickSort(arr, low, high):
         quickSort(arr, pi+1, high)
 
 
-# Driver code to test above
-arr = [10, 7, 5, 8, 9, 1, 5]
-print("Original array is {}".format(arr))
-quickSort(arr, 0, len(arr)-1)
-print("Sorted array is {}".format(arr))
+def bucketSort(x):
+    arr = []
+    slot_num = 10  # 10 means 10 slots, each slot's size is 0.1
+    for i in range(slot_num):
+        arr.append([])
+
+    # Put array elements in different buckets
+    for j in x:
+        index_b = int(slot_num * j)
+        arr[index_b].append(j)
+
+    # Sort individual buckets
+    for i in range(slot_num):
+        if arr[i]:
+            quickSort(arr[i], 0, len(arr[i])-1)
+
+    # concatenate the result
+    k = 0
+    for i in range(slot_num):
+        if arr[i]:
+            for j in range(len(arr[i])):
+                x[k] = arr[i][j]
+                k += 1
+
+
+# Driver Code
+x = [0.897, 0.565, 0.656, 0.1234, 0.665, 0.3434]
+print("Original array is {}".format(x))
+bucketSort(x)
+print("Sorted array is {}".format(x))

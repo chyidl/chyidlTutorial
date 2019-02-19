@@ -65,8 +65,11 @@ Recursive
 Sort
 ----
 * Implement merge sort, quick sort, insert sort, bubble sort, select sort
-![Python3 sort_bubble_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_bubble_implement.py)
-![Python3 sort_insert_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_insert_implement.py)
+![Python3 sort_bubble_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_bubble_array_implement.py)
+![Python3 sort_insert_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_insert_array_implement.py)
+![Python3 sort_selection_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_selection_array_implement.py)
+![Python3 sort_merge_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_merge_array_implement.py)
+![Python3 sort_quick_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_quick_array_implement.py)
 * Programming to achieve the Kth element of a set of data within O(n) time complexity
 
 Binary search 
