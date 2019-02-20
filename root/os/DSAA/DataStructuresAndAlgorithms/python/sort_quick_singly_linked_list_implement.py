@@ -28,6 +28,8 @@ The important things aboyt implementation are, it changes pointers rather
 swapping data and time complexity is same as the implementation for Doubly
 Linked List.
 """
+
+
 # Node class
 class Node:
     # Function to initialize the ndoe object
@@ -37,7 +39,7 @@ class Node:
 
 
 # Singly Linked list class contains a Node object
-class LinkedList:
+class SinglyLinkedList:
     # Function to initialize head
     def __init__(self):
         self.head = None  # Initialize head as None
@@ -55,7 +57,6 @@ class LinkedList:
 
         # 4. Move the head to point to new Node
         self.head = new_node
-
 
     # Inserts a new node after the given prev_node.
     def insertAfter(self, prev_node, new_data):
@@ -194,7 +195,7 @@ class LinkedList:
                 slow_p = slow_p.next
             print("The middle element is [{}]\n".format(slow_p.data))
         else:
-            print("the linked list is NULL, so no middle node")
+            print("the linked list is None, so no middle node")
 
     # Utility function to print the linked Linked List
     def printList(self):
@@ -203,13 +204,17 @@ class LinkedList:
         while temp:
             print(' -> ', temp.data, end='')
             temp = temp.next
-        print(" NULL", end='')
+        print(" None", end='')
 
 
-find_before(first, last, ):
+# Find the before
+def find_before(first, last, search_node):
     current = first
     while current is not last.next:
-        if current.next is
+        if current.next == search_node:
+            return current
+        current = current.next
+    return None
 
 
 def swap(A, B):
@@ -219,7 +224,7 @@ def swap(A, B):
     B.data = temp
 
 
-def partition(llist, head, end):
+def partition(head, end):
     # Partitions the list taking the last element as the pivot
     pivot = end
     switcher, current = head, head
@@ -235,13 +240,24 @@ def partition(llist, head, end):
     return switcher
 
 
-def quickSort(llist):
-    print("quick sort was called")
-    llist.printList()
-    head = llist.head
-    tail = llist.tail
-    if llist.head.next is not llist.tail:
+def quickSort(head, tail):
+    if head.next is not tail:
         m = partition(head, tail)
         quickSort(m.next, tail)
-        lower = find
+        mprev = find_before(head, tail, m)
+        quickSort(head, mprev)
 
+
+# Driver program to test above functions
+if __name__ == '__main__':
+    slist = SinglyLinkedList()
+    slist.push(5)
+    slist.push(20)
+    slist.push(4)
+    slist.push(3)
+    slist.push(30)
+    print("Original Singly Linked List")
+    slist.printList()
+    quickSort(slist.head, slist.tail)
+    print("\n\nSorted Singly Linked List")
+    slist.printList()
