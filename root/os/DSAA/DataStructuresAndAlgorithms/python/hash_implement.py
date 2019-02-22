@@ -56,5 +56,40 @@ Collision Handling:
         i*hash2(x) slot in i'th rotation
 
 Hashing in Distributed Systems:
+    A distributed system is a network that consists of autonomous computers
+    that are connected using a distribution middleware. They help in sharing
+    different resources and capabilities to provide users with a single and
+    integrated coherent network.
 
+    The hash function can be defined as node_number = hash(key)mod_N where N
+    is the number of Nodes.
+
+Consistent Hashing:一致性哈希算法
+    This method operates independently of the number of nodes as the hash
+    function is not dependent on the number of nodes.
+
+    The hash value can be computed as position_on_chain = hash(key)mod_360
+Steps for the arrangement -
+    1) Find Hash values of the keys and place it on the ring according to the
+    hash value.
+    2) Find Hash values of the individual nodes and place it on the ring
+    according to the hash value.
+    3) Now map each key with the node which is closest to it in the
+    counter-clockwise disrection
+    4) If the position of a node and key is same, assign that key to the node.
+
+This is how consistent hashing sloves the rehashing problem. The number of keys
+which needs to be redistributed after rehashing is minimized.
+
+MPI - Distributed Computing
+    Advantages of Distributed Computing
+        1) Highly efficient
+        2) Scalability
+        3) Less tolerant to failures
+        4) High Availability
+
+    What is MPI?
+        Message Passing Interface(MPI) is a standardized and portable
+        message-passing system developed for distributed and parallel
+        computing.
 """
