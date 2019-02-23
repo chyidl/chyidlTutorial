@@ -15,6 +15,8 @@
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)
 
-FAQ - Frequently asked questions 
+Easter Egg Program
+- [easter egg program](/root/raspberrypi/RaspberryPiPrj/easterEgg/README.md)
 
+FAQ - Frequently asked questions 
 - [FAQ](/root/raspberrypi/RaspberryPiPrj/FAQ.md)
