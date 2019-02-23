@@ -34,5 +34,4 @@ else:
     print("before broadcasting: process %d has %s" % (rank, data))
 
 comm.Bcast(data, root=0)
-
 print("after broadcasting: process %d has %s" %(rank, data))
