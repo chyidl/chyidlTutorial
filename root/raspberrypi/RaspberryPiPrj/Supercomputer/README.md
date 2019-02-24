@@ -1,7 +1,6 @@
 Build a Supercomputer with Raspberry Pi's
 =========================================
-
-If you've build and own a supercomputer is not enough, that's fine. you will also learn about networking and parallel processing.
+How to create your own Raspberry Pi cluster for parallel computing via MPI(Messaging Passing Interface) library. Message Passing Interface(MPI) is a standardized and portable message-passing standard designed to exchange messages between multiple computers running a parallel program across distributed memory.
 
 Parallel Computing
 ------------------
@@ -25,24 +24,37 @@ Bitcoin network is the largest supercomputing network: No central server, as the
         MPI - Message Passing Interphase, Share data, variables, and work in a synchronized fashion.
 ```
 
-Running an MPI CLuster within a LAN on Raspberry Cluster
----------------------------------------------------
+How to Build Raspberry Pi Supercomputer With Raspberry Pi Cluster?
+------------------------------------------------------------------
 ```
 2+ Raspberry Pis, One of the Pis will be the master node, the rest are worker nodes.
+    $ cat /etc/os-release 
+PRETTY_NAME="Raspbian GNU/Linux 9 (stretch)"
+NAME="Raspbian GNU/Linux"
+VERSION_ID="9"
+VERSION="9 (stretch)"
+ID=raspbian
+ID_LIKE=debian
+HOME_URL="http://www.raspbian.org/"
+SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
+BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
 
-Step 1: Configure your hosts file 
-    $ cat /etc/hosts 
+In this case, select Python, as it has plenty of libraries available and also a nice integration with MPI via **mpi4py** library.
+```
 
-Downloading and installing MPICH3 
-MPICH, the MPI iplementation from Argonne National Laboratory.
-    $ sudo apt-get update  # update the system 
-    $ sudo apt-get dist-upgrade  # update packages 
-    $ sudo mkdir mpich3 && cd ~/mpich3  # create the folder for mpich3 
-    $ sudo wget http://www.mpich.org/static/downloads/3.3/mpich-3.3.tar.gz  # download the version 3.3 of mpich 
-
-# From a Standing Start to Running an MPI program 
-
+Installing MPICH3
+-----------------
+```
+# Downloading and installing MPICH3 (install version 3.3)
+# MPICH, the MPI iplementation from Argonne National Laboratory.
+    $ sudo apt-get update  			# update the system 
+    $ sudo apt-get dist-upgrade  	# update packages 
+	# create the folder for mpich3
+    $ sudo mkdir mpich3 && cd ~/mpich3   
+    # download the version 3.2 of mpich 
+	$ sudo wget http://www.mpich.org/static/downloads/3.3/mpich-3.3.tar.gz 
     $ sudo tar xfz mpich-3.3.tar.gz  # Unpack the tar file
+	# create folders for mpi
     $ mkdir ~/mpich-install  # Choose an installation directory (the default is /usr/local/bin)
     $ mkdir ~/mpich-build  # Choose a build directory 
     # Configure MPICH, specifying the installation directory, and running the configure script in the source directory, c.txt is created by configure and contains a record of the tests that configure performed.
@@ -53,23 +65,53 @@ MPICH, the MPI iplementation from Argonne National Laboratory.
     $ PATH=~/mpich-install/bin:$PATH && export PATH 
     # Check that you can reach these machines with ssh or rsh without entering a password.
     $ which mpicc && which mpiexec 
+	# Test that MPI works 
+	$ mpiexec -n 1 hostname 
+```
 
-Step 3: Setting up SSH 
+Installing mpi4py
+-----------------
+```
+	# These steps will allow you to install MPI4py to your Raspbian stretch distro
+	$ sudo apt-get install python3-mpi4py 
+	[helloworld.py](/root/raspberrypi/RaspberryPiPrj/Supercomputer/mpi_helloworld.py)
+	# Test that MPI works on your device 
+	$ mpiexec -n 5 python3 mpi_helloworld.py
+Hello world from process 0 at RPi3B.
+Hello world from process 0 at RPi3B.
+Hello world from process 0 at RPi3B.
+Hello world from process 0 at RPi3B.
+```
+
+Configuring SSH keys for each RPi
+---------------------------------
+```
+you need to be able to command each RPi without using users/passwords. To do this, you will have to generate SSH keys for each RPi and then share each key to each device under authroized devices. By doing this, MPI will be able to communicate with each device without bothering about credentials. 
+	# Setting up SSH 
 # Check that you can reach these machine with ssh or rsh without entering a password
     $ ssh-keygen -t 'rsa' -C 'mpi-master'
     $ ssh-copy-id mpi@mpi-node_public_ip
     # test by doing below, if you cannot get this to work without entering a password, you will need to configure ssh or rsh so that this can be done. 
     $ ssh othermachine date 
 
-Step 4: Setting up NFS
-    You share a directory via NFS in master which the client mounts to exchange data.
-
 
 # Test the setup you just created:
     # A machinefile is a file that contains a list of the possible machine on which you want your MPI program to run.
     $ mpiexec -f machinefile -n <number> hostname
-    $ cat machinefile 
-        host1   # Run 1 process on host1
-        host2:4 # Run 4 processes on host2
-        host3:2 # Run 2 processes on host3 
+	# add the following IP address(or hostname). This will be used by the MPICH3 to communicate and send/receive messages between various nodes.
+    $ vim machinefile 
+        host1:4  # Run 4 process on host1
+        host2:4  # Run 4 processes on host2
+	# Testing the cluster (If everything is configured correctly, the following command should work fine)
+	$ mpiexec -f mpi_machinefile -n 8 hostname
+RPi3B
+RPi3B
+RPi3B
+RPi3B
+RPi2B
+RPi2B
+RPi2B
+RPi2B
 ```
+
+Now, your system is ready to take any parallel computing application that you wnat to develop.

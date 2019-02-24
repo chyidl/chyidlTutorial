@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# bradcast.py
+# Bradcast.py
 # Supercomputer
 #
 # 🎂"Here's to the crazy ones. The misfits. The rebels.
@@ -15,10 +15,11 @@
 # Because the poeple who are crazy enough to think thay can change
 # the world, are the ones who do."
 #
-# Created by Chyi Yaqing on 02/22/19 23:26.
+# Created by Chyi Yaqing on 02/22/19 23:47.
 # Copyright © 2019. Chyi Yaqing. All rights reserved.
 #
 # Distributed under terms of the MIT
+import numpy as np
 from mpi4py import MPI
 
 
@@ -26,12 +27,11 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 
 if rank == 0:
-    data = {'key1': [7, 2.72, 2+3j],
-            'key2': ('abc', 'xyz')}
-    print("before broadcasting: process %d has %s" % (rank, data))
+    data = np.arange(10, dtype='i')
+    print("before broadcasting: process %d has %s" %(rank, data))
 else:
-    data = None
+    data = np.zeros(10, dtype='i')
     print("before broadcasting: process %d has %s" % (rank, data))
 
-data = comm.bcast(data, root=0)
+comm.Bcast(data, root=0)
 print("after broadcasting: process %d has %s" %(rank, data))

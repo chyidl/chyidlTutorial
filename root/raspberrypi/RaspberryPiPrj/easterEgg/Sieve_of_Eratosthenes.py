@@ -23,10 +23,20 @@
 # MIT
 
 """
+A prime number (or a prime) is a nature number greater than 1 that cannot be
+formed by multiplying two smaller natural numbers.
+
 埃拉托斯特尼筛法 (Sieve of Eratosthenes),是希腊数学家提出的一种简单鉴定素数的算法
 
 Given a number n, print all primes smaller than or equal to n. It is also given
 that n is  a small number.
+
+Algorithm:
+    1) Create a list of consecutive integers from 2 to n: (2, 3, 4,...,n)
+    2) Initially, let p equal 2, the first prime number
+    3) Starting from p^2, count up in crements of p and mark each of these
+        numbers greater than or equal to p^2 itself in the list, These numbers
+        will be
 """
 import sys
 
@@ -37,17 +47,17 @@ def sieveOfEratosthenes(n):
     # Create a boolen array "prime[0..n]" and initialize all entries it as true
     # A value in prime[i] will finally be false if i is Not a prime, else true
     prime = [True for i in range(n+1)]
-    p = 2
-    while (p*p <= n):
+    p = 2  # the first prime number
+    while (p**2 <= n):
         # If prime[p] is not changed, then it is a prime
         if (prime[p] is True):
             # Update all multiples of p
-            for i in range(p * 2, n+1, p):
+            for i in range(p**2, n+1, p):
                 prime[i] = False
         p += 1
 
     # Print all prime numbers
-    for p in range(2, n):
+    for p in range(2, n+1):
         if prime[p]:
             print(p, end=",")
 
