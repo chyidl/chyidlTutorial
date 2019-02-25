@@ -11,6 +11,7 @@
 - [Install ShadowSocks and Configure Proxy](/root/raspberrypi/RaspberryPiPrj/ShadowsocksPi/README.md)
 - [Apple Airplay on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/Airplay/README.md)
 - [Nokia 5110/3310 LCD Python](/root/raspberrypi/RaspberryPiPrj/Nokia5110/README.md)
+- [SuperComputer Rasp Cluster](/root/raspberrypi/RaspberryPiPrj/Supercomputer/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)
