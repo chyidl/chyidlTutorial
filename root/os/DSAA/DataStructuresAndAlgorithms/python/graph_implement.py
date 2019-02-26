@@ -95,50 +95,78 @@ class Graph:
         node.next = self.graph[dest]
         self.graph[dest] = node
 
-    # Function to print a BFS of graph
-    def breadth_first_search(self, src):
+    # Function to print a BFS of graph from src to dst  广度优先
+    def breadth_first_search(self, src, dst):
+        if src == dst:
+            return
         # Mark all the virtices as not vistied
         visited = [False] * (len(self.graph))
         # Create a queue for BFS
         queue = []
+        # 用来记录搜索路径
+        prev = [-1] * (len(self.graph))
         # Mark the source node as  visited and enqueue it
         queue.append(src)
         visited[src] = True
 
         while queue:
             # Dequeue a vertex from queue and print it
-            src = queue.pop(0)
-            print(src, end=" ")
+            s = queue.pop(0)
 
             # Get all adjacent vertices of the dequeued vertex s. If a adacent
             # has not been visited, then mark it visited and enqueue it
-            travl = self.graph[src]
-            while travl.next:
+            travl = self.graph[s]
+            while travl:
                 if visited[travl.vertex] is False:
+                    prev[travl.vertex] = s
+                    if travl.vertex == dst:
+                        print("PREV: {}".format(prev))
+                        self.print_bft(prev, src, dst)
+                        return
                     queue.append(travl.vertex)
                     visited[travl.vertex] = True
                 travl = travl.next
 
-    # A function used by DFS
-    def depth_first_searchUtil(self, v, visited):
+    def print_bft(self, prev, s, dst):
+        if prev[dst] != -1 and dst != s:
+            self.print_bft(prev, s, prev[dst])
+        print(dst, end=" ")
+
+    # A function used by DFS (深度优先搜索路径并不是最短路径)
+    def depth_first_search_recur(self, src, dst, visited, prev, found):
+        if found is True:
+            return
         # Mark the current node as visited and print it
-        visited[v] = True
-        print(v, end=" ")
+        visited[src] = True
+        if src == dst:
+            found = True
+            return
 
         # Recur for all the vertices adjacent to this vertex
-        travl = self.graph[v]
-        while travl.next:
+        travl = self.graph[src]
+        while travl:
             if visited[travl.vertex] is False:
-                self.depth_first_searchUtil(travl.vertex, visited)
+                prev[travl.vertex] = src
+                self.depth_first_search_recur(
+                        travl.vertex, dst, visited, prev, found)
             travl = travl.next
 
-    # The function to do DFS traversal. It uses recursive DFSUtil
-    def depth_first_search(self, v):
+    # The function to do depth_first_search traversal.
+    # It uses recursive depth_first_search_recur
+    def depth_first_search(self, src, dst):
+        found = False  # Mark end
         # Mark all the vertices as not visited
         visited = [False]*(len(self.graph))
-
+        # 用来记录搜索路径
+        prev = [-1]*(len(self.graph))
         # Call the recursive helper function to print DFS traversal
-        self.depth_first_searchUtil(v, visited)
+        self.depth_first_search_recur(src, dst, visited, prev, found)
+        self.print_dft(prev, src, dst)
+
+    def print_dft(self, prev, s, dst):
+        if prev[dst] != -1 and dst != s:
+            self.print_dft(prev, s, prev[dst])
+        print(dst, end=" ")
 
     # Function to print the graph
     def printGraph(self):
@@ -153,19 +181,22 @@ class Graph:
 
 # Driver program to the above graph class
 if __name__ == "__main__":
-    V = 5
+    V = 9
     graph = Graph(V)
-    graph.add_edge(0, 1)
-    graph.add_edge(0, 2)
     graph.add_edge(1, 2)
-    graph.add_edge(2, 0)
+    graph.add_edge(1, 4)
     graph.add_edge(2, 3)
-    graph.add_edge(3, 3)
+    graph.add_edge(3, 5)
+    graph.add_edge(4, 5)
+    graph.add_edge(5, 6)
+    graph.add_edge(5, 7)
+    graph.add_edge(6, 8)
+    graph.add_edge(7, 8)
 
     graph.printGraph()
 
-    print("\nFollowing is Breadth First Traversal (starting from vertex 2)")
-    graph.breadth_first_search(2)
+    print("\nFollowing is Breadth First Traversal (starting from vertex 1)")
+    graph.breadth_first_search(1, 7)
 
-    print("\nFollowing is Depth First Travers from (starting from vertex 2)")
-    graph.depth_first_search(2)
+    print("\nFollowing is Depth First Travers from (starting from vertex 0)")
+    graph.depth_first_search(1, 8)

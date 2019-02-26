@@ -23,28 +23,75 @@
 # MIT
 
 """
+https://brilliant.org/wiki/rabin-karp-algorithm/
+
 Rabin-Karp Algorithm for Pattern Searching
     Given a text txt[0..n-1] and a pattern pat[0..m-1], write a function
     search(char pat[], char txt[]) that prints all occurrences of pat[] in
     txt[]. You may assume that n > m
 
-Rabin Karp algorithm matches the hash value of the pattern with the hash value
-of current substring of text, and if the hash values match then only it starts
-matching individual characters. So Rabin Karp algorithm needs to calculate hash
-values for following strings.
+The Rabin-Karp algorithm is a string searching algrithm that uses hashing to
+find patterns in strings. A string is an abstract data type that consists or
+a sequence of characters. Letters, words, sentences, and more can be represente
+as strings.
 
+The Rabin-Karp algorithm makes use of hash functions and the rolling hash
+technique. A hash function is essentially a function that maps one thing to a
+value. In particular, hashing can map data of arbitrary size to value of fixed
+size.
+
+A rolling hash allows an algorithm to calculate a hash value without having the
+rehash the entire string.
 """
-# Following program is the python implementation of Rabin Karp Algorithm given
-# d is the number of characters in the input alphabet
-d = 256
-
-# pat   -> pattern
-# txt   -> text
-# q     -> A prime number
 
 
-def rabin_karp_search(pat, txt, q):
-    M, N = len(pat), len(txt)
-    p = 0  # hash value for pattern
-    t = 0  # hash value for txt
+class RollingHash:
+    def __init__(self, text, sizeWord):
+        self.text = text
+        self.hash = 0
+        self.sizeWord = sizeWord
 
+        for i in range(0, sizeWord):
+            # ord maps the character to a number
+            # substrct out the ASCII value of "a" to start the indexing at zero
+            self.hash += (ord(self.text[i]) - ord("a")+1)*(26**(sizeWord-i-1))
+
+        # start index of current window
+        self.window_start = 0
+        # end of index window
+        self.window_end = sizeWord
+
+    def move_window(self):
+        if self.window_end <= len(self.text) - 1:
+            # remove left letter from hash value
+            self.hash -= (ord(self.text[self.window_start]) - ord("a")+1)*26**(
+                    self.sizeWord-1)
+            self.hash *= 26
+            self.hash += ord(self.text[self.window_end]) - ord("a")+1
+            self.window_start += 1
+            self.window_end += 1
+
+    def window_text(self):
+        return self.text[self.window_start:self.window_end]
+
+
+def rabin_karp(word, text):
+    if word == "" or text == "":
+        return None
+    if len(word) > len(text):
+        return None
+
+    rolling_hash = RollingHash(text, len(word))
+    word_hash = RollingHash(word, len(word))
+
+    for i in range(len(text) - len(word) + 1):
+        if rolling_hash.hash == word_hash.hash:
+            if rolling_hash.window_text() == word:
+                return i
+        rolling_hash.move_window()
+    return None
+
+
+if __name__ == "__main__":
+    print(rabin_karp("a", "abcdefgh"))
+    print(rabin_karp("cpu", "ballcpuaspcpucpu"))
