@@ -42,6 +42,10 @@ size.
 
 A rolling hash allows an algorithm to calculate a hash value without having the
 rehash the entire string.
+
+RK 算法包含两部分：计算字串哈希值 + 模式串哈希值与子串哈希值比较
+RK 算法时间复杂度：O(n)
+RK 算法空间复杂度:
 """
 
 
@@ -50,7 +54,7 @@ class RollingHash:
         self.text = text
         self.hash = 0
         self.sizeWord = sizeWord
-
+        
         for i in range(0, sizeWord):
             # ord maps the character to a number
             # substrct out the ASCII value of "a" to start the indexing at zero
@@ -77,9 +81,9 @@ class RollingHash:
 
 def rabin_karp(word, text):
     if word == "" or text == "":
-        return None
+        return
     if len(word) > len(text):
-        return None
+        return
 
     rolling_hash = RollingHash(text, len(word))
     word_hash = RollingHash(word, len(word))
@@ -87,11 +91,10 @@ def rabin_karp(word, text):
     for i in range(len(text) - len(word) + 1):
         if rolling_hash.hash == word_hash.hash:
             if rolling_hash.window_text() == word:
-                return i
+                print (i, end=" ")
         rolling_hash.move_window()
-    return None
 
 
 if __name__ == "__main__":
-    print(rabin_karp("a", "abcdefgh"))
+    print(rabin_karp("a", "abcdaefagh"))
     print(rabin_karp("cpu", "ballcpuaspcpucpu"))
