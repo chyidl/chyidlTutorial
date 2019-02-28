@@ -2,7 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6944c5ad-952f-4534-b7fe-93b93f0275b1" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_fixed_size_CURD_implement.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/shortest_path_algorithm_Dijkstra_implement.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/topological_sorting_depth_first_traversal_implement.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/topological_sorting_kahn_algorithm_implement.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_dynamic_append_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_dynamic_append_implement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_merge_sorted_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_two_merge_sorted_implement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/levenshtein_distance_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/levenshtein_distance_implement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,60 +20,27 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FUSProjectUsageTrigger">
-    <session id="-2114037082">
-      <usages-collector id="statistics.lifecycle.project">
-        <counts>
-          <entry key="project.closed" value="3" />
-          <entry key="project.open.time.0" value="1" />
-          <entry key="project.open.time.10" value="1" />
-          <entry key="project.open.time.11" value="1" />
-          <entry key="project.opened" value="3" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.edit">
-        <counts>
-          <entry key="py" value="246" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.edit">
-        <counts>
-          <entry key="Python" value="246" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.extensions.open">
-        <counts>
-          <entry key="py" value="1" />
-        </counts>
-      </usages-collector>
-      <usages-collector id="statistics.file.types.open">
-        <counts>
-          <entry key="Python" value="1" />
-        </counts>
-      </usages-collector>
-    </session>
-  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/root/mldl/MLDLPrj/SnakeAI/snake_game.py">
+        <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="114" selection-start-line="114" selection-end-line="114" />
-              <folding>
-                <element signature="e#110#123#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="533">
+              <caret line="133" selection-start-line="133" selection-end-line="133" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file:///usr/local/Cellar/python/3.7.1/Frameworks/Python.framework/Versions/3.7/lib/python3.7/random.py">
+        <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4240">
-              <caret line="221" selection-start-line="221" selection-end-line="221" />
-            </state>
+            <state relative-caret-position="-3107" />
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_circular_implement.py">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -75,6 +52,7 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/root/mldl/MLDLPrj/SnakeAI/snake_game.py" />
+        <option value="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py" />
       </list>
     </option>
   </component>
@@ -90,6 +68,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -106,28 +85,36 @@
               <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
               <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
               <item name="root" type="462c0819:PsiDirectoryNode" />
-              <item name="mldl" type="462c0819:PsiDirectoryNode" />
+              <item name="os" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
               <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
               <item name="root" type="462c0819:PsiDirectoryNode" />
-              <item name="mldl" type="462c0819:PsiDirectoryNode" />
-              <item name="MLDLPrj" type="462c0819:PsiDirectoryNode" />
+              <item name="os" type="462c0819:PsiDirectoryNode" />
+              <item name="DSAA" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
               <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
               <item name="root" type="462c0819:PsiDirectoryNode" />
-              <item name="mldl" type="462c0819:PsiDirectoryNode" />
-              <item name="MLDLPrj" type="462c0819:PsiDirectoryNode" />
-              <item name="SnakeAI" type="462c0819:PsiDirectoryNode" />
+              <item name="os" type="462c0819:PsiDirectoryNode" />
+              <item name="DSAA" type="462c0819:PsiDirectoryNode" />
+              <item name="DataStructuresAndAlgorithms" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
+              <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
+              <item name="root" type="462c0819:PsiDirectoryNode" />
+              <item name="os" type="462c0819:PsiDirectoryNode" />
+              <item name="DSAA" type="462c0819:PsiDirectoryNode" />
+              <item name="DataStructuresAndAlgorithms" type="462c0819:PsiDirectoryNode" />
+              <item name="python" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -146,7 +133,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.linked_list_singly_circular_implement">
+    <configuration name="linked_list_singly_circular_implement" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="chyidlTutorial" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="snake_game" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="chyidlTutorial" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -170,6 +178,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.linked_list_singly_circular_implement" />
         <item itemvalue="Python.snake_game" />
       </list>
     </recent_temporary>
@@ -189,7 +198,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -210,9 +218,6 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -231,13 +236,33 @@
           <line>50</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py</url>
+          <line>133</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="self.tail.next" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>self.tail.next</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file:///usr/local/Cellar/python/3.7.1/Frameworks/Python.framework/Versions/3.7/lib/python3.7/random.py" />
     <entry file="file://$PROJECT_DIR$/root/mldl/MLDLPrj/SnakeAI/snake_game.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
+        <state relative-caret-position="413">
           <caret line="114" selection-start-line="114" selection-end-line="114" />
           <folding>
             <element signature="e#110#123#0" expanded="true" />
@@ -245,10 +270,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/Cellar/python/3.7.1/Frameworks/Python.framework/Versions/3.7/lib/python3.7/random.py">
+    <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_circular_implement.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4240">
-          <caret line="221" selection-start-line="221" selection-end-line="221" />
+        <state relative-caret-position="-3107" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="533">
+          <caret line="133" selection-start-line="133" selection-end-line="133" />
         </state>
       </provider>
     </entry>

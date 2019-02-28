@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # vim:encoding=utf-8
 #
-# array_merge_sorted_implement.py
+# array_two_merge_sorted_implement.py
 # python
 #
 # 🎂"Here's to the crazy ones. The misfits. The rebels.
@@ -32,10 +32,15 @@ Method 1: Merge two sorted arrays with O(1) extra space
     be-comes really complicated when extra space is not allowed and doesn't
     look posible in less the O(m*n) worst case time.
 
-    The idea is to begin from last element of arr2[] and search it in arr1[].
-    if these is a greater element in arr1[], then we move last element of
-    arr1[] to arr2[]. To keep arr1[] and arr2[] sorted, we need to place last
-    element of arr2[] at correct place in arr1[]. Using Insertion Sort type
+Below is algorithm:
+    1) Iterate through every element of ar2[] starting from last element. Do following for every element ar2[i]
+    a) Store last element of ar1[j]: last = ar1[j]
+    b) Loop for last element of ar1[] while element ar1[j] is smaller than ar2[i].
+        ar1[j+1] = ar1[j]  // Move element one position ahead
+        j--
+    c) If any element of ar1[] was moved or (j != m-1)
+        ar1[j+1] = ar2[i]
+        ar2[i] = last
 """
 
 

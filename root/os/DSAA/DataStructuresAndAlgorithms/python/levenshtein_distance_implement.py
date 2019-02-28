@@ -58,6 +58,7 @@ m, n = len(str1), len(str2)
 minDist = max(m, n)
 
 
+# 回溯算法
 def levenshteinDistance(i=0, j=0, edist=0):
     global minDist
     if i == n or j == m:

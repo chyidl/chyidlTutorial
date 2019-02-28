@@ -4,20 +4,24 @@ Data Structures and Algorithms
 Array
 -----
 * Implementation an array that supports dynamic expansion 
-![Python3 Implement](/root/os/DSAA/DataStructuresAndAlgorithms/python/array_dynamic_append_implement.py)
+![Python3 Implement : array_dynamic_append_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/array_dynamic_append_implement.py)
 * Implementation an ordered array of fixed size, support dynamic additions and deletions 
+![Python3 Implement: array_fixed_size_CURD_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/array_fixed_size_CURD_implement.py)
 * Implementation two ordered arrays into one ordered array. 
 ![Python3 array_merge_sorted_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/array_merge_sorted_implement.py)
 
-Linked-list
+Linked List
 -----------
 * Implement single-linked list, circular linked list, and doubly linked list to support addition and deletion operations 
-![Python3 linked_list_singly_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py)
+![Python3 Implement : linked_list_singly_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py)
+![Python3 Implement : linked_list_singly_circular_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py)
 ![Python3 linked_list_doubly_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_doubly_implement.py)
-![Python3 linked_list_circular_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_circular_implement.py)
 * Implement single-linked list reversed
+![Python3 Implement : linked_list_singly_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py)
 * Implementing two ordered linked lists into one ordered list 
+![Python3 Implement : linked_list_merge_two_sorted_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_merge_two_sorted_implement.py)
 * Implement the intermediate node of the linked list 
+
 
 Stack
 -----
@@ -90,16 +94,16 @@ String
 * Implement a simple string matching algorithm 
 
 Backtracking
-------------
+---------------
 * Using backtracking algorithm to solve the problem of eight queens 
 * Using backtracking algorithm to solve 0-1 knapsack problem 
 
 Division and treatment algorithm
---------------------------------
+-------------------------------------
 * Using the divide and conquer algorithm to find the reverse order of a set of data 
 
 Dynamic planning 
-----------------
+--------------------
 * 0-1 backpack problem 
 * Sum of Minimum path 
 * Programming to achieve the shortest edit distance of Levins 

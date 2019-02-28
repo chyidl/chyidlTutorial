@@ -117,7 +117,6 @@ Merge two sorted lists (in-place)
 
 
 # A simple Python program to introduce a linked list
-
 # Node class
 class Node:
     # Function to initialize the ndoe object
