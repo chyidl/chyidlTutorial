@@ -16,6 +16,10 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [CC++ Tutorial](root/cc++/CC++Tutorial/README.md)
 - [CC++ Awesome Project](root/cc++/CC++Prj/README.md)
 
+### ![](imgs/golang_logo.png?raw=true) Golang Language
+
+- [Golang Tutorial](/root/golang/GoTutorial/README.md)
+- [Golang Awesome Project](root/golang/GoPrj/README.md)
 
 ### ![](imgs/swift-logo.png?raw=true) Swift Language 
 
