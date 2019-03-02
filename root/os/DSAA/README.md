@@ -16,3 +16,6 @@ Pages: 560
 
 - [Mastering Algorithms With C README](/root/os/DSAA/MasteringAlgorithmsWithC/README.md)
 - [Coding Challenge - Youtube](/root/os/DSAA/CodingChallenge/README.md)
+
+![The Beauty of Data Structures and Algorithms](/imgs/os/DSAA/DataStructuresAndAlgorithms/DataStructuresAndAlgorithms.png?raw=true)
+- [The Beauty of Data Structures and Algorithms](/root/os/DSAA/DataStructuresAndAlgorithms/README.md)
