@@ -2,4 +2,4 @@
 =====================
 
 Ex Machina easter egg...
-![ExMachina.py](/root/raspberrypi/RaspberryPiPrj/easterEgg/ExMachina.py)
+- [ExMachina.py](/root/raspberrypi/RaspberryPiPrj/easterEgg/ExMachina.py)
