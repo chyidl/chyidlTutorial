@@ -27,9 +27,11 @@ Stack
 -----
 * Implement a sequential stack with arrays 
 - [Python3 stack_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/stack_array_implement.py)
-- [Python3 stack_linked_list_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/stack_linked_list_implement.py)
 * Implement a chain stack with a linked list 
+- [Python3 stack_linked_list_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/stack_linked_list_implement.py)
 * Programming simulation to implement a browser's forward and backward functions
+- [stack_browser_back_forward_button_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/stack_browser_back_forward_button_implement.py)
+
 
 Heap
 ----
@@ -45,6 +47,7 @@ Queue
 * Implement a chained queue with a linked list 
 - [Python3 queue_linked_list_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/queue_linked_list_implement.py)
 * Implement a circular queue 
+- []
 
 Binary Tree
 -----------

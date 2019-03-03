@@ -2,8 +2,74 @@
 
 The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
 
-MySQL Install and Manage
+MySQL 8.0 Install and Manage
 -------------
+```
+# My Machine info 
+$ cat /etc/os-release 
+NAME="Ubuntu"
+VERSION="18.04.2 LTS (Bionic Beaver)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 18.04.2 LTS"
+VERSION_ID="18.04"
+HOME_URL="https://www.ubuntu.com/"
+SUPPORT_URL="https://help.ubuntu.com/"
+BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
+PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
+VERSION_CODENAME=bionic
+UBUNTU_CODENAME=bionic
+
+# Adding the MySQL Software Repository 
+$ wget https://dev.mysql.com/get/mysql-apt-config_0.8.12-1_all.deb
+$ sudo dpkg -i mysql-apt-config* 
+# During the installation, you'll be presented with a configuration screen where you can specify which version of MySQL you'd prefer, 
+$ sudo apt update # Refresh your apt package cache 
+$ rm mysql-apt-config*  # clean up after ourseleves and delete the file we download  
+# If you need to update the configuration of these repositories, just run $sudo dpkg-reconfigure mysql-apt-config, select new options, and then sudo apt update to refresh your package cache.
+
+# Install MySQL by the following command:
+$ sudo apt-get install mysql-server 
+
+# You can set the root password later using the mysql_secure_installation 
+$ sudo mysql_secure_installtion
+
+# How to Create a New User
+# Making a new user within the MySQL shell 
+mysql> CREATE USER 'newuser'@'%' IDENTIFIED BY 'password';
+# provide the user with access to the informantion they will need.
+#   ALL_PRIVILEGES - full access to a designated database 
+#   CREATE - create new tables or databases 
+#   DROP - delete tables or databases
+#   DELETE - delete rows from tables 
+#   INSERT - insert rows into tables 
+#   SELECT - allow select command to read through databses;
+#   UPDATE - allow them to update table rows 
+#   GRANT OPTION - allow them to grant or remove other user's privileges 
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'%'; 
+
+# revoke a permission
+mysql> REVOKE type_of_permission ON database_name.table_name FROM 'username'@'localhost';
+
+# review user current permissions 
+mysql> SHOW GRANTS ;
+
+# drop user 
+mysql> DROP USER 'username'@'%';
+
+# log out 
+mysql> quit 
+
+# Don't forget reload all the privileges, 
+$ FLUSH PRIVILEGES; 刷新权限
+
+# Support full Unicode in MySQL databases
+
+# Switching from MySQL's utf8 to utf8mb4 
+Step 1: Create a backup
+Create a backup of all the databases on the server you want to upgrade. Safety first!
+$ mysqldump -u vps -p project > projectbackup.sql 
+```
 
     1. Stop the MySQL Service ($ sudo systemctl stop mysql)
     2. Start MySQL without a password ($ sudo mysqld_safe --skip-grant-tables &)
