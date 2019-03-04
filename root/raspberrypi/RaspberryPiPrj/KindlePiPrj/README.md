@@ -14,14 +14,11 @@ The first thing we need to do to get control of the device is "jailbreak"(越狱
 Check your Settings page, find what FW your Kindle is running.
 
 Install the Jailbreak [kindle-jailbreak-0.13.N]. To install it you just transfer over the bin that's right for your version of the kindle (I.e., Update_jailbreak_0.13.N_k3w_install.bin = Kindle Keyboard 3 Wifi) into the device root and then update the device: Home > Menu > Settings > Menu > Update Kindle. 
-- [Update_jailbreak_0.13.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-jailbreak-0.13.N
-/Update_jailbreak_0.13.N_k3w_install.bin)
 
 To remove the jailbreak(if you somehow want to get rid of it... There's no practical reason to do this though ;) use the same process described substituting the appropriate "uninstall" bin file.)
-
-- [Update_jailbreak_0.13.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-jailbreak-0.13.N
-/Update_jailbreak_0.13.N_k3w_uninstall.bin)
 ```
+- [Update_jailbreak_0.13.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-jailbreak-0.13.N/Update_jailbreak_0.13.N_k3w_install.bin)
+- [Update_jailbreak_0.13.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-jailbreak-0.13.N/Update_jailbreak_0.13.N_k3w_uninstall.bin)
 
 Kindle Screen Saver Hack (the custom ScrrenSavers)
 --------------------------------------------------
@@ -36,4 +33,5 @@ Kindle Screen Saver Hack (the custom ScrrenSavers)
 To remove the screen saver hack, just copy the appropriate "uninstall" bin file to the root of your Kindle and update. Note that, since the v0.6.N, you shouldn't have to deactivate/uninstall it in order to be able to install official Amazon updates!
 ```
 
-
+- [Update_ss_0.47.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_install.bin)
+- [Update_ss_0.47.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_uninstall.bin)
