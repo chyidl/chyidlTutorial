@@ -112,3 +112,8 @@ Dynamic planning
 * Programming to achieve the shortest edit distance of Levins 
 * Programmatically find the longest common subsequence of two strings 
 * Programming to implement the longest increasing subsequence of a data sequence
+
+Chyidl Utils -- chutils
+-----------------------
+A series of convenience functions to make programming easier with python3
+- [chutils.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/chutils.py)
