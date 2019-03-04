@@ -2,6 +2,7 @@ Kindle + Raspberry Pi == Anything
 =================================
 
 ![Kindle Keyboard](/imgs/raspberrypi/KindlePiPrj/340px-Amazon_Kindle_3.jpg?raw=true)
+
 The Amazon Kindle is  a series of e-readers with E Ink electronic paper displays. on July 28, 2010. Amazon announced the third generation Kindle, later renamed "Kindle Keyboard".
 
 The Kindle is a very low cost, super lightweight, ARM Linux machine with an eInk display that can be easily read in bright sunlight, a great text-to-speech system, amazing battery life,WIFI access, a nice bit of storage, sound output and even a hidden microphone. There are endless creative off-label things you could do with it.
@@ -13,8 +14,13 @@ The first thing we need to do to get control of the device is "jailbreak"(越狱
 Check your Settings page, find what FW your Kindle is running.
 
 Install the Jailbreak [kindle-jailbreak-0.13.N]. To install it you just transfer over the bin that's right for your version of the kindle (I.e., Update_jailbreak_0.13.N_k3w_install.bin = Kindle Keyboard 3 Wifi) into the device root and then update the device: Home > Menu > Settings > Menu > Update Kindle. 
+- [Update_jailbreak_0.13.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-jailbreak-0.13.N
+/Update_jailbreak_0.13.N_k3w_install.bin)
 
 To remove the jailbreak(if you somehow want to get rid of it... There's no practical reason to do this though ;) use the same process described substituting the appropriate "uninstall" bin file.)
+
+- [Update_jailbreak_0.13.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-jailbreak-0.13.N
+/Update_jailbreak_0.13.N_k3w_uninstall.bin)
 ```
 
 Kindle Screen Saver Hack (the custom ScrrenSavers)
