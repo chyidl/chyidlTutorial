@@ -20,9 +20,9 @@
 # Copyright © 2019. Chyi Yaqing. All rights reserved.
 #
 # Distributed under terms of the MIT
-"""
-A series of convenience functions to make easier with Python3.
-"""
+'A series of convenience functions to make easier with Python3.'
+__author__ = 'Chyi Yaqing'
+__verion__ = '0.0.1'
 import sys
 import time
 import functools
@@ -75,6 +75,59 @@ def metric(func):
     return wrapper
 
 
+class Student:
+
+    def __init__(self, Name, Score):
+        self.name = Name
+        self.score = Score
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str):
+            raise ValueError('name must be an string!')
+        self._name = value
+
+    @property
+    def score(self):
+        return self._score
+
+    @score.setter
+    def score(self, value):
+        if not isinstance(value, int):
+            raise ValueError('score must be an integer!')
+        if value < 0 or value > 100:
+            raise ValueError('score must between 0 ~ 100!')
+        self._score = value
+
+    def get_grade(self):
+        if self._score >= 80:
+            return 'A'
+        if self._score >= 60:
+            return 'B'
+        return 'C'
+
+
+class Chain:
+
+    def __init__(self, path=''):
+        self._path = path
+
+    def __getattr__(self, path):
+        return Chain('%s/%s' % (self._path, path))
+
+    def __call__(self, param):
+        return Chain('%s/%s' % (self._path, param))
+
+    def __str__(self):
+        return self._path
+
+    __repr__ = __str__
+
+
 if __name__ == '__main__':
     # Test chlog decorate  and metric
     @metric
@@ -83,3 +136,16 @@ if __name__ == '__main__':
         print(sys.platform)
     # Run Testcase
     foo()
+
+    # Test Student property decorate
+    s = Student(Name="Chyi Yaqing", Score=99)
+    print(s.score)  # OK
+    print(s.score)  # OK, 实际转化为s.get_score()
+    try:
+        s.score = 101
+    except Exception as e:
+        print(e)
+
+    # Test Chain
+    print(Chain().status.user.timeline.list)
+    print(Chain().users('Chyi Yaqing').age(26).single(True).repos)

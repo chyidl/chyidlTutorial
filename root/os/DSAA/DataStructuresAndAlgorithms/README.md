@@ -116,4 +116,4 @@ Dynamic planning
 Chyidl Utils -- chutils
 -----------------------
 A series of convenience functions to make programming easier with python3
-- [chutils.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/chutils.py)
+- [chutils](/root/os/DSAA/DataStructuresAndAlgorithms/python/chutils)
