@@ -28,40 +28,43 @@ import time
 import functools
 
 
-def chlog(text="INFO:"):
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            """ For top-level functions and classes, the __qualname__ attrubute
-            is equal to the __name__ attribute. For nested classes, methods,
-            and nested functions, the __qualname__ attribute contains a dotted
-            path leading to the object from the medule top-level.
+def chdebug(func=None, *, prefix=""):
+    if func is None:
+        # Wasn't passed
+        return functools.partial(chdebug, prefix=prefix)
 
-            Example with nexted classes
-            >>> class C:
-            ...     def f(): pass
-            ...     class D:
-            ...         def g(): pass
-            ...
-            >>> C.__qualname__
-            'C'
-            >> C.__name__
-            'C'
-            >>> C.f.__qualname__
-            'C.f'
-            >>> C.f.__name__
-            'f'
-            >>> C.D.__qualname__
-            'C.D'
-            >>> C.D.__name__
-            'D'
-            """
-            print('%s start call %s():' % (text, func.__qualname__))
-            result = func(*args, **kwargs)
-            print('%s end call %s():' % (text, func.__qualname__))
-            return result
-        return wrapper
-    return decorator
+    # func is a function to be wrapped
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        """ For top-level functions and classes, the __qualname__ attrubute
+        is equal to the __name__ attribute. For nested classes, methods,
+        and nested functions, the __qualname__ attribute contains a dotted
+        path leading to the object from the medule top-level.
+
+        Example with nexted classes
+        >>> class C:
+        ...     def f(): pass
+        ...     class D:
+        ...         def g(): pass
+        ...
+        >>> C.__qualname__
+        'C'
+        >> C.__name__
+        'C'
+        >>> C.f.__qualname__
+        'C.f'
+        >>> C.f.__name__
+        'f'
+        >>> C.D.__qualname__
+        'C.D'
+        >>> C.D.__name__
+        'D'
+        """
+        print('%s start call %s():' % (prefix, func.__qualname__))
+        result = func(*args, **kwargs)
+        print('%s end call %s():' % (prefix, func.__qualname__))
+        return result
+    return wrapper
 
 
 def metric(func):
@@ -131,11 +134,16 @@ class Chain:
 if __name__ == '__main__':
     # Test chlog decorate  and metric
     @metric
-    @chlog()
+    @chdebug(prefix='')
     def foo():
         print(sys.platform)
     # Run Testcase
     foo()
+
+    @chdebug
+    def bar():
+        print('bar')
+    bar()
 
     # Test Student property decorate
     s = Student(Name="Chyi Yaqing", Score=99)
