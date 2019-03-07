@@ -12,6 +12,7 @@
 - [Apple Airplay on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/Airplay/README.md)
 - [Nokia 5110/3310 LCD Python](/root/raspberrypi/RaspberryPiPrj/Nokia5110/README.md)
 - [SuperComputer Rasp Cluster](/root/raspberrypi/RaspberryPiPrj/Supercomputer/README.md)
+- [LogitechK480 bluetooth in Linux](/root/raspberrypi/RaspberryPiPrj/LogitechK480/README.md)
 - [Kindle + Raspberry = Anything](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/README.md)
 
 
