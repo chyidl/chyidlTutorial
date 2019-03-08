@@ -16,7 +16,7 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [CC++ Tutorial](root/cc++/CC++Tutorial/README.md)
 - [CC++ Awesome Project](root/cc++/CC++Prj/README.md)
 
-### ![](imgs/golang_logo.png?raw=true) Golang Language
+### ![](imgs/Go_Logo.png?raw=true) Golang Language
 
 - [Golang Tutorial](/root/golang/GoTutorial/README.md)
 - [Golang Awesome Project](root/golang/GoPrj/README.md)
@@ -58,7 +58,7 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Vim Tips](root/ilikeit/vim/README.md)
 - [Vim+Tmux OMG!](/root/ilikeit/Vim+Tmux/README.md)
 - [Bash Script](root/ilikeit/Scripts/README.md)
-- [Git - Fast-Version-Control](/root/ilikeit/Git/README.md)
+- [Git Crash Course](/root/ilikeit/GitCrashCourse/README.md)
 - [The tutorl of Final Cut Pro X](root/ilikeit/FinalCutProX/README.md)
 - [MySQL Crash Course](root/ilikeit/MySQLCrashCourse/README.md)
 - [RabbitMQ Crash Course](root/ilikeit/RabbitMQCrashCourse/README.md)
