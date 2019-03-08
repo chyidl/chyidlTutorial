@@ -1,7 +1,7 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# produce_consumer_asyncio.py
+# async_hello.py
 # chasyncio
 #
 # 🎂"Here's to the crazy ones. The misfits. The rebels.
@@ -15,7 +15,7 @@
 # Because the poeple who are crazy enough to think thay can change
 # the world, are the ones who do."
 #
-# Created by Chyi Yaqing on 03/07/19 22:36.
+# Created by Chyi Yaqing on 03/08/19 08:40.
 # Copyright © 2019. Chyi Yaqing.
 # All rights reserved.
 #
@@ -23,32 +23,25 @@
 # MIT
 
 """
-协程 - 生产者消费者模型
+用asyncio实现Hello world代码
 """
+import asyncio
+import threading
+import time
 
 
-# 生产者
-def produce(c):
-    c.send(None)
-    n = 0
-    while n < 5:
-        n += 1
-        print('[Producer] Producing %s...' % n)
-        r = c.send(n)
-        print('[Producer] Consumer return: %s' % r)
-    c.close()
+@asyncio.coroutine
+def hello():
+    print("%s: Hello world! (%s)" % (time.time(), threading.currentThread()))
+    # 异步调用asyncio.sleep(1):
+    yield from asyncio.sleep(1)
+    print("%s: Hello again! (%s)" % (time.time(), threading.currentThread()))
 
 
-# 消费者
-def consumer():
-    r = ''
-    while True:
-        n = yield r
-        if not n:
-            return
-        print('[Consumer] Consuming %s...' % n)
-        r = '200 OK'
-
-
-c = consumer()
-produce(c)
+# 获取EventLoop:
+loop = asyncio.get_event_loop()
+# 封装Tasks任务表
+tasks = [hello(), hello()]
+# 执行coroutine
+loop.run_until_complete(asyncio.wait(tasks))
+loop.close()
