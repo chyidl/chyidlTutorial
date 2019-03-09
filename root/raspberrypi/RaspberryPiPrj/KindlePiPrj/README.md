@@ -74,15 +74,15 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 
 * Hot keys at any time 
 
-    shift + alt + G = screenshot (plug your kindle in via the USB and navigate to the folder 'documents' screenshots are GIF and named something like "screen_short.***.gif")
-    alt + G = screen refresh 
-    alt + home = Kindle Store 
-    alt + top row of letters on keyboard = numbers 1-0
+    - shift + alt + G = screenshot (plug your kindle in via the USB and navigate to the folder 'documents' screenshots are GIF and named something like "screen_short.***.gif")
+    - alt + G = screen refresh 
+    - alt + home = Kindle Store 
+    - alt + top row of letters on keyboard = numbers 1-0
 
 * Music Controls
     
-    alt + space = turn music on and off 
-    alt + f = skip to next track 
+    - alt + space = turn music on and off 
+    - alt + f = skip to next track 
 
 * Kindle 3 Image Viewer 
     
@@ -92,14 +92,14 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 
 * Image Viewer Functions 
     
-    Page forward and back to see different images 
-    f = full-screen 
-    q = zoom in 
-    w = zoom out 
-    e = reset zoom 
-    c = actual size 
-    r = rotate 
-    nav controller = pan 
+    - Page forward and back to see different images 
+    - f = full-screen 
+    - q = zoom in 
+    - w = zoom out 
+    - e = reset zoom 
+    - c = actual size 
+    - r = rotate 
+    - nav controller = pan 
 
 
 
