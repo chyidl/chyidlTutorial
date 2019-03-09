@@ -87,7 +87,9 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 * Kindle 3 Image Viewer 
     
 ...Kindle has an image viewer. Who knows why its hidden (other than maybe its not very good), but still it's there and simple to set up.
-...Plug your Kindle 3 into the computer with the USB. Open the Kindle drive that is now in your displayed with your removable drives, 
+
+...Plug your Kindle 3 into the computer with the USB. Open the Kindle drive that is now in your displayed with your removable drives
+
 ...in the root create a folder called "pictures" within that folder you can create a number of other folders (think of them as collections), then add your images/pictures to this(or these) folders. I've only tried Jpegs and they work find. Once finished safely unplug the kindle 
 
 * Image Viewer Functions 
