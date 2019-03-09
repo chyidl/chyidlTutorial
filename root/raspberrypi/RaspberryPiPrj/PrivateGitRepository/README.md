@@ -12,8 +12,7 @@ The first thing to do is to install Git on the remote server, Once you do that t
 * Server (pull commits)
 
 Server set-up
--------------------------
-
+-------------
 ```
 $ ssh -pxxxx username@xxx.xxx.xxx.xxx (This is you connecting to your remote server)
 
@@ -22,12 +21,19 @@ $ sudo apt update
 $ sudo apt upgrade -y 
 
 # then make sure Git is installed 
-$ sudo apt install git-core 
+$ sudo apt install git
+
+# create new git user and no create home directories,and no login
+$ sudo useradd -r -s /sbin/nologin git 
+
+# Remove user home directory and mail spool by using the -r flag
+$ sudo userdel -r user_name 
 
 # Firstly, need to make a directory for where our new repository will be stored. The -p tag will create any directories in our path that doesn't already exits.
 public server$ mkdir -p ~/GitRepository/chutils
 
-# initialize the Git repository using the bare command. 
+# initialize the Git repository using the bare command.
+# Because the Git in the Server is purely for sharing, so users are not allowed to log in directlry to the server to change the workspace.
 public server$ cd ~/GitRepository/chutils && git init --bare 
 Initialized empty Git repository in /home/vps/GitRepository/chutils/
 
@@ -36,7 +42,6 @@ Initialized empty Git repository in /home/vps/GitRepository/chutils/
 
 Local set-up (push commits)
 ---------------------------
-
 ```
 # You will need to initialize it before we can push the code to our Git Server. To do this enter the following command
 local server$ mkdir -p ~/Downloads/chutils && cd ~/Downloads/chutils
@@ -57,7 +62,6 @@ local server$ git remote rm <name>
 
 Another Local set-up and test 
 -----------------------------
-
 ```
 # To test to see if everything is working correctly. you can clone the repository we just set up to a new folder.
 local server$ mkdir ~/Downloads/chutils2 && cd ~/Downloads/chutils2

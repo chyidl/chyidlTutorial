@@ -35,3 +35,9 @@ To remove the screen saver hack, just copy the appropriate "uninstall" bin file 
 
 - [Update_ss_0.47.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_install.bin)
 - [Update_ss_0.47.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_uninstall.bin)
+
+
+Kindle + Raspberry Pi + Logitech K480 = A Portable Outdoor Hackstation
+======================================================================
+
+http://ponnuki.net/2012/09/kindleberry-pi/
