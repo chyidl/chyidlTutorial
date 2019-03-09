@@ -66,15 +66,40 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 ~usbNetwork 
 ```
 * Games 
+    
     Shift + alt + m = play Minesweeper(from homescreen)
     GoMoku: press G from Minesweeper 
+
 ![screen shot game](/imgs/raspberrypi/KindlePiPrj/screen_shot_game.gif?raw=true)
 
 * Hot keys at any time 
+
     shift + alt + G = screenshot (plug your kindle in via the USB and navigate to the folder 'documents' screenshots are GIF and named something like "screen_short.***.gif")
     alt + G = screen refresh 
     alt + home = Kindle Store 
     alt + top row of letters on keyboard = numbers 1-0
+
+* Music Controls
+    
+    alt + space = turn music on and off 
+    alt + f = skip to next track 
+
+* Kindle 3 Image Viewer 
+    
+    Kindle has an image viewer. Who knows why its hidden (other than maybe its not very good), but still it's there and simple to set up.
+    Plug your Kindle 3 into the computer with the USB. Open the Kindle drive that is now in your displayed with your removable drives, 
+    in the root create a folder called "pictures" within that folder you can create a number of other folders (think of them as collections), then add your images/pictures to this(or these) folders. I've only tried Jpegs and they work find. Once finished safely unplug the kindle 
+
+* Image Viewer Functions 
+    
+    Page forward and back to see different images 
+    f = full-screen 
+    q = zoom in 
+    w = zoom out 
+    e = reset zoom 
+    c = actual size 
+    r = rotate 
+    nav controller = pan 
 
 
 
