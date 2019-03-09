@@ -36,6 +36,48 @@ To remove the screen saver hack, just copy the appropriate "uninstall" bin file 
 - [Update_ss_0.47.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_install.bin)
 - [Update_ss_0.47.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_uninstall.bin)
 
+Kindle 3 tricks & hacks 
+-----------------------
+
+* Disable my screensaver 
+```
+holding a page is probably less energy consuming than loading the screensaver! In a few keystrokers, you can disable it and leave the Kindle screen at the latest page that you're reading. 
+
+Now here is the big secret:
+    Home screen: (enter)
+    ;debugOn (enter)
+    ~disableScreensaver (enter)
+    ;debugOff (enter) 
+
+There are other hacks from the ;debugOn list, you can list them with the ~help or simply try these (play at your own risk, I only used the ScreenSaver personally):
+
+~changeLocal
+~disableIndexing
+~disableScreensaver
+~dumpIndexStats
+~exec
+~help
+~indexStatus
+~meminfo
+~reloadContentRoster
+~resumeScreensaver
+~startindexing
+~stopindexing 
+~usbNetwork 
+```
+* Games 
+    Shift + alt + m = play Minesweeper(from homescreen)
+    GoMoku: press G from Minesweeper 
+
+![screen_shot game](/imgs/raspberrypi/KindlePiPrj/screen_shot_game.gif?raw=true)
+
+* Hot keys at any time 
+    shift + alt + G = screenshot (plug your kindle in via the USB and navigate to the folder 'documents' screenshots are GIF and named something like "screen_short.***.gif")
+    alt + G = screen refresh 
+    alt + home = Kindle Store 
+    alt + top row of letters on keyboard = numbers 1-0
+
+
 
 Kindle + Raspberry Pi + Logitech K480 = A Portable Outdoor Hackstation
 ======================================================================
