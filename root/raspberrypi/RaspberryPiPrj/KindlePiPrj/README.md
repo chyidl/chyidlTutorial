@@ -68,8 +68,7 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 * Games 
     Shift + alt + m = play Minesweeper(from homescreen)
     GoMoku: press G from Minesweeper 
-
-![screen_shot game](/imgs/raspberrypi/KindlePiPrj/screen_shot_game.gif?raw=true)
+![screen shot game](/imgs/raspberrypi/KindlePiPrj/screen_shot_game.gif?raw=true)
 
 * Hot keys at any time 
     shift + alt + G = screenshot (plug your kindle in via the USB and navigate to the folder 'documents' screenshots are GIF and named something like "screen_short.***.gif")
