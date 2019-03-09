@@ -3,9 +3,9 @@ Kindle + Raspberry Pi == Anything
 
 ![Kindle Keyboard](/imgs/raspberrypi/KindlePiPrj/340px-Amazon_Kindle_3.jpg?raw=true)
 
-The Amazon Kindle is  a series of e-readers with E Ink electronic paper displays. on July 28, 2010. Amazon announced the third generation Kindle, later renamed "Kindle Keyboard".
+...The Amazon Kindle is  a series of e-readers with E Ink electronic paper displays. on July 28, 2010. Amazon announced the third generation Kindle, later renamed "Kindle Keyboard".
 
-The Kindle is a very low cost, super lightweight, ARM Linux machine with an eInk display that can be easily read in bright sunlight, a great text-to-speech system, amazing battery life,WIFI access, a nice bit of storage, sound output and even a hidden microphone. There are endless creative off-label things you could do with it.
+...The Kindle is a very low cost, super lightweight, ARM Linux machine with an eInk display that can be easily read in bright sunlight, a great text-to-speech system, amazing battery life,WIFI access, a nice bit of storage, sound output and even a hidden microphone. There are endless creative off-label things you could do with it.
 
  ：ROOTING  YOUR KINDLE (My Kindle Keyboard)
 The first thing we need to do to get control of the device is "jailbreak"(越狱) it. which really just adds a "hacked" key to the keyring used to verify the package signature.
@@ -86,9 +86,9 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 
 * Kindle 3 Image Viewer 
     
-    Kindle has an image viewer. Who knows why its hidden (other than maybe its not very good), but still it's there and simple to set up.
-    Plug your Kindle 3 into the computer with the USB. Open the Kindle drive that is now in your displayed with your removable drives, 
-    in the root create a folder called "pictures" within that folder you can create a number of other folders (think of them as collections), then add your images/pictures to this(or these) folders. I've only tried Jpegs and they work find. Once finished safely unplug the kindle 
+...Kindle has an image viewer. Who knows why its hidden (other than maybe its not very good), but still it's there and simple to set up.
+...Plug your Kindle 3 into the computer with the USB. Open the Kindle drive that is now in your displayed with your removable drives, 
+...in the root create a folder called "pictures" within that folder you can create a number of other folders (think of them as collections), then add your images/pictures to this(or these) folders. I've only tried Jpegs and they work find. Once finished safely unplug the kindle 
 
 * Image Viewer Functions 
     
@@ -106,7 +106,7 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 Kindle + Raspberry Pi + Logitech K480 = A Portable Outdoor Hackstation
 ======================================================================
 
-Using a Kindle as a screen, connecting it to the processing power of the Raspberry Pi while using an external keyboard to work comfortably. Since conecting an extral keyboard to the Kindle seemed impossible at that point. I need to use the raspberry pi as the 'hub'.
+...Using a Kindle as a screen, connecting it to the processing power of the Raspberry Pi while using an external keyboard to work comfortably. Since conecting an extral keyboard to the Kindle seemed impossible at that point. I need to use the raspberry pi as the 'hub'.
 
 Lets get started
 ----------------
