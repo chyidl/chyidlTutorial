@@ -234,3 +234,18 @@ spoof a MAC address on a macOS computer running Majave. This is a technique for 
 6) Copy the random address from Terminal, then type the following command and paste the random address at the end before pressing Return 
     $ sudo ifconfig en0 ether bd:5d:26:d9:4a:b2 
 ```
+
+Add a Message to the Login and Lock Screen in Mac OS X 
+------------------------------------------------------
+```
+OS X has a nice new feature to login and lock screens that allow you to display a meesage underneath the login panel. This is visible to everyone who can see the Mac screen, and it makes for a great place to put either a bit of generic personalization message, or better yet, a lost & found message with some contact and ownership details 
+
+1. Open up System Preferences from the  Apple menu > System Preferences > Security & Privacy > General > then click the little lock icon in the lower left corner of the window, enter the admin password when asked. 
+2. Check the button next to "Show a message when the screen is locked"
+3. Click the lock icon again to set the changes and close out System Preferences.
+```
+
+You can see what this looks like in the screenshot above and the closeup image below.
+![Lock Message](/imgs/os/macOS/Screen_Shot_LockMessage.png?raw=true)
+
+Having a message on your lock screen is a great loss prevention and general anti-theft measure, since anyone who gets the Mac into their hands later will see the message and if they have a conscience, will hopefully call the number your set on the screen. This could also help if you ever acciendtally misplaced a Mac laptop

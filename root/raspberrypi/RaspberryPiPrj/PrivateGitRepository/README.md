@@ -14,6 +14,9 @@ The first thing to do is to install Git on the remote server, Once you do that t
 Server set-up
 -------------
 ```
+# Create the SSH Key Pair 
+$ ssh-keygen -C "youremail@mailprovider.com"
+
 $ ssh -pxxxx username@xxx.xxx.xxx.xxx (This is you connecting to your remote server)
 
 # fist make sure that Linux is up to date. Run  the following commands

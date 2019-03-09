@@ -40,4 +40,20 @@ To remove the screen saver hack, just copy the appropriate "uninstall" bin file 
 Kindle + Raspberry Pi + Logitech K480 = A Portable Outdoor Hackstation
 ======================================================================
 
-http://ponnuki.net/2012/09/kindleberry-pi/
+Using a Kindle as a screen, connecting it to the processing power of the Raspberry Pi while using an external keyboard to work comfortably. Since conecting an extral keyboard to the Kindle seemed impossible at that point. I need to use the raspberry pi as the 'hub'.
+
+Lets get started
+----------------
+* a Kindle (I use Kindle 3 keyboard wifi)
+* a Raspberry Pi (I use Raspberry Pi 3B)
+* 2 micro usb to usb cables (one for power and one to connect the Kindle to the Raspberry Pi)
+* One keyboard connected to the Raspberry Pi (I use Logitech Bluetooth K480)
+
+![Kindle Raspberry Pi Logitech K480](/imgs/raspberrypi/KindlePiPrj/kindle_raspberry.png?raw=true)
+
+Hacking the Kindle 
+------------------
+
+**DISCLAIMER - you can brick (render unusable) your Kindle doing so, these are just pointers and I take no responsibility whatever you do with your kindle, or your like...**
+
+The first part, connecting the Kindle to the Raspberry Pi is simple enough. **Jail break the Kindle**, install a terminal enulator like. 
