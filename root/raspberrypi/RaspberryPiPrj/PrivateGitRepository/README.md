@@ -7,9 +7,9 @@ Set-up remote git repository on a standard server
 -------------------------------------------------
 The first thing to do is to install Git on the remote server, Once you do that the reset of the process is split into three sections:
 
-* 1. Server set up 
-* 2. Local set-up (push commits)
-* 3. Server (pull commits)
+* Server set up 
+* Local set-up (push commits)
+* Server (pull commits)
 
 Server set-up
 -------------------------
@@ -66,4 +66,4 @@ local server$ git clone username@publish_ip:port/home/xxx/GitRepository/chutils/
 # As you can see, the Git Server is noe storing our code correctly. Now, this is the very basics of Git, and there is so much more to learn. 
 ```
 
-! [Private Git Server](/imgs/ilikeit/GitCrashCourse/privateGitServer.png?raw=true)
+![Private Git Server](/imgs/ilikeit/GitCrashCourse/privateGitServer.png?raw=true)
