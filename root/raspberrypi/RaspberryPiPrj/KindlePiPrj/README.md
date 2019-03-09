@@ -101,6 +101,11 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
     - r = rotate 
     - nav controller = pan 
 
+* Restart Your Kindle 
+    
+    - To restart Kindle keyboard (3rd Generation):
+    - 1. Slide and hold the **Power** button for a full 40 seconds. After the first 6 to 8 secons, the screen will go blank, which is normal. Continue holding the Power button.
+    - 2. After 40 seconds, release the **Power** button. The charge indicator light will turn on after a few seconds.
 
 
 Kindle + Raspberry Pi + Logitech K480 = A Portable Outdoor Hackstation
