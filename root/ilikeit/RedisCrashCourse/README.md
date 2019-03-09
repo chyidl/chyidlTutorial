@@ -130,20 +130,14 @@ $ 127.0.0.1:6379> exit
 
 # As a final test, let's restart the Redis instance:
 $ sudo systemctl restart redis 
-```
 
-Enable Redis to Start at Boot
------------------------------
-```
+# Enable Redis to Start at Boot
 $ sudo systemctl enable redis 
-```
 
-# To set the password, edit your redis.conf file 
-```
-find this line 
+# To set the password, edit your /etc/redis/redis.conf file 
+# find this line 
 # requirepass foobared  
-
-Then uncomment it and change foobared to your password. Make sure you choose something pretty long, 32 characters or so would probably be good, it's easy for an outside user to guess upwards of 150k passwords a second, as the notes in the config file mention, 
+# Then uncomment it and change foobared to your password. Make sure you choose something pretty long, 32 characters or so would probably be good, it's easy for an outside user to guess upwards of 150k passwords a second, as the notes in the config file mention, 
 
 $ sudo systemctl restart redis  
 
@@ -152,4 +146,8 @@ $ redis-cli
 redis 127.0.0.1:6379> AUTH PASSWORD 
 Ok 
 
+# Host, port, password and database 
+# By default **redis-cli** connects to the server at 127.0.0.1 port 6379. As you can guess, you can easily change this using command line options. To specify a different host name or an IP address, use -h. In order to sent a different port, user -p 
+
+$ redis-cli -h pi -p 6379 
 ```
