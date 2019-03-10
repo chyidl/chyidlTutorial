@@ -13,7 +13,7 @@ To do this, we can install the **build-essential** meta-package from the reposit
 
 ```
 $ sudo apt-get update 
-$ sudo apt-get install build-essential tcl 
+$ sudo apt-get install build-essential tcl make gcc 
 ```
 
 Download, Compile, and Install Redis 
@@ -22,7 +22,7 @@ Download, Compile, and Install Redis
 # Since we won't need to keep the source code that we'll compile long term, we will build in the **~** directory.
 $ cd ~ 
 
-# download the latest stable version of Redis.
+# download the latest stable version of Redis source code
 $ wget http://download.redis.io/redis-stable.tar.gz 
 
 # Unpack the tarball by typing:
