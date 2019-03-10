@@ -218,7 +218,7 @@ def article_vote(conn, user, article):
 
     article_id = article.partition(':')[-1]          # D
     if conn.sadd('voted:' + article_id, user):       # E
-        conn.zincrby('score:', article, VOTE_SCORE)  # E
+        conn.zincrby('score:', VOTE_SCORE, article)  # E
         conn.hincrby(article, 'votes', 1)            # E
 # <end id="upvote-code"/>
 # END
@@ -247,8 +247,8 @@ def post_article(conn, user, title, link):
         'votes': 1,                             # C
     })                                          # C
 
-    conn.zadd('score:', article, now + VOTE_SCORE)  # D
-    conn.zadd('time:', article, now)                # D
+    conn.zadd('score:', {article: int(now + VOTE_SCORE)})  # D
+    conn.zadd('time:', {article: int(now)})                # D
 
     return article_id
 # <end id="post-article-code"/>
@@ -265,7 +265,6 @@ ARTICLES_PER_PAGE = 25
 def get_articles(conn, page, order='score:'):
     start = (page-1) * ARTICLES_PER_PAGE            # A
     end = start + ARTICLES_PER_PAGE - 1             # A
-
     ids = conn.zrevrange(order, start, end)         # B
     articles = []
     for id in ids:                                  # C
@@ -321,7 +320,7 @@ class TestCh01(unittest.TestCase):
         redis_host = env_dist.get('REMOTE_REDIS_HOST')
         redis_port = env_dist.get('REMOTE_REDIS_PORT')
         redis_password = env_dist.get('REMOTE_REDIS_PASSWORD')
-        self.conn = redis.Redis(
+        self.conn = redis.StrictRedis(
                 host=redis_host,
                 port=redis_port,
                 password=redis_password, db=15)
@@ -336,19 +335,16 @@ class TestCh01(unittest.TestCase):
         article_id = str(post_article(
             conn, 'username', 'A title', 'http://www.google.com'))
         print("We posted a new article with id:", article_id)
-        print()
         self.assertTrue(article_id)
 
         print("Its HASH looks like:")
         r = conn.hgetall('article:' + article_id)
         print(r)
         self.assertTrue(r)
-
         article_vote(conn, 'other_user', 'article:' + article_id)
         print("We voted for the article, it now has votes:")
         v = int(conn.hget('article:' + article_id, 'votes'))
         print(v)
-        print()
         self.assertTrue(v > 1)
 
         print("The currently highest-scoring articles are:")

@@ -2,17 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6944c5ad-952f-4534-b7fe-93b93f0275b1" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_fixed_size_CURD_implement.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/shortest_path_algorithm_Dijkstra_implement.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/topological_sorting_depth_first_traversal_implement.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/topological_sorting_kahn_algorithm_implement.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_dynamic_append_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_dynamic_append_implement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_merge_sorted_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/array_two_merge_sorted_implement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/levenshtein_distance_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/levenshtein_distance_implement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction/ch01.py" beforeDir="false" afterPath="$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction/ch01.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,27 +14,59 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py">
+        <entry file="file://$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction/ch01.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="133" selection-start-line="133" selection-end-line="133" />
+            <state relative-caret-position="386">
+              <caret line="253" column="31" lean-forward="true" selection-start-line="253" selection-start-column="31" selection-end-line="253" selection-end-column="31" />
+              <folding>
+                <element signature="e#1134#1145#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py">
+        <entry file="file:///usr/local/Cellar/python/3.7.2_2/Frameworks/Python.framework/Versions/3.7/lib/python3.7/unittest/case.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3107" />
+            <state relative-caret-position="182">
+              <caret line="617" selection-start-line="617" selection-end-line="617" />
+            </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_circular_implement.py">
-          <provider selected="true" editor-type-id="text-editor" />
+        <entry file="file:///usr/local/lib/python3.7/site-packages/redis/client.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="2319" selection-start-line="2319" selection-end-line="2319" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file:///usr/local/Cellar/python/3.7.2_2/Frameworks/Python.framework/Versions/3.7/lib/python3.7/posixpath.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="382" selection-start-line="382" selection-end-line="382" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file:///usr/local/lib/python3.7/site-packages/twisted/python/lockfile.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="217" selection-start-line="217" selection-end-line="217" />
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>conn.zadd</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -53,6 +76,7 @@
       <list>
         <option value="$PROJECT_DIR$/root/mldl/MLDLPrj/SnakeAI/snake_game.py" />
         <option value="$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py" />
+        <option value="$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction/ch01.py" />
       </list>
     </option>
   </component>
@@ -85,31 +109,22 @@
               <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
               <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
               <item name="root" type="462c0819:PsiDirectoryNode" />
-              <item name="os" type="462c0819:PsiDirectoryNode" />
+              <item name="ilikeit" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
               <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
               <item name="root" type="462c0819:PsiDirectoryNode" />
-              <item name="os" type="462c0819:PsiDirectoryNode" />
-              <item name="DSAA" type="462c0819:PsiDirectoryNode" />
+              <item name="ilikeit" type="462c0819:PsiDirectoryNode" />
+              <item name="RedisCrashCourse" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
               <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
               <item name="root" type="462c0819:PsiDirectoryNode" />
-              <item name="os" type="462c0819:PsiDirectoryNode" />
-              <item name="DSAA" type="462c0819:PsiDirectoryNode" />
-              <item name="DataStructuresAndAlgorithms" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="chyidlTutorial" type="b2602c69:ProjectViewProjectNode" />
-              <item name="chyidlTutorial" type="462c0819:PsiDirectoryNode" />
-              <item name="root" type="462c0819:PsiDirectoryNode" />
-              <item name="os" type="462c0819:PsiDirectoryNode" />
-              <item name="DSAA" type="462c0819:PsiDirectoryNode" />
-              <item name="DataStructuresAndAlgorithms" type="462c0819:PsiDirectoryNode" />
-              <item name="python" type="462c0819:PsiDirectoryNode" />
+              <item name="ilikeit" type="462c0819:PsiDirectoryNode" />
+              <item name="RedisCrashCourse" type="462c0819:PsiDirectoryNode" />
+              <item name="RedisInAction" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -133,7 +148,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.linked_list_singly_circular_implement">
+  <component name="RunManager" selected="Python tests.Twisted Trial in ch01.py">
     <configuration name="linked_list_singly_circular_implement" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="chyidlTutorial" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -176,8 +191,23 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="Twisted Trial in ch01.py" type="tests" factoryName="Twisted Trial" temporary="true" nameIsGenerated="true">
+      <module name="chyidlTutorial" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction/ch01.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Twisted Trial in ch01.py" />
         <item itemvalue="Python.linked_list_singly_circular_implement" />
         <item itemvalue="Python.snake_game" />
       </list>
@@ -196,16 +226,49 @@
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 10m 19s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 11m 27s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 14m 05s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 15m 23s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 17m 55s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 20m 28s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 36m 48s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 42m 57s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 49m 31s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Twisted_Trial_in_ch01_py - 2019.03.10 at 20h 49m 51s.xml">
+      <configuration name="Twisted Trial in ch01.py" configurationId="tests" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="0" width="2048" height="1152" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24913666" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.46986303" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32994455" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.46950093" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -241,9 +304,17 @@
           <line>133</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction/ch01.py</url>
+          <line>220</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
+      <configuration name="tests">
+        <watch expression="VOTE_SCORE" language="Python" />
+      </configuration>
       <configuration name="PythonConfigurationType">
         <watch expression="self.tail.next" language="Python" />
       </configuration>
@@ -251,6 +322,51 @@
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="watch">
+      <expression>
+        <expression-string>conn.hincrby(ari)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>conn.zincrby('score:', VOTE_SCORE, article)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>VOTE_SCORE</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>conn.zincrby('score:', article, VOTE_SCORE)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>conn.zincrby('score:', {article: VOTE_SCORE})</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>conn.zadd('score:', now+VOTE_SCORE, article)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>conn.zadd('score:', now+VOTE_SCORE, )</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>conn.zadd('score:', article, now+VOTE_SCORE)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>now + VOTE_SCORE</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
       <expression>
         <expression-string>self.tail.next</expression-string>
         <language-id>Python</language-id>
@@ -270,18 +386,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="842">
+          <caret line="133" selection-start-line="133" selection-end-line="133" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_circular_implement.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_implement.py">
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm/_jb_trialtest_runner.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3107" />
+        <state relative-caret-position="95">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/root/os/DSAA/DataStructuresAndAlgorithms/python/linked_list_singly_circular_implement.py">
+    <entry file="file:///usr/local/Cellar/python/3.7.2_2/Frameworks/Python.framework/Versions/3.7/lib/python3.7/posixpath.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="133" selection-start-line="133" selection-end-line="133" />
+        <state relative-caret-position="182">
+          <caret line="382" selection-start-line="382" selection-end-line="382" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.7/site-packages/twisted/python/lockfile.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="217" selection-start-line="217" selection-end-line="217" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.7/site-packages/redis/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="2319" selection-start-line="2319" selection-end-line="2319" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/Cellar/python/3.7.2_2/Frameworks/Python.framework/Versions/3.7/lib/python3.7/unittest/case.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="617" selection-start-line="617" selection-end-line="617" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/root/ilikeit/RedisCrashCourse/RedisInAction/ch01.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="386">
+          <caret line="253" column="31" lean-forward="true" selection-start-line="253" selection-start-column="31" selection-end-line="253" selection-end-column="31" />
+          <folding>
+            <element signature="e#1134#1145#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
