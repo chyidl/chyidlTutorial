@@ -20,7 +20,10 @@
 # Copyright © 2019. Chyi Yaqing. All rights reserved.
 #
 # Distributed under terms of the MIT
-'A series of convenience functions to make easier with Python3.'
+'''A series of convenience functions to make easier with Python3.
+Identify bottlenecks as quickly as possible,
+fix them and then confirm you've fixed them.
+'''
 __author__ = 'Chyi Yaqing'
 __verion__ = '0.0.1'
 import sys
@@ -68,6 +71,7 @@ def chdebug(func=None, *, prefix=""):
 
 
 def metric(func):
+    'a simple timing decorator flexible ways to measure execution time'
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         start = time.time()

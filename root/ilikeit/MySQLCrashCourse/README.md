@@ -1,4 +1,5 @@
-# MySQL 
+MySQL Crash Course
+==================
 
 The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
 
@@ -86,11 +87,12 @@ wondering why your changes seem to make no difference! If you modify the grant t
 the server notices these changes and loads the grant tables into memory again immediately.
 
 
-## MySQL Infrastructure
+MySQL Infrastructure 架构
+-------------------------
 
 Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor --> Storage Engine.
 
-**Connector**
+**Connector连接器**
 
     * $ mysql -h$host -P$port -u$user -p 
     * After the user successfully establishes the connection, the modification of the user rights will not affect the existing connection, and only the newly established connection will use the new permission setting.
@@ -108,7 +110,7 @@ Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor -->
     * mysql> mysql_reset_connection  # Resets the connection to clear the session state
 
     
-**Query Cache** 
+**Query Cache查询缓存(MySQL 8.0删除该功能)** 
     
     * Query caching is one of the prominent features in MySQL and a vital part of query optimization. The MySQL query cache is a global
     one shared among the sessions. It caches the select query along with the result set, which enables the identical selects to execute
@@ -201,13 +203,13 @@ SET query_cache_type=DEMAND; 默认的SQL语句都不使用查询缓存，而对
 mysql> SELECT SQL_CACHE * from test.hs300 WHERE ID=10; 
 ```
 
-**Query Parsing**
+**Query Parsing解析器**
     
     Lexical analysis 词法分析and parsing语法分析 are prerequisite for any language. There are many tools available in the industry which can help in achieving this goal. 
     Lexer used in MySQL: MySQL uses a hand-written lexer for lexical analysis.The benefit being most of the code can be optimized keeping SQL syntax in mind.
     Parser used in MySQL: MySQL uses 'bison' tool as it's parser generator.
 
-**Query Optimizer**
+**Query Optimizer优化器**
     
     * EXPLAIN is one of the most powerful tools at your disposal for understanding and optimizing troublesome MySQL queries.
 ```
@@ -244,8 +246,7 @@ mysql> select * from t1 join t2 using(ID) where t1.c=10 and t2.d=20;
     也可以从表t2里面取出d=20的记录的ID值，再根据ID值关联到t1再判断t1里面c的值是否等于10.
 ```
 
-**Query Actuators**
-    
+**Query Actuators执行器**
 ```
     开始执行要判断对表有没有执行查询的权限,如果没有，就会返回没有权限的错误，有过查询缓存打开，会在查询缓存结果的时候做权限验证，查询也会在优化器之前做precheck验证权限。
 
@@ -257,8 +258,8 @@ mysql> select * from t1 join t2 using(ID) where t1.c=10 and t2.d=20;
 Oracle会在分析阶段判断语句是否正确，表是否存在列.
 ```
 
-## MySQL Log System 
-
+MySQL Log System 
+----------------
 ```
     mysql> create table T(ID int primary key, c int); 
     mysql> insert into T (ID, c) VALUES(1,1),(2,2),(3,3);
