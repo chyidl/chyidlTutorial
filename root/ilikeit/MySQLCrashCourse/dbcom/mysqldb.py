@@ -14,14 +14,15 @@ class MySQLDB:
         'password': config.mysql_passwd,
         'host':     config.mysql_host,
         'port':     config.mysql_port,
-
-                 # TCP/IP port of the MySQL server. default Value 3306
-        'charset':  config.mysql_charset,            # default value of the charset argument is "utf8"
+        # TCP/IP port of the MySQL server. default Value 3306
+        'charset':  config.mysql_charset,
+        # default value of the charset argument is "utf8"
         'connection_timeout': config.mysql_connection_timeout,
         'pool_name': config.mysql_poolname,
         'pool_size': config.mysql_poolsize,
         'pool_reset_session':config.mysql_pollresetsession,
-        'use_pure': config.mysql_usepure,            # use_pure is False means it the pure Python implementation
+        'use_pure': config.mysql_usepure,
+        # use_pure is False means it the pure Python implementation
     }
     """
     def __init__(self, config, pool=True):
@@ -55,25 +56,34 @@ class MySQLDB:
         """Connect to database"""
         try:
             if self._pool:
-                # mysql.connector.connect() method of MySQL Connector Python with required parameters to connect MySQL.
-                #self._conn = mysql.connector.connect(**config)  # return MySQLConnection
+                # mysql.connector.connect() method of MySQL Connector Python
+                # with required parameters to connect MySQL.
+                # self._conn = mysql.connector.connect(**config)
+                # return MySQLConnection
                 # Create a connection pool.
-                self._conn_pool = mysql.connector.pooling.MySQLConnectionPool(**self._config)
-                self._conn = self._conn_pool.get_connection() # Get connection object from a pool
+                self._conn_pool = mysql.connector.pooling.MySQLConnectionPool(
+                        **self._config)
+                self._conn = self._conn_pool.get_connection()
+                # Get connection object from a pool
                 print("Printing connection pool properties")
-                print(f'Connection Pool Name - {self._conn_pool.pool_name}')
+                print(
+                        f'Connection Pool Name - {self._conn_pool.pool_name}')
                 print(f'Connection Pool Size - {self._conn_pool.pool_size}')
             else:
                 self._conn = mysql.connector.connect(**self._config)
-            if self._conn.is_connected():  # verify is our python application is connected to MySQL
+            if self._conn.is_connected():
+                # verify is our python application is connected to MySQL
                 # need to buffered=True to avoid MySQL Unread result error
-                # need to prepared=True to allows the cursor to execute the prepared statement
-                self._cursor = self._conn.cursor(buffered=False, prepared=False)  # Using MySQLCursor can execute SQL queries
+                # need to prepared=True to allows the cursor to
+                # execute the prepared statement
+                self._cursor = self._conn.cursor(
+                        buffered=False, prepared=False)
+                # Using MySQLCursor can execute SQL queries
             else:
                 print('connection failed.')
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                print('Something is wrong with your user name or password, {}'.format(err))
+                print('Something is wrong with yourname or password, %s' % err)
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
                 print('Database does not exists, {}'.format(err))
             else:
@@ -105,13 +115,8 @@ class MySQLDB:
 
         try:
             self.cursor.execute(sql, params or ())
-        # except mysql.connector.errors.InterfaceError as error:
-        #     # When the connection is not available
-        #     print(f"mysql.connector.InterfaceError {error}, and reconnect...")
-        #     self.connection.reconnect(attempts=3, delay=5)
-        #     self.cursor.execute(sql, params or ())
         except mysql.connector.Error as error:
-            self.rollback() # rollback if any exception occured
+            self.rollback()  # rollback if any exception occured
             print(f'query Exception: {error} {sql} {params}')
 
     def querymany(self, sql, seq_of_params=None):
@@ -120,20 +125,22 @@ class MySQLDB:
             self.connectDb()
 
         try:
-            # use cursor's executemany() function to insert multiple records into a table
+            # use cursor's executemany() function to
+            # insert multiple records into a table
             self.cursor.executemany(sql, seq_of_params or [()])
-
         except mysql.connector.Error as error:
             self.rollback()
             print(f'querymany Exception: {error}')
 
     def callproc(self, proc_name, args=None):
         try:
-            # cursor.callproc method calls the stored procedure mentioned in the proc_name argument
+            # cursor.callproc method calls the stored procedure mentioned
+            # in the proc_name argument
             self.cursor.callproc(proc_name, args or ())
         except mysql.connector.Error as error:
             self.rollback()
-            print(f'callproc Exception : {error}, proc_name={proc_name}, agrs={args}')
+            print('callproc Exception : {}, proc_name={}, agrs={}'.format(
+                error, proc_name, args))
 
     def fetchall(self):
         # Get resultSet from the cursor object
@@ -160,28 +167,39 @@ class MySQLDB:
 
 
 if __name__ == '__main__':
-    import time
+    import os
+    env_dist = os.environ
+
     cfg = {
-        'user': 'chyidl',
-        'password': 'macintosh',
-        'host': '192.168.82.56',
-        'port': 3306,  # TCP/IP port of the MySQL server. default Value 3306
-        'charset': 'utf8mb4',  # default value of the charset argument is "utf8"
+        'user': env_dist.get('REMOTE_MYSQL_USER'),
+        'password': env_dist.get('REMOTE_MYSQL_PASSWORD'),
+        'host': env_dist.get('REMOTE_MYSQL_HOST'),
+        'port': env_dist.get('REMOTE_MYSQL_PORT'),
+        'charset': 'utf8mb4',
         'connection_timeout': 10,
         'pool_name': 'dbcom',
         'pool_size': 5,
         'pool_reset_session': True,
-        'use_pure': True,  # use_pure is False means it the pure Python implementation
+        'use_pure': True,
     }
 
     with MySQLDB(cfg, pool=True) as db:
-        count = 10
         try:
-            while count > 0:
-                count -= 1
-                # db stuff
-                sql = 'SELECT VERSION()'
-                db.query(sql)
-                print(f'MySQL Version: {db.fetchone()[0]}')
+            # db stuff
+            sql = 'SELECT VERSION()'
+            db.query(sql)
+            print(f'MySQL Version: {db.fetchone()[0]}')
+
+            # create table if not exist;
+            sql = """
+            CREATE TABLE IF NOT EXISTS `test`.`t` (
+            `id` int(11) NOT NULL,
+            `a` int(11) DEFAULT NULL,
+            `b` int(11) DEFAULT NULL,
+            PRIMARY KEY (`id`),
+            KEY `a` (`a`),
+            KEY `b` (`b`)) ENGINE=InnoDB;"""
+            db.query(sql)
+
         except Exception as err:
             print(err)
