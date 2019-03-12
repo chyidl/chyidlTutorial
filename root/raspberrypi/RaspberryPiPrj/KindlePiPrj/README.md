@@ -127,4 +127,93 @@ Hacking the Kindle
 
 **DISCLAIMER - you can brick (render unusable) your Kindle doing so, these are just pointers and I take no responsibility whatever you do with your kindle, or your like...**
 
-The first part, connecting the Kindle to the Raspberry Pi is simple enough. **Jail break the Kindle**, install a terminal enulator like. 
+The first part, connecting the Kindle to the Raspberry Pi is simple enough. 
+> [Jail break the Kindle](http://wiki.mobileread.com/wiki/Kindle_Hacks_Information#Jail_break_JB)
+
+> install a [terminal emulator](https://www.mobileread.com/forums/showthread.php?t=154500).
+    - Terminal Emulator for Kindle. The terminal emulator is named myts. This is an enhanced version done by Matan based on the original [kiterm](http://info.iet.unipi.it/~luigi/kindle/) by Luigi Rizzo.
+    - The latest download link is http://my.svgalib.org/kindle/myts-8.zip
+    - After unzipping the archive, you will fond 2 folders: myts and launchpad.
+    - mv mytes/ and launchpad to /mnt/us 
+    - After installing, the default launchpad configuration (in the file /mnt/us/launchpad/myts.I.ini) is :
+        T A = !/mnt/us/myts/myts.sh kill
+        T T = !/mnt/us/myts/myts.sh 1
+        T Y = !/mnt/us/myts/myts.sh 2
+        T U = !/mnt/us/myts/myts.sh 3
+
+> install [UsbNetwork](http://www.mobileread.com/forums/showthread.php?t=88004).
+> What's usbnet? The Kindle 2 has a hidden USB network mode, probably left over from development. When activated, the Kindle would behave as a USB network device rather than a USB mass storage device. This allowed you to do neat things such as tethering the device to your laptop. Kindle keyboard version seems to have removed this feature, but the usbnet hack reactivates it and installs busybox (a
+> micro shell environment), dropbear (a micro SSH server) and a few other utilities to you to SSH into your device and explore its insides.
+    - Install the usbnetwork [kindle-usbnetwork-0.57.N-k3](https://www.mobileread.com/forums/attachment.php?attachmentid=141340&d=1440341473). To install it you transfer over the bin that's right for your version of the kindle (I.e.,Update_usbnetwork_0.57.N_k3w_install.bin = Kindle Keyboard 3 Wifi).
+    - After installation, usbnet creates a usbnet directory in your kindle root which contains its configuration files:
+```
+$ tree usbnet -d
+usbnet
+├── bin
+├── empty
+├── etc
+│   ├── dot.ssh
+│   ├── ltrace
+│   ├── nano
+│   ├── terminfo
+│   │   ├── a
+│   │   ├── d
+│   │   ├── l
+│   │   ├── r
+│   │   ├── s
+│   │   ├── v
+│   │   └── x
+│   └── zsh
+├── lib
+│   └── zsh
+│       └── net
+├── libexec
+├── run
+├── sbin
+└── share
+    ├── misc
+    └── zsh
+        ├── functions
+        │   ├── Calendar
+        │   ├── Chpwd
+        │   ├── Completion
+        │   │   ├── AIX
+        │   │   ├── BSD
+        │   │   ├── Base
+        │   │   ├── Cygwin
+        │   │   ├── Darwin
+        │   │   ├── Debian
+        │   │   ├── Linux
+        │   │   ├── Mandriva
+        │   │   ├── Redhat
+        │   │   ├── Solaris
+        │   │   ├── Unix
+        │   │   ├── X
+        │   │   ├── Zsh
+        │   │   └── openSUSE
+        │   ├── Exceptions
+        │   ├── MIME
+        │   ├── Misc
+        │   ├── Newuser
+        │   ├── Prompts
+        │   ├── TCP
+        │   ├── VCS_Info
+        │   │   └── Backends
+        │   ├── Zftp
+        │   └── Zle
+        ├── help
+        ├── scripts
+        └── site-functions
+```
+    - Now unmount(I.e.,"eject") the Kindle from our computer, disconnect the USB connection to take it out of mass storage mode and enable usbnet mode. 
+    - Press [DEL] on your Kindle to bring up the search bar and do this following "searches":
+        ```
+        ;debugOn
+        ~usbNetwork
+        ;debugOff
+        ```
+    - The commands are not case sensitive. Usually you don't want to stay in debugging mode because it turn Off various power savings features such as turning off WiFi is your Kindle is not connected to the USB. Also, It turns on verbose logging. 
+    - Now When you connect your Kindle to your Computer via USB, it itn't recognized as a mass storage device but rather as a USB network devices.
+    - Note that with the **usbnet** hack, bu default SSH only works over the USB host-to-host conection. SSH is configured not to ask for the root password so usbnet wisely disables SSH over WIFI for security reasons.
+    - Now let's login to our Kindle for the first time:
+

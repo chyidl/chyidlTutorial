@@ -1,0 +1,151 @@
+LICENSE
+
+  Permission to use, copy, modify, and distribute this software and its
+documentation for any purpose and without fee is hereby granted, provided
+that the above copyright notice appears in all copies and that both the
+copyright notice and this permission notice appear in supporting
+documentation, and that the same name not be used in advertising or
+publicity pertaining to distribution of the software without specific,
+written prior permission. We make no representations about the
+suitability this software for any purpose. It is provided "as is"
+without express or implied warranty.
+
+CREDITS
+
+  xzdec: XZ Utils, Released under the public domain.
+(http://tukaani.org/xz/)
+
+  busybox: BusyBox, licensed under the GNU General Public License version 2.
+(http://www.busybox.net/license.html)
+
+  dropbearmulti: Dropbear, distributed under a MIT-style license.
+(http://matt.ucc.asn.au/dropbear/dropbear.html)
+
+    `->   libtommath & libtomcrypt, (C) Tom St Denis, <tomstdenis@gmail.com>,
+        released in the Public Domain,
+        (https://github.com/libtom/libtommath & https://github.com/libtom/libtomcrypt)
+
+  rsync: Rsync, licensed under the GNU General Public License (http://www.gnu.org/licenses/gpl.html).
+(http://rsync.samba.org)
+
+  htop: htop, licensed under the GNU General Public License version 2 (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+(http://htop.sourceforge.net/index.php?page=author)
+
+  lsof: lsof, Copyright 2002 Purdue Research Foundation, West Lafayette, Indiana 47907. All rights reserved. Written by Victor A. Abell
+(ftp://lsof.itap.purdue.edu/pub/tools/unix/lsof)
+
+  mosh-server: Mosh, Copyright (C) 2012 Keith Winstein, along with Anders Kaseorg, Quentin Smith, Richard Tibbetts and Keegan McAllister,
+Licensed under the GNU General Public License version 3+ (http://www.gnu.org/licenses/gpl.html).
+(http://mosh.mit.edu/)
+
+    |->   libstdc++, Copyright (C) 1994-2012, Free Software Foundation, Inc.,
+    |   Licensed under the GNU General Public License version 3 (http://gcc.gnu.org/onlinedocs/libstdc++/manual/license.html)
+    |   (http://gcc.gnu.org/)
+    |
+    `->   protobuf, Copyright (C) 2008, Google Inc.,
+        Licensed under the New BSD License (http://www.opensource.org/licenses/bsd-license.php).
+        (http://code.google.com/p/protobuf/)
+
+  kindletool: KindleTool, Copyright (C) 2011-2015  Yifan Lu, licensed under the GNU General Public License version 3+ (http://www.gnu.org/licenses/gpl.html).
+  (https://github.com/NiLuJe/KindleTool/)
+
+    |
+    |->   libarchive, Copyright (C) Tim Kientzle, licensed under the New BSD License (http://www.opensource.org/licenses/bsd-license.php)
+    |   (http://libarchive.github.com/)
+    |
+    |->   GMP, GNU MP Library, Copyright 1991-2013 Free Software Foundation, Inc.,
+    |   licensed under the GNU Lesser General Public License version 3+ (http://www.gnu.org/licenses/lgpl.html).
+    |   (http://gmplib.org/)
+    |
+    `->   nettle, Copyright (C) 2001-2013 Niels Möller,
+        licensed under the GNU Lesser General Public License version 2.1+ (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html).
+        (http://www.lysator.liu.se/~nisse/nettle)
+
+  sftp-server, sshd, ssh, scp, sftp, ssh-*: OpenSSH, licensed under a BSD licence (http://www.openbsd.org/cgi-bin/cvsweb/src/usr.bin/ssh/LICENCE?rev=1.19;content-type=text%2Fplain).
+(http://openssh.org/)
+
+    |
+    |->   OpenSSL, Copyright (C) 1998-2011 The OpenSSL Project. SSLeay, Copyright (C) 1995-1998 Eric Young,
+    |   Licensed under an Apache-style licence (http://openssl.org/source/license.html).
+    |   (http://openssl.org/)
+    |
+    `->   zlib, Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler,
+        Licensed under the zlib license (http://zlib.net/zlib_license.html)
+        (http://zlib.net/)
+
+
+  sshfs: SSH file system, Copyright (C) 2004, Miklos Szeredi <miklos@szeredi.hu>,
+Licensed under the GNU General Public License version 2 (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+(http://fuse.sourceforge.net/sshfs.html)
+
+    |->   libfuse, Filesystem in Userspace, Copyright (C) 2001-2007 Miklos Szeredi <miklos@szeredi.hu>,
+    |   Licensed under the GNU Lesser General Public License, version 2.1 (https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html)
+    |   (http://fuse.sourceforge.net/)
+    |
+    `->   glib, Library of useful routines for C programming, Copyright (C) 1995-1997 Peter Mattis, Spencer Kimball and Josh MacDonald,
+       Licensed under the GNU Lesser General Public License, version 2 (https://www.gnu.org/licenses/old-licenses/lgpl-2.0.html)
+       (http://library.gnome.org/devel/glib/)
+
+  fbgrab: fbgrab, Copyright (C) Gunnar Monell <gmo@linux.nu> 2002,
+Licensed under the GNU General Public License version 2 (https://www.gnu.org/licenses/old-licenses/gpl-2.0.html).
+(http://fbgrab.monells.se/)
+
+    |->   libpng, Copyright (c) 2004, 2006-2012 Glenn Randers-Pehrson,
+    |   Licensed under the libpng license (http://www.libpng.org/pub/png/src/libpng-LICENSE.txt)
+    |   (http://www.libpng.org/pub/png/libpng.html)
+    |
+    `->   zlib, Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler,
+        Licensed under the zlib license (http://zlib.net/zlib_license.html)
+        (http://zlib.net/)
+
+  strace: strace, Copyright (c) 1991, 1992 Paul Kranenburg <pk@cs.few.eur.nl>,
+                  Copyright (c) 1993 Branko Lankester <branko@hacktic.nl>,
+                  Copyright (c) 1993 Ulrich Pegelow <pegelow@moorea.uni-muenster.de>,
+                  Copyright (c) 1995, 1996 Michael Elizabeth Chastain <mec@duracef.shout.net>,
+                  Copyright (c) 1993, 1994, 1995, 1996 Rick Sladkey <jrs@world.std.com>,
+                  Copyright (C) 1998-2001 Wichert Akkerman <wakkerma@deephackmode.org>,
+        Licensed under the BSD 3-Clause License (http://opensource.org/licenses/BSD-3-Clause)
+        (http://sourceforge.net/projects/strace/)
+
+  libncurses*.so*: ncurses, Copyright (c) 1998-2011 Free Software Foundation, Inc.,
+        distributed under a MIT-style license (http://opensource.org/licenses/MIT).
+        (https://www.gnu.org/software/ncurses/)
+
+  libunwind*: libunwind, Copyright (C) 2008 CodeSourcery,
+        distributed under a MIT-style license (http://opensource.org/licenses/MIT).
+        (http://savannah.nongnu.org/projects/libunwind)
+
+  eu-*, libelf.so*, libdw.so*, libebl_*.so*: elfutils, Copyright (C) 1999-2014 Red Hat, Inc.,
+        Licensed under the GNU General Public License version 3+ (http://www.gnu.org/licenses/gpl.html)
+        (https://fedorahosted.org/elfutils/)
+
+  ltrace: ltrace, Copyright (C) 2009 Juan Cespedes,
+        Licensed under the GNU General Public License version 2+ (http://www.gnu.org/licenses/old-licenses/gpl-2.0.html),
+        (http://www.ltrace.org/)
+
+  nano: nano, Copyright (C) 1999-2014 Free Software Foundation, Inc.,
+        Licensed under the GNU General Public License version 3+ (http://www.gnu.org/licenses/gpl.html)
+        (http://www.nano-editor.org/)
+
+  zsh: the Z shell, Copyright (c) 1992-1997 Paul Falstad,
+        Licensed under the ZSH License (http://sourceforge.net/p/zsh/code/ci/master/tree/LICENCE)
+        (http://www.zsh.org/)
+
+  dircolors: coreutils, Copyright (C) 1988, 1991-2011 Free Software Foundation, Inc.,
+        Licensed under the GNU General Public License (http://www.gnu.org/licenses/gpl.html).
+        (http://www.gnu.org/software/coreutils)
+
+  dircolors.*: seebi/dircolors-solarized,
+        (https://github.com/seebi/dircolors-solarized)
+
+  libmagic.so*: file, Copyright (c) Ian F. Darwin 1986-1995,
+        Licensed under the New BSD License (http://www.opensource.org/licenses/bsd-license.php).
+        (http://www.darwinsys.com/file/)
+
+  libpcre*.so: PCRE, Copyright (c) 1997-2014 University of Cambridge,
+        Licensed under the New BSD License (http://www.opensource.org/licenses/bsd-license.php).
+        (http://www.pcre.org/)
+
+  ag: The Silver Searcher, Copyright (c) 2011-2014 Geoff Greer,
+        Licensed under the Apache 2.0 License (https://www.apache.org/licenses/LICENSE-2.0.html).
+        (http://github.com/ggreer/the_silver_searcher)
