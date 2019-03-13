@@ -1,5 +1,6 @@
 Kindle + Raspberry Pi == Anything 
 =================================
+> As a always, RTFM (read the fucking manual) with anything that you're doing.
 
 ![Kindle Keyboard](/imgs/raspberrypi/KindlePiPrj/340px-Amazon_Kindle_3.jpg?raw=true)
 
@@ -130,16 +131,20 @@ Hacking the Kindle
 The first part, connecting the Kindle to the Raspberry Pi is simple enough. 
 > [Jail break the Kindle](http://wiki.mobileread.com/wiki/Kindle_Hacks_Information#Jail_break_JB)
 
+> Launchpad -- yet another hotkey manager for Kindle, to get the Launchpad software which is required to run the terminal emulator later. Download the file: [lpad-pkg-001d](https://www.mobileread.com/forums/attachment.php?attachmentid=141887&d=1441954643) and unzip. Find the correct install binary for your device. I used: update_launchpad_0.0.1d_k3w_install.bin
+
 > install a [terminal emulator](https://www.mobileread.com/forums/showthread.php?t=154500).
     - Terminal Emulator for Kindle. The terminal emulator is named myts. This is an enhanced version done by Matan based on the original [kiterm](http://info.iet.unipi.it/~luigi/kindle/) by Luigi Rizzo.
     - The latest download link is http://my.svgalib.org/kindle/myts-8.zip
     - After unzipping the archive, you will fond 2 folders: myts and launchpad.
     - mv mytes/ and launchpad to /mnt/us 
+    - To make sure that this new ini configuration file is read,safely disconnect the Kindle and issue this hotkey sequence:[Shift][Shift][Space].You should see a command 'Success!' notification on the Kindle when you issue this command.
     - After installing, the default launchpad configuration (in the file /mnt/us/launchpad/myts.I.ini) is :
-        T A = !/mnt/us/myts/myts.sh kill
-        T T = !/mnt/us/myts/myts.sh 1
-        T Y = !/mnt/us/myts/myts.sh 2
-        T U = !/mnt/us/myts/myts.sh 3
+        [Shift] T A = !/mnt/us/myts/myts.sh kill
+        [Shift] T T = !/mnt/us/myts/myts.sh 1
+        [Shift] T Y = !/mnt/us/myts/myts.sh 2
+        [Shift] T U = !/mnt/us/myts/myts.sh 3
+        You can hit the left back arrow (the Kindle's page turning buttons) to exit temporarily.
 
 > install [UsbNetwork](http://www.mobileread.com/forums/showthread.php?t=88004).
 > What's usbnet? The Kindle 2 has a hidden USB network mode, probably left over from development. When activated, the Kindle would behave as a USB network device rather than a USB mass storage device. This allowed you to do neat things such as tethering the device to your laptop. Kindle keyboard version seems to have removed this feature, but the usbnet hack reactivates it and installs busybox (a
@@ -216,4 +221,33 @@ usbnet
     - Now When you connect your Kindle to your Computer via USB, it itn't recognized as a mass storage device but rather as a USB network devices.
     - Note that with the **usbnet** hack, bu default SSH only works over the USB host-to-host conection. SSH is configured not to ask for the root password so usbnet wisely disables SSH over WIFI for security reasons.
     - Now let's login to our Kindle for the first time:
+
+> Make sure the usbNetwork is enable, Connect the devices through USB, do a quick ifconfig usb0 192.168.2.1
+![macOS network setting](/imgs/raspberrypi/KindlePiPrj/mac_network_setting.png?raw=true)
+
+> I can login into the Raspberry Pi with no problem. 
+![ifconfig usbNetwork](/imgs/raspberrypi/KindlePiPrj/ifconfig_usb.png?raw=true)
+
+> Using the great display of the Kindle but sadly also using it's limiting keyboard 
+![kindle terminal](/imgs/raspberrypi/KindlePiPrj/kindle_usb_network.png?raw=true)
+
+> The main challenge now is to use the keyboard connected to the Raspberry Pi instead of the Kindle's. This is where the magic of **GNU SCREEN** comes in play! Screen is a terminal multiplexer, screen is that you can be multiple user on the same screen session.
+
+> So what happen here, is that using the keyboard connected to the Raspberry Pi, you will login into the Raspberry Pi with the Kindle and the share the same screen session so that you can use the keyboard connected on the Raspberry pi.You will still need to use the kindle keyboard to create that first connection, but once your connected, you can use your main keyboard.
+
+**Use network for the Raspberry Pi**
+
+> First we want to be able to use UsbNetworking when connecting Kindle. When the Kindle is on usbNetworking, it assign the ip 192.168.2.2 to its USB port. When then need the Raspberry Pi to assign its USB port the 192.168.2.1 and that has to be automatic. To do so, the first step is to add to your **/etc/network/interfaces**
+```
+allow-hotplug usb0 
+mapping hotplug 
+script grep 
+map usb0
+iface usb0 inet static
+address 192.168.2.1
+netmask 255.255.255.0
+broadcast 192.168.2.255
+up iptables -I INPUT 1 -s 192.168.2.1 -j ACCEPT 
+```
+
 

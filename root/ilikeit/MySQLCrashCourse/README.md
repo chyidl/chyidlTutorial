@@ -688,3 +688,31 @@ COUNT(字段)：
 COUNT(*)做了专门的优化，不获取值
 执行效率排序: COUNT(*)~COUNT(1)>COUNT(id)>COUNT(字段)
 ```
+
+MySQL Order
+-----------
+```
+创建表结构:
+
+CREATE TABLE `t` (`id` int(11) NOT NULL, `city` varchar(16) NOT NULL, `name` varchar(16) NOT NULL, `age` int(11) NOT NULL, `addr` varchar(128) DEFAULT NULL, PRIMARY KEY (`id`), KEY `city` (`city`))ENGINE=InnoDB;
+
+mysql> explain select city, name, age from t where city = '杭州' order by name limit 1000;
++----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+----------------+
+| id | select_type | table | partitions | type | possible_keys | key  | key_len | ref   | rows | filtered | Extra          |
++----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+----------------+
+|  1 | SIMPLE      | t     | NULL       | ref  | city          | city | 66      | const |    1 |   100.00 | Using filesort |
++----+-------------+-------+------------+------+---------------+------+---------+-------+------+----------+----------------+
+1 row in set, 1 warning (0.18 sec)
+
+MySQL会给每一个线程分配一块内存用于排序：sort_buffer. 
+
+SET max_length_for_sort_data = 16; #MYSQL认为单行长度太大采用另外一种算法.
+
+全字段排序 vs rowid排序
+    MySQL担心排序内存太小会影响排序效率，才会采用rowid排序算法，这样排序过程中一次可以排序更多行，但是需要再回到原表取数据.
+
+MySQL做排序时成本比较高的操作，
+覆盖索引是指，索引上的信息足够满足查询请求，不需要再回到主键索引上取数据.
+```
+
+
