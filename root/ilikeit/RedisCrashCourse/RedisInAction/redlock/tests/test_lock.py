@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# optimization_example.py
-# choptimization
+# test_lock.py
+# tests
 #
 # 🎂"Here's to the crazy ones. The misfits. The rebels.
 # The troublemakers. The round pegs in the square holes.
@@ -15,14 +15,35 @@
 # Because the poeple who are crazy enough to think thay can change
 # the world, are the ones who do."
 #
-# Created by Chyi Yaqing on 03/11/19 15:05.
+# Created by Chyi Yaqing on 03/16/19 15:22.
 # Copyright © 2019. Chyi Yaqing.
 # All rights reserved.
 #
-# Distributed under terms of the
-# MIT
+# Distributed under terms of the MIT
 
 """
-Identify bottlenecks as quickly as possible,
-fix them and then confirm your've fixed them.
 """
+import unittest
+from redlock import RedLock, ReentrantRedLock, RedLockError
+from redlock.lock import CLOCK_DRIFT_FACTOR
+import mock
+import time
+
+
+def test_default_connection_details_value():
+    """
+    Test that RedLock instance could be created with
+    default value of `connection_details` argument.
+    """
+    RedLock("test_simple_lock")
+
+
+def test_simple_lock():
+    'Test a RedLock can be acquired.'
+    lock = RedLock("test_simple_lock", [{"host": "localhost"}], ttl=1000)
+    locked = lock.acquire()
+    lock.release()
+    lock.release()
+    assert locked is True
+
+

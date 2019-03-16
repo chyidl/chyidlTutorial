@@ -38,3 +38,33 @@ $ id
 # View All Groups on the System
 $ getent group 
 ```
+
+Set Up Time Synchronization 
+---------------------------
+> Accurate timekeeping has become a critical component of modern software deployments. Whether it's making sure logs are recorded in the right order or database updates are applied correctly, out-of-sync time can cause errors, data corruption, and other hard to debug issues.
+```
+# Navigating Basic Time Commands 
+$ date 
+
+# list the available time zones
+$ timedatectl list-timezones 
+
+# set the time zone with timedatectl set-timezone
+$ sudo timedatectl set-timezone Asia/Hong_Kong
+
+# verify your changes by running date again
+$ date 
+
+# query the status of timesyncd by running timedatectl with no arguments.
+$ timedatectl
+                      Local time: Sat 2019-03-16 13:14:41 HKT
+                  Universal time: Sat 2019-03-16 05:14:41 UTC
+                        RTC time: Sat 2019-03-16 05:14:42  (Real time Clock)
+                       Time zone: Asia/Hong_Kong (HKT, +0800)
+       System clock synchronized: yes
+systemd-timesyncd.service active: yes
+                 RTC in local TZ: no
+
+# If timesyncd isn't enabled, turn it on with timedatectl 
+$ sudo timedatectl set-ntp on|yes
+```
