@@ -52,7 +52,7 @@ class RedLockError(Exception):
 
 
 class RedLockFactory:
-    'A Factory class that helps reuse multiple Redis connections.'
+    """A Factory class that helps reuse multiple Redis connections."""
     def __init__(self, connection_details):
         self.redis_nodes = []
         for conn in connection_details:
@@ -67,18 +67,18 @@ class RedLockFactory:
             self.redis_nodes.append(node)
             self.quorum = len(self.redis_nodes)//2 + 1
 
-        def create_lock(self, resource, **kwargs):
-            """
-            Create a new RedLock object and reuse stored Redis clients.
-            All the kwargs it received would be passed to the RedLock's
-            __init__ function.
-            """
-            lock = RedLock(
-                    resource=resource, created_by_factory=True, **kwargs)
-            lock.redis_nodes = self.redis_nodes
-            lock.quorum = self.quorum
-            lock.factory = self
-            return lock
+    def create_lock(self, resource, **kwargs):
+        """
+        Create a new RedLock object and reuse stored Redis clients.
+        All the kwargs it received would be passed to the RedLock's
+        __init__ function.
+        """
+        lock = RedLock(
+                resource=resource, created_by_factory=True, **kwargs)
+        lock.redis_nodes = self.redis_nodes
+        lock.quorum = self.quorum
+        lock.factory = self
+        return lock
 
 
 class RedLock:
@@ -123,6 +123,9 @@ class RedLock:
             self.redis_nodes.append(node)
         self.quorum = len(self.redis_nodes)//2 + 1
 
+    # Context Managers
+    # Defines what the context manager should do at the beginning
+    # of the block created by the with statement
     def __enter__(self):
         acquired, validity = self.acquire_with_validity()
         if not acquired:
