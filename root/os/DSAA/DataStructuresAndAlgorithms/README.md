@@ -47,7 +47,7 @@ Queue
 * Implement a chained queue with a linked list 
 - [Python3 queue_linked_list_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/queue_linked_list_implement.py)
 * Implement a circular queue 
-- []
+- [Python3 queue_circular_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/queue_circular_array_implement.py)
 
 Binary Tree
 -----------

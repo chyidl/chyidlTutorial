@@ -103,7 +103,7 @@ There are following limitations of above implementation.
 import sys
 
 
-# Function to create a stack. It initializes size of stack as 0
+# Class to create a stack. It initializes size of stack as 0
 class Stack:
     def __init__(self):
         self.data = []
@@ -188,10 +188,10 @@ def infixToPostfix(exp):
         # If the scanned character is an ')', pop and
         # output from the stack until and '(' is found
         elif i == ')':
-            while ((not stack.isEmpty()) and stack.peek() is not '('):
+            while ((not stack.isEmpty()) and stack.peek() != '('):
                 a = stack.pop()
                 output.append(a)
-            if (not stack.isEmpty() and stack.peek() is not '('):
+            if (not stack.isEmpty() and stack.peek() != '('):
                 return -1
             else:
                 stack.pop()
