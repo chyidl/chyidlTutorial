@@ -715,4 +715,74 @@ MySQL做排序时成本比较高的操作，
 覆盖索引是指，索引上的信息足够满足查询请求，不需要再回到主键索引上取数据.
 ```
 
+```
+SQL语言分为DDL, DML, DCL三大类。
+https://blog.csdn.net/chenlycly/article/details/21302073
 
+```
+
+MySQL 查看表结构
+```
+desc tabl_name;  # 简单描述表结构，字段类型
+显示表结构，字段类型，主键，是否为空等属性
+mysql> desc asharecalendar;
++-------------------+--------------+------+-----+---------+-------+
+| Field             | Type         | Null | Key | Default | Extra |
++-------------------+--------------+------+-----+---------+-------+
+| OBJECT_ID         | varchar(100) | NO   | PRI |         |       |
+| TRADE_DAYS        | varchar(12)  | YES  | MUL | NULL    |       |
+| S_INFO_EXCHMARKET | varchar(60)  | YES  | MUL | NULL    |       |
+| OPDATE            | datetime     | YES  |     | NULL    |       |
+| OPMODE            | varchar(1)   | YES  |     | NULL    |       |
++-------------------+--------------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+select * from information_schema.columns where table_schema = 'db' # 表所在数据库 and table_name = 'tablename'; # 你要查看的表名称
+mysql> SELECT column_name, column_comment FROM information_schema.columns WHERE table_schema = 'wind' and table_name = 'asharecalendar';
++-------------------+-----------------------+
+| column_name       | column_comment        |
++-------------------+-----------------------+
+| OBJECT_ID         | 对象ID                |
+| TRADE_DAYS        | 交易日                |
+| S_INFO_EXCHMARKET | 交易所英文简称        |
+| OPDATE            |                       |
+| OPMODE            |                       |
++-------------------+-----------------------+
+5 rows in set (0.02 sec)
+
+只查询列名和注释
+select column_name, column_comment from information_schema.columns where table_schema='db' and table_name = 'tablename';
+
+查询表的注释
+select table_name, table_comment from information_schema.tables where table_schema = 'db' and table_name = 'tablename' 
+
+查看表生成的DDL
+show create table table_name; 
+mysql> show create table asharecalendar\G
+*************************** 1. row ***************************
+       Table: asharecalendar
+Create Table: CREATE TABLE `asharecalendar` (
+  `OBJECT_ID` varchar(100) NOT NULL DEFAULT '' COMMENT '对象ID',
+  `TRADE_DAYS` varchar(12) DEFAULT NULL COMMENT '交易日',
+  `S_INFO_EXCHMARKET` varchar(60) DEFAULT NULL COMMENT '交易所英文简称',
+  `OPDATE` datetime DEFAULT NULL,
+  `OPMODE` varchar(1) CHARACTER SET utf8 DEFAULT NULL,
+  PRIMARY KEY (`OBJECT_ID`),
+  KEY `index_trade_days` (`TRADE_DAYS`),
+  KEY `index_s_info_exchange` (`S_INFO_EXCHMARKET`)
+) ENGINE=InnoDB DEFAULT CHARSET=gbk
+1 row in set (0.01 sec)
+
+表操作命令：
+复制表结构：create table table1 like table; 
+复制数据: insert into table1 select * from table; 
+
+机器授权：
+grant select on *.* to 'reader'@'%' identified by '123456' WITH GRANT OPTION flush privileges;
+
+插叙数据直接插入
+insert into t_visual_domain(`user_id`, `domain`, `group`) select id, 'www.baidu.com' as doamin, 'group' from t_visual_user;
+
+修改表结构
+alter table competitor_goods add sku_id bigint(20) unsigned DEFAULT NULL COMMENT '商品销售'
+```
