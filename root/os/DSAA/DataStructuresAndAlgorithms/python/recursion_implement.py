@@ -41,7 +41,7 @@ What is tail recursion?
 # valye returned by fact(n-1) is used in fact(n) and call to fact(n-1) is not
 # the last thing done by fact(n)
 def fact(n):
-    if n is 0:
+    if n == 0:
         return 1
     return n * fact(n-1)
 
@@ -52,7 +52,7 @@ print(fact(5))
 
 # The above function can be written as a tail recursive function.
 def factTR(n, a):
-    if n is 0:
+    if n == 0:
         return a
 
     return factTR(n-1, n*a)

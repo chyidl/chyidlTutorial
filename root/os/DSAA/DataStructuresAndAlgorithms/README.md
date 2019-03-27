@@ -67,7 +67,9 @@ Recursive
 * Programming to achieve Fibonacci sequence evaluation 
 - [Python3 recursion_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/recursion_implement.py)
 * Programming to achieve factorial 
+- [Python3 recursion_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/recursion_implement.py)
 * Programming implements a full array of data sets 
+- [Python3 recursion_arrangement_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/recursion_arrangement_implement.py)
 
 Sort
 ----
