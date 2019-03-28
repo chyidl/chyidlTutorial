@@ -26,6 +26,10 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Swift Tutorial](root/swift/swiftTutorial/README.md)
 - [Swift Awesome Project](root/swift/swiftPrj/README.md)
 
+### ![](imgs/Java_logo.png?raw=true) Java Language
+
+- [Java Tutorial](root/java/javaTutorial/README.md)
+- [Java Awesome Project](root/java/javaPrj/README.md)
 
 ### ![](imgs/raspiberrypi-logo.png?raw=true) RASPBERRY PI 
 

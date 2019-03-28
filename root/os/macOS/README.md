@@ -249,3 +249,35 @@ You can see what this looks like in the screenshot above and the closeup image b
 ![Lock Message](/imgs/os/macOS/Screen_Shot_LockMessage.png?raw=true)
 
 Having a message on your lock screen is a great loss prevention and general anti-theft measure, since anyone who gets the Mac into their hands later will see the message and if they have a conscience, will hopefully call the number your set on the screen. This could also help if you ever acciendtally misplaced a Mac laptop
+
+
+Install Multiple Java Versions on macOS 
+---------------------------------------
+
+> On Mac, Homebrew is the de-facto package manager, and Homebrew Cask is the app manager
+
+```
+Install Homebrew Cask first if you havn't:
+$ brew update
+$ brew tap caskroom/cask 
+$ brew install brew-cask-completion 
+
+If you brew or cask is outdated, update and upgrade:
+$ brew update && brew upgrade brew-cask-completion && brew cleanup && brew cask cleanu
+# Check if we already have JDK 7, 11 installed by Homebrew Cask:
+$ brew tap caskroom/versions 
+$ brew cask info java7 
+$ brew cask info java11 
+
+To check JDK 12 (latest)
+$ brew cask info java 
+
+Install Java 7, 11 (latest):
+$ brew tap caskroom/versions
+$ brew cask install java8
+$ brew cask install java11 
+
+Install OpenJDK Versions 7, 11 
+$ brew tap AdoptOpenjdk/openjdk
+$ brew search /adoptopenjdk/ 
+```
