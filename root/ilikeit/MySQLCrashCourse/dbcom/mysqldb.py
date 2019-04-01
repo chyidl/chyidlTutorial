@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
-# mysql-connector-python
+# Mysql  autocommit ON
+# Installing Connector/Python with pip
+# pip install mysql-connector-python
+# the MySQLConnector Python supports a maximum of 32
 import mysql.connector
 # Using this module create, manage and use the connection pool
+# A pool opens a number of connections and handles thread safety when providing
+# connections to requesters
+# The size of connection pool is configurable at pool creation time
 import mysql.connector.pooling
-from mysql.connector import errorcode
+# To handle connection errors, use the try statement and catch all errors
+from mysql.connector import Error, errorcode
 
 
 class MySQLDB:
@@ -18,7 +25,7 @@ class MySQLDB:
         'charset':  config.mysql_charset,
         # default value of the charset argument is "utf8"
         'connection_timeout': config.mysql_connection_timeout,
-        'pool_name': config.mysql_poolname,
+        'pool_name': config.mysql_poolname, # distinct name
         'pool_size': config.mysql_poolsize,
         'pool_reset_session':config.mysql_pollresetsession,
         'use_pure': config.mysql_usepure,
@@ -29,6 +36,14 @@ class MySQLDB:
         self._config = config
         self._pool = pool
         self.connectDb()
+
+    def reSetConfig(self, re_config):
+        """Change Configureation parameters for connections in the pool"""
+        if self._pool:
+            self._conn_pool.set_config(**re_config)
+
+        else:
+            raise "There is no exist MySQLConnectionPool"
 
     # Using the magic methods (__enter__, __exit__) allows you to implement
     # object which can be used easily with the with statement
@@ -60,17 +75,21 @@ class MySQLDB:
                 # with required parameters to connect MySQL.
                 # self._conn = mysql.connector.connect(**config)
                 # return MySQLConnection
-                # Create a connection pool.
+                # Create a Connection Pool.
                 self._conn_pool = mysql.connector.pooling.MySQLConnectionPool(
                         **self._config)
+                # self._conn_pool_name = self._conn_pool.pool_name
+                # get the connection object from a connection pool
                 self._conn = self._conn_pool.get_connection()
                 # Get connection object from a pool
                 print("Printing connection pool properties")
-                print(
-                        f'Connection Pool Name - {self._conn_pool.pool_name}')
+                print(f'Connection Pool Name - {self._conn_pool.pool_name}')
                 print(f'Connection Pool Size - {self._conn_pool.pool_size}')
             else:
+                # connect() contructor creates a connection to the MySQL server
+                # and returns a MySQLConnection object.
                 self._conn = mysql.connector.connect(**self._config)
+
             if self._conn.is_connected():
                 # verify is our python application is connected to MySQL
                 # need to buffered=True to avoid MySQL Unread result error
@@ -81,6 +100,8 @@ class MySQLDB:
                 # Using MySQLCursor can execute SQL queries
             else:
                 print('connection failed.')
+        except mysql.connector.PoolError as err:
+            print("no have available connection pool,{}".format(err))
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print('Something is wrong with yourname or password, %s' % err)
@@ -112,7 +133,6 @@ class MySQLDB:
         if not self.cursor or not self._conn.is_connected():
             print('MySQL is not connected, Trying to reconnect')
             self.connectDb()
-
         try:
             self.cursor.execute(sql, params or ())
         except mysql.connector.Error as error:
@@ -165,25 +185,41 @@ class MySQLDB:
             print(f"Failed to read database version {error}")
             return error
 
+    @property
+    def getPoolName(self):
+        """MySQLConnectionPool.pool_name property to get the connection name"""
+        if self._pool:
+            return self._conn_pool.pool_name
+        else:
+            return None
+
+    @property
+    def getPoolSize(self):
+        """MySQLConnectionPool.pool_size property to get the connection size"""
+        if self._pool:
+            return self._conn_pool.pool_size
+        else:
+            return None
+
 
 if __name__ == '__main__':
     import os
+    import hashlib
     env_dist = os.environ
-
-    cfg = {
+    mysql_cfg = {
         'user': env_dist.get('REMOTE_MYSQL_USER'),
         'password': env_dist.get('REMOTE_MYSQL_PASSWORD'),
         'host': env_dist.get('REMOTE_MYSQL_HOST'),
         'port': env_dist.get('REMOTE_MYSQL_PORT'),
         'charset': 'utf8mb4',
         'connection_timeout': 10,
-        'pool_name': 'dbcom',
-        'pool_size': 5,
-        'pool_reset_session': True,
-        'use_pure': True,
+        'pool_name': hashlib.md5(f"{env_dist.get('REMOTE_MYSQL_HOST')}".encode(
+            'utf-8')).hexdigest(),
+        'pool_size': 5,  # the default is 5. cannot be 0 or less than 0.
+        'pool_reset_session': False,
+        'use_pure': False,  # a pure python interface or C extension
     }
-
-    with MySQLDB(cfg, pool=True) as db:
+    with MySQLDB(mysql_cfg, pool=True) as db:
         try:
             # db stuff
             sql = 'SELECT VERSION()'
@@ -200,6 +236,7 @@ if __name__ == '__main__':
             KEY `a` (`a`),
             KEY `b` (`b`)) ENGINE=InnoDB;"""
             db.query(sql)
-
+            print(f"Pool_name: {db.getPoolName}")
+            print(f"Pool_size: {db.getPoolSize}")
         except Exception as err:
             print(err)

@@ -45,4 +45,38 @@ Continuous deployment (CD) 持续部署
         Chef
         Puppet 
 
+回滚: 一旦当前版本发生问题，就要回滚到上一版本的构建结果，最简单的做法就是修改一下符号连接，指向上一个版本的目录
+```
+
+Jenkins CI 持续集成
+------------------
+```
+This is the Debian package repository of Jenkins to automate installation and upgrade. To use this repository, first add the key to your system:
+$ wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+
+Then add the following entry in your /etc/apt/sources.list:
+$ deb https://pkg.jenkins.io/debian-stable binary/
+
+Update your local package index, then finally install Jenkins:
+$ sudo apt-get update 
+$ sudo apt-get install jenkins 
+
+Jenkins will start automatically on port 8080.
+第一次启动Jenkins，Jenkins会自动生成一个随机口令，访问http://localhost:8080/ 
+$ sudo systemctl status jenkins 
+```
+
+Jenkins and Python
+------------------
+> setting up a continuous integration server, Jenkins, with our Python applications
+    - install Jenkins on Ubuntu 
+    - clone and install a Python application in a virtualenv 
+    - run tests using nose and publish tests results, code coverage and pylint reports
+    - have Github notify Jenkins when new code is pushed 
+
+> Setup a Jenkins job 
+```
+1. Create a new job and call it something without spaces! Jenkins creates a directory of the same name on the filesystem, but pip (or virtualenv?) will choke on spaces. Then select "Build a free-style software project".
+
+
 ```
