@@ -105,3 +105,11 @@ venv.bak/
 
 # PyCharm
 .idea/
+
+# java.gitignore 
+# Compiled class file
+*.class 
+
+# Package Files
+*.jar
+*.war
