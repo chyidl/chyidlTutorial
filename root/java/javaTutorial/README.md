@@ -177,7 +177,24 @@ Thread类的setPriority()和getPriority()方法分别用来设置和获取线程
 
 yield()从未导致线程转到等待/睡眠/阻塞状态，在大多数情况下，yield()将导致线程从运行状转为可运行状态，yield()方法对应如下操作，先检查当前是所有的yield()方法称为"退让"，他把运行机会让给同等优先级的其它线程。sleep()方法允许较低优先级的线程获得运行机会，但yield方法执行时，当前线程仍处于可运行状态，所以不可能让出低优先级的线程获得CPU占有权，在一个运行系统中，如果较高优先级的线程没有调用sleep()方法，又没有收到IO阻塞，那较低优先级的线程只能等待较高优先级的线程运行结束，才有有机运行
 
-https://blog.csdn.net/evankaka/article/details/44153709
+主线程: JVM调用程序main()所产生的线程
+当前线程: Thread.currentThread()获取的线程
+后台线程: 守护线程，JVM的垃圾回收就是一个后台守护线程,用户线程和守护线程的却别在于是否等待主线称依赖于主线程结束而结束
+前台线程：isDaemon,setDaemon判断或设置线程
+
+sleep() 线程睡眠 
+isAlive() 判断线程是否存活
+join():等待线程终止
+activeCount():进程中活跃的线程数
+enumerate(): 枚举程序中的线程
+currentThread():当前线程
+isDaemon():判断一个线程是否为守护线程
+setDaemon():设置线程为守护线程
+setName():线程设置一个名称 
+wait():线程等待
+notify():通知一个线程继续运行
+setPriority():设置一个线程的优先级
+
 ```
 
 计算机基础

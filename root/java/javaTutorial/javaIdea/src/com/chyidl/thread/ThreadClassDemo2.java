@@ -5,16 +5,16 @@ import java.util.Vector;
 /**
  *  通过实现Runnable 接口创建线程
  * */
-class WriteMessage implements Runnable {
+class WriteMessage2 implements Runnable {
     private String message;
     // private Object lock;
     // 生成零长度的byte[] 只需要3条操作码，Object lock = new Object()需要7行操作码
-    Object lock = new Object();  // 同步锁
+    Object lock;  // 同步锁
 
     private Vector<Integer> shareVar;
 
     // 构造函数 -- 通过构造方法传递数据
-    public WriteMessage(String message, Object lock,Vector<Integer> shareVar) {
+    public WriteMessage2(String message, Object lock,Vector<Integer> shareVar) {
         this.message = message;
         // 将传入的数据使用类变量保存起来
         this.lock = lock;
@@ -37,29 +37,21 @@ class WriteMessage implements Runnable {
             }
         }
         System.out.printf("%s activeCount: %d\n", message, Thread.activeCount());
-        System.out.printf("%s %s %s\n", Thread.currentThread().getName(), message, getShareVar());
-    }
-
-    public Vector<Integer> getShareVar() {
-        return shareVar;
-    }
-
-    public void setShareVar(Vector<Integer> shareVar) {
-        this.shareVar = shareVar;
+        System.out.printf("%s %s %s\n", Thread.currentThread().getName(), message, shareVar);
     }
 }
 
 /**
  *  通过实现Runnable 接口创建线程
  * */
-class DisplayMessage implements Runnable {
+class DisplayMessage2 implements Runnable {
     private String message;
     //private Object lock;
-    Object lock = new Object();  // 同步锁
+    Object lock;  // 同步锁
     public Vector<Integer> shareVar;
 
     // 构造函数
-    public DisplayMessage(String message, Object lock, Vector<Integer> shareVar) {
+    public DisplayMessage2(String message, Object lock, Vector<Integer> shareVar) {
         this.message = message;
         this.lock = lock;
         this.shareVar = shareVar;
@@ -79,7 +71,7 @@ class DisplayMessage implements Runnable {
     }
 }
 
-public class ThreadClassDemo {
+public class ThreadClassDemo2 {
 
     public static Vector<Integer> shareVar = new Vector<Integer>();
     // private static byte[] lock = new byte[0]; // instance 变量
@@ -91,8 +83,8 @@ public class ThreadClassDemo {
 
         Object lock = new Object();  // 同步锁
 
-        WriteMessage T1 = new WriteMessage("WriteMessage", lock, shareVar);
-        DisplayMessage T2 = new DisplayMessage("DisplayMessage", lock, shareVar);
+        WriteMessage2 T1 = new WriteMessage2("WriteMessage", lock, shareVar);
+        DisplayMessage2 T2 = new DisplayMessage2("DisplayMessage", lock, shareVar);
 
         Thread thread2 = new Thread(T2);
         Thread thread1 = new Thread(T1);
