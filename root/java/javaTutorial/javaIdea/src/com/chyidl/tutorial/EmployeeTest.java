@@ -1,6 +1,4 @@
-package com.chyidl;
-
-import java.io.*;
+package com.chyidl.tutorial;
 
 public class EmployeeTest {
     public static void main(String args[]) {

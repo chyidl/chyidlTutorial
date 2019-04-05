@@ -1,7 +1,6 @@
 package com.chyidl.tutorial;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;  // 当前日期和时间
 
 public class DateAndTimeTest {

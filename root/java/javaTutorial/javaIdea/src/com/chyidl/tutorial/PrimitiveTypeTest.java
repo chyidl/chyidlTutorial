@@ -1,7 +1,5 @@
-package com.chyidl;
+package com.chyidl.tutorial;
 
-import java.nio.channels.ClosedByInterruptException;
-import java.nio.channels.MembershipKey;
 
 public class PrimitiveTypeTest {
     public static void main (String[] args){

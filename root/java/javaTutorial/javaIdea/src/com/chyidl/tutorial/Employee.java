@@ -1,6 +1,5 @@
-package com.chyidl;
+package com.chyidl.tutorial;
 
-import java.io.*;
 
 public class Employee {
     String name;

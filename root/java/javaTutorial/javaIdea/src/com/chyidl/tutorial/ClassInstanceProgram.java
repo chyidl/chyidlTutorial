@@ -1,4 +1,4 @@
-package com.chyidl;
+package com.chyidl.tutorial;
 
 
 class Dog {
