@@ -17,8 +17,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#define ANSI_COLOR_CYAN "\x1b[36m";
-#define ANSI_COLOR_RESET "\x1b[0m";
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RESET "\x1b[0m"
 
 void *create_shared_memory(size_t size){
     // 将共享内存设置成可读可写
