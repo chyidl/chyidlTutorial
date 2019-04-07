@@ -17,6 +17,7 @@
 - [Build your own Private Git Repository](/root/raspberrypi/RaspberryPiPrj/PrivateGitRepository/README.md)
 - [Build Ghost Blog on Raspberry](/root/raspberrypi/RaspberryPiPrj/GhostPi/README.md)
 - [Kindle + Raspberry = Anything](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/README.md)
+- [YahooWeatherAPI](/root/raspberrypi/RaspberryPiPrj/YahooWeatherAPI/README.md)
 
 
 Download all history Magpi Magazine PDF files

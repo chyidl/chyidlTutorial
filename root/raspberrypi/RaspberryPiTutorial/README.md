@@ -88,3 +88,5 @@ Swap:          1023           0        1023
 
 That should be enough swap to complete any future compiles I may do n the future.
 
+
+![Raspberry Start](/root/raspberrypi/RaspberryPiTutorial/RaspberryPi_Start.md)

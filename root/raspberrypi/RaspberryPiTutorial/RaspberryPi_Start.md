@@ -621,5 +621,126 @@ $ stat example.txt  # 查看文件的inode编号
 FAT 文件系统: 引导块+文件分配表FAT:File Allocation Table,FAT文件洗头膏中还有一个区域专门记录FAT根目录的信息，其他的子目录则以文件的形式保持，目录中每条记录对应一个文件，除了文件名和文件属性，还记录了文件的起始数据块的位置。
 
 文件描述符: File Descriptor: 进程描述符中有一个文件描述符表，记录该进程所有已经打开的文件，文件描述符说明目标文件在文件描述表中的位置，文件表File Table.
+
+/boot挂载FAT32格式化的启动分区，里面的文件用于树莓派的开机启动，计算机一般会从主办BIOS上读取存储的程序，BIOS知道主办上的硬件，从默认存储设备中读取最开始的512字节的数据，MBR Master Boot Record.
+通过MBR，计算机知道要从该存储器设备的那个分区找引导加载程序，引导加载程序存储有操作系统的相关信息，比如操作系统名称，内核所在位置，随后引导加载程序加载内核，操作系统开始工作。树莓派的开机方式有别于普通计算机，树莓派没有BIOS，树莓派电路板上携带启动程序，板载启动程序会挂载FAT32的启动分区，并运行引导程序bootcode.bin，负责下一阶段的启动工作，会从SD卡上找到GPU固件start.elf，将固件写入GPU，GPU在start.elf的指挥下，会读取系统配置文件config.txt和内核配置文件cmdline.txt,并启动内核文件kernel.img.该内核加载成功后，处理器开始工作，系统启动正式开始
+
+引用程序相关：应用程序都编译成二进制的可执行文件，位于名为bin的目录下，/sbin保存了系统启动、修复、恢复所必须的应用程序。/usr/local/bin和/usr/local/sbin用来保存应用程序的地方，保存自己编写或手动编译安装的应用程序。
+
+/etc: 保存关键的操作系统配置文件，这些配置文件可以改变操作系统级别的行为，
+    /etc/default/locale : 本地设置
+    /etc/default/keyboard: 键盘设置
+    /etc/localtime: 时间与时区配置
+    /etc/modules: 可加载模块配置 
+    /etc/init.d: 初始化相关文件
+    /etc/rc.local: 初始化脚本 
+    /etc/passwd: 用户列表，用户密码 
+    /etc/group:用户组列表 
+    /etc/motion/motion.conf: Motion的配置文件
+    /etc/apt/sources.list: apt-get软件源配置
+    /etc/wpa_supplication/wpa_supplicant.conf: Wi-Fi设置 
+    /etc/virc: vi初始化设置
+
+/proc 虚拟文件系统，直接对应内存上的内核空间，
+    /proc/cpuinfo: 保存CPU信息 
+    /proc/meminfo: 保存内存使用信息
+
+/dev 保存设备文件,每个设备文件对应一个设备，
+/mnt: 用于挂载额外的文件系统
+/media:挂载可插拔设备
+/var:保存系统中会动态增长的数据
+    /var/log: 系统日志和应用程序日志
+/tmp: 下的文件会自动清空，因此/tmp下的文件基本不需要维护，不同版本的Linux系统会选择不同的时间清空临时文件，Raspbian会在开机后清空/tmp,
+
+树莓派上的三种电子元件都有存储数据的功能
+    CPU缓存:一级缓存32KB,二级缓存512KB
+    内存：1GB 
+    SD卡存储:大于4GB
+分级存储的设计，兼顾了读取速度、储存容量和计算机的稳定性
+缓存记录Cache Entry
+缓存命中Cache Hit
+缓存缺失Cache Miss 
+缓存替换策略：
+    最少使用LFU,Least Frequently Used 
+    最久没有使用 LRU,Least Recently Used: CPU为每一个缓存记录增加一个计数，当CPU读缓存时，LRU会把命中记录的计数清零，而其他记录的计数增加1，如果一条记录长期没有被读取，那么他的计数就会越来越大，在选择牺牲者时，CPU缓存会选择计数最大的记录作为牺牲者。
+    最早被缓存FIFO,First In First Out 
+    随机替换:Random Replacement 
+
+页交换Page Swap
+虚拟内存可以把一部分的外部存储器空间转换成内存空间，让应用程序可以虚拟地增加内存大小，页交换Page Swap就是进程空间和外部存储空间以页为单位交换数据，虚拟内存是一套管理数据和数据地址的方法，也可以用于外部存储空间的管理，操作系统可以把一部分外部存储空间换分为页，成为交换空间Swap
+
+Space.操作系统按照管理内存的方式管理交换空间，物理内存和交换空间，外部存储器的读写速度慢，为了保证读写效率，应用程序只用在物理内存中的虚拟内存，当程序访问的数据恰好位于交换空间时，内核会启动页交换，把交换空间的页转移到物理内存中，随后内核把分页对应到物理内存位置，并通知应用程序继续进行数据操作。
+
+交换空间：交换分区和交换文件两种形式
+    交换分区就是一个独立的存储器分区作为交换空间，没有文件系统完全以页的方式进行管理
+    交换文件时文件系统中的特殊文件，占据的空间以页的方式进行管理
+$ sudo swapon -s # 查看交换空间
+$ sudo mkswap /dev/hdb1 # 将/dev/hdb1编程交换分区 
+$ sudo swapon /dev/hdb1 # 用swapon命令激活交换分区 
+$ sudo dd if=/dev/zero of=/var/swapfile bs=2014 count=1048576 # 使用dd创建一个1GB的文件 
+$ mkswap /var/swapfile 调用交换文件
+$ swapon /var/swapfile 激活交换文件，方交换文件成为可以使用的交换空间
+
+页缓存Page Cache
+$ free # 查看内存页缓存空间的大小
+内存为进程打开文件保留缓冲区Buffer,用于收集待写入文件的文本，缓冲区采用先进先出的策略，先写入的字符会被先取出，刷新Flush缓冲区，操作系统的内核提供缓冲区，因此，很多时候用write()系统写一个字符到文件，字符并没有真正存入文件，计算机会在多个条件下刷新缓冲区:
+    缓冲区填满了数据
+    文件关闭
+    进程终结
+    文本中出现换行符
+    该文件出现数据读取
+Linux内核内置了缓冲读写功能，不过，鉴于缓冲时一种简单而有效的策略，应用程序也可以自己在进程空间中安排缓冲区，来把多次操作合并成一次操作，实际上，C标准库中的标准IO函数，就负责在读写过程中管理进程空间的缓冲区，IPC和网络通信也经常用到相似的缓冲策略，以提高通信效率。
 ```
 
+网络协议
+--------
+```
+协议Protocol: 
+    点报使用莫尔斯码通信，求救信息SOS，短短短 长长长 短短短
+
+协议分层：
+    互联网通信协议以TCP/IP协议为核心，并通过多种多样的协议形式向上下游延伸
+    1.物理层： Physical Layer,光纤，电缆，或者电磁波，随后计算机将利用相应的物理层协议，把物理信号解读成二进制序列
+    2.连接层:Link Layer,把二进制序列分割成帧Frame,所谓帧是一段有序的二进制序列，连接层协议能帮助计算机识别二进制序列中所包含的帧，规定特殊的01组合作为帧的开始和结束，连接层协议还规定了帧的格式，帧中包含收信地址SRC,source,和送信地址DST Destination,还能够探测错误的校验序列。
+        以太网Ethernet和Wi-Fi时现在最常见的连接层协议，分别用于有限网络和无线网络，树莓派上有两个网络接口控制器NIC:Network Interface Controller. 就是所谓的网卡，连接层协议中帧的收信地址只能是本地局域网内，更远距离的通信还需要更高层的网络层实现
+    3.网络层:Network Layer
+        路由器Router:一个路由器有多个网，因此路由器可以同时接入多个网络，并理解相应的连接层协议。在帧经过路由到达另一个网络的时候，路由会读取帧的信息，并改写发送到另一个网络，由于树莓派上有多个网卡，他也可以充当一个路由器。路由将分离的局域网网络连接成覆盖全球的互联网。
+    4.传输层:Transport Layer,TCP 和UDP协议都使用端口号Port Number，TCP和UDP是两种不同的传输层协议
+    5. 应用层 Application Layer： HTTP协议，DNS协议 IMAP协议
+```
+
+网络诊断
+--------
+```
+$ sudo ip address show # 显示接口名称，接口类型，接口IP地址，硬件MAC地址 
+$ sudo arp -a # ARP协议用在局域网内部，借用ARP协议设备可以知道局域网内的IP-MAC对应关系
+$ sudo apt-get install arping # 安装arping工具 
+$ sudo arping -I wlan0 192.168.31.39 # 经过wlan0接口发送ARP 请求，查询IP地址192.168.31.39设备的MAC地址
+$ sudo apt-get install arp-scan工具 
+$ sudo arp-scan -l # 查看整个局域网内所有IP地址对应的MAC地址
+$ sudo apt-get install tcpdump # 安装tcpdump工具
+$ sudo tcpdump -i en0 arp  #监听eth0接口的ARP协议通信 
+
+ping命令是向某个IP地址发送ICMP协议的ECHO_REQUEST请求，收到该请求的设备将返回ICMP回复
+$ ping 192.168.31.39 # 如果ping请求到某个IP地址，则说明IP地址的设备可以经过网络层顺利到达,许多网络设备会禁止ICMP
+$ sudo dhclient -v -r  #跟新DHCP租约，设备将释放IP地址，再从DHCP服务器重新获得IP地址
+$ sudo ifconfig wlan0 192.168.1.106 up # 将接口wlan0的IP地址设置成192.168.1.106
+$ sudo nano /etc/hdcpcd.conf # 编辑/etc/dhcpcd.conf文件，在文件末尾加入
+    interface eth0 
+    static ip_address=192.168.1.106 
+
+$ netstat -nr #显示路由表,从路由表找到网关
+$ traceroute 8.8.8.8 # 追踪到达IP目的地址的全程路由 
+$ sudo traceroute -I 8.8.8.8 # 通过ICMP协议追踪路由
+$ sudo traceroute -T -p 80 chyidl.com # 通过TCP协议，经过80 端口追踪路由，TCP协议的默认端口80很少会被禁用 #跟新DHCP租约，设备将释放IP地址，再从DHCP服务器重新获得IP地址
+
+网络监听：
+Linux下，tcpdump是一款网络抓包工具，可以监听网络接口不同层的通信，并过滤出特定的内容，特定协议、特定端口
+$ sudo tcpdump -i eth0 # 监听eth0所有的通信 
+$ sudo tcpdump -A -i wlan0 # 使用ASCII显示wlan0接口的通信内容
+$ sudo tcpdump -i wlan0 'port 8080' # 显示wlan0接口的8080端口的通信
+$ sudo tcpdump -i wlan0 src 192.168.31.39 # 显示来自192.168.31.39的通信 
+$ sudo tcpdump -i wlan0 dst 192.168.31.39 and port 80 # 显示wlan0接口80端口，目的地为192.168.31.39的通信
+
+域名解析：DNS在域名和IP之间进行翻译，DNS故障会导致用户无法通过域名访问某个网址
+```
