@@ -1,6 +1,5 @@
 package com.chyidl.tutorial;
 
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /**
  * Java不支持多继承，但支持多重继承

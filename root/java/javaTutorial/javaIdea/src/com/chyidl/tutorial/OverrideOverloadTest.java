@@ -21,8 +21,6 @@ package com.chyidl.tutorial;
  * 编译阶段，只是检查参数的引用类型，运行阶段，JVM运行该对象的方法
  * */
 
-import com.sun.tools.javac.tree.JCTree;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.util.stream.StreamSupport;
 
