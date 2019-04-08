@@ -1,7 +1,7 @@
 Java Decompiler
 ===============
 
-[java-decompiler.jar](/root/java/javaPrj/java-decompiler.jar)
+- [java-decompiler.jar](/root/java/javaPrj/java-decompiler.jar.removesuffix)
 
 ```
 First Find **java-decompiler.jar** at the following location: 
