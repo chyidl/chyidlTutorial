@@ -4,7 +4,7 @@ Java Decompiler
 - [java-decompiler.jar](/root/java/javaPrj/java-decompiler.jar.removesuffix)
 
 ```
-First Find **java-decompiler.jar** at the following location: 
+First Find java-decompiler.jar at the following location: 
 $ (macOS) /Applications/IntelliJ IDEA CE.app/Contents/plugins/java-decompiler/lib/java-decompiler.jar
 
 Second Try to invoke main class org.jetbrains.java.decompiler.main.decompiler.ConsoleDecompiler manually 
