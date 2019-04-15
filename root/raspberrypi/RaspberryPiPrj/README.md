@@ -26,5 +26,8 @@ Download all history Magpi Magazine PDF files
 Easter Egg Program
 - [easter egg program](/root/raspberrypi/RaspberryPiPrj/easterEgg/README.md)
 
+Welcome Message SSH Start
+- [welcome message ssh](/root/raspberrypi/RaspberryPiPrj/WelcomeMsg/README.md)
+
 FAQ - Frequently asked questions 
 - [FAQ](/root/raspberrypi/RaspberryPiPrj/FAQ.md)
