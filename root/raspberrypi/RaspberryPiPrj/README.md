@@ -18,7 +18,8 @@
 - [Build Ghost Blog on Raspberry](/root/raspberrypi/RaspberryPiPrj/GhostPi/README.md)
 - [Kindle + Raspberry = Anything](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/README.md)
 - [YahooWeatherAPI](/root/raspberrypi/RaspberryPiPrj/YahooWeatherAPI/README.md)
-
+- [Homebridge HomeKit Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/README.md)
+- [Java IDE on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/JavaIDERaspberryPi/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)

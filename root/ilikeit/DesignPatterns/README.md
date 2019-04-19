@@ -1,12 +1,21 @@
 Design Patterns
 ===============
 
-In software engineering, a software design pattern is a general, reusable solution to a commonly occurring problem within a given context in software design.
+> In software engineering, a software design pattern is a general, reusable solution to a commonly occurring problem within a given context in software design.
 It is not a finished design that can be transformed directly into source or machine code. It is a description or template for how to solve a problem that can 
 be used in many different situations. Design patterns are formalized best practices that the programmer can use to solve common problems when designing an 
 application or system.
 
-Design patterns may be viewed as a structured approach to computer programming intermediate between the levels of a programming paradigm and a concrete algorithm.
+> Design patterns may be viewed as a structured approach to computer programming intermediate between the levels of a programming paradigm and a concrete algorithm.
+
+> 设计模式：是一些常见的软件工程设计问题的最佳实践方案.
+
+```text
+软件复杂度分为两个层面:
+    1. 业务逻辑复杂度
+    2. 代码实现复杂度
+
+``` 
 
 Uses of Design Patterns
 -----------------------
@@ -29,14 +38,22 @@ Be Careful
 Types of Design Patterns
 ------------------------
 
-[Creational design patterns](/root/ilikeit/DesignPatterns/creational/README.md)
-These design patterns are all about class instantiation. This pattern can be further divided into class-creation patterns and object-creational patterns.
+[Creational design patterns](/root/ilikeit/DesignPatterns/Creational/README.md)
+> These design patterns are all about class instantiation. This pattern can be further divided into class-creation patterns and object-creational patterns.
 While class-creation patterns use inheritance effectively in the instantiation process, object-creation patterns use delegation effectively to 
 get the job done.
 
-[Structural design patterns](/root/ilikeit/DesignPatterns/structural/README.md)
-These design patterns are all about Class and Object composition. Structural class-creation patterns use inferitance to compose interfaces. Structural object-patterns define 
+[Structural design patterns](/root/ilikeit/DesignPatterns/Structural/README.md)
+> These design patterns are all about Class and Object composition. Structural class-creation patterns use inferitance to compose interfaces. Structural object-patterns define 
 ways to compose objects to obtain new functionality.
 
-[Behavioral design patterns](/root/ilikeit/DesignPatterns/behavioral/README.md)
-These design patterns are all about Class's objects communication. Behavioral patterns are those patterns that are most specifically concerned with communication between objects.
+[Behavioral design patterns](/root/ilikeit/DesignPatterns/Behavioral/README.md)
+> These design patterns are all about Class's objects communication. Behavioral patterns are those patterns that are most specifically concerned with communication between objects.
+
+
+Programming Language Implement Design Pattern 
+---------------------------------------------
+* Python 
+```text
+Python 支持动态类型(dock-typing),函数是一等公民，并且内置迭代器、修饰器模式。
+```
