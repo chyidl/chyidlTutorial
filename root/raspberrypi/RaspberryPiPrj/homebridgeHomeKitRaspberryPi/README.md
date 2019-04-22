@@ -65,21 +65,17 @@ Quick Overview
 
 Setup Homebridge to Start on Bootup
 -----------------------------------
-```
-Using systemd to start Homebridge on bootup, I prefered this method because it will restart if an error occurs.
-
-Here are the steps that worked for me:
-    1. $ sudo vim /etc/default/homebridge and paste this ![homebridge](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homrbridge)
-    2. $ sudo vim /etc/systemd/system/homebridge.service and paste this ![homebridge.service](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homebridge.service)
-    3. Create a user to run service: sudo useradd --system homebridge 
-    4. $ sudo mkdir /var/homebridge 
-    5. $ sudo cp ~/.homebridge/config.json /var/homebridge/
-    6. $ sudo cp -r ~/.homebridge/persist /var/homebridge 
-    7. $ sudo chmod -R 0777 /var/homebridge 
-    8. $ sudo systemctl daemon-reload 
-    9. $ sudo systemctl enable homebridge 
-    10. $ sudo systemctl start homebridge 
-    
-    Type $ systemctl status homebridge to check the status of the service 
-```
+> Using systemd to start Homebridge on bootup, I prefered this method because it will restart if an error occurs.
+* Here are the steps that worked for me:
+    - 1. $ sudo vim /etc/default/homebridge and paste this -[homebridge](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homrbridge)
+    - 2. $ sudo vim /etc/systemd/system/homebridge.service and paste this -[homebridge.service](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homebridge.service)
+    - 3. Create a user to run service: sudo useradd --system homebridge 
+    - 4. $ sudo mkdir /var/homebridge 
+    - 5. $ sudo cp ~/.homebridge/config.json /var/homebridge/
+    - 6. $ sudo cp -r ~/.homebridge/persist /var/homebridge 
+    - 7. $ sudo chmod -R 0777 /var/homebridge 
+    - 8. $ sudo systemctl daemon-reload 
+    - 9. $ sudo systemctl enable homebridge 
+    - 10. $ sudo systemctl start homebridge 
+   
 ![HomeKit DEMO image](/imgs/raspberrypi/HomeKit/homekit_demo.png?raw=true)
