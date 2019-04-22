@@ -20,6 +20,7 @@
 - [YahooWeatherAPI](/root/raspberrypi/RaspberryPiPrj/YahooWeatherAPI/README.md)
 - [Homebridge HomeKit Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/README.md)
 - [Java IDE on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/JavaIDERaspberryPi/README.md)
+- [Compile and Install MongoDB on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/MongoDBRPi/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)

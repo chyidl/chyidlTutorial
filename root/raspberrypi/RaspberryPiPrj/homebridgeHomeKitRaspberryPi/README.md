@@ -50,5 +50,36 @@ Quick Overview
 			$ sudo modprobe bcm2835-v4l2 
 			$ sudo apt install ffmpeg # need to install ffmpeg
 			$ npm install -g homebridge-camera-rpi  # And the camera plugin 
-
+    5. create config.json file containing your accessories and/or platforms.
+        a. On macOS and Linux, the full path for your config.json would be *~/.homebridge/config.json*. Any error messages will contain the exact path where your config is expected to be found.
+    6. run Homebridge:
+        a. $ homebridge 
+    7. Adding Homebridge to iOS 
+        a. HomeKit itself is actually not an app, it;s a "database" similar to HealthKit. Where HealthKit has the companion Health app, HomeKit has the Home app, introduced with iOS10.
+        b. If you are a member of the iOS deverloper program, you might also find Apple's Catalog app to be useful, as it provides straightforward and comprehensive management of all HomeKit database "objects".
+        c. Using the Home app (or most other HomeKit apps), you should be able to add the single accessory "Homebridge", assuming that you're still running Homebridge and you're on the same WiFi network. Adding this accessory will automatically add all accessories and platforms defined in config.json. 
+        d. When you attempt to add Homebrige, it will ask for a "PIN code". The default code is like 031-45-154 
+    8. Interacting with your Devices
+        a. Once your device has been added to HomeKit, you should be about to tell Siri to control your devices. However, realize that Siri is a cloud service, and iOS may need some time to synchronize your device information with iCloud.
 ```
+
+Setup Homebridge to Start on Bootup
+-----------------------------------
+```
+Using systemd to start Homebridge on bootup, I prefered this method because it will restart if an error occurs.
+
+Here are the steps that worked for me:
+    1. $ sudo vim /etc/default/homebridge and paste this ![homebridge](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homrbridge)
+    2. $ sudo vim /etc/systemd/system/homebridge.service and paste this ![homebridge.service](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homebridge.service)
+    3. Create a user to run service: sudo useradd --system homebridge 
+    4. $ sudo mkdir /var/homebridge 
+    5. $ sudo cp ~/.homebridge/config.json /var/homebridge/
+    6. $ sudo cp -r ~/.homebridge/persist /var/homebridge 
+    7. $ sudo chmod -R 0777 /var/homebridge 
+    8. $ sudo systemctl daemon-reload 
+    9. $ sudo systemctl enable homebridge 
+    10. $ sudo systemctl start homebridge 
+    
+    Type $ systemctl status homebridge to check the status of the service 
+```
+![HomeKit DEMO image](/imgs/raspberrypi/HomeKit/homekit_demo.png?raw=true)

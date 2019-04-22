@@ -786,3 +786,31 @@ insert into t_visual_domain(`user_id`, `domain`, `group`) select id, 'www.baidu.
 修改表结构
 alter table competitor_goods add sku_id bigint(20) unsigned DEFAULT NULL COMMENT '商品销售'
 ```
+
+Changing MySQL wait_timeout variable
+------------------------------------
+
+> wait_timeout variable, for a session or globally.
+> If we set the wait_timeout variable for a session, it will valid only for a particular session. But when we set the wait_timeout variable globally it will valid for all the sessions.
+```
+mysql> show session variables like '%wait_timeout%';
++-------------------------------------+----------+
+| Variable_name                       | Value    |
++-------------------------------------+----------+
+| innodb_lock_wait_timeout            | 50       |
+| innodb_print_lock_wait_timeout_info | OFF      |
+| lock_wait_timeout                   | 31536000 |
+| wait_timeout                        | 28800    |
++-------------------------------------+----------+
+4 rows in set (0.53 sec)
+
+Default wait_timeout value is 28800 seconds. 
+
+If we need to set this timeout for a session we can use below command.
+mysql> SET session wait_timeout=300; 
+
+If we need to change the wait_timeout global value we should follow below steps:
+    1. Open the my.cnf file which resides in /etc/mysql/ directory 
+    2. Add below value with the mysqld blog to my.cnf file 
+
+```
