@@ -67,8 +67,10 @@ Setup Homebridge to Start on Bootup
 -----------------------------------
 > Using systemd to start Homebridge on bootup, I prefered this method because it will restart if an error occurs.
 * Here are the steps that worked for me:
-    - 1. $ sudo vim /etc/default/homebridge and paste this - [homebridge](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homrbridge)
-    - 2. $ sudo vim /etc/systemd/system/homebridge.service and paste this - [homebridge.service](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homebridge.service)
+    - 1. $ sudo vim /etc/default/homebridge and paste this 
+    - [homebridge](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homebridge)
+    - 2. $ sudo vim /etc/systemd/system/homebridge.service and paste this 
+    - [homebridge.service](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/homebridge.service)
     - 3. Create a user to run service: sudo useradd --system homebridge 
     - 4. $ sudo mkdir /var/homebridge 
     - 5. $ sudo cp ~/.homebridge/config.json /var/homebridge/
