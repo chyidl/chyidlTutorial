@@ -29,7 +29,7 @@ $ chsh -s $(which zsh)
 3. Install oh-my-zsh 
 $ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
-4. Make sure terminal is using 256-colors mode add ~/.zshrc file with **export TERM="xterm-256color"**
+4. Make sure terminal is using 256-colors mode add ~/.zshrc file with export TERM="xterm-256color"
 
 5. For oh-my-zsh users install bullet-train 
 $ wget http://raw.github.com/caiogondim/bullet-train-oh-my-zsh-theme/master/bullet-train.zsh-theme
