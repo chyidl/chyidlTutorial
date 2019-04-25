@@ -128,6 +128,7 @@ $ vim +PluginInstall +qall
 Requirements:
 	1. tmux **>= 2.1** running inside Linux, Mac, OpenBSD 
 	2. outside of tmux, $TERM must be set to **xterm-256color**
+	3. check tmux Version $ tmux -V
 
 To install, run the following from your terminal: (you may want to backup your existing ~/.tmux.conf first)
 
