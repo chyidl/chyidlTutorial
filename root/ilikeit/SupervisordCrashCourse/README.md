@@ -123,4 +123,5 @@ location /supervisor {
     proxy_pass http://127.0.0.1:8999/;
 }
 ```
+
 ![supervisord](/imgs/ilikeit/SupervisordCrashCourse/supervisord.png?raw=true)
