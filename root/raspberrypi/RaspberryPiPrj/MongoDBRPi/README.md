@@ -49,5 +49,53 @@ $ cd -
 $ scons core --wiredtiger=off --mmapv1=on 
 
 9. Reduce binaries file size 
+$ cd ./build/opt/mongo 
+$ ls 
+-rwxr-xr-x  1 pi pi 159M Apr 24 01:00 mongo
+-rwxr-xr-x  1 pi pi 433M Apr 24 14:44 mongod
+-rwxr-xr-x  1 pi pi 221M Apr 24 15:57 mongos
+
+This is because they contain debugging information. You can remove this with the strip command, for instance.
+$ strip -s mongo mongod mongos
+$ ls
+-rwxr-xr-x  1 pi pi  14M Apr 24 16:27 mongo
+-rwxr-xr-x  1 pi pi  25M Apr 24 16:27 mongod
+-rwxr-xr-x  1 pi pi  13M Apr 24 16:27 mongos
+
+10. Copy binaries
+$ cd build/opt/mongo 
+$ sudo cp mongo mongod mongos /usr/loca/mongodb3.2.22/bin/
 
 ```
+
+Install MongoDB 4.0.9 on Ubuntu 18.04 ARM64 RaspberryPi
+-------------------------------------------------------
+> The latest release MongoDB community edition is an open source NoSQL database system written in C++ that provides scalability, high performance/availability. NoSQL database systems are often referred to as Document-oriented databases. MongoDB common use case is storage and management of Big Data-sized collections of literal documents like text documents, email message, XML documents and many others.
+```
+There are two ways of installing MongoDB on Ubuntu systems.
+
+Step1: Import MongoDB public GPG Key:
+$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+
+Step2: Create a list file for MongoDB
+$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+
+Step3: Install mongodb 
+$ sudo apt-get update
+$ sudo apt-get install -y openssl libcurl3 mongodb-org 
+
+The service name is, mongod, you can start the application by running
+$ sudo systemctl start mongod 
+
+Enable the service to start on boot using 
+$ sudo systemctl enabled mongod 
+
+Check status using 
+$ sudo systemctl status mongod 
+
+the service should be listening on port 27017 
+$ ss -tunelp | grep 27017 
+```
+
+* MongoDB main configuration file is /etc/mongod.conf You can tweak the settings to your linking, but remember to restart mongod service whenever you make a change.
+

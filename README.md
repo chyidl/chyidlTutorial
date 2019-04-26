@@ -70,3 +70,4 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Redis Crash Course](root/ilikeit/RedisCrashCourse/README.md)
 - [Docker Crash Course](root/ilikeit/DockerCrashCourse/README.md)
 - [Continuous Integration, Continuous Delivery](root/ilikeit/CICD/README.md)
+- [Process Monitoring with Supervisord](root/ilikeit/SupervisordCrashCourse/README.md)
