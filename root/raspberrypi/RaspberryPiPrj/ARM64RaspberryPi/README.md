@@ -48,8 +48,8 @@ Step4: add connect to /etc/wpa_supplicant/wpa_supplicant.conf
 country=CN 
 
 network={
-    ssid="Airbnb-HK"
-    psk="pp341152"
+    ssid="XXX"
+    psk="XXX"
 }
 ```
 
