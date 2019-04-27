@@ -98,7 +98,7 @@ Description=Keeps a tunnel to 'chyidl.com' open
 After=network.target 
 
 [Service]
-User=autossh 
+User=pi 
 Type=simple
 # -p [PORT]
 # -l [user]
