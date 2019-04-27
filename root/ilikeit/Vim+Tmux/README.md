@@ -1,9 +1,9 @@
-# Oh-My-Zsh+Vim+Tmux OMG!
+Oh-My-Zsh+Vim+Tmux OMG!
+======================
 
-## Oh-My-Zsh + Bullet Train Theme 
-
-Requirements:
-
+Oh-My-Zsh + Bullet Train Theme 
+------------------------------
+* Requirements:
 ```
 In or der to use the theme( Bullet Train ), you will first need:
 	
@@ -41,18 +41,20 @@ $ vim ~/.zshrc
 # add export LANG=en_US.UTF-8
 # add export LC_TYPE=en_US.UTF-8
 
-6. Enabling Plugins
+6. Let all changes be valid 
+$ source ~/.zshrc 
+
+7. Enabling Plugins
 $ vim ~/.zshrc
 plugins=(
     extract
     git 
-    zsh-autosuggestions
 )
 ```
+![bullet-train](/imgs/ilike/Vim+Tmux/bullet-train.png?raw=true)
 
-## Vim 
-
-### Vim setup instructions
+Vim Setup Instructions
+----------------------
 
 1. Download Vim 
 
