@@ -28,6 +28,7 @@ $ python3 -c 'import sys;print("%x" % sys.maxsize, sys.maxsize > 2**32)'
 
 * First boot (Username/Password)
 > The login username is "ubuntu", password is "ubuntu". You will be asked to change the password on first login.
+
 > Create a sudo user "$ sudo adduser new_user", and add "new_user" to "sudo" group, "$ sudo usermod -aG sudo new_user"
 
 * Swap 
