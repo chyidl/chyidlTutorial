@@ -11,6 +11,6 @@ This code will extract the ip address of your Pi and then send a email containin
 You need to :
   1. Create a Python script and store it in a direcotry 
   2. Make Python script executable.
-  3. Set teh program to run at boot time 
+  3. Set the program to run at boot time 
 
 - [EmailIP.py](/root/raspberrypi/RaspberryPiPrj/EmailIP/EmailIP.py)
