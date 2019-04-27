@@ -77,6 +77,9 @@ Jenkins and Python
 > Setup a Jenkins job 
 ```
 1. Create a new job and call it something without spaces! Jenkins creates a directory of the same name on the filesystem, but pip (or virtualenv?) will choke on spaces. Then select "Build a free-style software project".
-
-
 ```
+
+Jenkins Abnormal Problem
+------------------------
+* Stop Jenkins log from becoming huge
+    - /var/log/jenkins.log has started getting very large, very quickly, full of exceptions about DNS resolution. 

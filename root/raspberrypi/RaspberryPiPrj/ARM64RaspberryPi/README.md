@@ -31,6 +31,28 @@ $ python3 -c 'import sys;print("%x" % sys.maxsize, sys.maxsize > 2**32)'
 
 > Create a sudo user "$ sudo adduser new_user", and add "new_user" to "sudo" group, "$ sudo usermod -aG sudo new_user"
 
+* Onboard Wi-Fi on Raspberry Pi 
+```
+Step1:
+$ sudo apt-get install wireless-tools 
+
+Step2:
+$ sudo apt-get install wpasupplicant 
+
+Step3: add to /etc/network/interfaces:
+auto wlan0
+iface wlan0 inet dhcp
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf 
+
+Step4: add connect to /etc/wpa_supplicant/wpa_supplicant.conf 
+country=CN 
+
+network={
+    ssid="Airbnb-HK"
+    psk="pp341152"
+}
+```
+
 * Swap 
 ```
 There is no swap partition/file included. If you want swap, it's recommended you do:
