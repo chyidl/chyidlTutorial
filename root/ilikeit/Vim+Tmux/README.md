@@ -51,7 +51,7 @@ plugins=(
     git 
 )
 ```
-![bullet-train](/imgs/ilike/Vim+Tmux/bullet-train.png?raw=true)
+![bullet-train](/imgs/ilikeit/Vim+Tmux/bullet-train.png?raw=true)
 
 Vim Setup Instructions
 ----------------------
