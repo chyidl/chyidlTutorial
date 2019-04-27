@@ -77,7 +77,7 @@ $ sudo dphys-swapfile swapoff
 MODIFY THE SIZE OF THE SWAP 
 As root, edit the file /etc/dphys-swapfile and modify the variable CONF_SWAPSIZE:
 CONF_SWAPSIZE=1024
-To modify the swap file, edit the variable CONF_SWAPFILE, and run dphys-swapfile setup which will create and initialize the file.
+To modify the swap file, edit the variable CONF_SWAPFILE, and run $ dphys-swapfile setup, which will create and initialize the file.
 
 START THE SWAP 
 $ sudo dphys-swapfile swapon
