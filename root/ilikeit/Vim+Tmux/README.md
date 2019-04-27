@@ -119,7 +119,7 @@ Launch vim and run :PluginInstall
 To install from command line: 
 $ vim +PluginInstall +qall
 ```
-
+![vim +PluginInstall +qall](/imgs/ilikeit/Vim+Tmux/pluginInstall.png?raw=true)
 - [.vimrc](/root/ilikeit/Vim+Tmux/vimrc)
 
 

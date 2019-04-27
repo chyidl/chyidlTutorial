@@ -53,6 +53,19 @@ network={
 }
 ```
 
+* Timezone, locale
+```
+Check Current Timezone Settings 
+$ timedatectl # Use the timedatectl command to show the current timezone and time
+
+Show all Available Timezones 
+$ timedatectl list-timezones | grep -i Asia/Hong_Kong
+Asia/Hong_Kong
+
+Change Timezone 
+$ sudo timedatectl set-timezone Asia/Hong_Kong 
+```
+
 * Swap 
 ```
 There is no swap partition/file included. If you want swap, it's recommended you do:
@@ -68,4 +81,28 @@ To modify the swap file, edit the variable CONF_SWAPFILE, and run dphys-swapfile
 
 START THE SWAP 
 $ sudo dphys-swapfile swapon
+```
+
+* Headless VncServer Configuration 
+```
+configure accessing the pi with osx's Screen
+1. $ sudo raspi-config > Interface Options > VNC > Enable.
+2. Generate the password you wish to use in screen with vncpasswd -print 
+pi@RPi2B:~ $ vncpasswd -print
+Password:
+Verify:
+Password=bf8c3dcbaeaeb962267ad00c568c0850
+3. Copy the output of that command(e.g.Password=bf8c3dcbaeaeb962267ad00c568c0850)for the config file.
+4. Create and edit the following file here:
+$ sudo vim /etc/vnc/config.d/common.custom 
+5.Add the following config:
+Encryption=PreferOn
+Authentication=VncAuth
+Password=bf8c3dcbaeaeb962267ad00c568c0850
+6. Restart the vnc service:
+$ sudo systemctl restart vncserver-x11-serviced 
+7. Open Screen with the instructions above, and use the password you provided to vncpasswd.
+mac> Finder > Go > Connect to Server... 
+8. If you need to monitor the logs for vncserver, you can use journalctl
+$ sudo journalctl -u vncserver-x11-serviced.service 
 ```
