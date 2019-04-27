@@ -12,5 +12,5 @@ You need to :
   1. Create a Python script and store it in a direcotry 
   2. Make Python script executable.
   3. Set the program to run at boot time 
-
-- [EmailIP.py](/root/raspberrypi/RaspberryPiPrj/EmailIP/EmailIP.py)
+- [chyiemail.py is util script](/root/raspberrypi/RaspberryPiPrj/EmailIP/chyiemail.py)
+- [EmailIP.py is app script](/root/raspberrypi/RaspberryPiPrj/EmailIP/EmailIP.py)
