@@ -167,6 +167,7 @@ Bindings
 --------
 
 tmux may be controlled from an attached client by using a key combination of a prefix key, followed by a command key. This configuration uses `C-a` as a secondary prefix while keeping `C-b` as the default prefix. In the following list of key bindings: 
+
     - 1. `<prefix>` means you have to either hit <kbd>Ctrl</kbd> + <kbd>a</kbd> or <kbd>Ctrl</kbd> + <kbd>b<kbd>
     - 2. `<prefix> c` means you have to hit <kbd>Ctrl<kbd> + <kbd>a</kbd> or <kbd>Ctrl<kbd> +<kbd>b</kbd> followed by <kbd>c<kbd>
     - 3. `<prefix> C-c` means you have to hit <kbd>Ctrl</kbd> + <kbd>a<kbd> or <kbd>Ctrl</kbd> + <kbd>b<kbd> followed by <kbd>Ctrl</kbd> + <kbd>c</kbd>
