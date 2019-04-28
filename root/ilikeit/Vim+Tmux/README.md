@@ -321,10 +321,10 @@ bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
 
 ```
 
-- [.tmux.conf](/root/ilikeit/Vim+Tmux/tmux.conf)
-- [.tmux.conf.local](/root/ilikeit/Vim+Tmux/tmux.conf.local)
-- [tmux-spotify-info](/root/ilike/Vim+Tmux/tmux-spotify-info)
-- [tmux-itunes-info](/root/ilike/Vim+Tmux/tmux-itunes-info)
+- [.tmux.conf](/root/ilikeit/Vim%2BTmux/tmux.conf)
+- [.tmux.conf.local](/root/ilikeit/Vim%2BTmux/tmux.conf.local)
+- [tmux-spotify-info](/root/ilikeit/Vim%2BTmux/tmux-itunes-info)
+- [tmux-itunes-info](/root/ilike/Vim%2BTmux/tmux-itunes-info)
 ![tmux music info](/imgs/ilikeit/Vim+Tmux/tmux-itunes-info.png?raw=true)
 
 
