@@ -168,32 +168,32 @@ Bindings
 
 tmux may be controlled from an attached client by using a key combination of a prefix key, followed by a command key. This configuration uses `C-a` as a secondary prefix while keeping `C-b` as the default prefix. In the following list of key bindings: 
 
-    - 1. `<prefix>` means you have to either hit <kbd>Ctrl</kbd> + <kbd>a</kbd> or <kbd>Ctrl</kbd> + <kbd>b<kbd>
-    - 2. `<prefix> c` means you have to hit <kbd>Ctrl<kbd> + <kbd>a</kbd> or <kbd>Ctrl<kbd> +<kbd>b</kbd> followed by <kbd>c<kbd>
-    - 3. `<prefix> C-c` means you have to hit <kbd>Ctrl</kbd> + <kbd>a<kbd> or <kbd>Ctrl</kbd> + <kbd>b<kbd> followed by <kbd>Ctrl</kbd> + <kbd>c</kbd>
+    1. `<prefix>` means you have to either hit <kbd>Ctrl</kbd> + <kbd>a</kbd> or <kbd>Ctrl</kbd> + <kbd>b<kbd>
+    2. `<prefix> c` means you have to hit <kbd>Ctrl<kbd> + <kbd>a</kbd> or <kbd>Ctrl<kbd> +<kbd>b</kbd> followed by <kbd>c<kbd>
+    3. `<prefix> C-c` means you have to hit <kbd>Ctrl</kbd> + <kbd>a<kbd> or <kbd>Ctrl</kbd> + <kbd>b<kbd> followed by <kbd>Ctrl</kbd> + <kbd>c</kbd>
 
 This configuration uses the following bindings:
 
-    - 1. `<prefix> e` opens `~/.tmux.conf.local` with the editor defined by the `$EDITOR` environment variables (defaults to `vim` when empty)
-    - 2. `<prefix> r` reloads the configuration
-    - 3. `C-l` clears both the screen and the tmux history 
-    - 4. `<prefix> C-c` creates a new session 
-    - 5. `<prefix> C-f` lets you switch another session by name 
-    - 6. `<prefix> C-h` and `<prefix> C-l` let you navigate windows (default `<prefix> n` and `<prefix> p` are unbound)
-    - 7. `<prefix> Tab` brings you to the last active window 
-    - 8. `<prefix> -` splits the current pane vertically 
-    - 9. `<prefix> |` splits the current pane horizontally 
-    - 10. `<prefix> h`, `<prefix> j`, `<prefix> k` and `<prefix> l` let you navigate panes as Vim 
-    - 11. `<prefix> H`, `<prefix> J`, `<prefix> K`, `<prefix> L` let you resize panes
-    - 12. `<prefix> <` and `<prefix> >` let you swap panes 
-    - 13. `<prefix> +` maximizes the current pane to a new window 
-    - 14. `<prefix> m` roggles mouse mode on or off 
-    - 15. `<prefix> U` launches Urlview (if availabele)
-    - 16. `<prefix> F` launches Facebook PathPicker (if available)
-    - 17. `<prefix> Enter` enters copy-mode 
-    - 18. `<prefix> b` lists the paste-buffers 
-    - 19. `<prefix> p` pastes from the top paste-buffer 
-    - 20. `<prefix> P` lets you choose the paste-buffer to paste from 
+    1. `<prefix> e` opens `~/.tmux.conf.local` with the editor defined by the `$EDITOR` environment variables (defaults to `vim` when empty)
+    2. `<prefix> r` reloads the configuration
+    3. `C-l` clears both the screen and the tmux history 
+    4. `<prefix> C-c` creates a new session 
+    5. `<prefix> C-f` lets you switch another session by name 
+    6. `<prefix> C-h` and `<prefix> C-l` let you navigate windows (default `<prefix> n` and `<prefix> p` are unbound)
+    7. `<prefix> Tab` brings you to the last active window 
+    8. `<prefix> -` splits the current pane vertically 
+    9. `<prefix> |` splits the current pane horizontally 
+    10. `<prefix> h`, `<prefix> j`, `<prefix> k` and `<prefix> l` let you navigate panes as Vim 
+    11. `<prefix> H`, `<prefix> J`, `<prefix> K`, `<prefix> L` let you resize panes
+    12. `<prefix> <` and `<prefix> >` let you swap panes 
+    13. `<prefix> +` maximizes the current pane to a new window 
+    14. `<prefix> m` roggles mouse mode on or off 
+    15. `<prefix> U` launches Urlview (if availabele)
+    16. `<prefix> F` launches Facebook PathPicker (if available)
+    17. `<prefix> Enter` enters copy-mode 
+    18. `<prefix> b` lists the paste-buffers 
+    19. `<prefix> p` pastes from the top paste-buffer 
+    20. `<prefix> P` lets you choose the paste-buffer to paste from 
 
 Bindings for `copy-mode-vi`:
 
