@@ -31,26 +31,44 @@ $ python3 -c 'import sys;print("%x" % sys.maxsize, sys.maxsize > 2**32)'
 
 > Create a sudo user "$ sudo adduser new_user", and add "new_user" to "sudo" group, "$ sudo usermod -aG sudo new_user"
 
-* Onboard Wi-Fi on Raspberry Pi 
+* Setting on-board Wi-Fi up on Raspberry Pi via the command line  
 ```
 Step1:
 $ sudo apt-get install wireless-tools 
 
 Step2:
-$ sudo apt-get install wpasupplicant 
+$ sudo apt-get install wpasupplicant , ifupdown
 
-Step3: add to /etc/network/interfaces:
+Step3: add below content to /etc/network/interfaces:
 auto wlan0
 iface wlan0 inet dhcp
 wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf 
 
-Step4: add connect to /etc/wpa_supplicant/wpa_supplicant.conf 
+Step4: Adding the network details to the Raspberry Pi
+$ sudo vim /etc/wpa_supplicant/wpa_supplicant.conf 
 country=CN 
 
 network={
     ssid="XXX"
     psk="XXX"
+    id_str="home"
 }
+
+# Hidden networks 
+network={
+    ssid="yourHiddenSSID"
+    scan_ssid=1
+    psk="Your_wifi_password"
+    id_str="cpmpany"
+}
+
+Getting WiFi network details
+
+This will list all available WiFi networks
+$ sudo iwlist wlan0 scan 
+
+verfiy whether has successful connected 
+$ sudo ifconfig wlan0 
 ```
 
 * Timezone, locale

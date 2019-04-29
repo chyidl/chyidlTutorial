@@ -93,9 +93,65 @@ $ sudo systemctl enabled mongod
 Check status using 
 $ sudo systemctl status mongod 
 
+Do anything after changes
+$ sudo systemctl daemon-reload
+
 the service should be listening on port 27017 
 $ ss -tunelp | grep 27017 
 ```
 
 * MongoDB main configuration file is /etc/mongod.conf You can tweak the settings to your linking, but remember to restart mongod service whenever you make a change.
 
+```
+$ cat /etc/mongod.conf
+# mongod.conf
+
+# for documentation of all options, see:
+#   http://docs.mongodb.org/manual/reference/configuration-options/
+
+# Where and how to store data.
+storage:
+  dbPath: /var/lib/mongodb
+    journal:
+        enabled: true
+#  engine:
+#  mmapv1:
+#  wiredTiger:
+
+# where to write logging data.
+systemLog:
+  destination: file
+    logAppend: true
+      path: /var/log/mongodb/mongod.log
+
+# network interfaces
+net:
+  port: 27017
+    # bindIp: 127.0.0.1
+
+
+# how the process runs
+processManagement:
+  timeZoneInfo: /usr/share/zoneinfo
+
+  security:
+    # security.authorization, Enable of disable Role-Based Access Control (RBAC) to given each user's access to database resources and operations.
+      authorization: enabled
+
+#operationProfiling:
+
+#replication:
+
+#sharding:
+
+## Enterprise-Only Options:
+
+#auditLog:
+
+#snmp:
+```
+
+* What's the different between /lib/systemd/system vs /etc/systemd/system?
+```
+Basically, files that ships in packages downloaded from distribution repository go into `/usr/lib/systemd/`. Modifications done by system administrator (user) go into `/etc/systemd/system/`.
+```

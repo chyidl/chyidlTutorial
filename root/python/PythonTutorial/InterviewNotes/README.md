@@ -1,6 +1,8 @@
-# 关于Python面试题
+关于Python面试题
+================
 
-## Python 语言特性
+Python 语言特性
+--------------
 
 ### 1. Python Parameters Passed by Reference or Value?
 
@@ -137,7 +139,34 @@ a = A(1)
 
 ```
 
+```
 
+### 5. Shallow or Deep copy()?
+```
+By "shallow copying" it means the content of the object is not copied by value, but just creating a new reference.
+
+>>> a = {1: [1, 2, 3]}
+>>> b = a.copy()
+>>> a,b
+({1: [1, 2, 3]}, {1: [1, 2, 3]})
+>>> a[1].append(4)
+>>> a, b
+({1: [1, 2, 3, 4]}, {1: [1, 2, 3, 4]})
+
+
+In contrast, a deep copy will copy all contents by value.
+
+>>> import copy
+>>> c = copy.deepcopy(a)
+>>> a, c
+({1: [1, 2, 3, 4]}, {1: [1, 2, 3, 4]})
+>>> a[1].append(5)
+>>> a, c
+({1: [1, 2, 3, 4, 5]}, {1: [1, 2, 3, 4]})
+
+1. b = a: Reference assignment, Make a and b points to the same object.
+2. b = a.copy(): Shallow copying, a and b will become two isolated objects, but their contents still share the same reference.
+3. b = copy.deepcopy(a): Deep copying, a and b's structure and content become completely isolated.
 ```
 
 
