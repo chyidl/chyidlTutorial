@@ -359,6 +359,10 @@ bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
 - [.tmux.conf](/root/ilikeit/Vim%2BTmux/tmux.conf)
 - [.tmux.conf.local](/root/ilikeit/Vim%2BTmux/tmux.conf.local)
 
+## Attach a tmux session to a remote machine 
+```
+
+```
 
 ## Using template files in Vim 
 

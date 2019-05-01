@@ -112,15 +112,20 @@ environment=SECRET_PASSPHRASE="this is secret" # Environment variables to pass t
     - Double check this with the ps command:
         * $ ps aux | grep /usr/bin/python3 
     
-    - This nginx configuration worsk 
+    - Nginx proxy pass to supervisord 
 ```
 location /supervisor {
+    return 301 /supervisor/;
+}
+location ^~ /supervisor/ {
+    proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    # hack the host https://github.com/Supervisor/supervisor/issues/251
-    proxy_set_header Host $http_host/supervisor/index.html;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-NginX-Proxy true;
+
+    proxy_pass http://unix:/var/run/supervisor.sock/;
     proxy_redirect off;
-    rewrite ^/supervisor(.*)$ /$1 break;
-    proxy_pass http://127.0.0.1:8999/;
+    proxy_buffering off;
 }
 ```
 

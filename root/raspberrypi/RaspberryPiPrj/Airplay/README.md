@@ -1,14 +1,16 @@
 Apple Airplay on Raspberry Pi
 =============================
+> Make Raspberry Pi into an AirPlay receiver. With Apple having officially discontinued line of AirPort routers, including the AirPlay-enabled AirPort Express, using a Raspberry Pi to fill the gap has become an even more appealing option. There's a reliable third-party community that regularly updates the open-sourced software.
 
 Configure the Airplay Server
 ----------------------------
-* 1. Install Dependencies
+* 1.Install Dependencies
 ```
     First off, you'll need to install some dependencies so you can build the Airplay server application., Run the following:
     $ sudo apt-get update
     $ sudo apt-get install autoconf automake avahi-daemon build-essential git libasound2-dev libavahi-client-dev libconfig-dev libdaemon-dev libpopt-dev libssl-dev libtool xmltoman 
 ```
+
 * 2.Build & Install shairport-sync 
 ```
     shairport-sync turns your Linux machine into an Apple Airplay server. One of the best things about it is that it runs entirely on the command line, and while it has a million configuration options, it's surprisingly easy to get working out of the box.
@@ -20,30 +22,35 @@ Configure the Airplay Server
     $ ./configure --with-alsa --with-avahi --with-ssl=openssl --with-systemd --with-metadata 
     
     Finally build and install the application
-    $ make 
+    $ make -j4 
     $ sudo make install
 ```
+
 * 3.Configure the Audio Output
 ```
     Now you need to configure the audio path on Raspberry Pi. It's generally set to "auto" but you need to force it to go the 3.5mm jack. 
     $ sudo raspi-config 
 ```
-* 4. Set the Volume 
+
+* 4.Set the Volume 
 ```
     The Volume can tend to be very low, so change it to max using 
     $ amixer sset PCM,0 100% 
 ```
-* 5 Test Airplay to the Raspberry Pi 
+
+* 5.Test Airplay to the Raspberry Pi 
 ```
     Now start shairport-sync with:
     $ sudo service shairport-sync start
 ```
-* 6 Configure shairport-sync to Start Automatically 
+
+* 6.Configure shairport-sync to Start Automatically 
 ```
     start servicely manually: want shairport-sync to run as soon as the Pi has booted
     $ sudo systemctl enable shairport-sync
 ```
-* 7 Prevent Wifi Dropouts
+
+* 7.Prevent Wifi Dropouts
 ```
     The Raspberry Pi wifi will tend to go into power-saving mode periodically, which can cause serious audio glitching when using Airplay.
     $ sudo vim /etc/network/interfaces
@@ -111,6 +118,7 @@ LTE1LjE5LC0yOS40MywtOTYuMzAsMC4wMA==</data></item>
 Now that proves you're receiving information from the Airplay client. The airtist, album and track names are encoded in base64 format which enables them to be sent safely inside XML.
 
 $ git clone https://github.com/mikebrady/shairport-sync-metadata-reader.git 
+$ cd shairport-sync-metadata-reader 
 $ autoreconf -i -f 
 $ ./confugure 
 $ make
@@ -149,6 +157,4 @@ Title: "Adventure of a Lifetime".
  Woohoo! There you have it, album Name, Aritist, Composer, Genre and Title fields are all filled in.
 ```
 
-Connecting a Display
---------------------
-
+![Airplay on Raspberry Pi](/imgs/raspberrypi/airplay-raspberrypi.png?raw=true)

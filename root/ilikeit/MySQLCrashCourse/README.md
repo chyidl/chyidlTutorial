@@ -97,8 +97,8 @@ Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor -->
     * $ mysql -h$host -P$port -u$user -p 
     * After the user successfully establishes the connection, the modification of the user rights will not affect the existing connection, and only the newly established connection will use the new permission setting.
     * mysql> SHOW PROCESSLIST; show which threads are running 
-    * mysql> SHOW VARIABLES LIKE '%max_connections%'; 
-    * mysql> SET GLOBAL max_connections = 5000; to change max_connections 
+    * mysql> SHOW VARIABLES LIKE '%max_connections%';   # 查看允许最大并发连接数
+    * mysql> SET GLOBAL max_connections = 5000; 临时生效 to change max_connections 
     * 数据库中，长连接是指连接成功后，如果客户端持续有请求，则一直使用同一个连接，短连接则是指每次执行完很少的几次查询就断开连接，下次查询再重新建立连接
     * OOM killer : Out Of Memory killer is a process that the linux kernel employs when the system is critically low on memory. the OOM
     killer to review all running processes and kill one or more in order to free up system memory and keep the system running. The 
@@ -108,6 +108,27 @@ Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor -->
     * $ dmesg | egrep -i "killed process" # find if the OOM killer 
     * The OOM Killer will only get invoked when the system is critically low on memory.
     * mysql> mysql_reset_connection  # Resets the connection to clear the session state
+    * SHOW STATUS LIKE 'Threads%'; # 查看线程相关的状态变量
+    mysql> show status like 'Threads%';
+    +-------------------+-------+
+    | Variable_name     | Value |
+    +-------------------+-------+
+    | Threads_cached    | 0     |   Threads_cached: 缓存中的线程连接数
+    | Threads_connected | 51    |   Threads_connected: 当前打开的连接数, 该值和SHOW PROCESSLIST; 输出的记录综述一样
+    | Threads_created   | 54    |   Threads_created: 为处理连接而创建的线程数,如果该值很大，可能要增加thread_cache_size. 缓存为命中率 = Threads_created/Connections
+    | Threads_running   | 50    |   Threads_running: 非睡眠状态的连接数，通常指并发连接数
+    +-------------------+-------+
+    4 rows in set (1.44 sec)
+
+```
+修改最大连接数
+[mysqld]
+max_connections = 1000 
+```
+
+```
+线程池: 线程池由许多线程组构成，每个组管理一系列客户端连接，一旦连接被建立，线程池会以轮训调度(Round-robin)方式将连接分配给线程组。每个线程组可拥有的最大线程数量为
+```
 
     
 **Query Cache查询缓存(MySQL 8.0删除该功能)** 
