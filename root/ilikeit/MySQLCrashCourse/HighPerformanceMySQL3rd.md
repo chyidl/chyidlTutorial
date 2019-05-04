@@ -154,10 +154,39 @@ Concurrency Control :
     
     MySQL Development Model:
         MySQL remains GPL-licensed and open source, with the full source code(except for commerically licensed plugins, of course) available to the community.
-    
-        
 ```
 
+Chapter 2 Benchmarking MySQL
+----------------------------
+
+* Benchmark:
+    - benchmarking is not real. real-life workloads are nondeterministic, varying, and too complex to understand readily. 
+    - Benchmarks are simpler, more directly comparable to each other, and cheaper and easier to run. And despite their limitations, benchmarks are useful.
+
+* Becnmarking Strategies:
+    - full-stack  benchmarking 
+    - single component benchmarking 
+
+* What to Measure:
+    - Throughput:吞吐量is defined as the number of transactions per unit of time.
+    - Response time or latency:响应时间和时延: It's common to use percentile response times instead.
+    - Concurrency: 
+        * HTTP is stateless and most users are simply reading what's displayed in their browsers, so this doesn't transalte into concurrency on the web server.
+        * A more accurate measurement of concurrency on the web server is how many simultaneous requests are running at any given time.
+
+* Capturing System Performance and Status 
+    - Try to record status and performance metrics such as CPU usage, disk I/O, network traffic statistics, counters from SHOW GLOBAL STATUS; and so on.    
+    - The default MySQL confirguration settings either, because they're turned for tiny applications that consume very little memory.
+
+* Benchmarking Tools:
+    - Full-Stack Tools:
+        * db: is an Apache HTTP server benchmarking tool. It shows how many requests per second your HTTP server is capable of serving. It's a very simple tool, but its usefulness is limited because it just hamers one URL as fast as it can.
+        * http_load: it is also designed to load a web server, but it's more flexible. 
+        * JMeter: is a Java application that can load another application and measure its performance.JMeter is much more complex than ab and http_load. 
+
+    - Single-Component Tools:
+        * mysqlslap: simulates load on the server and reports timing information.
+        * MySQLBenchmark Suite(sql-bench): 
 
 
 

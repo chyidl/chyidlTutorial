@@ -1,0 +1,56 @@
+{
+    "bridge": {
+        "name": "Shanghai",
+        "username": "AA:BB:CC:DD:FF:FF",
+        "port": 51888,
+        "pin": "341-99-152"
+    },
+    "platforms": [
+        {
+            "platform": "MiAqaraPlatform",
+            "gateways": {
+                "MAC地址": "通信协议密码"
+            },
+            "defaultValue": {
+                "158d0001c152ba": {
+                    "TemperatureAndHumiditySensor_TemperatureSensor": {
+                        "name": "bedroom temperature"
+                    },
+                    "TemperatureAndHumiditySensor_HumiditySensor": {
+                        "name": "bedroom humidity"
+                    }
+                },
+                "MAC地址": {
+                    "Gateway_Lightbulb": {
+                        "name": "gateway light"
+                    },
+                    "Gateway_LightSensor": {
+                        "name": "bedroom light sensor"
+                    },
+                    "Gateway_Switch_JoinPermission": {
+                        "name": "gateway join permission switch",
+                        "disable": true
+                    }
+                }
+            }
+        },
+	    {
+	        "platform": "Camera-ffmpeg",
+	        "cameras": [
+	    	    {
+		        "name": "piCam",
+                "uploader": false,
+                "videoConfig": {
+                    "source": "-re -f video4linux2 -i /dev/video0",
+                    "stillImageSource": "-re -f video4linux2 -ss 0.9 -i /dev/video0 -vframes 1",
+                    "maxStreams": 2,
+                    "maxWidth": 1920,
+                    "maxHeight": 1080,
+                    "maxFPS": 30,
+                    "vcodec": "h264_omx"
+                }
+		        }
+	        ]
+	    }
+    ]
+}
