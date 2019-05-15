@@ -169,6 +169,11 @@ In contrast, a deep copy will copy all contents by value.
 3. b = copy.deepcopy(a): Deep copying, a and b's structure and content become completely isolated.
 ```
 
+### 6.map_async vs apply_async: what should I use in this case?
+```
+
+```
+
 
 Interesting interview questions
 --------------------------------

@@ -1,7 +1,126 @@
-Git Server: Build your own Private Git Repository 
+GitLab: Build your own Private GitLab Repository 
 =================================================
 
-Make a simple yet cool Git server that is perfect for hosting your next code project. If you're a programmer, then your probably have heard of Git before.Git is a hugely popular version control software for the development of software. 
+> Make a simple yet cool Git server that is perfect for hosting your next code project. If you're a programmer, then your probably have heard of Git before.Git is a hugely popular version control software for the development of software. 
+
+Attach USB Storage to your Raspberry Pi
+---------------------------------------
+```
+Pre-requistes
+    For most USB hard drives you will need a power supply (PSU) capable of supplying at least 2.5A @ 5V, for some drives you many need even more power than this. This may mean that your setup will need one PSU for the Raspberry Pi and an additional one per hard drive you add.
+
+    We will be formatting our drive with the EXT4 filesystem and using a unique label so that we can use multiple devices at the same time.
+
+Step 1. Identify the drive
+    The Linux command lsblk will list all bulk storage devices.
+$ sudo lsblk
+NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda           8:0    1 59.8G  0 disk
+└─sda1        8:1    1 59.8G  0 part
+mmcblk0     179:0    0 29.8G  0 disk
+├─mmcblk0p1 179:1    0  256M  0 part /boot/firmware
+└─mmcblk0p2 179:2    0 29.6G  0 part /
+
+Step 2. Create the partitions
+    Using the fdisk tool to wipe out the existing partitions and create new ones. This is not always essential but ensures we have a known state on the disk.
+$ sudo fdisk /dev/sda
+    First wipe the existing partitions:
+Command (m for help): o
+Created a new DOS disklabel with disk identifier 0x04e2ae16.
+The old gpt signature will be removed by a write command.
+
+Now create a single partition by accepting all the defaults
+Finally write the changes:
+
+Step 3. Format the new partition 
+$ sudo fdisk -l /dev/sda
+[sudo] password for pi:
+Disk /dev/sda: 59.8 GiB, 64172851200 bytes, 125337600 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: gpt
+Disk identifier: 34086D2F-E64E-4934-91A7-DA3E5962F2D5
+
+Device     Start       End   Sectors  Size Type
+/dev/sda1   2048 125337566 125335519 59.8G Linux filesystem
+
+Now format the partition we just created and at the same time attach a unique label
+$ sudo mkfs.ext4 -L USBSHARE /dev/sda1 
+
+Step 4. Pick a mount-point 
+    For a Linux operating system we need to pick a directory to mount our storage under. This could be almost any folder including /home/pi for instance. we'll keep things simple and pick /mnt/usbshare.
+$ sudo mkdir /mnt/usbshare 
+    Let's test the mount point temporarily and then make things permanent.
+$ sudo mount -L USBSHARE /mnt/usbshare 
+$ ls /mnt/usbshare/
+
+Now we were able to mount our drive using a label instead of the device /USBSHARE name of /dev/sda1 - as long as we keep the labels unique for all devices we attach we can use this method of identify them.
+
+Step 5. Make it permanent
+    If you intend on using the drive permanently then follow this step. The next step involves editing the fstab file which is used to mount disks at system boot time:
+$ sudo vim /etc/fstab
+    Since used an ext4 file-system and that is also used for the SD card's root filesystem, we can use the same settings. You should see two lines like the following:
+$ sudo vim /etc/fstab
+LABEL=writable  /        ext4   defaults        0 0
+LABEL=system-boot       /boot/firmware  vfat    defaults        0       1
+
+Add a line underneath, save the file, then reboot.
+LABEL=USBSHARE          /mnt/usbshare   ext4    defaults,noatime    0   1
+# a swapfile is not a swap partition, no line here
+#   use  dphys-swapfile swap[on|off]  for that
+
+Now that your drive is attached let's look at how to keep the drive working reliably and a few uses for that extra storage.
+
+Best practices:
+    Always shutdown with shutdown -h 0 or halt -h - never pull the power cable.
+    
+    If you are using the drive only temporarily then type in sudo unmount /mnt/usbshare before pulling out the USB cable - or shutdown the system first.
+    
+    If you have a power-cut or accidental power-out then you can repair the filesystem like this:
+
+$ sudo umount /mnt/usbshare 
+$ sudo fsck /dev/sda1 
+    
+    Optimizing power consumption 
+```
+
+Configure Swap
+--------------
+> Even with a newer Pi, the first setting you will want to change is to ensure the device has enough memory available by expanding the seap space to 4GB.
+```
+# The config file /etc/dphys-swapfile allows the user to set up the working environment for dphys-swapfile. 
+$ sudo vim /etc/dphys-swapfile 
+# The default value in Raspbian is:
+CONF_SWAPSIZE=100 
+# We will need to change this to:
+CONF_SWAPSIZE=1024
+# Then you will need to stop and start the service that manages the swapfile own Rasbian:
+$ sudo /etc/init.d/dphys-swapfile stop 
+$ sudo /etc/init.d/dphys-swapfile start 
+# You can then verify the amount of memory + swap by issuing the following command:
+$ free -m 
+```
+
+GitLab Installation 
+-------------------
+```
+GitHub is a web service based on the software Git. Git allows you to store the history of your software code base and easily control versioning.
+
+1. Install required dependencies.
+$ sudo apt-get install curl openssh-server ca-certificates postfix apt-transport-https 
+Select Internet Site when primpted. On the next screen, enter your server's domain name to configure how the system will send mail.
+$ curl https://packages.gitlab.com/gpg.key | sudo apt-key add - 
+
+2. Install GitLab CE(Community Edition) server.
+# Run below command one by one to download and install GitLab. This may take time based on your internet speed.
+$ sudo curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
+$ sudo apt-getgitlab-ce
+
+3. Configure and start GitLab.
+
+
+```
 
 Set-up remote git repository on a standard server 
 -------------------------------------------------

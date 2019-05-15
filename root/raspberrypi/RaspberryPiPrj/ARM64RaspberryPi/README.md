@@ -124,3 +124,78 @@ mac> Finder > Go > Connect to Server...
 8. If you need to monitor the logs for vncserver, you can use journalctl
 $ sudo journalctl -u vncserver-x11-serviced.service 
 ```
+
+Install Tomcat 8.5 and JDK 8 on Raspberry
+-----------------------------------------
+```
+Apache Tomcat is one of the most popular web servers in the Java community. It ships as a servelt container capable of serving Web ARchives with the WAR extension.
+
+Tomcat Structure:
+    Environment Variables:
+        $CATALINA_HOME: This variable points to the directory where our server is installed.
+        $CATALINA_BASE: This variable points to the direoctory of a particular instance of Tomcat.If this variable is not set explicitly. Then it will assigned the same value as $CATALINA_HOME 
+        Web applications are deploy under the $CATALINA_HOME/webapps directory 
+
+Step 1: Install OpenJDK 
+$ sudo apt update 
+# Install the OpenJDK package by running
+$ sudo apt-get install openjdk-8-jdk 
+# Add JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64 
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64 
+
+Step 2: Create Tomcat User 
+# For security purposes, create a new system user and group with home directory /opt/tomcat that will run the Tomcat service
+$ sudo useradd -r -m -U -d /opt/tomcat -s /bin/false tomcat
+
+Step 3: Install Tomcat 
+# download the latest binary release of Tomcat 9 from Tomcat downloads page 
+$ wget http://www-eu.apache.org/dist/tomcat/tomcat-9/v9.0.20/bin/apache-tomcat-9.0.20.tar.gz -P /tmp
+# Once the download is completed, extract the Tomcat archive and move it to the /opt/tomcat directory 
+$ sudo tar xf /tmp/apache-tomcat-9*.tar.gz -C /opt/tomcat
+# To have more control over Tomcat versions and updates, we will create a symbolic link latest which will point to the Tomcat.
+$ sudo ln -s /opt/tomcat/apache-tomcat-9.0.20 /opt/tomcat/latest
+# change the directory ownership to user and group tomcat 
+$ sudo chown -RH tomcat: /opt/tomcat/latest
+# The scripts inside bin/ directory must have executable flag 
+$ sudo sh -c 'chmod +x /opt/tomcat/latest/bin/*.sh'
+
+Step 4: Create a systemd Unit File 
+# To run Tomcat as a service we will create a new unit file. create a file named tomcat.service in the /etc/systemd/system/
+$ sudo vim /etc/systemd/system/tomcat.service
+t]
+Description=Tomcat 9 servlet container
+After=network.target
+
+[Service]
+Type=forking
+User=tomcat
+Group=tomcat
+Environment="JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64"
+Environment="JAVA_OPTS=-Djava.security.egd=file:///dev/urandom -Djava.awt.headless=true"
+Environment="CATALINA_BASE=/opt/tomcat/latest"
+Environment="CATALINA_HOME=/opt/tomcat/latest"
+Environment="CATALINA_PID=/opt/tomcat/latest/temp/tomcat.pid"
+Environment="CATALINA_OPTS=-Xms512M -Xmx1024M -server -XX:+UseParallelGC"
+ExecStart=/opt/tomcat/latest/bin/startup.sh
+ExecStop=/opt/tomcat/latest/bin/shutdown.sh
+
+[Install]
+WantedBy=multi-user.target
+
+# Save and close the file and notify systemd that we created a new unit file:
+$ sudo systemctl daemon-reload 
+# Start the Tomcat service by executing
+$ sudo systemctl start tomcat 
+# Check the service status with the following command:
+$ sudo systemctl status tomcat 
+# enable the Tomcat service to be automatically started at boot time:
+$ sudo system enable tomcat 
+```
+
+Deploy a WAR File to Apache Tomcat 
+----------------------------------
+```
+Deploying a web application to Apache Tomcat is very straightforward using a WAR(Web Archive) file. By deploying we are placing a zipped web application in a location on the file system where Tomcat can make the web page(s) available to the world.
+
+
+```

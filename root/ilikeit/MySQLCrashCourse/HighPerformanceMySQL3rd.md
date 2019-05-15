@@ -187,6 +187,38 @@ Chapter 2 Benchmarking MySQL
     - Single-Component Tools:
         * mysqlslap: simulates load on the server and reports timing information.
         * MySQLBenchmark Suite(sql-bench): 
+        * Super Smack: 
+        * Database Test Suite: 
+        * Percona's TPCC-MySQL Tool: 
+        * sysbench: 
+
+* MySQL BENCHMARK() FUNCTION
+```
+mysql> SET @input := 'David Chyi';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> SELECT BENCHMARK(1000000, MD5(@input));
++---------------------------------+
+| BENCHMARK(1000000, MD5(@input)) |
++---------------------------------+
+|                               0 |
++---------------------------------+
+1 row in set (0.94 sec)
+
+mysql> SELECT BENCHMARK(1000000, SHA1(@input));
++----------------------------------+
+| BENCHMARK(1000000, SHA1(@input)) |
++----------------------------------+
+|                                0 |
++----------------------------------+
+1 row in set (1.18 sec)
+
+We don't use BENCHMARK() for real benchmarks.
+```
+
+Chapter 3 Profiling Server Performance
+--------------------------------------
+
 
 
 

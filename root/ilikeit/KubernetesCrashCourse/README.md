@@ -253,3 +253,97 @@ ENV NAME World
 # 设置容器进程为: python3 app.py, 即: 这个Python应用的启动命令 
 CMD ["python3", "app.py"]
 ```
+```
+* Docker 制作镜像 
+# -t 为镜像添加一个Tag; docker build 自动加载当前目录下的Dockerfile文件。
+$ docker build -t flask-web-py3 . 
+
+Dockerfile中的每个原句执行后，都会生成一个对应的镜像层.即使原语句本身没有明显的修改文件的操作，它对应的层也会存在。为空
+
+* docker images 查看结果 
+$ docker image ls
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+flask-web-py3       latest              2fad65148ef1        3 minutes ago       149MB
+
+* docker run 启动容器 
+# -p 4000:80 把容器内的80端口映射到宿主机的4000端口上
+$ docker run -p 4000:80 flask-web-py3 
+
+$ docker ps
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                  NAMES
+de6895cdf2d4        flask-web-py3       "python app.py"     6 minutes ago       Up 6 minutes        0.0.0.0:4000->80/tcp   practical_sanderson
+
+$ curl http://localhost:4000
+<h3>Hello World!</h3><b>Hostname:</b> de6895cdf2d4<br/>% 
+
+* 注册Docker Hub账号，然后使用docker login 命令登陆 
+$ docker login  # 登陆 
+
+# docker tag 给容器镜像
+$ docker tag flask-web-py3 username/flask-web-py3:v1
+
+# 将自己的镜像上传到Docker Hub上  
+$ docker push username/flask-web-py3:v1 
+
+# 可以使用docker commit 指令将一个正在运行的容器直接提交为一个镜像
+$ docker exec -it 1c479d716e49 /bin/sh 
+# 在容器内新建一个文件
+$ touch README.txt 
+$ exit 
+# 将新建的文件提交到镜像中保存 
+$ docker commit 1c479d716e49 username/flask-web-py3:v2 
+
+# 查看当前正在运行的Docker容器的进程号PID
+$ docker inspect --format '{{ .State.Pid }}' e9fc6f3014cf
+3044
+
+# 查看宿主主机的proc文件，看到3044进程的Namespace对应的文件
+# 一个进程每种Linux Namespace都对应/proc/[进程号]/ns下一个对应的虚拟文件,连接到一个真实的Namespace文件上
+$ sudo ls -l /proc/3044/ns
+[sudo] password for pi:
+total 0
+lrwxrwxrwx 1 root root 0 May  5 20:55 cgroup -> 'cgroup:[4026531835]'
+lrwxrwxrwx 1 root root 0 May  5 20:53 ipc -> 'ipc:[4026533249]'
+lrwxrwxrwx 1 root root 0 May  5 20:53 mnt -> 'mnt:[4026533247]'
+lrwxrwxrwx 1 root root 0 May  5 20:51 net -> 'net:[4026533252]'
+lrwxrwxrwx 1 root root 0 May  5 20:53 pid -> 'pid:[4026533250]'
+lrwxrwxrwx 1 root root 0 May  5 20:55 pid_for_children -> 'pid:[4026533250]'
+lrwxrwxrwx 1 root root 0 May  5 20:55 user -> 'user:[4026531837]'
+lrwxrwxrwx 1 root root 0 May  5 20:53 uts -> 'uts:[4026533248]'
+
+# 一个进程可以选择加入到某个进程已有的Namespace当中，从而达到进入这个进程所在的容器的目的.
+$ sudo ./set_ns /proc/3044/ns/net /bin/bash
+root@RPi3BPlus:~/chyidl.com/DockerPrj# ifconfig
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+    inet 172.17.0.2  netmask 255.255.0.0  broadcast 172.17.255.255
+    ether 02:42:ac:11:00:02  txqueuelen 0  (Ethernet)
+    RX packets 36  bytes 2738 (2.7 KB)
+    RX errors 0  dropped 0  overruns 0  frame 0
+    TX packets 7  bytes 655 (655.0 B)
+    TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+    inet 127.0.0.1  netmask 255.0.0.0
+    loop  txqueuelen 1000  (Local Loopback)
+    RX packets 0  bytes 0 (0.0 B)
+    RX errors 0  dropped 0  overruns 0  frame 0
+    TX packets 0  bytes 0 (0.0 B)
+    TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+# Docker 提供参数启动容器并加入到另一个容器的Network Namespace
+$ docker run -it --net container:xxxx busybox ifconfig 
+# --net=host 容器和宿主其它普通进程共享主机网络;这就为容器直接操作和使用宿主网络提供渠道
+$ docker run -it --net=host 
+```
+* Copy-on-Write: 使用联合文件系统，在容器中对镜像rootfs所做的任何修改，都会被操作系统先复制到可读写层，然后再修改。
+
+搭建私有的Docker Registry
+-------------------------
+
+* Volume 数据卷
+```
+容器技术使用rootfs机制和Mount Namespace构建出一个同宿主主机完全隔离开的文件系统环境，Docker Volumn机制允许宿主主机上指定的目录或者文件挂载到容器里面进行读取和修改操作.
+# Docker项目支持两种Volume声明方式,可以将宿主目录挂在进入容器中
+$ docker run -v /test ... 
+$ docker run -v /home:/test ... 
+```

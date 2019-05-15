@@ -14,7 +14,7 @@
 - [SuperComputer Rasp Cluster](/root/raspberrypi/RaspberryPiPrj/Supercomputer/README.md)
 - [LogitechK480 bluetooth in Linux](/root/raspberrypi/RaspberryPiPrj/LogitechK480/README.md)
 - [Measure Performance in Linux](/root/raspberrypi/RaspberryPiPrj/MeasurePerformance/README.md)
-- [Build your own Private Git Repository](/root/raspberrypi/RaspberryPiPrj/PrivateGitRepository/README.md)
+- [Build your own Private GitLab](/root/raspberrypi/RaspberryPiPrj/PrivateGitRepository/README.md)
 - [Build Ghost Blog on Raspberry](/root/raspberrypi/RaspberryPiPrj/GhostPi/README.md)
 - [Kindle + Raspberry = Anything](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/README.md)
 - [YahooWeatherAPI](/root/raspberrypi/RaspberryPiPrj/YahooWeatherAPI/README.md)
