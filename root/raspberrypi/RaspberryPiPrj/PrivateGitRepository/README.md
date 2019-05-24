@@ -110,14 +110,25 @@ GitHub is a web service based on the software Git. Git allows you to store the h
 1. Install required dependencies.
 $ sudo apt-get install curl openssh-server ca-certificates postfix apt-transport-https 
 Select Internet Site when primpted. On the next screen, enter your server's domain name to configure how the system will send mail.
-$ curl https://packages.gitlab.com/gpg.key | sudo apt-key add - 
 
-2. Install GitLab CE(Community Edition) server.
-# Run below command one by one to download and install GitLab. This may take time based on your internet speed.
-$ sudo curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh | sudo bash
-$ sudo apt-getgitlab-ce
+2. Installing GitLab from source 
+    Installing from source means that we will take the source code from gitlab.com and use that to code in order to install it on our server. 
+    
+    https://gitlab.com/gitlab-org/gitlab-ce/blob/master/VERSION  -- v11.10.4 
+    
+    Getting ready 
+        1. A server running Debain or Ubuntu: preferably one of the latest versions, and running as 64-bit 
+        2. Git Version 2.21 or higher 
+        3. A text editor, using Vim 
+        4. A working mail server 
+        5. You have to setup the database 
+        6. You have to install all the server dependencies 
 
-3. Configure and start GitLab.
+    Download the source code:
+        $ cd /home/pi
+        $ git clone https://gitlab.com/gitlab-org/gitlab-ce.git -b 11-10-stable gitlab
+
+    In config/gitlab.yml, we need to change the host to the fully-qualified domain name of your GitLab instance. Also change the email_from to the e-mail address you want to use as a from address for all the e-mails that are sent by GitLab.
 
 
 ```

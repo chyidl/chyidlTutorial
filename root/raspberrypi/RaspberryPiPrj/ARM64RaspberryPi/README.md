@@ -101,6 +101,66 @@ START THE SWAP
 $ sudo dphys-swapfile swapon
 ```
 
+* Change swap size in Ubuntu 
+```
+Swap is a special area on your computer, which the operating system can use as additional RAM.
+
+In the following example, we'll extend the swap space avilable in the /swapfile from 1GB to 2GB 
+
+1. Turn off all swap processes
+    $ sudo swapoff -a 
+
+2. Resize the swap 
+    $ sudo dd if=/dev/zero of=/swapfile bs=4M count=512
+    if = input file 
+    of = output file 
+    bs = block size 
+    count = multiplier of blocks 
+    
+    To Set the right permissions type:
+    $ sudo chmod 600 /swapfile
+
+3. Make the file usable as swap 
+    Use the mkswap utility to set up the file as Linux swap area:
+    $ sudo mkswap /swapfile 
+
+4. Activate the swap file
+    $ sudo swapon /swapfile 
+    
+    To make the change permanent open the /etc/fstab file and append the following line:
+    /swapfile swap swap defaults 0 0 
+
+5. Verify the swap status.
+    $ sudo swapon --show 
+    $ sudo free -h 
+
+How to adjust the swappiness value
+    Swappiness is a Linux kernel property that defines how often the system will use the swap space. Swappiness can have a value between 0 and 100.
+    A low value will make the kernel to try to avoid swapping whenever possible while a higher value will make the kernel to use the swap more aggressively.
+
+    The default swappiness value is 60. You can check the current swappiness value by typing the following command:
+    $ cat /proc/sys/vm/swapiness
+    
+    While the swappiness value of 60 is OK for Desktops, for production servers you may need to set a lower value.
+    For example, to set the swappiness value to 10, type:
+    $ sudo sysctl vm.swappiness=10
+
+    To make this parameter persistent across reboots append the following line to the /etc/sysctl.conf file:
+    $ sudo vim /etc/sysctl.conf 
+        vm.swappiness=10 
+
+    The optimal swappiness value depends on your system workload and how the memory is being used. You should adjuest this parameter in small 
+    increments to find an optimal value.
+
+
+How to remove Swap File:
+    01. First, deactivate the swap using the following command:
+        $ sudo swapoff -v /swapfile 
+    02. Remove the swap file entry /swapfile swap swap defaults 0 0  from the /etc/fstab file.
+    03. Finally delete the actual swapfile file:
+        $ sudo rm /swapfile 
+```
+
 * Headless VncServer Configuration 
 ```
 configure accessing the pi with osx's Screen
