@@ -4,7 +4,8 @@ MySQL Crash Course
 The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
 
 MySQL 8.0 Install and Manage
--------------
+----------------------------
+
 ```
 # My Machine info 
 $ cat /etc/os-release 
@@ -833,5 +834,4 @@ mysql> SET session wait_timeout=300;
 If we need to change the wait_timeout global value we should follow below steps:
     1. Open the my.cnf file which resides in /etc/mysql/ directory 
     2. Add below value with the mysqld blog to my.cnf file 
-
 ```

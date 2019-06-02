@@ -11,6 +11,11 @@ Vim is rock stable and is continuously being developed to become even better. Am
 - integrates with many tools 
 
 ## VIM Tutorial 
+```
+
+
+
+```
 
 ## VIM Tips 
 

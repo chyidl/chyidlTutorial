@@ -185,10 +185,58 @@ mac> Finder > Go > Connect to Server...
 $ sudo journalctl -u vncserver-x11-serviced.service 
 ```
 
-Install Tomcat 8.5 and JDK 8 on Raspberry
------------------------------------------
+Install Multiple Tomcat Instances 8.5 and JDK 8 on One Raspberry
+----------------------------------------------------------------
 ```
-Apache Tomcat is one of the most popular web servers in the Java community. It ships as a servelt container capable of serving Web ARchives with the WAR extension.
+    Running multiple Tomcat Instances on one server
+    Advanced Configuration - Multiple Tomcat Instance
+    Running Multiple Tomcat Instances on Single Machine 
+
+Understand Tomcat Directory Structure:
+    bin     : This directory contains the startup and shudown scripts for both Windows and Linux.
+    conf    : This directory contains the main configuration files for Tomcat. The two most important are the server.xml and the global web.xml
+    server  : This directory contains the Tomcat Java Archive files.
+    lib     : This directory contains Java Archive files that Tomcat is dependent upon.
+    logs    : This directory contains Tomcat's log files 
+    src     : This directory contains the source code used by the Tomcat server. Once Tomcat is released, it will probably contain interfaces and abstract classes only.
+    webapps : All web applications are deployed in this directory; it contains the WAR file.
+    work    : This is the directory in which Tomcat will place all servlets that are generated from JPSs. If you want to see exactly how a particular JSP is interpreted, look in this directory.
+
+Tomcat server ports:
+    Connector Port: This is the port where Apache Tomcat listen for the HTTP requests.
+    Shutdown Port: This port is used when we try to shutdown the Apache Tomcat Server.
+    AJP (Apache JServ Protocol) Connector Port: The Apache JServ Protocol (AJP) is a binary protocol that can conduct inbound requests from a web server through to an application server that sits behind the web server.
+    Redirect Port: Any redirection happending inside Apache Tomcat will happen through this port.
+
+Mac/Linux/Unix:
+    ./catalina.sh start|stop
+
+Kill process using command kill -9 <process ID>
+$ kill -9 <PID>
+
+Change HTTP, HTTPS, AJP, Shutdown Ports
+File location: Tomcat/conf/server.xml 
+    1: <Server port="9005" shutdown="SHUTDOWN">
+    2: <Connector port="9080" protocol="HTTP/1.1"
+            connectionTimeout="20000"
+            redirectPort="9443" />
+    3: <!-- Define an AJP 1.3 Connector on port 8009 -->
+       <Connector port="9009" protocol="AJP/1.3" redirectPort="9443" />
+
+The startup.sh and shutdown.sh script files make use of catalina.sh for performing the startup and shutdown operations.
+
+$ vim catalina.sh 
+# chyi_add 2019-05-29
+export CATALINA_HOME=/root/chyi_backup/apache-tomcat-8.5.41
+export CATALINA_BASE=/root/chyi_backup/apache-tomcat-8.5.41
+
+The main different from running a single Tomcat instance is you need to set CATALINA_BASE to the directory you set up for the particular instance you want to start[or stop]
+
+```
+
+```
+Apache Tomcat(or simply Tomcat) is an open source web server and servlet container developed by the Apache Software Foundation(ASF). Tomcat implements ths Java Servlet and the JavaServer Pages[JSP] specifications from Oracle Corporation, and provides a "pure Java" HTTP web server environment for Java code to run.
+
 
 Tomcat Structure:
     Environment Variables:
@@ -256,6 +304,4 @@ Deploy a WAR File to Apache Tomcat
 ----------------------------------
 ```
 Deploying a web application to Apache Tomcat is very straightforward using a WAR(Web Archive) file. By deploying we are placing a zipped web application in a location on the file system where Tomcat can make the web page(s) available to the world.
-
-
 ```

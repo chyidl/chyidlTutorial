@@ -49,4 +49,28 @@ Appendix
 
 ElasticSearch技术：在高并发架构下，可以通过分布式架构的ES家属支撑高并发的搜索
 
+技术面准备:
+    并发相关原理问题
+    消息中间件的问题
+    JVM 
+    项目技术细节讨论
+写代码:
+    并发有关题
+    算法题
+    设计模式(考虑支持扩展性)
+    主要涉及有分布式、缓存、消息队列等内容
+    来阿里你不缺挑战，可能你更多需要关注第一年你能否活得下来。
+
+Tomcat Implementation:
+    Apache Tomcat software is an open source implementation of the Java Servlet, JavaServer Pages, Java Expression Language and Java WebSocket technologies.
+    Web应用打包成WAR包部署到Tomcat中,在我们的Web应用中，我们要指名URL被那个类的哪个方法所处理(无论是原始的Servlet开发,还是现在流行的SpringMVC都必须指明).
+    请求先到达Tomcat, Tomcat对于请求进行下面的处理:
+        1. 提供Socket服务
+            Tomcat启动之后，必然是Socket服务(BIO, NIO, AIO)，支持HTTP协议
+        2. 进行请求的分发
+            Tomcat可以为多个Web应用提供服务，Tomcat可以把URL下发到不同的Web应用
+        3. 需要把请求和相应封装成request/response
+            我们在Web应用这层不必封装request/response,都是直接使用，这是因为Tomcat已经做好封装
+
+
 ```

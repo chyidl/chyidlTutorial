@@ -26,6 +26,7 @@ Plugin 'garbas/vim-snipmate'    " snipMate.vim aims to be a concise vim script t
 Plugin 'w0rp/ale'               " Asynchronous linting/fixing for Vim and Language Server Protocol (LSP) integration
 Plugin 'vim-syntastic/syntastic' " Syntax checking hacks for vim
 Plugin 'keith/swift.vim'        " Vim runtime files for Swift
+Plugin 'fatih/vim-go'           " Go development plugin for Vim
 
 
 call vundle#end()               " required
@@ -76,6 +77,8 @@ filetype plugin indent on    " required
 
 " Set to auto read when a file is changed from the outside 
 set autoread 
+
+" manual reload current file use :e (the short edit) it will discard local changes and reload
 
 " With a map leader it's possible to do extra key combinations 
 " like <leader>w saves the current file 
@@ -174,6 +177,7 @@ syntax enable
 if !has('gui_running')
 	set t_Co=256
 endif
+
 set background=dark
 
 " Set extra options when running in GUI mode 
@@ -190,15 +194,17 @@ set encoding=utf8
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
-colorscheme desert
-" highlight the current line and the cursor
+try
+    color desert
+    " highlight the current line and the cursor
     
-set cursorline
-set cursorcolumn
+    set cursorline
+    set cursorcolumn
 
-highlight CursorColumn guibg=lightblue ctermbg=8
-" Dark grey, better you can get if you don't support 256 colors
-highlight CursorLine cterm=NONE ctermbg=8 ctermfg=NONE
+    highlight CursorColumn guibg=lightblue ctermbg=lightgray
+    highlight CursorLine cterm=NONE ctermbg=lightgray ctermfg=NONE
+catch
+endtry
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
@@ -594,10 +600,13 @@ let g:syntastic_check_on_wq = 0
 " Vim runtime files for Swift 
 let g:syntastic_swift_checkers = ['swiftpm', 'swiftlint']
 
-" Using template files in Vim
+" Using template files in Vim 
 if has("autocmd")
-    augroup templates 
+    augroup templates
         autocmd BufNewFile *.* silent! execute '0r ~/.vim/templates/skeleton.'.expand("<afile>:e")
-        autocmd BufNewFile * %substitute#\[:VIM_EVAL:\]\(.\{-\}\)\[:END_EVAL:\]#\=eval(submatch(1))#ge
-    augroup END 
+        autocmd BufNewFile * %substitute#\[:VIM_EVAL:\]\(.\{-\}\)\[:END_EVAL:\]#\=eval(submatch(1))#ge 
+    augroup END
 endif
+
+" Running Python code in Vim 
+autocmd FileType python nnoremap <buffer> <F5> :exec '!clear && python3' shellescape(@%, 1)<cr>

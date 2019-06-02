@@ -1,0 +1,170 @@
+Linux 是一套免费使用和自由传播的Unix操作系统,是一个多用户、多任务、支持多线程和多CPU的操作系统
+
+VMware网络模式：
+    1. 桥接模式：相当于独立虚拟出一台电脑，和宿主是平行关系，虚拟机和宿主使用的是同一张网卡
+        桥接模式：对应的是PC机的物理网卡
+    2. Host-only: 虚拟机可以访问虚拟机，可以访问宿主主机，除此以外的机器不能访问,宿主机器可以访问虚拟机，其他机器不能访问
+        宿主模式：对应的是虚拟机的net1网卡
+    3. NAT: 虚拟机可以访问虚拟机，也可以访问宿主主机，也可以访问外网，租住主机可以访问虚拟机，其他外部机器不能访问虚拟机
+        NAT模式，对应的是虚拟的net8网卡
+
+Linux目录结构:
+    /bin: binaries 存放二进制可执行文件
+    /sbin: super user binaries存放二进制可执行文件，只有root才能访问
+    /etc:etcetra 存放系统配置文件
+    /usr:unix share resource:用于存放共享的系统资源
+    /home:存放用户文件的根目录
+    /root:超级用户目录
+    /dev:devices 用于存放设备文件
+    /lib:library存放跟文件系统中的程序运行所需要的共享库及内核模块
+    /mnt:mount系统管理员安装临时文件系统的安装点
+    /boot:存放用于系统引导时使用的各种文件
+    /tmp:temporary用于存放各种临时文件
+    /var:variable用于存放运行时需要改变数据的文件
+
+Linux常用命令:
+    ls: 显示文件和目录列表
+    pwd: 显示当前目录 print working directory
+    clear: 清屏
+    cd: change directory 切换目录
+    mkdir: 创建目录 make directory
+    cp : 复制文件或目录 copy
+    mv: 移动文件或目录
+    rm: 删除文件
+    touch: 创建一个空文件
+    tar: 解压缩文件
+    echo: 将内容写入指定文件，如果目标文件不存在，同时会把文件创建出来
+    cat: 显示文本文件内容
+    head/tail: 产看文本中开头或结尾部分的内容
+    ln: 建立连接文件 link
+    find: 在文件系统中查找指定的文件
+    grep: 在指定的文本文件中查找指定的字符串
+    | 管道
+    ps: 显示瞬间的京城状态
+    kill: 杀死一个进程
+    su: 切换用户
+    sudo: 获取临时目标用户权限，默认是root用户
+    whoami: 查看当前用户
+    which: 查看可执行文件在哪里
+    mount: 挂载外设，挂载目录
+    umount: 解除挂载
+    dirname: 显示文件所在目录
+    hostname: 查看当前主机名
+    top:显示当前系统中耗费资源最多的进程
+    Ctrl+C: 退出命令
+    df: 显示文件系统磁盘空间的使用情况
+    free: 显示当前内存和交换空间的使用清空
+    shutdown:关机/重启
+    help: 查看帮助文档
+
+vi/vim 是Unix/Linux上最常用的文本编辑器而且功能非常强大
+
+    $ vim filename ==> 进入 [一般模式]  :wq == > 退出
+
+    插入命令:
+        i: 在光标前插入
+        I: 在光标当前行开始处插入
+        a: 在光标后插入
+        A: 在光标当前行末尾插入
+        o: 在光标当前行的下一行插入新行
+        O: 在光标当前行的上一行插入新行
+
+    定位命令:
+        :set nu : 显示行号
+        :set nonu: 取消行号
+        gg: 到文本的第一行
+        G: 到文本的最后一行
+        num G: 到文本的第几行
+
+    删除命令:
+        x: 删除光标所在处的字符
+        nx: 删除光标所在处后的n个字符
+        dd: 删除光标所在行
+        ndd: 删除光标所在处以及下面n-1行
+        dG: 删除光标锁在行以及到末尾行的所有内容
+        D: 删除光标所在出到行尾的内容
+        :n1,n2d: 删除指定范围的行
+
+    复制粘贴：
+        y: 复制当前行
+        p : 粘贴
+
+    替换和取消命令:
+        u： undo 取消行一步操作
+        Ctrl + r: redo 返回到undo之前
+        r: 替换光标所在处的字符
+        R: 从光标所在处开始替换，按Esc健结束
+
+    退出命令:
+        :q: 退出vi (没有做任何修改时)
+        :q!: 强制退出不保存
+        :w: 保存不退出
+        :wq: 保存后退出
+
+用户和组管理:
+    linux操作系统是一个多用户操作系统，它允许多用户同时登陆到系统上并使用资源。系统会根据账户区分用户的文件\进程、任务、工作环境，使得每个用户工作都不受干扰.
+
+    配置文件:
+        保存用户信息的文件: /etc/passwd
+        保存密码的文件: /etc/shadow
+        保存用户组的文件: /etc/group
+        保存用户组密码的文件: /etc/gshadow
+        用户配置文件: /etc/default/useradd
+
+    用户组和用户的关系
+        每个用户至少属于一个用户组
+        每个用户组可以包含多个用户
+        同一个用户组的用户享有该组共有的权限
+
+    $ useradd: 添加用户
+    $ passwd: 修改用户密码
+    $ usermod: 修改用户
+    $ userdel: 删除用户
+    $ groupadd: 添加用户组
+    $ groupmod: 修改用户组
+    $ groupdel: 删除用户组
+    $ groups: 显示用户所属组
+
+    权限管理：
+        r: 读权限 (read) 4
+        w: 写权限 (write) 2
+        x: 执行权限 (execite) 1
+
+    Linux 权限管理策略:
+        -rwxrw-r--
+        -: 类型  d: 目录, - 普通用户, l: 连接文件
+        rwx: 所属用户权限 u(user)
+        rw-: 所属组权限 g(group)
+        r--: 其他用户权限 o (other)
+
+    常用的修改权限方式:
+        $ chmod u+x file: 给file的属主增加执行权限
+        $ chmod 751 file: 给file的属主分配读，写、执行的权限，给file的所在组分配读、执行权限，给其他用户分配
+        $ chmod u=rwx, g=rx, o=x file:
+        $ chmod =r file: 为所有用户分配读权限
+        $ chmod 444 file:
+        $ chmod a-wx, a+r file:
+        $ chmod -R u+r directory: 递归给directory目录下所有文件和子目录的属主分配读权限
+        $ chmod 4755: 设置用户ID，给属主分配读、写和执行权限，给组和其他用户分配读、执行的权限，并且该文件除了属主，不能被其他用户进行删除或者移动操作.
+
+常用软件安装:
+
+    MySQL:
+        $ sudo systemctl status mysql  # 查看MySQL状态
+        $ sudo systemctl start mysql    # 启动MySQL
+        设置root用户密码:
+            $ /usr/bin/mysqladmin -u root password 'rootpassword' // 为root账号设置密码
+        MySQL远程连接授权:
+            mysql> GRANT ALL PRIVILEGES ON *.* 'myuser'@'%' IDENTIFIED BY 'mypassword' WITH GRANT OPTION;
+        MySQL设置大小写不敏感:
+            1. Linux下MySQL安装完后默认：区分表名的大小写，不区分列名的大小写;
+            2. root账号登陆后, 修改/etc/my.cnf 中的[mysqld]添加
+                lower_case_table_names=1, 重启MySQL服务，设置不区分表名的大小写
+            MySQL 在Linux下数据库名，表名，列名大小写规则:
+                1. 数据库名和表名是严格区分大小写
+                2. 表的别名是严格区分大小写的
+                3. 列名与列的别名在所有的情况下均是忽略大小写
+                4. 变量名也是严格区分大小写的
+            MySQL在WIndows下都不区分大小写
+    JDK:
+        $ echo $JAVA_HOME:
