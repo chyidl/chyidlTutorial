@@ -10,7 +10,9 @@ THE EVOLUTION OF APPLE DESIGN BETWEEN 1977-NOW
 
 * APPLE II-1977
 > 1977 saw the invention of both the Apple II and the famous rainbow Apple Logo. Steve Jobs added the colours to the Logo to reflect the Apple II's superior colour output. Colour graphics set the Apple II aprt from its rivals on the market. Image: Wikipedia
+
 ![Apple II series](/imgs/PersonComputer/AppleDesign/Apple_II.jpg?raw=true)
+
 ```
 Developer       :   Steve Wozniak (lead designer)
 Manufacturer    :   Apple Computer, Inc.        
@@ -45,7 +47,9 @@ Successor       :   Apple II Plus
 
 * APPLE III - 1980
 > The next iteration of the Apple computer for business was created primarily to compete with business computing like IBM. Image: Wikipedia
+
 ![Apple III series](/imgs/PersonComputer/AppleDesign/Apple_III.jpg?raw=true)
+
 ```
 Developer       :   Apple Computer, Inc.
 Release date    :   May 1980; 39 years ago
@@ -62,7 +66,9 @@ Successor       :   Apple III Plus
 
 * APPLE LISA - 1983
 > While Lisa won the legendary race between itself and the Macintosh by being the first desktop computer to market with an intuitive GUI, it flopped with the public due to sticker shock at its $10,000 price tag and a lack of software titles. Image: Wikipedia
+
 ![Apple Lisa](/imgs/PersonComputer/AppleDesign/Apple_Lisa.jpg?raw=true)
+
 ```
 Also known as   :   Locally Integrated Software Architecture
 Developer       :   Apple Computer Inc.
@@ -84,7 +90,9 @@ Successor       :   Macintosh XL
 
 * MACINTOSH 128K - 1984
 > The Macintosh, for most of us, was the computer that started it all. In the first demonstration of the product at MacWorld, Steve Jobs pulled the very first Macintosh out of the bag and demonstrated product features that the most of us take for granted now. Image: Wikipedia
+
 ![Macintosh 128K](/imgs/PersonComputer/AppleDesign/Macintosh_128K.png?raw=true)
+
 ```
 A Macintosh 128K
 Also known as   :   Apple Macintosh
@@ -108,7 +116,9 @@ Successor       :   Macintosh 512K
 
 * iMac G3 - 1998
 > In doing away with the tower and keeping the computing power, Apple completely revolutionized the desktop computer industry. The iMac G3's were available in a bouquest of various colours.Johnathan lve, the designer who was later the mastermind of the Cube, designed the iMac G3. Image: Wikipedia
+
 ![iMac G3](/imgs/PersonComputer/AppleDesign/iMac_G3.jpg?raw=true)
+
 ```
 iMac G3 in its original Bondi Blue color
 Manufacturer    :   Apple Computer, Inc.
@@ -146,7 +156,9 @@ Successor       :   iMac G4
 
 * eMac - 2002
 > The eMac was made available as a cheaper option to the educational market than the iMAC. Image: Wikipedia
+
 ![eMac](/imgs/PersonComputer/AppleDesign/eMac.jpg?raw=true)
+
 ```
 The Apple eMac
 Developer       :   Apple Computer, Inc.
@@ -160,7 +172,9 @@ Successor       :   Intel iMac
 
 * iMac G4 - 2002
 > The iMac G4 was produced from 2002-2004 and represents the first iteration of Apple's desire to "slim down" the components necessary for an out of the box personal computer experience. It was nicknamed the iLamp because of its swiveling monitor. Image: Wikipedia 
+
 ![iMac G4](/imgs/PersonComputer/AppleDesign/iMac_G4.jpg?raw=true)
+
 ```
 The iMac G4 with a 15" screen
 Developer       :   Apple Inc.
@@ -189,7 +203,9 @@ Successor       :   iMac G5
 
 * iMac G5 - 2004
 > The iMac G5 lacked the swivel functionality of the G4 but introduced the "behind-the-screen" component design priciple which characterized future iMac designs. Image Wikipedia
+
 ![iMac G5](/imgs/PersonComputer/AppleDesign/iMac_G5.jpg?raw=true)
+
 ```
 The original iMac G5 with an Apple Wireless Mouse
 Developer       :   Apple Computer, Inc.
@@ -206,7 +222,9 @@ Successor       :   Intel iMac
 
 * iMac (Intel Based) - Aluminum - 2007 
 > The current iMac modles pack all of the componnets necessary to the operation of a computer behind the monitor in a perfect realization of "slim design", Image: Wikipedia 
+
 ![iMac (Intel Based) - Aluminum](/imgs/PersonComputer/AppleDesign/iMac(Intel_based).png?raw=true)
+
 ```
 Developer       :   Apple Inc.
 Type            :   All-in-one
