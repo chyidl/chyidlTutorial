@@ -114,6 +114,23 @@ Predecessor     :   Apple Lisa
 Successor       :   Macintosh 512K
 ```
 
+* eMate 300 - 1997 
+> The eMate 300 is a personal digital assistant designed, manufactured and sold by Apple Computer to the education market as a low-cost laptop running the Newton operating system. It was the only Newton Device with a built-in keyboard. The eMate was introduced March 7, 1997 for US$799 and was discontinued along with the Apple Newton product line and its operating system on February 27, 1998.
+
+![eMate 300](/imgs/PersonComputer/AppleDesign/eMate_300.jpg?raw=true)
+
+```
+Apple Newton eMate 300 open.
+Manufacturer	:   Apple Computer
+Type	        :   personal digital assistant
+Release date	:   March 7, 1997; 22 years ago[1]
+Introductory    :   US$799 (equivalent to $1,247 in 2018)
+price
+Discontinued	:   February 27, 1998
+Operating       :   Newton operating system
+system
+```
+
 * iMac G3 - 1998
 > In doing away with the tower and keeping the computing power, Apple completely revolutionized the desktop computer industry. The iMac G3's were available in a bouquest of various colours.Johnathan lve, the designer who was later the mastermind of the Cube, designed the iMac G3. Image: Wikipedia
 

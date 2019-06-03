@@ -1,21 +1,19 @@
-eMac Specs
+Apple eMac G4/1.0 (ATI Graphics) Speces
+=======================================
 
-- 1.0 GHz PowerPC G4
-- 17" CRT Display 
+- 1.0 GHz PowerPC 7445 (G4)
+- 17" Flat CRT Display; Resolution Support: 1024x768 
 - 1GB SDRAM
 - SuperDrive
 - 60 IDE Drive 
-
-Hold Key: Option + F + O 
-
-For some reason the eMac won't boot the flash drive, either by running the installer and rebooting or holding option when booting...it doesn't show up in the open firmware boot loader.
+- Genesis emulator()
 
 * Boot a PowerPC Apple from USB 
 > Booting from USB for PowerPC (PPC) eMac's is problematic to say the least. In any case, my 1ghz G4 Open Fireware version won't support it without getting acquanted with Open Firmware. After some serious digging around and rather a lot of experimenting I found a way though:
-    - 1. Be sure to partition the disk with an Apple Partition Map (i.e. not GUID or MBR)
-    - 2. Determine the partition where your bootable images it situated (e.g. an MacOS X DVD or DMG restarted to a partition with Disk utility's restore). This might be disk1s3 in which case the partition number is 3.
+    - 1. Be sure to partition the U disk with an Apple Partition Map (i.e. not GUID or MBR; However PowerPC Macs can read GUID, just can't boot of GUID)
+    - 2. Determine the partition where your bootable images it situated (e.g. an MacOS X DVD or DMG restarted to a partition with Disk utility's restore). Don't choose whole USB disk to restore. choose sub partition right. This might be disk1s3 in which case the partition number is 3.
     - 3. Restart your iMac while holding down Command-Option-O-F (Alt-Cmd-O-F). This will load you in Open Firmware.
-    - 4. Type:
+    - 4. Apple Open Fireware Type:
 ```
 dev / ls
 to get the device tree/list 
