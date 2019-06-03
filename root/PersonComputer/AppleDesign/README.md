@@ -91,7 +91,7 @@ Successor       :   Macintosh XL
 * MACINTOSH 128K - 1984
 > The Macintosh, for most of us, was the computer that started it all. In the first demonstration of the product at MacWorld, Steve Jobs pulled the very first Macintosh out of the bag and demonstrated product features that the most of us take for granted now. Image: Wikipedia
 
-![Macintosh 128K](/imgs/PersonComputer/AppleDesign/Macintosh_128K.png?raw=true)
+![Macintosh 128K](/imgs/PersonComputer/AppleDesign/Macintosh_128k.png?raw=true)
 
 ```
 A Macintosh 128K
