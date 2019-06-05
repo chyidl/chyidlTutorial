@@ -10,13 +10,6 @@ Vim is rock stable and is continuously being developed to become even better. Am
 - powerful search and replace 
 - integrates with many tools 
 
-## VIM Tutorial 
-```
-
-
-
-```
-
 ## VIM Tips 
 
-- [Entering special characters in VIM]()
+- [Entering special characters in VIM](/root/ilikeit/vim/VimTipsWiki/Tip_51_Entering_special_characters.md)
