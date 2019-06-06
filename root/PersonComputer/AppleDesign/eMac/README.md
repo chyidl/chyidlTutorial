@@ -10,11 +10,11 @@ Apple eMac G4/1.0 (ATI Graphics) Speces
 
 * Boot a PowerPC Apple from USB 
 > Booting from USB for PowerPC (PPC) eMac's is problematic to say the least. In any case, my 1ghz G4 Open Fireware version won't support it without getting acquanted with Open Firmware. After some serious digging around and rather a lot of experimenting I found a way though:
+```
     - 1. Be sure to partition the U disk with an Apple Partition Map (i.e. not GUID or MBR; However PowerPC Macs can read GUID, just can't boot of GUID)
     - 2. Determine the partition where your bootable images it situated (e.g. an MacOS X DVD or DMG restarted to a partition with Disk utility's restore). Don't choose whole USB disk to restore. choose sub partition right. This might be disk1s3 in which case the partition number is 3.
     - 3. Restart your iMac while holding down Command-Option-O-F (Alt-Cmd-O-F). This will load you in Open Firmware.
     - 4. Apple Open Fireware Type:
-```
 dev / ls
 to get the device tree/list 
 Look for something in the output like:

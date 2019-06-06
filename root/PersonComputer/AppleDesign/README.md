@@ -114,7 +114,7 @@ Predecessor     :   Apple Lisa
 Successor       :   Macintosh 512K
 ```
 
-* eMate 300 - 1997 
+* eMate 300 - 1997 [⭐️] 
 > The eMate 300 is a personal digital assistant designed, manufactured and sold by Apple Computer to the education market as a low-cost laptop running the Newton operating system. It was the only Newton Device with a built-in keyboard. The eMate was introduced March 7, 1997 for US$799 and was discontinued along with the Apple Newton product line and its operating system on February 27, 1998.
 
 ![eMate 300](/imgs/PersonComputer/AppleDesign/eMate_300.jpg?raw=true)
@@ -131,7 +131,7 @@ Operating       :   Newton operating system
 system
 ```
 
-* iMac G3 - 1998
+* iMac G3 - 1998 
 > In doing away with the tower and keeping the computing power, Apple completely revolutionized the desktop computer industry. The iMac G3's were available in a bouquest of various colours.Johnathan lve, the designer who was later the mastermind of the Cube, designed the iMac G3. Image: Wikipedia
 
 ![iMac G3](/imgs/PersonComputer/AppleDesign/iMac_G3.jpg?raw=true)
@@ -171,9 +171,9 @@ Successor       :   iMac G4
                     eMac
 ```
 
-* eMac - 2002
+* eMac - 2002 [⭐️]
 > The eMac was made available as a cheaper option to the educational market than the iMAC. Image: Wikipedia
-
+-[eMac Reinstall Mac OS X Using USB Disk](/root/PersonComputer/AppleDesign/eMac/README.md)
 ![eMac](/imgs/PersonComputer/AppleDesign/eMac.jpg?raw=true)
 
 ```
@@ -187,7 +187,7 @@ Predecessor     :   iMac G3
 Successor       :   Intel iMac
 ```
 
-* iMac G4 - 2002
+* iMac G4 - 2002 [⭐️]
 > The iMac G4 was produced from 2002-2004 and represents the first iteration of Apple's desire to "slim down" the components necessary for an out of the box personal computer experience. It was nicknamed the iLamp because of its swiveling monitor. Image: Wikipedia 
 
 ![iMac G4](/imgs/PersonComputer/AppleDesign/iMac_G4.jpg?raw=true)
@@ -218,7 +218,7 @@ Predecessor     :   iMac G3
 Successor       :   iMac G5
 ```
 
-* iMac G5 - 2004
+* iMac G5 - 2004 [⭐️]
 > The iMac G5 lacked the swivel functionality of the G4 but introduced the "behind-the-screen" component design priciple which characterized future iMac designs. Image Wikipedia
 
 ![iMac G5](/imgs/PersonComputer/AppleDesign/iMac_G5.jpg?raw=true)
