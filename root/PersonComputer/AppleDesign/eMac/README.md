@@ -24,22 +24,16 @@ Look for something in the output like:
 
 As we're talking about a tree here, write down the complete path to this node. In my case it would be:
 /ht/pci@2/usb@b/disk@1
-```
     - 5. Type:
-```
 devalias ud /ht/pci@2/usb@b/disk@1
 In other words: make 'ud' equal to the path you found in step 4.
-```
     - 6. Now verify you got the right disk:
-```
 dir ud:3,\
 (3 is the partition number you wrote down in step 2)
 And look for a file with tbxi attribute, probably in:
 \System\Library\CoreServices\BootX, e.g:
 dir ud:3,\System\Library\CoreServices 
-```
     - 7. The boot from it:
-```
 boot ud:3,\System\Library\CoreServices\BootX 
-```
     - 8. Presto!
+```
