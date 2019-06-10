@@ -68,7 +68,7 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [MySQL Crash Course](root/ilikeit/MySQLCrashCourse/README.md)
 - [PostgreSQL Crash Course](root/ilike/PostgreSQLCrashCourse/README.md)
 - [Mongo Crash Course](root/ilikeit/MongoDBCrashCourse/README.md)
-- [RabbitMQ Crash Course](root/ilikeit/RabbitMQCrashCourse/README.md)
+- [MQ Crash Course](root/ilikeit/MQCrashCourse/README.md)
 - [Redis Crash Course](root/ilikeit/RedisCrashCourse/README.md)
 - [Docker Crash Course](root/ilikeit/DockerCrashCourse/README.md)
 - [Continuous Integration, Continuous Delivery](root/ilikeit/CICD/README.md)

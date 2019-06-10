@@ -1,21 +1,24 @@
-RabbitMQ 
-========
+ActiveMQ or RabbitMQ or ZeroMQ or Kafka 
+=======================================
 
-RabbitMQ is the most widely deployed open source message broker [消息中间件].It supports multiple messaging protocols.
-RabbitMQ can be deplyed in distributed and federated configurations to meet high-scale, high-availability requirements.
+
+RabbitMQ
+--------
+> RabbitMQ is the most widely deployed open source message broker [消息中间件].It supports multiple messaging protocols.
+> RabbitMQ can be deplyed in distributed and federated configurations to meet high-scale, high-availability requirements.
 
 RabbitMQ Port Access
 --------------------
+```
     4369: epmd, a peer discovery service used by RabbitMQ nodes and CLI tools
     5672, 5671: used by AMQP 0-9-1 and 1.0 clients without and with TLS
     25672: used for inter-node and CLI tools communication ()
     15672: HTTP API clients, management UI and rabbitmqadmin (only if the management plugin is enabled)
-    
+``` 
 
 RabbitMQ Tutorials
 ------------------
-
-These tutorials cover the basics of creating messaging applications using RabbitMQ.
+> These tutorials cover the basics of creating messaging applications using RabbitMQ.
 
 ```
 # install rabbitmq with following command 
@@ -63,7 +66,6 @@ $ sudo rabbitmqctl set_permissions -p / myuser ".*" ".*" ".*"
 - [6. RPC](/root/ilikeit/RabbitMQCrashCourse/tutorials/rpc/rpc_client.py)
     - RPC: Remote Procedure Call.
     
-
 Best Practices
 --------------
     * RabbitMQ
@@ -113,9 +115,6 @@ Best Practices
             * Durable queue 
             * Persistent message (delivery_mode=2)
         - For throughput use temporary, or non-durable queues
-    
-    
-    
         
 RabbitMQ Cluster[2 nodes]
 -------------------------
@@ -258,8 +257,6 @@ RabbitMQ CTL
 
 HAProxy
 -------
-
-
 
 Erlang [Erlang Programming Function Language](/root/ilikeit/RabbitMQCrashCourse/erlang/README.md)
 -------

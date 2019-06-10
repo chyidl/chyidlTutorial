@@ -37,3 +37,27 @@ dir ud:3,\System\Library\CoreServices
 boot ud:3,\System\Library\CoreServices\BootX 
     - 8. Presto!
 ```
+
+Reset Your Mac Password
+-----------------------
+* Reset Mac Password - without a CD or Boot Drive
+
+> Using a pretty nifty trick you can reset a forgottern Mac password without a Mac OS X Installer CD/DVD or any kind of boot drive or recovery partition, and without having an Apple ID. This is basically the be-all-end-all approach if nothing else works, because it's guaranteed to get you back into a Mac when the other options are available, and it works in literally all version of OS X. 
+
+```
+The steps may seen a little intimidating at first but I assure you it's easy if you follow them
+exactly, here is exactly how to do this in three stages:
+
+Stage 1) Boot into Single User Mode and remove a setup file 
+    * Restart the Mac holding down the Command+S keys, this will take you into Single User Mode and it's Terminal interface.
+    * You'll need to check the filesystem first:
+    $ fsck -fy
+    
+    * Next, you must mount the root drive as writeable so that changes will save:
+    $ mount -uw / 
+    
+    * Now, type the following command exactly, followed by the enter key:
+    $ rm /var/db/.applesetupdone 
+
+    * After removing the applesetupdonw file, you need to reboot, type 'reboot' and hit enter 
+```

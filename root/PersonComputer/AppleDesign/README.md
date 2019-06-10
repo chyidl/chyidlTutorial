@@ -174,6 +174,7 @@ Successor       :   iMac G4
 * eMac - 2002 [⭐️]
 > The eMac was made available as a cheaper option to the educational market than the iMAC. Image: Wikipedia
 -[eMac Reinstall Mac OS X Using USB Disk](/root/PersonComputer/AppleDesign/eMac/README.md)
+
 ![eMac](/imgs/PersonComputer/AppleDesign/eMac.jpg?raw=true)
 
 ```
