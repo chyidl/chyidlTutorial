@@ -33,19 +33,32 @@ $ python3 -c 'import sys;print("%x" % sys.maxsize, sys.maxsize > 2**32)'
 
 * Setting on-board Wi-Fi up on Raspberry Pi via the command line  
 ```
+
+Setup WiFi on Raspberry Pi 2B Using USB Dongle
+1. Check for USB WiFi Dongle Hardware
+# To check whether the Raspberry Pi detected the WiFi Dongle hardware that is plugged in to the USB port, type the following command in the terminal and hit enter.
+$ lsusb
+Bus 001 Device 006: ID 0a12:0001 Cambridge Silicon Radio, Ltd Bluetooth Dongle (HCI mode)
+Bus 001 Device 005: ID 0d8c:013c C-Media Electronics, Inc. CM108 Audio Controller
+Bus 001 Device 004: ID 148f:5370 Ralink Technology, Corp. RT5370 Wireless Adapter
+Bus 001 Device 003: ID 0424:ec00 Standard Microsystems Corp. SMSC9512/9514 Fast Ethernet Adapter
+Bus 001 Device 002: ID 0424:9514 Standard Microsystems Corp. SMC9514 Hub
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
 Step1:
 $ sudo apt-get install wireless-tools 
 
 Step2:
 $ sudo apt-get install wpasupplicant , ifupdown
 
-Step3: add below content to /etc/network/interfaces:
+Step3: add below content to /etc/network/interfaces(Network Interfaces File):
 auto wlan0
+allow-hotplug wlan0
 iface wlan0 inet dhcp
 wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf 
 
 Step4: Adding the network details to the Raspberry Pi
-$ sudo vim /etc/wpa_supplicant/wpa_supplicant.conf 
+$ sudo vim /etc/wpa_supplicant/wpa_supplicant.conf (WPA Supplicant File)
 country=CN 
 
 network={
@@ -64,11 +77,14 @@ network={
 
 Getting WiFi network details
 
+Reboot the Raspberry Pi 
+
 This will list all available WiFi networks
 $ sudo iwlist wlan0 scan 
 
 verfiy whether has successful connected 
 $ sudo ifconfig wlan0 
+$ sudo iwconfig 
 ```
 
 * Timezone, locale
@@ -304,4 +320,9 @@ Deploy a WAR File to Apache Tomcat
 ----------------------------------
 ```
 Deploying a web application to Apache Tomcat is very straightforward using a WAR(Web Archive) file. By deploying we are placing a zipped web application in a location on the file system where Tomcat can make the web page(s) available to the world.
+```
+
+Set Up Hacking Linux Kit on Raspberry Pi 
+----------------------------------------
+```
 ```
