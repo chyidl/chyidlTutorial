@@ -44,7 +44,7 @@ Update Permissions
 $ sudo sh -c 'chmod +x /usr/local/apache-tomcat-8.5.40/bin/*.sh'
 
 Create a systemd unit file 
-- Create a new tomcat.service unit file in the /etc/systemd/system/ directory with the following contents:
+- Create a new **tomcat.service** unit file in the /etc/systemd/system/ directory with the following contents:
 
 Create a systemd Service File
 Tomcat needs to know where Java is installed. This path is commonly referred to as "JAVA_HOME". 
@@ -121,70 +121,3 @@ Conclusion
 ```
 Currently, your Tomcat installation is functional, but entirely unencrypted. This means that all data, including sensitive items like passwords, are sent in plain text that can be intercepted and read by other parties on the internet. In order to prevent this from happending, it is strongly recommended
 ```
-
-"""CREATE TABLE `history_{0}` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`JSID` int(11) DEFAULT NULL,
-	`XGRQ` datetime DEFAULT NULL COMMENT 'Modified date',
-	`Code` varchar(20) DEFAULT NULL COMMENT 'Stock code (not include market suffix)',
-	`RECID` int(11) DEFAULT NULL ,
-	`Seid` int(11) DEFAULT NULL ,
-	`StockCode` varchar(20) DEFAULT NULL COMMENT 'Stock code (include market suffix)',
-	`StockAbbr` varchar(20) DEFAULT NULL COMMENT 'Stock code short name',
-	`BargainDate` datetime DEFAULT NULL COMMENT 'Bargain DateTime',
-	`BargainTime` varchar(20) DEFAULT NULL COMMENT 'Bargain Time',
-	`PrevClosePrice` decimal(20,4) DEFAULT NULL COMMENT 'Prev Close Price',
-	`OpenPrice` decimal(20,4) DEFAULT NULL COMMENT 'Open Price',
-	`ClosePrice` decimal(20,4) DEFAULT NULL COMMENT 'Close Price',
-	`HighPrice` decimal(20,4) DEFAULT NULL COMMENT 'High Price',
-	`LowPrice` decimal(20,4) DEFAULT NULL COMMENT 'Low Price',
-	`AccuBargainAmount` decimal(20,4) DEFAULT NULL COMMENT 'Accumulate Transaction Amount',
-	`AccuBargainSum` decimal(20,4) DEFAULT NULL COMMENT 'Accumulate Transaction ',
-	`AccuTurnoverDeals` decimal(20,4) DEFAULT NULL,
-	`PE1` decimal(20,4) DEFAULT NULL,
-	`PE2` decimal(20,4) DEFAULT NULL,
-	`ChangePCT1` decimal(20,4) DEFAULT NULL,
-	`ChangePCT2` decimal(20,4) DEFAULT NULL,
-	`OpenInterest` int(11) DEFAULT NULL,
-	`Buy1Price` decimal(20,4) DEFAULT NULL,
-	`Buy1Amount` decimal(20,4) DEFAULT NULL,
-	`Buy2Price` decimal(20,4) DEFAULT NULL,
-	`Buy2Amount` decimal(20,4) DEFAULT NULL,
-	`Buy3Price` decimal(20,4) DEFAULT NULL,
-	`Buy3Amount` decimal(20,4) DEFAULT NULL,
-	`Buy4Price` decimal(20,4) DEFAULT NULL,
-	`Buy4Amount` decimal(20,4) DEFAULT NULL,
-	`Buy5Price` decimal(20,4) DEFAULT NULL,
-	`Buy5Amount` decimal(20,4) DEFAULT NULL,
-	`Sell1Price` decimal(20,4) DEFAULT NULL,
-	`Sell1Amount` decimal(20,4) DEFAULT NULL,
-	`Sell2Price` decimal(20,4) DEFAULT NULL,
-	`Sell2Amount` decimal(20,4) DEFAULT NULL,
-	`Sell3Price` decimal(20,4) DEFAULT NULL,
-	`Sell3Amount` decimal(20,4) DEFAULT NULL,
-	`Sell4Price` decimal(20,4) DEFAULT NULL,
-	`Sell4Amount` decimal(20,4) DEFAULT NULL,
-	`Sell5Price` decimal(20,4) DEFAULT NULL,
-	`Sell5Amount` decimal(20,4) DEFAULT NULL,
-	PRIMARY KEY (`id`),
-	KEY `ix_{0}_BargainDate` (`BargainDate`),
-	KEY `ix_{0}_Code` (`Code`)) 
-	ENGINE=InnoDB DEFAULT CHARSET=utf8
-	"""
-
-
-CREATE TABLE `asharecalendar` (
-  `OBJECT_ID` varchar(100) NOT NULL DEFAULT '' COMMENT '对象ID',
-  `TRADE_DAYS` varchar(12) DEFAULT NULL COMMENT '交易日',
-  `S_INFO_EXCHMARKET` varchar(60) DEFAULT NULL COMMENT '交易所英文简称',
-  `OPDATE` datetime DEFAULT NULL,
-  `OPMODE` varchar(1) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`OBJECT_ID`),
-  KEY `index_trade_days` (`TRADE_DAYS`),
-  KEY `index_s_info_exchange` (`S_INFO_EXCHMARKET`)
-) ENGINE=InnoDB DEFAULT CHARSET=gbk
-
-
-
-
-
