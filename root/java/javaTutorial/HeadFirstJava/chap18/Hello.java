@@ -1,5 +1,5 @@
 /*
- * Foo.java
+ * Hello.java
  * chap18
  *
  *             .''
@@ -9,24 +9,21 @@
  * ' <' `\ ._/'\
  *    `   \     \
  *
- * Created by Chyi Yaqing on 06/10/19 18:24.
+ * Created by Chyi Yaqing on 06/13/19 22:34.
  * Copyright (C) 2019. Chyi Yaqing.
  * All rights reserved.
  *
  * Distributed under terms of the MIT license.
  */
 
-public class Foo {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-    void go() {
-        Bar b = new Bar();
-        b.doStuff();
-    }
-
-    public static void main(String[] args)
-    {
-        Foo f = new Foo();
-        f.go();
-    }
+/**
+ * Define the remote interface 
+ * */
+public interface Hello extends Remote {
+    
+    String sayHello() throws RemoteException;
 }
 

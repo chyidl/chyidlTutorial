@@ -24,6 +24,7 @@
 - [ARM64 Ubuntu Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/ARM64RaspberryPi/README.md)
 - [Docker on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/DockerRPi/README.md)
 - [MySQL One More Thing](/root/raspberrypi/RaspberryPiPrj/MySQLOneMoreThing/README.md)
+- [Using Cron in Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/CronPi/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)

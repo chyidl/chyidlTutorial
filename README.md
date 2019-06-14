@@ -10,7 +10,7 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Python Pycon](root/python/PythonPyCon/README.md)
 - [Python Source Code](root/python/PythonSourceCode/README.md)
 - [Python Awesome Project](root/python/PythonAwesomePrj/README.md)
-
+- [Python Awesome Script](/root/python/PythonAwesomeScript/README.md)
 
 ### ![](imgs/cpp_logo.png?raw=true) C/C++ Language 
 

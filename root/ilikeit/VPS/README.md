@@ -3,7 +3,7 @@ VPS - Virtual Private Server
 
 1. How to Create a Sudo User on VPS
 -----------------------------------
-The **sudo** command provides a mechanism for granting administrator privileges, ordinarily only available to the root user, to normal users.
+> The **sudo** command provides a mechanism for granting administrator privileges, ordinarily only available to the root user, to normal users.
 
 ```
 # Step to Create a New Sudo User 
@@ -14,9 +14,11 @@ $ ssh root@server_ip_address
 $ adduser username  # userdel -r username 
 $ passwd username # Set and confirm the new password at the prompt. A strong password is highly recommended!
 
-3. First create a new sudo group (groupadd sudo) and add this lines (sudo visudo). Then once again add username to the group
+3. First create a new sudo group (groupadd sudo) and add this lines (sudo visudo). 
+# Change visudo editor from nano to vim 
+$ sudo update-alternative --config editor
 # the 'sudo' group has all the sudo privileges
-%sudo   ALL=(ALL:ALL) ALL
+sudo   ALL=(ALL:ALL) ALL
 
 3. Use the usermod command to add the user to the sudo group
 $ usermod -aG sudo username  # By default, on Ubuntu, members of the sudo group have sudo privileges 
@@ -30,8 +32,7 @@ $ sudo ls -la /root
 
 2. How To Add Swap Space on Ubuntu 18.04
 --------------------------------------------
-One of the easiest way of increasing the responsiveness of your server and guarding against out-of-memory errors in applications is to add some swap space.
-Although swap is generally recommended for systems utilizing traditional spinning hard drives, using swap with SSDs can cause issues with hardware degradation over time.
+> One of the easiest way of increasing the responsiveness of your server and guarding against out-of-memory errors in applications is to add some swap space.Although swap is generally recommended for systems utilizing traditional spinning hard drives, using swap with SSDs can cause issues with hardware degradation over time.
 
 * What is Swap?
     - Swap is an area on a hard drive that has been designated as a place where the operating system can temporarily store data that it can no longer hold in RAM.
@@ -51,6 +52,23 @@ Although swap is generally recommended for systems utilizing traditional spinnin
     - However, if you really feel that you need to force it you can momentarily disable and re-enable swap.
     - $ sudo swapoff -a 
     - $ sudo swapon -a 
+    - $ sudo vim /etc/fstab 
+```
+# /etc/fstab: static file system information.
+#
+# Use 'blkid' to print the universally unique identifier for a
+# device; this may be used with UUID= as a more robust way to name devices
+# that works even if disks are added and removed. See fstab(5).
+#
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+# / was on /dev/sda2 during installation
+UUID=ec1f5568-1f51-4d1b-80d4-a940d7f3aa4f /               ext3    errors=remount-ro,discard,noatime 0       1
+# /boot was on /dev/sda1 during installation
+UUID=9b9407e6-ff9b-48cc-a19b-b1008ad90fb3 /boot           ext3    defaults        0       2
+# Comment all below line
+#/swapfile                                 none            swap    sw              0       0
+#/swap none swap sw 0 0
+```
     - Be careful doing this, as you may make your system unstable, especially if its already low on RAM.
 
 * Create a Swap File
@@ -58,14 +76,14 @@ Although swap is generally recommended for systems utilizing traditional spinnin
     - The best way of creating a swap file is with the **fallocate** program. This command creates a file of a preallocated size instantly.
     - $ sudo fallocate -l 1G /swapfile   # If **faillocate** is not installed or if you get an error message saying **fallocate failed: Operation not supported** then you can use the following command to create the swap file:
     - $ sudo dd if=/dev/zero of=/swapfile bs=1024 count=1048576  
-    - verify that the correct amount of spaces was reserved by typing 
-    - $ ls -lh /swapfile 
+    - $ ls -lh /swapfile # verify that the correct amount of spaces was reserved by typing 
 
 * Enabling the Swap File 
     - Now that we have a file of the correct size available, we need to actually turn this into swap space.
     - First, we need to lock down the permissions of the file so that only the users with **root** privileges can read the contents. This prevents normal users from being able to access the file, which would have significant security implications.
     - $ sudo chmod 600 /swapfile #Make the file only accessible to **root** by typing.
     - $ sudo mkswap /swapfile # mark the files as swap space 
+    - $ sudo swapon -a 
     - $ sudo swapon --show # verify that the swap is available 
 
 * Make the Swap File Permanent
