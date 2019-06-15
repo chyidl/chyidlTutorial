@@ -151,10 +151,9 @@ ClientAliveCountMax 10000
 
 Keep SSH session alive
 ----------------------
+> sshd (the server) closes the connection if it doesn't hear anything from the client for a while. You can tell your client to send a sign-of-life signal to the server once in a while.
 
-sshd (the server) closes the connection if it doesn't hear anything from the client for a while. You ca tell your client to send a sign-of-life signal to the server once in a while.
-
-The configuration for this is in the file "~/.ssh/config", create it if the configuration file does not exist. To send the signal every four minutes (240 seconds) to the remote host, put the following in your "~/.ssh/config" file.
+> The configuration for this is in the file "~/.ssh/config", create it if the configuration file does not exist. To send the signal every four minutes (240 seconds) to the remote host, put the following in your "~/.ssh/config" file.
 
 ```
 $ vim ~/.ssh/config
