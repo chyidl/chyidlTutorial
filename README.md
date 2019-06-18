@@ -70,6 +70,7 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Mongo Crash Course](root/ilikeit/MongoDBCrashCourse/README.md)
 - [MQ Crash Course](root/ilikeit/MQCrashCourse/README.md)
 - [Redis Crash Course](root/ilikeit/RedisCrashCourse/README.md)
+- [Nginx Crash Course](root/ilikeit/NginxCrashCourse/README.md)
 - [Docker Crash Course](root/ilikeit/DockerCrashCourse/README.md)
 - [Continuous Integration, Continuous Delivery](root/ilikeit/CICD/README.md)
 - [Process Monitoring with Supervisord](root/ilikeit/SupervisordCrashCourse/README.md)

@@ -1,11 +1,74 @@
-MySQL Crash Course
+MySQL Crash Course(Everything before the word "but" is horse shit)
 ==================
+> The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
+> MySQL is written in C and C++. Its SQL parser is written in yacc, but it uses a home-brewed lexical analyzer.
 
-The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
+Install MySQL 5.7 on CentOS
+---------------------------
 
-MySQL 8.0 Install and Manage
-----------------------------
+* Step 1 - Enable MySQL Repository 
+```
+# First of all, You need to enable MySQL 5.7 community release yum repository on your system. The rpm package for yum repository configuration are available on MySQL official website.
 
+-- On CentOS and RHEL 7 -- 
+$ sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+
+-- On CentOS and RHEL 6 -- 
+$ sudo yum localinstall https://dev.mysql.com/get/mysql57-community-release-el6-9.noarch.rpm
+```
+
+* Step 2 - Install MySQL 5.7 Server 
+```
+As you have successfully enabled MySQL yum repository on your system. Now, Install MySQL 5.7 community server using following commands as per your operating system version.
+$ sudo yum install mysql-community-server 
+
+Get Temporary root Password:
+$ grep 'A temporary password' /var/log/mysqld.log | tail -1
+Sample output:
+2019-06-16T07:12:15.556876Z 1 [Note] A temporary password is generated for root@localhost: 3aU0dgHq*3Hsg
+```
+
+* Step 3 - Start MySQL Service 
+```
+After installing rpms use following command to start MySQL Service 
+$ sudo service mysqld start|stop|restart
+```
+
+* Step 4 - Initial MySQL Configuration 
+```
+Execute **mysql_secure_installation** script and follow the wizard. It will prompt for root password.
+$ sudo mysql_secure_installation 
+This wizzard will prompt you for inputs. Input new strong password for MySQL root account. For remaining options read option and provide input as required.
+```
+
+* Step 5 - Login to MySQL 
+```
+Login to MySQL using root access
+$ mysql -h localhost -u root -p
+
+After login to MySQL server
+
+/* CREATE NEW DATABASE */
+mysql> CREATE DATABASE mydb;
+
+/* CREATE MYSQL USER FOR DATABASE */
+mysql> CREATE USER 'db_user'@'%' IDENTIFIED BY 'password';
+
+/* GRANT Permission to User on Database */
+mysql> GRANT ALL ON mydb.* TO 'db_user'@'%';
+
+/* RELOAD PRIVILEGES */
+mysql> FLUSH PRIVILEGES;
+```
+
+* Step 6 - Check MySQL Version 
+```
+$ mysql -V 
+mysql  Ver 14.14 Distrib 5.7.26, for Linux (x86_64) using  EditLine wrapper
+```
+
+MySQL 8.0 Install and Manage on Ubuntu
+--------------------------------------
 ```
 # My Machine info 
 $ cat /etc/os-release 
@@ -22,19 +85,52 @@ PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-poli
 VERSION_CODENAME=bionic
 UBUNTU_CODENAME=bionic
 
-# Adding the MySQL Software Repository 
-$ wget https://dev.mysql.com/get/mysql-apt-config_0.8.12-1_all.deb
-$ sudo dpkg -i mysql-apt-config* 
+# A Quick Guide to Using the MySQL APT Repository
+# Adding the MySQL APT Repository
+$ wget https://dev.mysql.com/get/mysql-apt-config_0.8.13-1_all.deb
+$ sudo dpkg -i mysql-apt-config*
+
 # During the installation, you'll be presented with a configuration screen where you can specify which version of MySQL you'd prefer, 
 $ sudo apt update # Refresh your apt package cache 
-$ rm mysql-apt-config*  # clean up after ourseleves and delete the file we download  
-# If you need to update the configuration of these repositories, just run $sudo dpkg-reconfigure mysql-apt-config, select new options, and then sudo apt update to refresh your package cache.
 
 # Install MySQL by the following command:
 $ sudo apt-get install mysql-server 
 
 # You can set the root password later using the mysql_secure_installation 
 $ sudo mysql_secure_installtion
+
+#Starting and Stopping the MySQL Server
+
+# Check the status of the MySQL server 
+$ sudo systemctl status mysql
+
+# Stop the MySQL server with the following command:
+$ sudo systemctl stop mysql 
+
+# To restart the MySQL server, use the following command:
+$ sudo systemctl start mysql 
+
+# Selectig a Major Release Version 
+$ sudo spkg-reconfigure mysql-apt-config 
+# update package information from the MySQL APT repository with this command
+$ sudo apt-get update 
+
+# To see the names of the packages you have installed from the MySQL APT repository
+$ dpkg -l | grep mysql | grep ii 
+ii  mysql-apt-config                0.8.13-1                          all          Auto configuration for MySQL APT Repo.
+ii  mysql-client                    8.0.16-2ubuntu18.04               amd64        MySQL Client meta package depending on latest version
+ii  mysql-common                    8.0.16-2ubuntu18.04               amd64        Common files shared between packages
+ii  mysql-community-client          8.0.16-2ubuntu18.04               amd64        MySQL Client
+ii  mysql-community-client-core     8.0.16-2ubuntu18.04               amd64        MySQL Client Core Binaries
+ii  mysql-community-server          8.0.16-2ubuntu18.04               amd64        MySQL Server
+ii  mysql-community-server-core     8.0.16-2ubuntu18.04               amd64        MySQL Server Core Binaires
+ii  mysql-server                    8.0.16-2ubuntu18.04               amd64        MySQL Server meta package depending on latest version
+
+# mysql-client: Metapackage for installing the MySQL client 
+# mysql-server: Metapackage for installing the MySQL server 
+# mysql-common: MySQL database common files 
+# mysql-community-client: MySQL client
+# mysql-community-server: MySQL server 
 
 # How to Create a New User
 # Making a new user within the MySQL shell 
@@ -64,14 +160,14 @@ mysql> quit
 
 # Don't forget reload all the privileges, 
 $ FLUSH PRIVILEGES; 刷新权限
-
-# Support full Unicode in MySQL databases
-
-# Switching from MySQL's utf8 to utf8mb4 
-Step 1: Create a backup
-Create a backup of all the databases on the server you want to upgrade. Safety first!
-$ mysqldump -u vps -p project > projectbackup.sql 
 ```
+
+Switching from MySQL's utf8 to utf8mb4
+--------------------------------------
+```
+Step 1: Create a backup 
+Create a backup of all the databases on the server you want to upgrade. Safety first!
+$ mysqldump -u username -p password > projectbackup.sql 
 
     1. Stop the MySQL Service ($ sudo systemctl stop mysql)
     2. Start MySQL without a password ($ sudo mysqld_safe --skip-grant-tables &)
@@ -87,10 +183,95 @@ or tell it to reload the tables. If you change the grant tables directly but for
 wondering why your changes seem to make no difference! If you modify the grant tables indirectly using account-management statement such as GRANT, REVOKE, SET PASSWORD, or RENAME USER
 the server notices these changes and loads the grant tables into memory again immediately.
 
+Step 2: Upgrade the MySQL server 
+Upgrade the MySQL server to v5.53+, or ask your server administrator to do it for you.
 
-MySQL Infrastructure 架构
--------------------------
+Step 3: Modify databases, tables, and columns 
+# For each database:
+mysql> ALTER DATABSE database_name CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
+# For each table:
+ALTER TABLE table_name CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_uniocde_ci;
+
+# For each column:
+ALTER TABLE table_name CHANGE column_name column_name VARCHAR(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+Step 4: Check the maximum length of columns and index keys
+
+Step 5: Modify connection, client, and server character sets 
+# In application code, set the connection character set to utf8mb4.
+
+/etc/my.cnf 
+[client]
+default-character-set = utf8mb4 
+
+[mysql]
+default-character-set = utf8mb4
+
+[mysqld]
+character-set-client-handshake = FALSE 
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+# confirm settings 
+mysql> SHOW VARIABLES WHERE VARIABLE_NAME LIKE 'character_set_%' OR VARIABLE_NAME LIKE 'collation%';
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | utf8mb4                    |
+| character_set_connection | utf8mb4                    |
+| character_set_database   | utf8mb4                    |
+| character_set_filesystem | binary                     |
+| character_set_results    | utf8mb4                    |
+| character_set_server     | utf8mb4                    |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
+| collation_connection     | utf8mb4_unicode_ci         |
+| collation_database       | utf8mb4_unicode_ci         |
+| collation_server         | utf8mb4_unicode_ci         |
++--------------------------+----------------------------+
+11 rows in set (0.03 sec)
+
+Step 6: Repair and optimize all tables 
+# After upgraing the MySQL server and making the necessary changes explained above, make sure to repair and optimize all databases and tables. 
+# Run the following MySQL queries for each table you want to repair and optimize:
+# For each table 
+mysql> REPAIR TABLE table_name;
+mysql> OPTIMIZE TABLE table_name;
+
+# This can easily be done in one go using the command-line mysqlcheck utility:
+$ mysqlcheck -u root -p --auto-repair --optimize --all-databases 
+```
+
+MySQL Architecture and Components
+----------------------------------
+> try to explain things in flow including data processing and SQL execution in MySQL with the help of diagrams.
+> MySQL is a very flexible and offers different kinds of storage engines as a plugin for different kinds of needs.
+* [InnoDB]: transactional storage engines; it's default and main storage engine for MySQL
+* [MyISAM]: non-transactional storage engines 
+* MySQL Physical Architecture:
+    - MySQL Base Directory:
+        * Program log files
+            - Libraries 
+            - Documents, support files 
+            - pid files (Unix)
+            - socket files (Unix)
+        * Program executable files 
+            - mysql 
+            - mysqld 
+            - mysqladmin 
+            - mysqldump 
+            - mysql_upgrade 
+            - mysqlbinlog 
+    - MySQL Data Directory 
+        * Data directory
+            - Server log files 
+            - Status file 
+            - Innodb log files 
+            - Innodb system tablespace 
+            - Innodb log buffer 
+            - Innodb General/undo/temp_tablespace.
+```
 Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor --> Storage Engine.
 
 **Connector连接器**
@@ -120,6 +301,7 @@ Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor -->
     | Threads_running   | 50    |   Threads_running: 非睡眠状态的连接数，通常指并发连接数
     +-------------------+-------+
     4 rows in set (1.44 sec)
+```
 
 ```
 修改最大连接数
