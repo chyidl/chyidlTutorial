@@ -7,7 +7,7 @@ Continuous Integration (CI) 持续集成
 > 持续集成 (Continous integration, 简称CI), 持续集成的目的就是让产品可以快速迭代，代码集成到主干master之前，必须通过自动化测试，主要有一个测试用例失败，就不能集成。
 > Martin Fowler讲过：“持续集成并不能消除Bug,而是让Bug非常容易发现和改正.”
 
-![Continus integration](/imgs/ilike/CIDI/continuous_integration.png?raw=true)
+![Continus integration](/imgs/ilikeit/CIDI/continuous_integration.png?raw=true)
 
 
 Continuous delivery (CD) 持续交付
@@ -21,7 +21,7 @@ Continuous deployment (CD) 持续部署
 
 > 持续部署 (Continuous deployment) 是持续交付的下一步，是指代码通过评审以后，自动部署到生产环境. 持续部署的前提是能自动完成测试、构建、部署
 
-![delivery deployment](/imgs/ilike/CIDI/delivery_deployment.png?raw=true)
+![delivery deployment](/imgs/ilikeit/CIDI/delivery_deployment.png?raw=true)
 
 ```
 提交: 开发者向代码库提交代码 -> commit 
@@ -65,6 +65,41 @@ Jenkins will start automatically on port 8080.
 第一次启动Jenkins，Jenkins会自动生成一个随机口令，访问http://localhost:8080/ 
 $ sudo systemctl status jenkins 
 ```
+
+Jenkins For Continuous Integration
+----------------------------------
+> Continuous Integration is the most important part of DevOps that is used to integrate various DevOps stages. Jenkins is        the most famous Continuous Integration tool
+
+* What is Jenkins?
+> Jenkins is an open source automation tool written in Java with plugins built for Continous Integration purpose. Jenkins        is used to build and test your software projects continously making it easier for developers to integrate changes to the         project, and making it easier for users to obatin a fresh build.
+> Jenkins integrates development life-cycle processes of all kinds, including build, document, test, package, stage,             deploy, static analysis and much more.
+    - Advantages of Jenkins include:
+        * It is an open source tool with great community support
+        * It is easy to install
+        * It has 1000+ plugins to ease your work. If a plugin does not exist, you can code it and share with the community.
+        * Jenkins is widespread, with more than 147,000 active installations and over 1 million users around the world.
+        * Jenkins is interconnected with well over 1,000 plugins that allow it to integrate with most of the development,        testing and deployment tools.
+
+* What is Continuous Integration?
+> Continuous Integration is a development practice in which the developers are required to commit changes to the source code in a shared repository several times a day of more frequently.
+
+![Continuous Integration With Jenkins](/imgs/ilikeit/CIDI/ci_with_jenkins.png?raw=true)
+    
+    - First, a developer commits the code to the source code repository, Meanwhile, the Jenkins server checks the repository at regular intervals for changes.
+    - Soon after a commit occurs, the Jenkins server detects the changes that have occurred in the source code repository. Jenkins will pull those changes and will sart preparing a new build.
+    - If the build fails, then the concerned team will be notified.
+    - If built is successful, then Jenkins deploys the built in the test server.
+    - After testing,Jenkins generates a feedback and then notifies the developers about the build and test results.
+    - It will continue to check the source code repository for changes made in the source code and the whole process keeps on repeating.
+
+* Install Jenkins
+    - 1. Install Java Version 8 - Jenkins is Java Based application, hence Java is a must.
+    - 2. Install Apache Tomcat Version 9 - Tomcat is requirement to deploy Jenkins war file.
+    - 3. Download Jenkins war File - This war is required to install Jenkins.
+    - 4. Deploy Jenkins war File - Jenkins war file needs to be deployed using Tomcat to run Jenkins 
+    - 5. Install Suggested Plugins - Install a list of plugins suggested by Jenkins.
+
+
 
 Jenkins and Python
 ------------------

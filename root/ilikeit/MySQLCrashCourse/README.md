@@ -189,6 +189,9 @@ Upgrade the MySQL server to v5.53+, or ask your server administrator to do it fo
 Step 3: Modify databases, tables, and columns 
 # For each database:
 mysql> ALTER DATABSE database_name CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+# To see the default character set and collation for a given database, use these statements:
+mysql> USB db_name;
+mysql> SELECT @@character_set_database, @@collation_database;
 
 # For each table:
 ALTER TABLE table_name CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_uniocde_ci;

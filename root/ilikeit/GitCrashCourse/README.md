@@ -1,7 +1,6 @@
 Git Crash Course
 ================
-
-Git is distributed version-control system for tacking changes in source code during software development. It is designed for coordinating work among programmer, but it can be used to track changes in any set of files. it goals include speed, data integrity, and support for distributed, non-linear workflows.
+> Git is distributed version-control system for tacking changes in source code during software development. It is designed for coordinating work among programmer, but it can be used to track changes in any set of files. it goals include speed, data integrity, and support for distributed, non-linear workflows.
 
 ```
 # Mac Install Git 
@@ -238,4 +237,9 @@ $ git add -f App.class
 
 # 检查.gitignore是否合理
 $ git check-ignore -v App.class 
+```
+
+Use vimdiff as git mergetool
+----------------------------
+```
 ```

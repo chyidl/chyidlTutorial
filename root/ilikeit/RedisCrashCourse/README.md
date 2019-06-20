@@ -52,11 +52,19 @@ $ sudo cp ~/redis-stable/redis.conf /etc/redis
 # Open the file to adjust a few items in the configuration:
 $ sudo vim /etc/redis/redis.conf 
 
-# find the **supervised** directive. Currently, this is set to no. Since we are running an operating system that uses systemd init system, we can change this to **systemd**.
+# Find the **supervised** directive. Currently, this is set to no. Since we are running an operating system that uses systemd init system, we can change this to **systemd**.
 supervised systemd 
 
 # Next, find the **dir** directory. This option specifies the directory that Redis will use to dump persistent data. We need to pick a location that Redis will have write permission and that isn't viewable by normal users.
 dir /var/lib/redis 
+
+# To unbind 127.0.0.1
+#bind 127.0.0.1
+
+# To set the password, edit your /etc/redis/redis.conf file 
+# find this line 
+requirepass foobared  
+# Then uncomment it and change foobared to your password. Make sure you choose something pretty long, 32 characters or so would probably be good, it's easy for an outside user to guess upwards of 150k passwords a second, as the notes in the config file mention, 
 
 # Create a Redis systemd Unit File 
 # We can create a systemd unit file so that the init system can manage the Redis process.
@@ -134,10 +142,6 @@ $ sudo systemctl restart redis
 # Enable Redis to Start at Boot
 $ sudo systemctl enable redis 
 
-# To set the password, edit your /etc/redis/redis.conf file 
-# find this line 
-# requirepass foobared  
-# Then uncomment it and change foobared to your password. Make sure you choose something pretty long, 32 characters or so would probably be good, it's easy for an outside user to guess upwards of 150k passwords a second, as the notes in the config file mention, 
 
 $ sudo systemctl restart redis  
 

@@ -1,179 +1,234 @@
-# SSH, also known as Secure Socket Shell
+SSH TUNNELLING
+==============
 
-## About 
-
-SSH, is a network protocl that provides administrators with a secure way to access a remote computer. SSH also referes to the suite of utilities that implement the protocol. Secure Shell provides strong **authentication** and secure **encrypted** data communications between two computers connectingover an insecure network such as the Internet. 
-
-SSH uses the **client-server model**, connecting a secure shell client application, the end at whcih the session is displayed, with an SSH server
-
-**OpenSSH** is the premier connectivity tool for remote login with the SSH protocol. OpenSSH provides a large suite of secure tunneling capabilities, several authentication methods, and sophisticated configuration options.
-
-### How Does SSH Work 
-
-ssh - OpenSSH SSH client (remote login program)
-
-The SSH protocol employs a **client-server** model to authenticate two parties and encrypt the data between them.
-
-**server** component listens on a designated port for connections. It is responsible for negotiating the secure connection, authenticating the connecting party, and spawning the correct environment if the credentials are accepted. 
-
-**client** is responsible for beginning the initial TCP handshake with the server, negotiating the secure connection, verifying that the server's identity matches previously recorded information, and providing credentials to authenticate.
-
-An **SSH session** is established in two separate stages.
-    1. Negotiating Encryption for the Session 
-    2. Authenticating the User's Access to the Server 
-
-
+Local vs Remote SSH port forwarding
+-----------------------------------
 ```
-# 远程登陆
-$ ssh [-p port] [user@]hostname [command] 
-```
+* Local Port Forwarding: relay a port from a remote server to your local machine with **ssh -L** (-L: forward to local machine)
+    - For Example: If your rmeote server has a MySQL database daemon listening on port 3306 and you want to access this daemon from your local computer.
+    # Remote MySQL server (remote port 3306) to local machine on local port 5000:
+    $ ssh -L 5000:remote_ip:3306 -p xx user@remote_ip 
 
-### 中间人攻击
+# Local port forwarding (Make a remote port available locally)
+# In this example, make a remote MySQL Server (Port 3306) available on our local computer on port 5000
+$ ssh -L [<LocalAddress>]:<LocalPort>:<RemoteHost>:<RemotePort> sshUser@remoteServer
+    LocalAddress: The local address is an optional parameter, If you do not specify it. the remote port will be bound locally to all interfaces(0.0.0.0). SO you can also only bind it locally to your 127.0.0.1 (on your local machine).
+    LocalPort: The port on your local machine where the whole thing should be reachable 
+    RemoteHost: This specifies on which interface inside the remote server(remoteServer) the daemon is listening on.
+    RemotePort: This is the actual port on the remote machine (remoteServer) you want to relay to your local machine.
+    sshUser: This is the SSH username you have on the remote server 
+    remoteServer: The address (IP or hostname) by which your remote server is reachable via ssh.
 
-SSH之所以能够保持安全，原因在于采用公钥加密。
+# Check all interface for Port 
+$ netstat -an | grep 3306 | grep LISTEN 
 
-整个流程是：
-    1. 远程主机收到用户登陆请求，把自己的公钥发给用户
-    2. 用户使用远程主机的公钥，将登陆密码加密后，发送给远程主机。
-    3. 远程主机用自己的私钥，解密登陆密码，如果密码正确，就同意用户登陆。
+* Remote Port Forwarding: make your local port available on a remote server with **ssh -R** (-R: forward to remote machine)
+    - For Example: If your want to make your local web-srever available on a port of a public server. So that someone can quickly check what your local web-server provides without having to deploy it somewhere publicly.
+    # Local web-server (local port 80) to rmeote server on remote port 5000:
+    $ ssh -R 5000:localhost:80 -p xx user@remote_ip 
 
-这个过程本身是安全的，但是实施的时候存在一个风险，如果有人截获了登陆请求，然后冒充远程主机，将伪造的公钥发给用户，那么用户很难辨别真伪，因为不想HTTPS协议，SSH协议的公钥是没有证书中心（CA）公证的，也就是说，都是自己签发。
+# Remote port forwarding (Make a local port available remotely)
+# In this exmaple we are going to make our local web-server(Port 80) available on a remote server on Port 5000.
+$ ssh -R [<RemoteAddress>]:<RemotePort>:<LocalHost>:<LocalPort> sshUser@remoteServer 
+    RemoteAddress: The remote address is an optional parameter. If you do not specify it, the remote port will be bound remotely (on remoetServer) to all interfaces(0.0.0.0). So you can also only bind it remotely to a specific interface.
+    RemotePort: The port on your remote server (remoteServer) where the whole thing should be reachable 
+    LocalHost: This sepcifies on whic interface inside your local computer the daemon is listening on.
+    LocalPort: This is the actual port on your local machine you want to relay to the remote server (remoteServer)
+    sshUser: This is the SSH username you have on the remote server 
+    remoteServer: The address (IP or hostname) by which your remote server is reachable via ssh.
+$ ssh -R remote_ip:5000:localhost:8080 -p xx user@remote_ip 
+# You can now simply reach your local webserver via http://remote_ip:5000
 
-可以设想，如果攻击者插在用户和远程主机之间 (比如在公共wifi区域)，用伪造的公钥，获取用户的登陆密码。再用这个密码登陆远程主机，那么SSH的安全机制就有风险，这种风险就是著名的“中间人攻击”Man-in-the-middle-attack.
+# Enabled GateWayPorts option (on remote server):
+$ vim /etc/ssh/ssh_config 
+GatewayPorts yes 
 
-SSH 协议如何应对呢？
+# Ports below 1024 
+#Every system user can allocate ports above and including 1024 (high ports). Ports below that require root privileges.
 
-### 口令登陆
+# As allocate a low port on your local machine, you must either do that as root(locally) or with sudo (locally)
+$ sudo ssh -L 10:remote_ip:3306 -p xx user@remote_ip 
 
-如果是第一次登陆对方主机，系统会出现下面的提示：
-![第一次登陆对方主机](/imgs/os/UnixLinux/ssh_password_login.png?raw=true)
-
-"RSA key fingerprint" 是指公钥长度较长（采用RSA算法，长达1024位），很难比较，所以对其进行MD5计算，将它变为128位的指纹，很自然一个问题就是，用户怎么知道主机的公钥指纹应该是多少？没有好办法，远程铸就必需在自己的网站上贴出公钥指纹，以便用户自行核对。
-
-假设经过比对，用户决定接受远程主机的公钥。然后会要求输入密码。如果密码正确，就可以登陆了。
-
-Establish a Reverse Tunnel 
---------------------------
-> Establish a reverse tunnel with port forwarding in order to consistently ssh into a host behind NAT router that has a dynamic private IP.
-
-![Reverse tunnel SSH](/imgs/os/UnixLinux/reverse_tunnel_ssh.png?raw=true)
-
-1. Attempt to setup a reverse tunnel with port and ip forwarding. More specifically, the blue host should forward all ssh connection to it on port **2222** to the greenhost on port 22. This is done from the green host.
-```
-greenusr@greenhost: $ ssh -p [vps ssh port] -NR 2222:localhost:22 vps@[vps public ip]
+# As you allocate a low port on the remote server, you will need to ssh into the machine as root 
+$ ssh -R 10:localhost:8080 -p root@remote_ip 
 ```
 
-2. The point of setting up the reverse tunnel is so that following command will work so as to allow the read host to into the greenhost.
+TUNNEL OPTIONS
+--------------
 ```
-vps@vpshost: $ ssh -p 2222 greenuser@[greenhost] 
+$ ssh -L 5000:remote_ip:3306 -p xx user@remote_ip 
+# Once executed the above command, a tunnel is established. However, you will also be logged in into the remote server with a SSH session. If you simply want to do some port forwarding you will not need or might not event want to remote login session.You can disable it via -N, Which is a very common option for SSH tunnels:
+$ ssh -N -L 5000:remote_ip:3306 -p xx user@remote_ip 
+    -N: connect just hang there(you won't get a shell prompt)
+# So if you are not going to execute remote commands and will not need a login sheel, you also do not need to request a pseudo terminal in the first place.
+$ ssh -T -N -L 5000:remote_ip:3306 -p xx user@remote_ip 
+    -T: Disable pseudo-terminal allocaton.
+
+# Note: Be aware that this example requires private/public key authentication as cron will not be able to enter passwords.
+$ ssh -f -T -N -L 5000:remote_ip:3306 -p xx user@remote_ip 
+    -f: Requests ssh to go to background just before command execution.
+
+# SSH tunnel on a non-standard port
+# What if the SSH server is listening on a non-standard port(not tcp 22). You can always add a port option.
+$ ssh -T -N -L 5000:remote_ip:3306 -p xx user@remote_ip 
+    -p : Port to connect to on the remote host
+
+# SHH tunnel with a non standard private key.
+# If not explicitly, SSH will look for a file called ~/.ssh/id_rsa. In this case however, you file is called ~/.ssh/id_rsa-cytopia@remove_ip. So you will also pass this information to the tunnel command.
+$ ssh -T -N -L 5000:remote_ip:3306 -p xx user@remote_ip -i ~/.ssh/id_rsa-cytopia@remote_ip
+
+# SSH tunnel via SSH config 
+# Adding user and host 
+$ vim ~/.ssh/config 
+    Host remote-mysql-tunnel
+        HostName remote_ip
+        User    username 
+        Port    xxx 
+        IdentifyFile ~/.ssh/id_rsa 
+        LocalForward 5000 remote_ip:3306 
+# create an alias remote for host remote_ip with user username . Now command can be written like this
+$ ssh -T -N -L remote-mysql-tunnel 
 ```
 
-3. **autossh** - is a program to start a copy of ssh and monitor it, restarting it as necessary should it die or stop passing traffic. 
+AUTOSSH
+-------
 ```
+Make a tunnel persistent. By persistent I mean, that it is made sure the tunnel will always run.For example, Once you ssh connection times out(By server-side timeout), your tunnel should be re-established automatically.
+
+$ autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -L 5000:remote_ip:3306 -p xx user@remote_ip -i ~/.ssh/rsa_ip 
+
+# AutoSSH is a prpgram to start a copy of ssh and monitor it, restarting it as necessary should it die or stop passing traffic.
 $ sudo apt-get install autossh 
-$ autossh -p [vps ssh port] -M [localhost autossh monitor port] -NR 4444:localhost:22 vps@[vps public ip] 
-# **autossh** will send test data on the base monitoring port, and receive it back on the port above.
 
-# log in vps public server
-$ netstat -tunelp | grep 4444
-tcp        0      0 127.0.0.1:4444          0.0.0.0:*               LISTEN      1000       485429     13063/sshd: vps
-tcp6       0      0 ::1:4444                :::*                    LISTEN      1000       485428     13063/sshd: vps
-```
+# Basic usage:
+usage: autossh [-V] [-M minitor_port[:echo_port]] [-f] [SSH_OPTIONS]
+    -V: simply displays the version and exits 
+    -f: run in backgrounds
+    -M: minitoring port, AutoSSH will continuously send data back and forth through the pair of monitoring ports in order to keep track of an extablished connection. The specified monitoring and the port directly above (+1) must be free. The first one is used to send data and the one above to receive data on. 
+    
+    Unfortuately, this is not too handy, as it must be made sure both ports(the specified one and the one directly above) a free (not used). So in order to overcome this problem, there is a better solution.
 
-4. add lines to **/etc/ssh/sshd_config**
-```
-$ sudo vim /etc/ssh/sshd_config 
-# add the lines to /etc/ssh/sshd_config 
-# GatewayPorts yes 
-$ sudo systemctl restart sshd 
-```
+$ autossh -T -N -L 5000:remote_ip:3306 -p xx user@remote_ip -i ~/.ssh/id_rsa-cytopia@remote_ip
+# Make sure you use public/private key authentification instead of password-based authentification when you use -f. Because in a background run a passphrase cannot be entered interactively.
 
-5. Create SSH key 
-```
+# ServerAliveInterval and ServerAliveCountMax - they cause the SSH client to send traffic through the encrypted link to the server. This will keep the connection alive when there is no other activity and also when it does not receive any alive data,it will tell AutoSSH that the connection is broken and AutoSSH will then restart the connection.
+
+$ autossh -M 0  # disable the built-in AutoSSH monitoring port by giving it a value of 0
+
+# Additionally you will also have to specify values for ServerAliveInterval and ServerAliveCountMax 
+$ autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3"
+
+# So Now the complete tunnel command will look like this:
+$ autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -L 5000:remote_ip:3306 -p xx user@remote_ip -i ~/.ssh/id_rsa-cytopia@remote_ip
+    ServerAliveInterval: number of seconds that the client will wait before sending a null packet to the server (to keep the connection alive)
+    ServerAliveCountMax: Sets the number of server alive messages which may be sent without ssh receiving any messages back from the server. If this threshold is reached while server alive messages are being sent, ssh will disconnect from the server, terminating the session.
+
+# AutoSSH and ~/.ssh/config 
+$ vim ~/.ssh/config 
+    Host remote-mysql-tunnel
+        HostName remote_ip
+        User    username 
+        Port    xxx 
+        IdentifyFile ~/.ssh/id_rsa 
+        LocalForward 5000 remote_ip:3306 
+        ServerAliveInterval 30 
+        ServerAliveCountMax 3 
+
+# If you recall all the ssh options we had used already, we can not simply start the autossh tunnel like so:
+$ autossh -M 0 -f -T -N remote-mysql-tunnel 
+
+# AutoSSH environment variables 
+# AutoSSH can also be controlled via a couple of environment variables. Those are useful if you want to run AutoSSH unattended via cron.using shell scripts or during boot time with the help of systemd services.
+    AUTOSSH_GATETIME: How long ssh must be up before we consider it a successful connection. Default is 30 seconds. If set to 0, then this behaviour is disabled. and as well, autossh will retry even on failure of first attempt to run ssh.
+
+# Create SSH key and upload id.pub file
 $ ssh-keygen -t 'rsa' -C 'vps@goku163'
 $ ssh-copy-id -p [vps ssh port] vps@[vps public ip]
 $ ssh-copy-id -i ~/.ssh/id_rsa.pub -p 22 vps@public ip
-```
 
-6. autossh.service (/etc/systemd/system/)
-```
-# autossh.service file content 
+# AutoSSH during boot with systemd 
+# if you want a permanent SSH tunnel already created during boot time, You will have to create a systemd service and enable it. There is however an important thing to note about systemd and AutoSSH.
+$ sudo vim /etc/systemd/system/autossh.service
 [Unit]
-Description=Keeps a tunnel to 'chyidl.com' open 
-After=network.target 
+Description=Keeps a tunnel service everything
+After=network.target
 
 [Service]
-User=pi 
+User=pi
 Type=simple
-# -p [PORT]
-# -l [user]
-# -M 0 --> no monitoring 
-# -N Just open the connection and do nothing (not interactive)
-ExecStart=/usr/bin/autossh -M 9527 -NR '*:4444:localhost:22' -p [vps ssh port] vps@[vps public ip] -i /home/vps/.ssh/id_rsa
+# How long ssh must be up before we consider it a successful connection. Default is 30 seconds. If set to 0, this behaviour is disabled. and as well, autossh will retry even on failure of first attempt to run ssh
+Environment="AUTOSSH_GATETIME=0"
+ExecStart=/usr/bin/autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR '*:xxxx:localhost:xx' user@           remote_ip -p xx
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
 
 [Install]
-WantedBy=multi-user.target 
+WantedBy=multi-user.target
 
-$ sudo systemctl enable autossh.service 
-$ sudo systemctl start autossh 
-```
 
-### How can I keep SSH session from freezing? 
+# Notice here that the general definitions are at the very top and more wildcarded definitions (using the asterisk *) are followed below.
+# If you want to ssh connect to c1 (ssh c1), the file is read as follows:
+    1. Find section Host c1 and use its corresponding HostName (192.168.0.1)
+    2. Find more general section Host c* and use their values (User, Port, etc).
+    3. Find most general section Host * 
+        i. Don't use User as it has already been defined for this connection in c* 
+        ii. Don't use Port as it has already been defined for this connection in c* 
+        iii. Don't use PubkeyAuthentication as it has already been defined for this connection in c* 
+        iv. User ServerAliveInterval as there is no previous definition.
 
-![](/imgs/ilikeit/SSH/ssh_connection_closed_by_remote_host.png?raw=true)
+# So from that you must always remember that whenever a specific value has been found, it cannot be overwritten by values definied below.
 
-* First change on the client:
-```
-$ sudo vim /etc/ssh/ssh_config 
+$ vim ~/.ssh/config 
+Host RPi3BPlus
+    HostName 192.168.31.127
+
+Host RPi3B
+    HostName 192.168.31.156
+
+Host RPi2B
+    HostName 192.168.31.138
+
+Host RPi*
+    User pi
+    Port 22
+    PubkeyAuthentication yes
+    IdentityFile ~/.ssh/id_rsa
+
+# Identity leak via ssh keys 
+# be aware that once you connect to any ssh server, all of your public keys that are hold by your ssh-agent, are sent to this server.
+# Recommends is to turn off public key autentification in general and explicitly turn it on per host (where u need it):
+
+# Securing know_hosts 
+[104.xx.xx.31]:26861 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBGIBuui0UwpqdYTb5Sv3Sj+            Uykp9LsnkHvF8yS7ilavqLndRsSIvhiRVjTVF+/BA=
+# So in order to only store hashes of the hostname inside ~/.ssh/known_hosts, you will need to alter ~/.ssh/config 
+Host *
+    HashKnownHosts yes 
+# The hashed version for the file will look like this:
+|1|YZ1Z68Ka8xv9JeMmIfPfsi3+Y7I=|xK0ZsRUZ7AXndnBGs0kuuLLOes
+    Note 1: Keep in mind that the hashing will start from now on and previous entries will not be hashed 
+    Note 2: With hashing you will loose the autocompletion feature from known_hosts, but when you use aliase, you still have the alias based autocompletion described above.
+
+# Multiple connections inside a single one 
+# There is a way to reduce it by multiplexing multiple ssh connections over a single one from the same host/user by re-using an already established connection.
+$ vim ~/.ssh/config 
 
 Host * 
+    ControlMaster auto 
+    ControlPath ~/.ssh/sockets/%r@%h-%p
+    ControlPersist 600 
 
-# ServerAliveInterval: The client will send a null packet to the server every 60 seconds to keep the connection alive.
-ServerAliveInterval 60 
-```
 
-* Second change on the server:
-```
-$ sudo vim /etc/ssh/sshd_config 
+ControlMaster: Tell SSH to re-use an existing connection (if there is already an established one) without having to authenticate again 
+ControlPath: This is the path of the socket for open SSH connections. Every new connection will hook into this socket and can use the alredy established connection.
+ControlPersist: Keep the master (the first) SSH connection open for X seconds after the last connection has been closed.This means you have X seconds to connect again without authentification after all connections have been closed to this host.
 
-# ClientAliveInterval: The server will wait 60 seconds before sending a null packet to the client to keep the connection alive
-ClientAliveInterval 60 
+# Private ssh key leak 
+# In order to avoid possible private leaks via ssh to a malicious SSH server add the following undocumented setting to your ~/.ssh/config at the bottom inside the general section 
 
-# TCPKeepAlive: Is there to ensure that certain firewalls don't drop idle connections.
-TCPKeepAlive yes 
+Host * 
+    UseRoaming no 
 
-# ClientAliveCountMax: Server will send alive messages to the client event though it has not received any message back from the client.
-ClientAliveCountMax 10000
-```
-
-* Finally restart the ssh server
-
-```
-$ sudo service ssh restart 
-or 
-$ service sshd restart #  depending on what system you are on.
-```
-
-Keep SSH Session Alive (resolve a ssh connection closed by remote host due to inactivity)
------------------------------------------------------------------------------------------
-> sshd (the server) closes the connection if it doesn't hear anything from the client for a while. You can tell your client to send a sign-of-life signal to the server once in a while.
-
-> The configuration for this is in the file "~/.ssh/config", create it if the configuration file does not exist. To send the signal every four minutes (240 seconds) to the remote host, put the following in your "~/.ssh/config" file.
-
-```
-$ vim ~/.ssh/config
-# add below content to the "~/.ssh/config" file
-Host *
-    TCPKeepAlive yes
-    # ServerAliveInterval: This sets a timeout interval in seconds, which is pecified by you, from which if no packets are sent from the SSH client to the SSH server, SSH will send an encrypted request to the server for a TCP response. To make that request every 30 seconds.
-    ServerAliveInterval 30 
-```
-
-Also make sure to run:
-```
-$ chmod 600 ~/.ssh/config 
-# Because the config file must not be world-readable
+# Useful tools 
+    
 ```

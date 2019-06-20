@@ -71,6 +71,4 @@ Tomcat Implementation:
             Tomcat可以为多个Web应用提供服务，Tomcat可以把URL下发到不同的Web应用
         3. 需要把请求和相应封装成request/response
             我们在Web应用这层不必封装request/response,都是直接使用，这是因为Tomcat已经做好封装
-
-
 ```
