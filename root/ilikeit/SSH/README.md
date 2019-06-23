@@ -84,7 +84,7 @@ $ vim ~/.ssh/config
         HostName remote_ip
         User    username 
         Port    xxx 
-        IdentifyFile ~/.ssh/id_rsa 
+        IdentityFile ~/.ssh/id_rsa 
         LocalForward 5000 remote_ip:3306 
 # create an alias remote for host remote_ip with user username . Now command can be written like this
 $ ssh -T -N -L remote-mysql-tunnel 

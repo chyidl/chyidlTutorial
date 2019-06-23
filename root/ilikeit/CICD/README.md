@@ -99,6 +99,50 @@ Jenkins For Continuous Integration
     - 4. Deploy Jenkins war File - Jenkins war file needs to be deployed using Tomcat to run Jenkins 
     - 5. Install Suggested Plugins - Install a list of plugins suggested by Jenkins.
 
+* Download Jenkins war File:
+    - Now download Jenkins war file by using wget command:
+    - $ wget http://updates.jenkins-ci.org/latest/jenkins.war 
+
+* Deploy Jenkins war file 
+    - To deploy Jenkins war file that you have downloaded in the previous step, open your browser and access localhost:8080 again. Now click on the Manager App.
+    - Now you will be directed to Tomcat web application manager page. When you scroll down you will find an option called WAR file to deploy.
+    - Now click on "/jenkins" or http://localhost:8080:jenkins
+
+* Install Suggested Plugins 
+    - In order to unlock Jenkins first copy the part that. This is the location that contains your one time password for Jenkins i.e: /home/pi/.jenkins/secrets/initiaAdminPassword. 
+    - Install Suggested Plugins 
+    - Create First Admin User
+
+* Congratulations!
+    - Jenkins is ready now, once you click on start using Jenkins you will be directed to Jenkins dashboard.
+
+Continuous Integration Using Jenkins
+------------------------------------
+
+* Jenkins Distributed Architecture 
+> Jenkins uses a Master-Slave architecture to manage distributed builds. In this architecture, Master and Slave communicate through TCP/IP protocol.
+    - Jenkins Master (The Main Jenkins server is the Master)
+        * Scheduling build jobs.
+        * Dispatching builds to the slaves for the actual execution
+        * Monitor the slaves (possibly taking them online and offline as required) 
+        * Recording and presenting the build results.
+        * A Master instance of Jenkins can also execute build jobs directly
+    - Jenkins Slave (Slave is a Java executable that runs on a remote machine.)
+        * It hears requests from the Jenkins Master instance.
+        * Slaves can run on a variety of operating systems.
+        * The job of a Slave is to do as they are told to, which involves executing build jobs dispatched by the Master.
+        * You can configure a project to always run on a particular Slave machine, or a particular type of Slave machine. or simply let Jenkins next available Slave.
+
+![Jenkins Distributed Architecture](/imgs/ilikeit/CIDI/Jenkins_Distributed_Architecture.png?raw=true)
+
+* Which Jenkins is used for testing in different environment
+![Jenkins Distributed Testing](/imgs/ilikeit/CIDI/Jenkins-Distributed-Testing.png?raw=true)
+    - Jenkins checks the Git repository at periodic intervals for any changes made in the source code.
+    - Each builds requires a different testing environment which is not possible for a single Jenkins server.In order to perform testing in different environments Jenkins uses various Slaves as shown in the diagram.
+    - Jenkins Master requests these Slaves to perform testing and to generate test reports.
+
+* Jenkins Build Pipeline (The Jenkins Pipeline gives you an overview of where tests are up to)
+![Jenkins Build Pipeline](/imgs/ilikeit/CIDI/Jenkins-build-Pipeline.png?raw=true)
 
 
 Jenkins and Python

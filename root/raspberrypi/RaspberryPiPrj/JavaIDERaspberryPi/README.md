@@ -85,29 +85,40 @@ $ sudo systemctl status tomcat
 Enable the service file so that Tomcat automatically starts at boot.
 $ sudo systemctl enable tomcat 
 
-Configure Tomcat Web Management Interface 
-
+# Configure Tomcat Web Management Interface 
+In order to use the manager web app that comes with Tomcat, we must add a login to our Tomcat server.
 # add a login to our Tomcat server. add a user who can access the manager-gui, admin-gui
 $ sudo vim /usr/local/apache-tomcat-8.5.40/conf/tomcat-users.xml 
+# add the manager-gui and admin-gui role to a user named tomcat with a password of s3cret, add the following to the config file listed above.   
+    <role rolename="manager-gui" />
+    <role rolename="manager-script" />
+    <role rolename="manager-jmx" />
+    <role rolename="manager-status" />
+    <role rolename="admin-gui" />
+    <role rolename="admin-script" />
+    <user username="tomcat" password="s3cret" roles="manager-gui, manager-script, manager-jmx, manager-status, admin-gui, admin-script" />
+# Save and close the file when you are finished
 
 # By default, newer versions of Tomcat restrict access to the Manager and Host Manager apps to connections coming from the server itself. We will probably want to remove or alter this restriction. To change the IP address restrictions on these, open the appropriate context.xml files.
-
 # For the Manager app, type: 
 $ sudo vim /usr/local/apache-tomcat-8.5.40/webapps/manager/META-INF/context.xml 
-
-# For the Host Manager app, 
-$ sudo vim /usr/local/apache-tomcat-8.5.40/webapps/host-manager/META-INF/context.xml 
-
-Inside, comment out the IP address restriction to allow connections from anywhere, ALternatively, if you would like to allow access only to connections comming from your own IP address, you can add your public IP address to the list:
-	
 	<!--
 	<Value className="org.apache.catalina.valves.RemoteAddrValue" allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
 	-->
 
+# For the Host Manager app, 
+$ sudo vim /usr/local/apache-tomcat-8.5.40/webapps/host-manager/META-INF/context.xml 
+# Inside, comment out the IP address restriction to allow connections from anywhere, ALternatively, if you would like to allow access only to connections comming from your own IP address, you can add your public IP address to the list:
+	<!--
+	<Value className="org.apache.catalina.valves.RemoteAddrValue" allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+	-->
+
+# In the above images, as you can see that I have defined serveral roles and for all these roles I hava give one single username and password.
+
 To put our changes into effect, restart the Tomcat service:
 $ sudo systemctl restart tomcat
 
-Access the Web Interface 
+# Access the Web Interface 
 Open in web browser: http://server_domain_or_IP:8080 
 
 Access Manager APP, accessible via the link http://server_domain_or_IP:8080/manager/html 
