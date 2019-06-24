@@ -144,6 +144,13 @@ Continuous Integration Using Jenkins
 * Jenkins Build Pipeline (The Jenkins Pipeline gives you an overview of where tests are up to)
 ![Jenkins Build Pipeline](/imgs/ilikeit/CIDI/Jenkins-build-Pipeline.png?raw=true)
 
+* Create a new job in Jenkins
+    - Freestyle Project
+        * Freestyle build jobs are general-purpose build jobs, which provides maximum flexibility.
+    - Multiconfiguration Job
+        * 
+    - Monitor an External Job 
+    - Maven Project 
 
 Jenkins and Python
 ------------------
