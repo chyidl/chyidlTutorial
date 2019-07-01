@@ -2,6 +2,8 @@ Kindle + Raspberry Pi == Anything
 =================================
 > As a always, RTFM (read the fucking manual) with anything that you're doing.
 
+> A tablet is a tablet, a phone is a phone, but a Raspberry Pi can become anything you want, used for any task.
+
 ![Kindle Keyboard](/imgs/raspberrypi/KindlePiPrj/340px-Amazon_Kindle_3.jpg?raw=true)
 
 >The Amazon Kindle is  a series of e-readers with E Ink electronic paper displays. on July 28, 2010. Amazon announced the third generation Kindle, later renamed "Kindle Keyboard".
@@ -212,11 +214,11 @@ usbnet
 ```
     - Now unmount(I.e.,"eject") the Kindle from our computer, disconnect the USB connection to take it out of mass storage mode and enable usbnet mode. 
     - Press [DEL] on your Kindle to bring up the search bar and do this following "searches":
-        ```
-        ;debugOn
-        ~usbNetwork
-        ;debugOff
-        ```
+```
+;debugOn
+~usbNetwork
+;debugOff
+```
     - The commands are not case sensitive. Usually you don't want to stay in debugging mode because it turn Off various power savings features such as turning off WiFi is your Kindle is not connected to the USB. Also, It turns on verbose logging. 
     - Now When you connect your Kindle to your Computer via USB, it itn't recognized as a mass storage device but rather as a USB network devices.
     - Note that with the **usbnet** hack, bu default SSH only works over the USB host-to-host conection. SSH is configured not to ask for the root password so usbnet wisely disables SSH over WIFI for security reasons.
@@ -250,4 +252,36 @@ broadcast 192.168.2.255
 up iptables -I INPUT 1 -s 192.168.2.1 -j ACCEPT 
 ```
 
+Install KindleVNC viewer
+-----------------------
+> A VNC viewer for ebook readers -- https://github.com/hwhw/kindlevncviewer
 
+![kindlevncviewer.zip](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindlevncviewer.zip)
+```
+Installation/Running:
+
+Copy the fill directory "kindlevncviewer" to the (USB-storage) root of your device.
+
+You'll probably want to use this in combination with the "launchpad" application. A config file for 
+launchpad is included. you might need to edit it to your needs. The copy it (it's in the "launchpad"
+directory) to the "launchpad" directory on your device, For configuration, consider the following information:
+
+You can connect to VNC servers by two means:
+
+- USB connection:
+  You will need to have the USB networking hack running.
+  The distributed launch pad config file is configured to start a viewer connection to
+  192.168.2.1:1, which is display :1 on the USB networking host if you use
+  standard config for USB networking. It will use the key chain "V U" by default,
+  so the whole key chain to press is "Shift V U".
+
+- Wifi connection:
+  Of course, you must activate Wifi in order to connect.
+  The distributed launch pad config will start a connection to
+  somewifihost:1, you will most certainly have to edit this to suit your needs.
+  The standard key chain is "V W", including the launchpad start key, this
+  would be "Shift V W".
+
+The launchpad config will kill a running VNC viewer with the key chain "V Q"
+("Shift V Q" is the complete key chain you must press).
+```

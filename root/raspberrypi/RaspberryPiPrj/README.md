@@ -1,5 +1,7 @@
-# Raspberry Pi Awesome Project 
+Raspberry Pi Awesome Project 
+============================
 
+- [Raspberry Pi Intro](/root/raspberrypi/RaspberryPiPrj/Intro/README.md)
 - [TensorFlow Object Detection on the RaspberryPi](/root/raspberrypi/RaspberryPiPrj/TensorflowObjectDetection/Tensorflow_Object_Detection_on_the_RaspberryPi.md)
 - [AM2302 Temperature & Humidity](/root/raspberrypi/RaspberryPiPrj/AM2302/README.md)
 - [MLX90614 IR Sensor](/root/raspberrypi/RaspberryPiPrj/MLX90614/README.md)
@@ -27,9 +29,10 @@
 - [Using Cron in Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/CronPi/README.md)
 - [Jupyter Notebook](/root/raspberrypi/RaspberryPiPrj/JupyterNotebook/README.md)
 - [IPTables](/root/raspberrypi/RaspberryPiPrj/IPTables/README.md)
+- [Display Your Raspberry Pi's desktop on a Mac](/root/raspberrypi/RaspberryPiPrj/VNCRaspberryPi/README.md)
 
 Download all history Magpi Magazine PDF files
-- [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/SomeScript/RaspberryPiMagpiDownloader.py)
+- [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)
 
 Easter Egg Program
 - [easter egg program](/root/raspberrypi/RaspberryPiPrj/easterEgg/README.md)

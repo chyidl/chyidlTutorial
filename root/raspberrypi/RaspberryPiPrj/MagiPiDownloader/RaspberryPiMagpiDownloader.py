@@ -2,8 +2,9 @@
 # -*- coding:utf-8 -*-
 # >>Copyright 2018- chyidl (@Chyi Yaqing)
 """
-
+Modified: adding header to python requests module; User-Agent
 """
+import os
 import requests
 import bs4 as bs    # web scraping with Beautiful Soup
 import time
@@ -24,10 +25,13 @@ def timed(func):
 		return result
 	return wrapper
 
+
 def downloadPdf(file):
 	print("Beginning file download with requests, [{}], by [{}]".format(file, multiprocessing.current_process()))
 	url = "https://www.raspberrypi.org/magpi-issues/{}".format(file)
-	r = requests.get(url)
+	r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+	if not os.path.exists('MagiPi/'):
+		os.makedirs('MagiPi/')
 	with open('MagiPi/{}'.format(file), 'wb') as f:
 		f.write(r.content)
 
@@ -37,16 +41,15 @@ def downloadPdf(file):
 	print(r.headers['content-type'])
 	print(r.encoding)
 
-# ------------------------ MultiProcessing -------------------------#
 
+# ------------------------ MultiProcessing -------------------------#
 @timed
 def useMultiPool():
 	with multiprocessing.Pool(10) as p:
-		print(p.map(downloadPdf, range(1,72)))
+		print(p.map(downloadPdf, range(1, 72)))
 
 
 # ------------------------- Thread pool --------------------------#
-
 class Worker(Thread):
 	"""Thread executing tasks from a given tasks queue"""
 	def __init__(self, tasks):
@@ -65,6 +68,7 @@ class Worker(Thread):
 			finally:
 				self.tasks.task_done()
 
+
 class ThreadPool:
 	"""Pool of threads consuming tasks from a queue"""
 	def __init__(self, num_threads):
@@ -80,6 +84,7 @@ class ThreadPool:
 		"""wait for completion of all the tasks in the queue"""
 		self.tasks.join()
 
+
 @timed
 def useThreadPool(tasks):
 	pool = ThreadPool(multiprocessing.cpu_count()*2)
@@ -88,13 +93,11 @@ def useThreadPool(tasks):
 	pool.wait_completion()
 
 
-def get_table_from_url(url=""):
-
-	rst = [] # 最终结果集
-
+def get_table_from_url(url):
+	rst = []  # 最终结果集
 	# Create a handle, page, to handle the contents of the website
-	source = requests.get(url)
-	soup = bs.BeautifulSoup(source.content,'lxml')
+	source = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
+	soup = bs.BeautifulSoup(source.content, 'lxml')
 	table = soup.find('table')
 
 	# find the table rows within the table
@@ -105,21 +108,20 @@ def get_table_from_url(url=""):
 		td = tr.find_all('td')
 		row = [i.text for i in td]
 		try:
-			if row and len(row)==5 and '.pdf' in row[1]:
-				rst.append(row[1])
-		except:
+			if row and len(row) == 5 and '.pdf' in row[1]:
+				# special character # %23
+				rst.append(row[1].replace('#', '%23'))
+		except Exception as e:
+			print(e)
 			continue
 	return rst
 
 
-
 if __name__ == '__main__':
-
 	#useMultiPool() # MultiProcessing   多进程
 	#useThreadPool() # MultiThreading   多线程
-
 	# Download MagPi all history PDF Save to Folder MagPi/
-	url="https://www.raspberrypi.org/magpi-issues"
+	url = "https://www.raspberrypi.org/magpi-issues"
 	rst = get_table_from_url(url)
 	useThreadPool(rst)
 

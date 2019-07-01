@@ -132,3 +132,46 @@ Conclusion
 ```
 Currently, your Tomcat installation is functional, but entirely unencrypted. This means that all data, including sensitive items like passwords, are sent in plain text that can be intercepted and read by other parties on the internet. In order to prevent this from happending, it is strongly recommended
 ```
+
+Run Multiple Tomcat Instances on One Server
+-------------------------------------------
+```
+Tomcat Directory Structure
+    - When creating multiple instances of tomcat server. we need to play with the folders inside the server. These folders contain the actual scripts and code for the server. 
+    /bin: This directory contains the startup and shutdown scripts for both Windows and Linux.
+    /conf: This directory contains the main configuration files for Tomcat. 
+    /server: This directory contains the Tomcat Java Archive files.
+    /lib: This directory contains Java Archive files that Tomcat is dependent upon.
+    /logs: This directory contains Tomcat's log files.
+    /src: This directory contains the source code used by the Tomcat server.
+    /webapps: All web applications are deployed in this directory; it contains the WAR file.
+    /work: This is the directory in which Tomcat will place all servlet that are generated from JSPs
+
+Tomcat Server ports:
+    Connector Port: This is the port where Apache Tomcat listen for the HTTP requests.
+    Shutdown Port: This port is used when we try to shudown the Apache Tomcat Server.
+    AJP (Apache JServ Protocol) Connector Port: The Apache JServ Protocol (AJP) is a binary protocol that can conduct inbound requests from a web server through to an application server that sits behind the web server.
+    Redirect Port: Any redirection happening inside Apache Tomcat will happen through this port. In Apache TOMCAT there are two instance where redirect Port is mentioned. First one is for the Apache TOMCAT server and other one is for the AJP port.
+
+Lets Start creating multiple Tomcat Instances 
+    Tomcat1/ 
+    Tomcat2/
+
+Change tomcat/conf/server.xml file, HTTP, HTTPS, AJP, Shutdown Ports 
+
+<Server port="8006" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+
+<Connector port="8081" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8444" />
+
+<!-- Define an AJP 1.3 Connector on port 8009 -->
+    <Connector port="8010" protocol="AJP/1.3" redirectPort="8444" />
+
+The **bin/startup.sh** and **bin/shutdown.sh** script files make use of **bin/catalina.sh** for performing the startup and shutdown operations. We shall edit **bin/catalina.sh** file as described below:
+    a): specify following two variables in catalina.sh script file present in the bin folder of the tomcat_home 
+        export CATALINA_HOME = /path/Tomcat 
+        export CATALINA_BASE = /path/Tomcat 
+        export JAVA_HOME = /path/java  
+```

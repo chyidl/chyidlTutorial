@@ -1020,3 +1020,11 @@ If we need to change the wait_timeout global value we should follow below steps:
     1. Open the my.cnf file which resides in /etc/mysql/ directory 
     2. Add below value with the mysqld blog to my.cnf file 
 ```
+
+
+FQA & Shadowscosk
+-----------------
+```
+https://stackoverflow.com/questions/2675323/mysql-load-null-values-from-csv-data
+
+```

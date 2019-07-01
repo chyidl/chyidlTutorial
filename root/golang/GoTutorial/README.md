@@ -69,6 +69,18 @@ $ go get -v github.com/golang/lint/golint
 Install Golang on MacOS With Homebrew!
 --------------------------------------
 ```
+Installing Go via the Terminal 
+$ brew install go 
+
+Create your Go folder via the terminal && change directory into 
+$ mkdir MyGoCode && cd MyGoCode 
+
+Go requires a specific folder structure in order to manage local packages and code
+$ mkdir bin pkg src 
+
+Setup the GOPATH environment variable
+$ vim ~/.zshrc 
+# Keep in mind that $HOME is equal to "~" AKA /Users/your_username. 
 First of all export some paths, and save them in your .zshrc or .bashrc files for easy use. Use sudo if you get error.
 # Go development 
 export GOPATH="${HOME}/golib"
@@ -77,10 +89,13 @@ export PATH=$PATH:${GOPATH}/bin:${GOROOT}/bin
 $ test -d "${GOPATH}" || mkdir "${GOPATH}"
 $ test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 
-The finally install go, with Homebrew.
-$ brew install go 
-
 # Also a bunch of dev tools!
 $ go get golang.org/x/tools/cmd/godoc 
 $ go get github.com/golang/lint/golint 
+
+Setting up the VS Code text editor for Go 
+Open VS Code via spotlight. Press Command + Space and type "VS Code" then press enter 
+When VS Code opens, press command + shift + p and type "shell".
+"Shell Command: Install 'code' command in PATH"
+Click "Auto Save" in the file dropdown at the top of the screen. 
 ```
