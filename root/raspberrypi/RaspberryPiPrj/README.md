@@ -30,6 +30,7 @@ Raspberry Pi Awesome Project
 - [Jupyter Notebook](/root/raspberrypi/RaspberryPiPrj/JupyterNotebook/README.md)
 - [IPTables](/root/raspberrypi/RaspberryPiPrj/IPTables/README.md)
 - [Display Your Raspberry Pi's desktop on a Mac](/root/raspberrypi/RaspberryPiPrj/VNCRaspberryPi/README.md)
+- [Self-healing Raspberry Pi - Recovery Partition](/root/raspberrypi/RaspberryPiPrj/RecoveryModelRaspberryPi/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)

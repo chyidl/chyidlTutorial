@@ -256,7 +256,8 @@ Install KindleVNC viewer
 -----------------------
 > A VNC viewer for ebook readers -- https://github.com/hwhw/kindlevncviewer
 
-![kindlevncviewer.zip](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindlevncviewer.zip)
+- [kindlevncviewer.zip](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindlevncviewer.zip)
+
 ```
 Installation/Running:
 

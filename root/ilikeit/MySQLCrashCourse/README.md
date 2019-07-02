@@ -145,12 +145,18 @@ mysql> CREATE USER 'newuser'@'%' IDENTIFIED BY 'password';
 #   UPDATE - allow them to update table rows 
 #   GRANT OPTION - allow them to grant or remove other user's privileges 
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'newuser'@'%'; 
+mysql> GRANT SELECT, UPDATE, DELETE ON *.* TO 'newuser'@'%';
+
+# To grant the SELECT privilege on table t to the authorization IDs maria and harry, use the following syntax:
+mysql> GRANT SELECT, UPDATE, TRIGGER, EXECUTE ON TABLE t TO maria,harry;
 
 # revoke a permission
 mysql> REVOKE type_of_permission ON database_name.table_name FROM 'username'@'localhost';
+# revoke all privileges of the user
+mysql> REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'username'@'localhost';
 
-# review user current permissions 
-mysql> SHOW GRANTS ;
+# check the privileges of the user
+mysql> SHOW GRANTS FOR user;
 
 # drop user 
 mysql> DROP USER 'username'@'%';
