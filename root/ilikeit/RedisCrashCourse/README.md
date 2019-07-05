@@ -40,6 +40,10 @@ $ make test
 # Once complete, install the binaries onto the system by typing:
 $ sudo make install
 
+# Install init Script 
+# need init configuration so that redis-server should start itself on boot and no manual commands are needed by the user 
+$ cd /path/redis-stable/utils && sudo ./install_server.sh 
+
 # Configure Redis 
 # Now that Redis is installed, we can begin to configure it.
 
@@ -239,3 +243,18 @@ GET: 1162790.62 requests per second
     5. When the server and client benchmark programs run on the same box, both the TCP/IP loopback and unix domain sockets can be used. Depending on the platform, unix domain sockets can achieve around 50% more throughput than the TCP/IP loopback (on Linux for instance). The default behavior of redis-benchmark is to use the TCP/IP loopback.
     6. Being based on epoll/kqueue, the Redis event loop is quite scalable. Redis has already been benchmarked at more than 60000 connections, and was still able to sustain 50000 q/s in these conditions. 
 ```
+
+* Redis Data Types:
+    - Strings
+        * Strings are the most basic kind of Redis value. Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image or a serialized Ruby object.
+        * A String value can be max 512 Megabytes in length. 
+        * Use Strings as atomic counters using commands in the INCR family: INCR, DECR, INCRBY. 
+        * Append to strings with the APPEND command.
+        * Use Strings as a random access vectors with GETRANGE and SETRANGE.
+        * Encode a lot of data in little space, or create a Redis backed Bloom Filter using GETBIT and SETBIT.
+    - List 
+        * 
+    - Hash 
+        * 
+    - Set
+    - ZSet

@@ -155,6 +155,9 @@ mysql> REVOKE type_of_permission ON database_name.table_name FROM 'username'@'lo
 # revoke all privileges of the user
 mysql> REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'username'@'localhost';
 
+# MySQL query to get column names?
+mysql> SELECT `COLUMN_NAME` FROM `INFORMATION_SCHEMA`.`COLUMNS` WHERE `TABLE_SCHEMA`='yourdatabasename' AND `TABLE_NAME` = 'yourtablename';
+
 # check the privileges of the user
 mysql> SHOW GRANTS FOR user;
 
