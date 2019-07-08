@@ -130,6 +130,8 @@ Follow these steps to enable PAM-based limits for all users to allow a maximum o
 1. Edit /etc/pam.d/login and add the following line:
     session     required pam_limits.so 
 2. Edit /etc/security/limits.conf and append the following lines to the file:
+    root soft nofile 65535
+    root hard nofile 65535
     * soft  nofile 65536
     * hard  nofile 200000 
 3. Restart the machine so that the limits to effect and verify that the new limits are set with the following command

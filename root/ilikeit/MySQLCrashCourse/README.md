@@ -1035,5 +1035,28 @@ FQA & Shadowscosk
 -----------------
 ```
 https://stackoverflow.com/questions/2675323/mysql-load-null-values-from-csv-data
+MySQL load NULL values from csv data 
+    
+    LOAD DATA infile '/tmp/testdata.txt'
+    INTO TABLE moo 
+    fields terminated BY ","
+    lines terminated BY "\n"
+    (one, two, three, @vfour, file) 
+    SET four = nullif(@vfour, '');
 
+https://dev.mysql.com/doc/refman/5.5/en/packet-too-large.html
+MySQL Packet Too Large:
+    A communication packet is a single SQL statement sent to the MySQL server, a single row that is sent to the client, or a binary log event sent from a master replication server to a slave.
+
+    Both the client and the server have thier own max_allowed_packet variable, so if you want to handle big packets, you must increase this variable both in the client and in the server.
+    
+    If you are using the mysql client program, its default max_allowed_packet variable is 16MB. To set a larger value, start mysql like this:
+        shell> mysql --max_allowed_packet=32M 
+
+    The server's default max_allowed_packet value is 1MB. You can increase the if the server needs to handle big queries(for example, if you are working with big BLOB columns).
+        shell> mysqld --max_allowed_packet=16M 
+
+    You can also use an option file to set max_allowed_packet.
+    [mysqld]
+    max_allowed_packet = 16M 
 ```

@@ -1,6 +1,8 @@
 Protocol Buffer
 ===============
 
+> Protocol buffers are a language-neutral, platform-neutral extensible mechanism for serializing structured data. you can use special generated source code to easily write and read your structed data to and from a variety of data streams and using a vatiety of languages.
+
 An Evolution of data
 --------------------
 ```
@@ -164,4 +166,32 @@ You can also have different types in different .proto files
 
 This is useful if you want to re-use code and import other .proto files created by people in your team.
 
+Packages
+It is very important to define the package in which your protocol buffer messages live 
+    When your code gets compiled, it will be placed at the package you indicated.
+    It also helps to prevent name conflicts between messages 
+```
+
+* Setup Protoc Compiler
+```
+macOS 
+    $ brew install protobuf 
+
+Ubuntu/Linux
+    # Make sure you grab the latest version 
+    $ wget https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protoc-3.8.0-linux-x86_64.zip
+    # Unzip 
+    $ unzip protoc-3.8.0-linux-x86_64.zip -d protoc3 
+    # Move protoc to /usr/local/bin 
+    $ sudo mv protoc3/bin/* /usr/local/bin/
+    # Move protoc3/include to /usr/local/include/
+    $ sudo mv protoc3/include/* /usr/local/include/
+    # Optional: change owner
+    $ sudo chown [user] /usr/local/bin/protoc 
+    $ sudo chown -R [user] /usr/local/include/google 
+
+Usage: protoc [OPTION] PROTO_FILES 
+Parse PROTO_FILES and generate output based on the options given:
+
+$ protoc -I=proto --python-out=python3
 ```
