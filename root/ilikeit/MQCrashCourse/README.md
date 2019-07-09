@@ -21,10 +21,10 @@ RabbitMQ Port Access
     15675: MQTT-over-WebSockets clients (only if the Web MQTT plugin is enabled)
 ``` 
 
-Installing Latest RabbitMQ on Debain and Ubuntu
------------------------------------------------
+Installing Latest RabbitMQ
+--------------------------
 
-* Below is shell snippet that performs those steps. They are documented in moroe detail below.
+* Below is shell snippet that performs those steps ON Ubuntu/Debian. They are documented in moroe detail below.
 ```
 #!/bin/sh 
 
@@ -47,6 +47,18 @@ sudo apt-get update -y
 sudo apt-get install rabbitmq-server -y --fix-missing
 ```
 
+* Below is shell snippet that performs those steps ON REHL, CenOS, Fedora, openSUSE
+```
+#!/bin/sh 
+
+# Using packageCloud Yum Repository install rabbitmq-server 
+curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
+
+# Using packageCloud Yum repository install Erlang 
+curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
+
+```
+
 * Configuring RabbitMQ
 > The server is started as a daemon by default when the RabbitMQ server package is installed.it will run as a non-privileged user rabbitmq. 
 ```
@@ -62,6 +74,7 @@ $ ls /usr/lib/rabbitmq/lib/
 $ sudo service rabbitmq-server start | status | stop | restart 
 
 # rabbitmq-server.service : /lib/systemd/system/rabbitmq-server.service 
+# Log Files : /var/log/rabbitmq 
 
 # rabbitmq-management plugin provides an HTTP-based API for management and monitoring of RabbitMQ nodes and clusters,along with a browser-based UI and a command line tool.
 $ sudo rabbitmq-plugins enable rabbitmq_management
