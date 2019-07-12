@@ -175,3 +175,77 @@ The **bin/startup.sh** and **bin/shutdown.sh** script files make use of **bin/ca
         export CATALINA_BASE = /path/Tomcat 
         export JAVA_HOME = /path/java  
 ```
+
+Centos Automatically Start Apache Tomcat Server on Boot 
+-------------------------------------------------------
+```
+Step 1: Create a file named tomcat8.5 in your /etc/init.d directory 
+$ cd /etc/init.d
+$ sudo vim tomcat8.5 
+
+Step 2: Copy the following script and save the file 
+#!/bin/bash 
+# chkconfig: 2345 80 20 
+# Description: Tomcat Server basic start/shutdown script 
+# /etc/init.d/tomcat8.5 -- startup script for the Tomcat 8.5 servlet engine 
+
+TOMCAT_HOME=/usr/local/apache-tomcat-8.5.41/bin
+START_TOMCAT=/usr/local/apache-tomcat-8.5.41/bin/startup.sh 
+STOP_TOMCAT=/usr/local/apache-tomcat-8.5.41/bin/shutdown.sh
+
+start() {
+    echo -n "Stating tomcat8.5.41: "
+    cd $TOMCAT_HOME 
+    ${START_TOMCAT}
+    echo "done."
+}
+
+stop() {
+    echo -n "Shutting down tomcat8.5.41: "
+    cd $TOMCAT_HOME
+    ${STOP_TOMCAT}
+    echo "done."
+}
+
+case "$1" in 
+
+start) 
+    start
+    ;;
+
+stop)
+    stop
+    ;;
+
+restart)
+    stop
+    sleep 10
+    start
+    ;;
+
+*)
+    echo "Usage: $0 {start|stop|restart}"
+
+esac
+exit 0
+
+Step 3: Update the file permissions to make it executable by any user 
+$ chmod 755 tomcat8.5 
+
+Step 4: Make sure you have chkconfig command installed 
+$ chkconfig --help 
+$ sudo apt-get install chkconfig 
+
+Step 5: Run chkconfig command to add the script to the startup services 
+$ chkconfig --add tomcat8.5 
+Basically the chkconfig command automatically adds the symbolic links for starting and stopping the service based on the parameters passed to it.
+
+Step 6: Make sure scripts got added to the startup services 
+$ chkconfig --list tomcat8.5 
+
+Step 7: Verify your service is working 
+To start the Tomcat server 
+$ service tomcat start 
+To stop the Tomcat server 
+$ service tomcat stop 
+```
