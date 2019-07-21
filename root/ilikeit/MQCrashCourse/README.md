@@ -389,6 +389,34 @@ $ sudo rabbitmqctl cluster_status
 # => {alarms,[{rabbit@RPi3B,[]},{rabbit@RPi2B,[]}]}]
 
 # A stopping node picks an online cluster member to sync with after restart. Upon restart the node will try to contact that peer 10 times by default.with 30 second response timeouts.
+
+现在搭建的集群时默认的普通集群，普通集群中节点可以共享集群中的exchange, routingKey, queue,但是queue中的消息只保存在首次声明的queue的节点中，任何节点的消费者都可以消费其他节点的消息
+比如消费者连接rabbitmq1的节点的消费者(代码中建立Connection时，使用的是rabbitmq1的IP)可以消费节点rabbitmq2的队列myqueue2中的消息，消息传输过程是rabbitmq2把myquwuw2中的消息传输给rabbitmq1，
+然后rabbitmq1节点把消息发送给consumer,因为queue中的消息只保存在首次声明的queue节点中，这样就有一个问题，如果某个node节点挂掉,那么只能等待该节点重新连接才能继续处理该节点内的消息（如果没有设置持久化的化
+节点挂掉后消息会直接丢失）
+
+针对上面的问题, 如果可以让rabbitmq中的节点像redis集群的节点一样，每个节点都保存所有的消息，比如让rabbitmq1不仅保存自己的队列myqueue的消息，还保存其他节点的队列myqueue2和myqueue3种的消息，rabbitmq2节点也一样，这样就不用担心宕机，
+RabbitMQ提供这样的功能，镜像队列，镜像队列由一个master和多个slave组成，使用镜像队列的消息会自动在镜像节点间同步，而不是在consumer取数据时临时拉取.
+```
+
+Highly Available (Mirrored) Queues
+----------------------------------
+```
+By default, contents of a queue within a RabbitMQ cluster are located on a single node (the node on which the queue was declared).
+This is in contrast to exchanges and bindings, which can always be considered to be on all nodes. Queues can optionally be made mirrored across multiple nodes.
+
+# rabbitmq配置镜像队列十分简单，在任意一个node节点下执行下边的命令就可以完成镜像队列的配置(也可以在Web管理界面上添加policy)
+# ha-all: 策略名称
+# ^my_queue: 匹配符，只有一个^代表匹配所有,^my_queue匹配名称以my_queue开头的queue或exchange;
+# ha-mode: 同步模式，一共3种模式
+#   1. all - 所有(所有的节点都同步消费)
+#   2. exctly - 指定节点的数据(需配置ha-params参数，此参数为int类型比如2,在集群中随机抽取2个节点同步消费)
+#   3. nodes - 指定具体节点 (需配置ha-params参数，此参数为数组类型比如{"rabbit@rabbitmq_test_01", "rabbit@rabbitmq_test_03"}明确指定在这两个节点上同步消息)
+$ rabbitmqctl set_policy ha-all "^my_queue" '{"ha-mode":"all","ha-sync-mode":"automatic"}'
+
+使用镜像队列，因为各个节点要同步消息，所以比较消耗资源，一般在可靠行比较高的场景使用镜像队列
+
+
 ```
 
 RabbitMQ CTL

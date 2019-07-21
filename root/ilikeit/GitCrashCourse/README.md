@@ -7,6 +7,9 @@ Git Crash Course
 $ brew install git 
 
 # Git Config --global 参数表示全局有效
+$ git config --system --list  # 查看系统config 
+$ git config --global --list  # 查看当前用户 global 配置
+$ git config --local --list   # 查看当前仓库配置信息
 $ git config --global user.name "Your Name"
 $ git config --global user.email "email@example.com"
 
