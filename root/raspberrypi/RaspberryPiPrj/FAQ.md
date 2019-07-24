@@ -132,4 +132,14 @@ requirements of each model.
 |Raspberry Pi 3 Model B| 2.5A | 1.2A | 400mA|
 |Raspberry Pi 3 Model B+| 2.5A | 1.2A | 500mA|
 
+### How to fix 'Structure Needs Cleaning' Error 
 
+![Raspberry Pi 3B Ubuntu](/imgs/raspberrypi/StructureNeedsCleaning.png?raw=True)
+```
+/usr/src/linux-raspi2-headers-4.15.0-1038: Structure needs cleaning Error
+
+# First, Unmount this drive(this is my Raspberry Pi SD Card partition, so I shutdown system and remove sd card) 
+# Second, Using SD Card Reader insert another Linux OS. execute below command.
+$ sudo fdisk -l # check device 
+$ sudo fsck /dev/<unmounted_partition>
+```

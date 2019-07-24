@@ -3,8 +3,25 @@ ActiveMQ 、RabbitMQ 、ZeroMQ 、RocketMQ or Kafka
 
 RabbitMQ
 --------
+![RabbitMQ Architecture](/imgs/ilikeit/MQCrashCourse/rabbitmq_architecture.png?raw=true)
 > RabbitMQ is the most widely deployed open source message broker [消息中间件].It supports multiple messaging protocols.
 > RabbitMQ can be deplyed in distributed and federated configurations to meet high-scale, high-availability requirements.
+> RabbitMQ是一个由erlang开发的AMQP(Advanced Message Queue)的开源消息代理，主要负责接收、存储和转发消息，提供可靠的消息机制和灵活的消息路由，并支持集群和分布式部署，常用于应用解耦、耗时任务队列、
+流量消峰场景
+```
+Broker (Server): 接受客户端连接、实现AMQP消息队列和路由功能的进程
+Virtual Host: 一个Virtual Host里面可以有若干个Exchange和Queue,主要用于权限控制、隔离应用。如应用程序A使用VhostA,应用程序B使用VhostB,
+Exchange: 接受生产者发送的消息，并根据Binding规则将消息路由给服务器中的队列,ExchangeType决定Exchange路由消息的行为
+    Direct
+    Fanout
+    Topic
+    Header 
+Queue: 消息队列，用于存储还未被消费者消费的消息，队列是先进先出
+Message: 消息，由Header和Body组成，Header是由生产者添加的各种属性的集合，包括Message是否被持久化、由那个Message Queue接收，优先级。Body是真正传输的数据，内容格式byte[]
+Connection: 连接，对于RabbitMQ，就是一个客户端和Broker之间的TCP连接
+Channel: 信道,仅仅创建了客户端到Broker之间的连接Connection后，客户端还是不能发送消息，需要在Connection的基础上创建Channel,AMQP协议规定只有通过Channel才能执行AMQP的命令，一个Connection可以包含多个Channel,之所以需要Channel,是因为TCP连接的建立和释放比较消耗资源.
+
+```
 
 RabbitMQ Port Access
 --------------------
