@@ -402,6 +402,13 @@ RabbitMQ提供这样的功能，镜像队列，镜像队列由一个master和多
 Highly Available (Mirrored) Queues
 ----------------------------------
 ```
+Error: unable to perform an operation on node 'rabbit@rabbitmq_test_03'. Please see diagnostics information and suggestions below.
+解决办法:
+1. 先把RabbitMQ进程杀掉
+$ ps -ef | grep rabbitmq | grep -v grep | awk '{print $2}' | xargs kill -9 
+$ ps -aux | grep erl 
+$ ps -aux | grep epmd 
+
 By default, contents of a queue within a RabbitMQ cluster are located on a single node (the node on which the queue was declared).
 This is in contrast to exchanges and bindings, which can always be considered to be on all nodes. Queues can optionally be made mirrored across multiple nodes.
 

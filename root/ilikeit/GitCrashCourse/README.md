@@ -134,9 +134,13 @@ $ git stash
 
 # git branch -D <name> 丢弃一个没有被合并的分支
 # git remote  查看远程库的信息 fetch抓取, push推送的权限
-$ git remote -v  #查看远程库信息
+$ git remote -v  # -v选项(译) 查看远程库信息
 origin  ssh://xx@xxx/home/xx/GitRepository/chutils (fetch)  # 抓取
 origin  ssh://xx@xxx/home/xx/GitRepository/chutils (push)   # 推送 
+
+$ git remote show origin # git remote show 
+$ git remote rename origin new_origin # 修改某个远程在本地的简称
+$ git remote rm origin # 移除对应的远程仓库 
 
 # 并不是一定要把本地分支推送到远程
 # master 分支是主分支，因此要时刻与远程同步
