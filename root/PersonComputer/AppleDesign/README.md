@@ -254,3 +254,79 @@ Predecessor     :   iMac G5
                     eMac
 Related         :   Mac Mini, Mac Pro, iMac Pro
 ```
+
+* iPhone 4s  - October 14, 2011
+> The Phone 4 was drastically different from the iPhone 3GS, with Apple moving from a rounded
+plastic back to a flat glass and stainless-steel design, highlighted by a thin pice of metal
+that wrapped around the phone and served as the phone's antenna. 
+> The iPhone 4 was, and is still, one of the best-looking iPhone models Apple ever came out with.
+It was also the first iPhone with a Retina display.
+
+![iPhone 4/4s](/imgs/PersonComputer/AppleDesign/iPhone4s.png?raw=true)
+
+```
+Brand	        :   Apple Inc.
+Manufacturer	:   Foxconn & Pegatron (contract manufacturers)
+Slogan	        :   "The most amazing iPhone yet."
+Generation	    :   5th
+Compatible 
+networks	    :   GSM, CDMA, 3G, 3G+, HSUPA
+First released	:   October 14, 2011
+Discontinued	:   September 20, 2012
+Predecessor	    :   iPhone 4
+Successor	    :   iPhone 5
+Type	        :   Smartphone
+Form factor	    :   Touchscreen
+Dimensions	    :   115.2 mm (4.54 in) H
+                    58.6 mm (2.31 in) W
+                    9.3 mm (0.37 in) D
+Mass	        :   140 g (4.9 oz)
+Operating 
+system	        :   Original: iOS 5
+Last:           :   iOS 9.3.6, released July 22, 2019
+System on 
+chip	        :   Dual-core Apple A5
+CPU	            :   1.0 GHz (Underclocked to 800 MHz) dual-core 32-bit ARM Cortex-A9
+GPU	            :   PowerVR SGX543MP2
+Memory	        :   512 MB DDR2 RAM[4]
+Storage	        :   8, 16, 32, or 64 GB
+Battery	        :   3.7 V, 5.3 Whr (~1430 mAh) Lithium-ion battery
+Data inputs	    :   Multi-touch touchscreen display
+                    Dual microphone 
+                    3-axis gyroscope 
+                    3-axis accelerometer 
+                    Digital compass 
+                    Proximity sensor 
+                    Ambient light sensor
+Display	        :   3.5 in (89 mm) diagonal 3:2 aspect ratio widescreen
+                    LED backlit IPS TFT LCD
+                    960×640 Resolution at 326 ppi
+                    800:1 contrast ratio (typical)
+                    500 cd/m2 max. brightness (typical)
+                    Fingerprint-resistant oleophobic coating on front and back glass
+Rear camera	    :   Sony Exmor R IMX145[6] 8 MP back-side illuminated sensor
+                    HD video (1080p) at 30 frame/s
+                    IR filter
+                    Aperture f/2.4
+                    5 element lens
+                    Image signal processor (built-in A5)
+                    Face detection (stills only)
+                    image stabilization
+Front camera	:   0.3 MP VGA (480p)
+Sound	        :   Single loudspeaker
+                    3.5 mm TRRS, 20 Hz to 20 kHz frequency response (internal, headset)
+                    3.5mm audio jack
+                    Microphone
+Connectivity	:   Wi-Fi (802.11 b/g/n) (2.4 GHz only)
+                    Bluetooth 4.0
+                    Combined GSM/CDMA antenna: quad-band GSM/GPRS/EDGE
+                    (800 850 900 1,800 1,900 MHz)
+                    Quad-band UMTS/HSDPA/HSUPA
+                    (800 850 900 1,900 2,100 MHz) (800 MHz unannounced)
+                    Dual-band CDMA/EV-DO Rev. A (800 1,900 MHz)
+                    GLONASS, Global Positioning System (GPS)
+SAR	Head        :   1.18 W/kg
+Body            :   1.19 W/kg[8]
+
+Phoenix Jailbreak works 
+```
