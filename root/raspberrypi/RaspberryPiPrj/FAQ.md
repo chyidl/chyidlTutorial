@@ -12,11 +12,12 @@ world to learn programming and digital making.
 
 ### What are the differences between Raspberry Pi models?
 
-| Product   | SoC   | Speed     | RAM   | USB Ports | Ethernet  | Wireless/Bluetooth    |
-|:--------- |:----- |:--------- |:----- |:--------- |:--------- |:----------------------| 
-|Raspberry Pi 2 Model B|BCM2836|900MHz|1GB|4|Yes|No|
-|Raspberry Pi 3 Model B|BCM2837|1200MHz|1GB|4|Yes|Yes|
-|Raspberry Pi 3 Model B+|BCM2837|1400MHz|1GB|4|Yes|Yes|
+| Product   | SoC   | Speed     | RAM   | USB Ports | Ethernet  | Wireless/Bluetooth    | HDMI | Power input |
+|:--------- |:----- |:--------- |:----- |:--------- |:--------- |:----------------------|:-----|:------------|
+|Raspberry Pi 2 Model B|BCM2836, quad-core Cortex-A7|900MHz|1GB LPDDR2 SDRAM|4 USB 2 ports|100 Base Ethernet|No|Full-size HDMI|5V/2.5A DC power input||
+|Raspberry Pi 3 Model B|BCM2837,Cortex-A53(ARMv8)64|1200MHz|1GB LPDDR2 SDRAM|4 USB 2 ports|100 Base Ethernet|BCM43438 wireless LAN and Bluetooth Low Energy (BLE) on board|Full size HDMI| 5V/2.5A DC power input|
+|Raspberry Pi 3 Model B+|BCM2837B0, Cortex-A53(ARMv8)64-bit SoC|1400MHz|1GB LPDDR2 SDRAM|4 USB 2.0 ports|Gigabit Ethernet over USB 2.0(maximum throughput 300 Mbps)|2.4GHz and 5GHz IEEE 802.11.b/g/n/ac wireless LAN, Bluetooth 4.2, BLE|Full-size HDMI|5V/2.5A DC power input|
+|Raspberry Pi 4 Model B|BCM2711,Quad core Cortex-A72 (ARM v8)64-bit SoC|15000MHz|1GB,2GB or 4GB LPDDR4-2400 SDRAM|2 USB 3.0 ports; 2 USB 2.0 ports|Yes|Yes|
 
 In February 2015, Raspberry Pi 2 Model B, the second generation of the Raspberry Pi. The Pi 2 shares many specs with the Pi 1 B+, and originally used a 900MHz quad-core ARM Cortex-A7 CPU and has 1GB RAM. Some recent version of the Pi 2(v1.2) now use a 900MHz ARM Cortext-A53 CPU.
 
