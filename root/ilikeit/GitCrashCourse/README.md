@@ -250,3 +250,58 @@ Use vimdiff as git mergetool
 ----------------------------
 ```
 ```
+
+At what time of day do famous programmers work?
+-----------------------------------------------
+> One of the most popular version control system is git. When you put code in it you create the thing
+called "commit". Here is an example of raw information about some git commit:
+
+* git cat-file: Provide content or type and size information for repository objects.
+
+```
+# see commit message("Initial commit")
+$ git cat-file commit 8ad3be85d8e96e46ee0ce5593a1cf6653e4171f6
+tree c8ae7bff53b0dd778580196f2abd50b8963248dc
+author GOKU <vps@vultr.guest> 1541671458 -0600
+committer GOKU <vps@vultr.guest> 1541671458 -0600
+
+🍾🍾🍾first commit🍾🍾🍾
+
+The timestamp is the number of seconds since 1st January 1970. 
+Some serious code that is stored in VCS has lots and lots of commits and a lot of commit authors.
+So we can write a simple program that will check all the commits to filter only the commits by one
+person get the local time of that commit and aggregate it by hour when the commit was make.
+
+The script:
+If you want to check when do some other programmer work here is a script that I used to get that info. 
+This is a one-linear that you need to execute in the working copy of the repository. You need to specify
+--author option to git command. In most simple case you specify the name ('--author=""'). But is also 
+possible to use email('--author="torvalds@ppc970.osdl.org"') and specify more than one '--author'.
+
+git log --author="Linus Torvalds" --date=iso | perl -nalE 'if (/^Date:\s+[\d-]{10}\s(\d{2})/) { say $1+0 }' | sort | uniq -c|perl -MList::Util=max -nalE '$h{$F[1]} = $F[0]; }{ $m = max values %h; foreach (0..23) { $h{$_} = 0 if not exists $h{$_} } foreach (sort {$a <=> $b } keys %h) { say sprintf "%02d - %4d %s", $_, $h{$_}, “"x ($h{$_} / $m * 50); }'
+
+00 -    2 ********
+01 -    0
+02 -    0
+03 -    0
+04 -    0
+05 -    0
+06 -    0
+07 -    1 ****
+08 -    1 ****
+09 -   12 **************************************************
+10 -    8 *********************************
+11 -    3 ************
+12 -    0
+13 -    6 *************************
+14 -    4 ****************
+15 -    6 *************************
+16 -    7 *****************************
+17 -    6 *************************
+18 -   12 **************************************************
+19 -    9 *************************************
+20 -    9 *************************************
+21 -    8 *********************************
+22 -    8 *********************************
+23 -    6 *************************
+```

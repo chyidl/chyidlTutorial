@@ -1,0 +1,18 @@
+setuptools
+# parser
+hiredis
+uvloop;implementation_name=="cpython"
+pytest
+pytest-benchmark
+
+# aioredis -- async mode (hiredis/python parser), parsers implementation
+aioredis
+
+# aredis -- async mode (hiredis/python parser)
+aredis
+
+# asyncio_redis -- async mode (hiredis/python parser)
+asyncio_redis
+
+# redis-py -- sync mode (hiredis/python parser), parsers implementation
+redis
