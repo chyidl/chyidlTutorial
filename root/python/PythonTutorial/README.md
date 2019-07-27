@@ -6,3 +6,4 @@ Python3 Tutorial
 - [Python3 Template](/root/python/PythonTutorial/Template/README.md)
 - [Python3 Awesome Script](/root/python/PythonTutorial/awesome/README.md)
 - [A Guide to Python's Magic Methods](/root/python/PythonTutorial/MagicMethods/README.md)
+- [FQA](/root/python/PythonTutorial/FAQ.md)
