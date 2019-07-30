@@ -1,5 +1,18 @@
 SSH TUNNELLING
 ==============
+> Secure Shell(better known as SSH) is a cryptographic network protocol which allows users to securely perform a number of network services over an unsecured network.SSH keys provide a more secure way of logging into a server with SSH than using a password alone. While a password can eventually be creaked with a brute force attack, SSH keys are nearly impossible to decipher by brute force alone.
+
+Set Up SSH Keys
+---------------
+```
+Step One -- Create the RSA Key Pair 
+$ ssh-keygen -t rsa 
+
+Step Two -- Store the Keys and Passphrase 
+
+Step Three -- Copy the Public Key 
+$ ssh-copy-id -i ~/.ssh/lplus_id_rsa.pub -p xx root@xx
+```
 
 Local vs Remote SSH port forwarding
 -----------------------------------
