@@ -38,6 +38,60 @@ RabbitMQ Port Access
     15675: MQTT-over-WebSockets clients (only if the Web MQTT plugin is enabled)
 ``` 
 
+Installing rabbitmq on CentOS 6
+-------------------------------
+```
+The first step is to install erlang. But you don't want to install this 
+$ yum install erlang 
+
+It's super old, erlang 14 to be exact. the best way I found was to use rabbitmq-erlang:
+
+1. Download the rabbitmq-erlang rpm directly 
+$ wget https://github.com/rabbitmq/erlang-rpm/releases/download/v21.3.8.6/erlang-21.3.8.6-1.el6.x86_64.rpm 
+
+# Install it 
+$ yum install erlang-21.3.8.6-1.el6.x86_64.rpm 
+
+# If you encounter a conflicts error, try this:
+Transaction Check Error:
+  file /usr/lib64/erlang/bin/epmd from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/erl from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/erlc from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/escript from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/run_erl from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/to_erl from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/start from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/start.boot from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/start.script from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/start_clean.boot from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/start_erl from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/bin/start_sasl.boot from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/driver_int.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/erl_driver.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/erl_drv_nif.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/erl_fixed_size_int_types.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/erl_int_sizes_config.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/erl_memory_trace_parser.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/erl_nif.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/include/erl_nif_api_funcs.h from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/lib/liberts.a from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/usr/lib/liberts_r.a from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/releases/RELEASES from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/releases/RELEASES.src from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+  file /usr/lib64/erlang/releases/start_erl.data from install of erlang-21.3.8.6-1.el6.x86_64 conflicts with file from package erlang-erts-R14B-04.3.el6.x86_64
+
+Error Summary
+
+# Try this:
+$ yum remove erlang-erts-R14B-04.3.el6.x86_64 
+
+# Download the rabbitmq-server rpm directly 
+$ wget https://dl.bintray.com/rabbitmq/all/rabbitmq-server/3.7.17/rabbitmq-server-3.7.17-1.el6.noarch.rpm
+
+# Install it 
+$ yum install rabbitmq-server-3.7.17.1-1.el6.noarch.rpm 
+```
+
 Installing Latest RabbitMQ
 --------------------------
 
@@ -95,6 +149,8 @@ $ sudo service rabbitmq-server start | status | stop | restart
 
 # rabbitmq-management plugin provides an HTTP-based API for management and monitoring of RabbitMQ nodes and clusters,along with a browser-based UI and a command line tool.
 $ sudo rabbitmq-plugins enable rabbitmq_management
+# 启动日志插件命令
+$ sudo rabbitmq-plugins enable rabbitmq_tracing 
 
 # Default user access 
 # The broker creates a user guest with password guest. By default, these credentials can only be used when connecting to the broker as localhost.
@@ -586,4 +642,42 @@ RocketMQ
 
 ![Product Architecture](/imgs/ilikeit/MQCrashCourse/Product_Architecture.png?raw=True)
 
+RabbitMQ 性能调优
+----------------
+```
+RabbitMQ消费者模式:
+    1. EventingBasicConsumer : 发布/订阅模式的消费,可以让消费者即时获取到消息,长连接，创建一个Connection,然后Connection创建channel.
+    2. BasicGet : Get方式是短连接,消费者每次想要消息，首先建立一个Connection发送一个请求，Broker接收到请求，响应一条消息给消费者.然后断开连接
+    3. QueueBasicConsumer : 弃用
 
+内存与流量控制参数:
+    prefetch 是每次一次性从broker里面取消息的个数,值太大会增加延迟，太小会导致消息挤压
+
+Last login: Thu Aug  1 16:55:02 2019 from 58.247.91.82
+
+Welcome to Alibaba Cloud Elastic Compute Service !
+
+[root@rabbitmq_test_01 ~]# sudo rabbitmqctl status | grep vm_memory
+ {vm_memory_calculation_strategy,rss},
+ {vm_memory_high_watermark,0.4}, 内存流量控制,默认0.4,当占用无力内存的40%时，会引起内存报警并且阻塞所有连接
+ {vm_memory_limit,3355864268},
+[root@rabbitmq_test_01 ~]#
+
+Qos: Quality of service
+    If don't set a Qos setting at all(basic.qos), then Rabbit will push all the queue's messages to the clients as fast as the netwoek and the clients will allow. The consumers will ballon in memory as they buffer all the messages in their own RAM. 
+
+    the default QoS prefetch setting gives clients an unlimited buffer, and that can result in poor behaviour and performance. 
+```
+
+Network partition detected
+--------------------------
+```
+Network partition detected
+Mnesia reports that this RabbitMQ cluster has experienced a network partition. There is a risk of losing data. Please read RabbitMQ documentation about network partitions and the possible solutions.
+```
+
+CloudAMQP
+---------
+```
+
+```
