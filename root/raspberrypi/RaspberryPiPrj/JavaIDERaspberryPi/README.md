@@ -20,6 +20,11 @@ $ sudo apt-get install openjdk-8-jdk-headless
 or 
 $ sudo apt-get install openjdk-8-jdk 
 
+# Install Java on CentOS and Fedora 
+$ sudo yum install java-1.8.0-openjdk  # install JRE using yum 
+or 
+$ sudo yum install java-1.8.0-openjsk-devel  # install JDK using yum
+
 Check if OpenJDK 8 is installed correctly
 $ javac -version 
 $ java -version 
@@ -249,3 +254,4 @@ $ service tomcat start
 To stop the Tomcat server 
 $ service tomcat stop 
 ```
+

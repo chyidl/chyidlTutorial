@@ -1060,3 +1060,18 @@ MySQL Packet Too Large:
     [mysqld]
     max_allowed_packet = 16M 
 ```
+
+mysqldump 
+---------
+```
+mysqldump command is used to dump databases managed by MySQL. 
+    1. The simplest case is the whole database dumping:
+        $ mysqldump -u username -ppassword database_name > the_whole_database_dump.sql 
+    2. Sometimes, there's a need to dump a single table from your database 
+        $ mysqldump -u username -ppassword database_name table_name > single_table_dump.sql 
+        # Can also specify several tables separated by whitespace to dump these tables only 
+        $ mysqldump -u username -ppassword database_name table_name1 table_name2 table_name3 > single_table_dump.sql 
+    3. If you want to dump only rows that meet a specific criteria. you can add 'where' option to your mysqldump command. 
+        For example, dump only rows where date_created is today.
+        $ mysqldump -u username -ppassword database_name table_name --where="date_created='2019-08-01'" > few_rows_dump.sql 
+```

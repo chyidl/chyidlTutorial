@@ -676,8 +676,12 @@ Network partition detected
 Mnesia reports that this RabbitMQ cluster has experienced a network partition. There is a risk of losing data. Please read RabbitMQ documentation about network partitions and the possible solutions.
 ```
 
-CloudAMQP
----------
+RabbitMQ 顺序消费 & 重复消费
+----------------------------
 ```
+使用RabbitMQ作为消息队列，利用RabbitMQ的ack机制确认消息的可靠性
+RabbitMQ本身没有绝对的消息顺序机制，单个queue在多消费者下不能保证先后顺序,另外ack机制会触发消息重复消费，需要我们在设计上避免该问题.
 
+关于消息重复执行:
+    1. 消费任务超时，或者没有即时返回状态
 ```

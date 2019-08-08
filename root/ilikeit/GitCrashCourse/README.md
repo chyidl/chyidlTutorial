@@ -278,7 +278,8 @@ This is a one-linear that you need to execute in the working copy of the reposit
 --author option to git command. In most simple case you specify the name ('--author=""'). But is also 
 possible to use email('--author="torvalds@ppc970.osdl.org"') and specify more than one '--author'.
 
-git log --author="Linus Torvalds" --date=iso | perl -nalE 'if (/^Date:\s+[\d-]{10}\s(\d{2})/) { say $1+0 }' | sort | uniq -c|perl -MList::Util=max -nalE '$h{$F[1]} = $F[0]; }{ $m = max values %h; foreach (0..23) { $h{$_} = 0 if not exists $h{$_} } foreach (sort {$a <=> $b } keys %h) { say sprintf "%02d - %4d %s", $_, $h{$_}, “"x ($h{$_} / $m * 50); }'
+$ git log --author="Linus Torvalds" --date=iso | perl -nalE 'if (/^Date:\s+[\d-]{10}\s(\d{2})/) { say $1+0 }' | sort | uniq -c|perl -MList::Util=max -nalE '$h{$F[1]} = $F[0]; }{ $m = max values %h; foreach (0..23) { $h{$_} = 0 if not exists $h{$_} } foreach (sort {$a <=> $b } keys %h) { say sprintf "%02d - %4d %s", $_, $h{$_}, "*"x ($h{$_} / $m * 50); }'
+
 
 00 -    2 ********
 01 -    0
