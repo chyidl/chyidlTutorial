@@ -12,12 +12,13 @@ world to learn programming and digital making.
 
 ### What are the differences between Raspberry Pi models?
 
-| Product   | SoC   | Speed     | RAM   | USB Ports | Ethernet  | Wireless/Bluetooth    | HDMI | Power input |
-|:--------- |:----- |:--------- |:----- |:--------- |:--------- |:----------------------|:-----|:------------|
-|Raspberry Pi 2 Model B|BCM2836, quad-core Cortex-A7|900MHz|1GB LPDDR2 SDRAM|4 USB 2 ports|100 Base Ethernet|No|Full-size HDMI|5V/2.5A DC power input||
-|Raspberry Pi 3 Model B|BCM2837,Cortex-A53(ARMv8)64|1200MHz|1GB LPDDR2 SDRAM|4 USB 2 ports|100 Base Ethernet|BCM43438 wireless LAN and Bluetooth Low Energy (BLE) on board|Full size HDMI| 5V/2.5A DC power input|
-|Raspberry Pi 3 Model B+|BCM2837B0, Cortex-A53(ARMv8)64-bit SoC|1400MHz|1GB LPDDR2 SDRAM|4 USB 2.0 ports|Gigabit Ethernet over USB 2.0(maximum throughput 300 Mbps)|2.4GHz and 5GHz IEEE 802.11.b/g/n/ac wireless LAN, Bluetooth 4.2, BLE|Full-size HDMI|5V/2.5A DC power input|
-|Raspberry Pi 4 Model B|BCM2711,Quad core Cortex-A72 (ARM v8)64-bit SoC|15000MHz|1GB,2GB or 4GB LPDDR4-2400 SDRAM|2 USB 3.0 ports; 2 USB 2.0 ports|Gigabit Ethernet|2.4GHz and 5.0 GHz IEEE 802.11ac wireless, Bluetooth 5.0, BLE|2 x micro-HDMI ports(up to 4kp60 supprted)|5V DC/3A|
+| Product   | SoC   | Speed     | RAM   | GPU       | Storage   | USB Ports | Ethernet  | Wireless/Bluetooth    | HDMI | Power input |
+|:--------- |:----- |:--------- |:----- |:--------- |:----------|:----------|:--------- |:----------------------|:-----|:------------|
+|Raspberry Pi 2 Model B|BCM2836, quad-core Cortex-A7|900MHz|1GB LPDDR2 SDRAM|Broadcom VideoCore VI|microSD card storage|4 USB 2 ports|100 Base Ethernet|No|Full-size HDMI|5V/2.5A DC power input||
+|Raspberry Pi 3 Model B|BCM2837,Cortex-A53(ARMv8)64|1200MHz|1GB LPDDR2 SDRAM|Broadcom VideoCore VI|microSD card storage|4 USB 2 ports|100 Base Ethernet|BCM43438 wireless LAN and Bluetooth Low Energy (BLE) on board|Full size HDMI| 5V/2.5A DC power input|
+|Raspberry Pi 3 Model B+|BCM2837B0, Cortex-A53(ARMv8)64-bit SoC|1400MHz|1GB LPDDR2 SDRAM|Broadcom VideoCore VI|microSD card storage|4 USB 2.0 ports|Gigabit Ethernet over USB 2.0(maximum throughput 300 Mbps)|2.4GHz and 5GHz IEEE 802.11.b/g/n/ac wireless LAN, Bluetooth 4.2, BLE|Full-size HDMI|5V/2.5A DC power input|
+|Raspberry Pi 4 Model B|BCM2711,Quad core Cortex-A72 (ARM v8)64-bit SoC|15000MHz|1GB,2GB or 4GB LPDDR4-2400 SDRAM|Broacom VideoCore VI|microSD card storage|2 USB 3.0 ports; 2 USB 2.0 ports|Gigabit Ethernet|2.4GHz and 5.0 GHz IEEE 802.11ac wireless, Bluetooth 5.0, BLE|2 x micro-HDMI ports(up to 4kp60 supprted)|5V DC/3A|
+|Jetson Nano|Quad core Cortex-A57 SoC|14300MHz|4GB LPDDR4-2400 SDRAM|128 CUDA core Maxwell|microSD card storage|4 x USB 3.0|Gigabit Ethernet(& E-keyed M.2)|1xHDMI & 1xDP up to 4K, 60fps, H.264 & H.265 hardware decoding up to 4K at up 60fps|Micro USB or barrel jack|
 
 In February 2015, Raspberry Pi 2 Model B, the second generation of the Raspberry Pi. The Pi 2 shares many specs with the Pi 1 B+, and originally used a 900MHz quad-core ARM Cortex-A7 CPU and has 1GB RAM. Some recent version of the Pi 2(v1.2) now use a 900MHz ARM Cortext-A53 CPU.
 
@@ -143,4 +144,35 @@ requirements of each model.
 # Second, Using SD Card Reader insert another Linux OS. execute below command.
 $ sudo fdisk -l # check device 
 $ sudo fsck /dev/<unmounted_partition>
+```
+
+### Performance benchmark 
+```
+https://chromium.github.io/octane/
+Octane 2.0 is a performace benchmark which were running in chromium 
+iMac 2017"21.5 4K   : 47410 
+Raspberry Pi 4B     : 8220 
+Jetson Nano         : 7474
+Raspberry Pi 3B+    : 2967 
+Raspberry Pi 3B     : 2672
+```
+
+### Data Transfer 
+```
+test USB data tranfer speed and the speed of reading a board by micro SD card.
+    connect a USB 3 SSD 
+
+# test the speed in the USB interface read performance test of the connected SSD with no caching 
+# SanDisk Ultra microSDHC A1, Class 10, U1
+$ sudo hdparm -t --direct /dev/sda1 
+    Raspberry Pi 3B     :    Timing O_DIRECT disk reads: 86 MB in 3.02 seconds = 28.43 MB/sec 
+    Raspberry Pi 3B+    :    Timing O_DIRECT disk reads: 86 MB in 3.02 seconds = 28.29 MB/sec 
+    Raspberry Pi 4B     :    Timing O_DIRECT disk reads: 796 MB in 3.00 seconds = 265.18 MB/sec 
+    Jetson Nano         :    Timing O_DIRECT disk reads: 866 MB in 3.00 seconds = 288.35 MB/sec 
+    
+$ sudo hdparm -t --direct /dev/mmcblk0p2 
+    Raspberry Pi 3B     :    Timing O_DIRECT disk reads: 66 MB in 3.04 seconds = 21.72 MB/sec 
+    Raspberry Pi 3B+    :    Timing O_DIRECT disk reads: 68 MB in 3.08 seconds = 22.06 MB/sec 
+    Raspberry Pi 4B     :    Timing O_DIRECT disk reads: 128 MB in 3.04 seconds = 40.77 MB/sec 
+    Jetson Nano         :    Timing O_DIRECT disk reads: 188 MB in 3.01 seconds = 62.52 MB/sec 
 ```

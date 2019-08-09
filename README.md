@@ -78,6 +78,10 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Protocol Buffer](root/ilikeit/ProtocolBuffer/README.md)
 - [Dragon Fire](root/ilikeit/DragonFire/README.md)
 
+### Interview Some EECS Idol
+
+- [Jeff Dean](/root/InterviewIdol/JeffDean.md)
+
 ### ![The Evolution of Person Computer](/imgs/EvolutionOfPC.png?raw=true) Person Computer
 
 - [The Evolution Of Apple Design Between 1977-Now](/root/PersonComputer/AppleDesign/README.md)
