@@ -255,3 +255,60 @@ To stop the Tomcat server
 $ service tomcat stop 
 ```
 
+MacBook Pro for Java Install with Homebrew
+------------------------------------------
+```
+The version of Java available in Homebrew Cask previous to October 3, 2018 was indeed the Oracle JVM, Now homeever, it has now been updated to OpenJDK. Be sure to update Homebrew and then you will see the lastest version available for install.
+
+1. Install Homebrew if you havn't already. Make sure it is updated.
+$ brew update 
+
+2. Add the casks tap, if you havn't already (or you are not seeing older Java versions anymore with step #3)
+$ brew tap homebrew/cask=versions 
+and for the AdoptOpenJDK versions, add that tap:
+$ brew tap ado[topenjdk/openjdk 
+
+3. Look for installable versions:
+$ brew search java 
+or for AdoptOpenJDK versions:
+$ brew search jdk 
+
+4. Check the details on the version that will be installed:
+$ brew cask info java 
+or for the AdoptOpenJDK version:
+$ brew cask info adoptopenjdk 
+
+5. Install a specific version of the JDK such as java11, adoptopenjdk8, or just java or adoptopenjdk for the current. For example:
+$ brew cask install java 
+You can use the fully qualified path to older versions as well:
+$ brew cask install homebrew/cask-versions/java11
+And these will be installed into /Library/Java/JavaVirtualMachines/ which is the traditional location expected on Mac OS X.
+```
+
+Memory Problem: Process killed by OOM Killer
+--------------------------------------------
+```
+$ cd /var/log/
+[root@rabbitmq_test_01 log]# cat messages | grep 'Out of memory'
+Aug 12 18:00:24 iZbp1h7tr5p83bwyejuss9Z kernel: Out of memory: Kill process 8074 (java) score 108 or sacrifice child
+Aug 12 18:00:24 iZbp1h7tr5p83bwyejuss9Z kernel: Out of memory: Kill process 8081 (VM Thread) score 108 or sacrifice child
+Aug 12 18:00:24 iZbp1h7tr5p83bwyejuss9Z kernel: Out of memory: Kill process 8112 (mysql-cj-abando) score 108 or sacrifice child
+Aug 13 12:00:08 iZbp1h7tr5p83bwyejuss9Z kernel: Out of memory: Kill process 15578 (java) score 95 or sacrifice child
+Aug 13 12:00:08 iZbp1h7tr5p83bwyejuss9Z kernel: Out of memory: Kill process 15592 (VM Periodic Tas) score 95 or sacrifice child
+Aug 13 13:50:09 iZbp1h7tr5p83bwyejuss9Z kernel: Out of memory: Kill process 2767 (java) score 105 or sacrifice child
+Aug 13 13:50:09 iZbp1h7tr5p83bwyejuss9Z kernel: Out of memory: Kill process 2835 (org.springframe) score 105 or sacrifice child
+
+A Java process is made up of:
+    Java heap space (set via -Xms and Xmx)
+    the Metaspace (previously PermGen in Java 7)
+    the Native Memory area 
+
+Each one of these areas will use RAM. The memory is the sum of the maximum Java heap size, the Metaspace size and the native memory area.
+
+It is important to understand that the Operating System itself and any other process running on the machine have their own requirements regarding RAM and CPU. The operating System uses a certain amount of RAM which leaves the remaining RAM to be split among any other processes on the machine.
+
+Resolution:
+(This does not indicate a problem with Programs. It indicates that the Operating System is unable to prodive enough resources for all the programs it has been asked to run.)
+
+The OOM Killer is a function of the linux kernel that kill rogue processes that are requesting more memory that the OS can allocate so that the system can survive. The function applies some heuristics(it gives each process a score) to decide which process to kill when the system is in such state. The process 
+```

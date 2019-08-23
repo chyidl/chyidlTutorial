@@ -150,11 +150,13 @@ $ sudo fsck /dev/<unmounted_partition>
 ```
 https://chromium.github.io/octane/
 Octane 2.0 is a performace benchmark which were running in chromium 
-iMac 2017"21.5 4K   : 47410 
-Raspberry Pi 4B     : 8220 
-Jetson Nano         : 7474
-Raspberry Pi 3B+    : 2967 
-Raspberry Pi 3B     : 2672
+iMac 2017"21.5 4K       : 47410 
+macbook pro 2015"13     : 26352
+ipad pro 9.7            : 20947
+Raspberry Pi 4B         : 8220 
+Jetson Nano             : 7474
+Raspberry Pi 3B+        : 2967 
+Raspberry Pi 3B         : 2672
 ```
 
 ### Data Transfer 

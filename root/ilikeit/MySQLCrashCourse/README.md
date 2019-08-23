@@ -1061,12 +1061,26 @@ MySQL Packet Too Large:
     max_allowed_packet = 16M 
 ```
 
-mysqldump 
----------
+SHOW ENGINE 
+-----------
 ```
-mysqldump command is used to dump databases managed by MySQL. 
+# SHOW ENGINE displays operational information about a storage engine. 
+mysql> SHOW ENGINE engine_name {STATUS | MUTEX}
+    # display extensive information from the stadard InnoDB Monitor about the state of the InnoDB storage engine.
+    SHOW ENGINE INNODB STATUS 
+    # display InnoDB mutex and rw-lock
+    SHOW ENGINE INNODB MUTEX
+    SHOW ENGINE PERFORMANCE_SCHEMA STATUS 
+```
+
+How to Backup & Restore A MySQL Database  
+----------------------------------------
+```
+Back up From the Command Line with mysqldump
+    The mysqldump client utility can dump a database including the SQL statements required to rebuild the database. 
+    By default, the dump file includes the SQL commands to restore the tables and data
     1. The simplest case is the whole database dumping:
-        $ mysqldump -u username -ppassword database_name > the_whole_database_dump.sql 
+        $ mysqldump -u [username] -p[password] [database_name] > [the_whole_database_dump].sql 
     2. Sometimes, there's a need to dump a single table from your database 
         $ mysqldump -u username -ppassword database_name table_name > single_table_dump.sql 
         # Can also specify several tables separated by whitespace to dump these tables only 
@@ -1074,4 +1088,780 @@ mysqldump command is used to dump databases managed by MySQL.
     3. If you want to dump only rows that meet a specific criteria. you can add 'where' option to your mysqldump command. 
         For example, dump only rows where date_created is today.
         $ mysqldump -u username -ppassword database_name table_name --where="date_created='2019-08-01'" > few_rows_dump.sql 
+    4. To backup of an entire Database Management System:
+        $ mysqldump --all-databases --single-transaction --quick --lock-tables=false -u root -ppasswd > full-backup-$(date +%F).sql 
+    5. To include more than one database in the backup dump file:
+        $ sudo mysqldump -u [user] -p[password] [database_1] [database_2] [database_3] > [filename].sql
+
+How to Restore MySQL with mysqldump 
+    1. Restore MySQL Dump 
+    To restore a MySQL backup
+    $ mysql -u [user] -p[password] [database_name] < [filename].sql 
 ```
+
+MySQL 数据库优化
+----------------
+> 一个成熟的数据库架构并不是一开始设计就具备高可用、高伸缩特性，是随着用户量的增加，基础架构才逐渐完善，一下主要介绍MySQL数据库发展周期所面临的问题以及优化方案
+```
+1. 数据库表设计
+开发人员对表结构设计，对于数据库来讲，如果表设计不合适，会直接影响访问速度和用户体验，影响因素很多，比如满查询、低效的查询语句、没有适当建立索引、数据库堵塞(死锁)
+
+2. 数据库部署
+单台部署应该足以应对1500QPS(每秒查询率).考虑高可用性，可采用MySQL著丛复制和Keepalived做双击热备，常用的集群软件有Keepalived, Heartbeat.
+
+3. 数据库性能优化
+如果将MySQL部署到普通PC电脑上，不经过任何优化情况下，MySQL理论值正常可以处理2000左右QPS。经过优化后，有可能提升到2500左右的QPS。否则，当访问量达到1500左右的并发连接时，数据库处理性能就会变很慢。往往操作系统和数据库默认配置都比较保守，会对数据库发挥有一定的限制。客队这些配置进行适当的调整，尽可能的处理更多连接数。
+    3.1: 数据库配置优化
+        MySQL常用的两种存储引擎:
+            MyISAM: 不支持事务处理，读性能处理快，表级别锁
+            InnoDB: 支持事务处理(ACID),设计目标是为处理大容量数据发挥最大性能，行级别锁
+        表锁：开销小，锁定粒度大，发生死锁概率高，相对并发比较低
+        行锁：开销大，锁定粒度小，发生死锁概率低，相对并发比较高
+        使用表锁和行锁主要是保证数据的完整性
+        
+        connect_timeout = 
+        net_read_timeout=600
+        net_write_timeout=180
+        wait_timeout=86400
+        interactive_timeout = 86400
+        max_allowed_packet = 128M 
+        
+        max_connections = 151 -- 同时处理最大连接数，推荐设置最大连接数是上限连接数的80%左右
+        sort_buffer_size = 2M -- 查询排序时缓冲区大小，只对ORDER BY 和 GROUP BY起作用，可增大此值为16M 
+        open_files_limit = 7048 -- 打开文件数限制，如果show global status like 'open_files' 查看的值等于或者大约open_files_limit值，程序会无法连接数据库或卡死.
+
+    InnoDB 参数默认值:
+        innodb_buffer_pool_size = 128M -- 索引和数据缓冲区大小，一般设置物理内存的60%-70% 
+        innodb_buffer_pool_instances = 1 -- 缓冲池实例个数，推荐设置4个或8个
+        innodb_flush_log_at_trx_commit = 1 --
+        0代表大约每秒写入到日志并同步到磁盘，数据库故障会丢失1秒左右的事务数据，1为没执行一条SQL后写入到日志并同步到磁盘，I/O开销大，执行完SQL要等待日志读写，效率低。2代表只把日志写入到系统缓存区，再每秒同步到磁盘，效率很高，如果服务器故障，才会丢失事务数据，对数据安全性要求不是很高的推荐设置为2，性能高，修改后效果明显
+        innodb_file_per_table = OFF -- 默认是开启共享表空间，共享表空间idbdata文件不断增大，影响一定的I/O性能。推荐开启独立表空间模式，每个表的索引和数据都存在自己独立的表空间中，可以实现单表不同数据库中移动
+        innodb_log_buffer_size = 8M -- 日志缓冲区大小，由于日志最长每秒钟刷新一次，所以一般不用超过16M
+    
+    3.2 系统内核优化(Linux操作系统的一些参数会影响MySQL性能，一下对Linux内核进行适当优化)
+        net.ipv4.tcp_fin_timeout = 30  -- TIME_WAIT超时时间，默认是60s 
+        net.ipv4.tcp_tw_reuse = 1 -- 1表示开启复用，允许TIME_WAIT socket重新用于新的TCP连接,0表示关闭
+        net.ipv4.tcp_tw_recycle = 1 -- 1表示开启TIME_WAIT socket快速回收，0表示关闭
+        net.ipv4.tcp_max_tw_buckets = 4096 -- 系统保持TIME_WAIT socket最大数量，如果超过这个数，系统将随机清除一些TIME_WAIT并打印警告信息
+        net.ipv4.tcp_max_syn_backlog = 4096 -- 进入SYN队列最大长度，加大队列长度可以容纳更多的等待连接.
+        在Linux系统中，如果进程打开的文件句柄数量超过默认值1024，就会提示"too many files open"信息，所以要调整打开文件句柄限制
+        $ vim /etc/security/limits.conf # 加入一下配置, *代表所有用户 也可以指定用户，重启系统生效
+        * soft nofile 65535 
+        * hard nofile 65535 
+        $ ulimit -SHn 65535  # 立刻生效
+
+    3.3 硬件配置
+        加大物理内存，提高文件系统性能，Linux内核会从内存中分配出缓存区（系统缓存和数据缓存）来存放热数据，通过文锦啊系统延迟写入机制，等满足条件时（如缓存区大小到达一定百分比或者执行sync命令）才会同步到磁盘，物理内存越大，分配缓存区越大，混存数据越多，当然，服务器故障会丢失一定的缓存数据
+        SSD硬盘代替SAS硬盘，将RAID级别调整为RAID1+0,现对于RAID1和RAID5有更好的读写性能(IOPS),毕竟数据库的压力主要来自磁盘IO方面。
+
+4. 数据库架构扩展
+随着业务量增加，单台数据库服务器性能无法满足业务需求，需要组件集群，主要思想是分而治之，分解单台数据库负载，突破磁盘I/O性能，热数据存放缓存中，降低磁盘I/O访问频率。
+    4.1: 主从复制与读写分离
+        因为生产环境中，数据库大多数都是读操作，所以部署主从架构，主数据库负责写操作，并做双击热备，多台从数据库做负载均衡，负责读操作，主流的负载均衡器有LVS，HAProxy,Nginx
+        如何实现读写分离，大多数企业是在代码层实现读写分离，效率比较高，另一种方式通过代理程序实现读写分离，常用的代理程序有MySQL Proxy, Amoeba. 这样的数据库集群架构中，大大增加数据库高并发能力，解决单台性能瓶颈问题。如果从数据库一台从库能处理2000QPS，那么5台就能处理1WQPS，数据库横向扩展性很容易.
+        如果，面对大量写操作的应用时，单台写性能达不到业务需求，如果做双主，就会遇到数据库数据不一致现象，产生这个原因是应用程序不同的用户会有可能操作两台数据库，同时的更新操作造成两台数据库发生冲突或者不一致,单库时MySQL利用存储引擎机制表锁和行锁来保证数据完整性. 有一台基于perl语言开发的主从复制管理工具，MySQL-MMM(Master-Master replication manager for MySQL,
+        MySQL主主复制管理器)，这个工具最大的优点是在同一时间只提供一台数据库写操作，有效保证数据库一致性
+    
+    4.2: 增加缓存
+        给数据库增加缓存系统，把热数据缓存到内存中，如果缓存中有要请求的数据就不再去数据库中返回结果。提高读性能，缓存实现有本地缓存和分布式缓存，本地缓存是将数据缓存到本地服务器内存中或文件中，分布式缓存可以缓存海量数据，扩展性好，主流的分布式缓存系统有Memcached,redis;
+        memcached性能稳定，数据缓存在内存中，速度很快，QPS可达8W左右，数据库持久化存则使用redis
+
+    4.3: 分库
+        分库是业务不同把相关的表切分到不同的数据库中，如果业务量很大，还可以将切分后的库做主从架构，进一步避免单个库压力过大。
+
+    4.4: 分表
+        数据量的增加，数据库中某个表有千万条数据，导致查询和插入耗时太长，可以考虑将表拆分成小表，来减轻单个表的压力。提高处理效率，此方法称为分表。
+        分表技术比较麻烦，要修改程序代码的SQL语句，还要手动创建其他表，可以使用merge存储引擎实现分表，相对简单许多，分表后，程序是对一个总表进行操作，这个总表不存放数据，只要一些分表的关系，以及更新数据的方式，总表会根据不同的查询，将压力分到不同的小表上，因此提高并发能力和磁盘I/O性能.
+        分表分为垂直拆分和水平拆分：
+            垂直拆分：把原来的一个很多字段拆分很多各表，解决表的宽度问题，可以将不常用的字段单独放在一个表中，也可以把大字段独立放一个表中，或者把关系密切的字段放一个表中。
+            水平拆分：把原来一个表拆分成多个表，每个表的结构都一样，解决单个表数据量过大的问题.
+    
+    4.5: 分区
+        分区是把一张表的数据根据表结构中的字段(range, list, hash)分成多个区块，这些区块可以在一个磁盘上，也可以在不同的磁盘上，分区后，表面上还是一张表，但是数据散列在多个位置，这样依赖
+        
+    
+mysql> show processlist;
++-----+------+-----------------------+---------+---------+-------+-------------+------------------------------------------------------------------------------------------------------+
+| Id  | User | Host                  | db      | Command | Time  | State       | Info                                                                                                 |
++-----+------+-----------------------+---------+---------+-------+-------------+------------------------------------------------------------------------------------------------------+
+| 110 | root | WIN-UHA4VHLFV5N:55510 | history | Query   | 50621 | System lock | load data local infile 'E:/2018/S_L_20180316.csv' into table history_20180316 character set 'gbk' fi |
+| 111 | root | WIN-UHA4VHLFV5N:55582 | history | Query   | 38615 | System lock | load data local infile 'E:/2018/S_L_20180319.csv' into table history_20180319 character set 'gbk' fi |
+| 112 | root | WIN-UHA4VHLFV5N:55606 | history | Query   | 35584 | System lock | load data local infile 'E:/2018/S_L_20180320.csv' into table history_20180320 character set 'gbk' fi |
+| 113 | root | WIN-UHA4VHLFV5N:55618 | history | Query   | 33028 | System lock | load data local infile 'E:/2018/S_L_20180321.csv' into table history_20180321 character set 'gbk' fi |
+| 114 | root | WIN-UHA4VHLFV5N:55677 | history | Query   | 25121 | System lock | load data local infile 'E:/2018/S_L_20180322.csv' into table history_20180322 character set 'gbk' fi |
+| 115 | root | WIN-UHA4VHLFV5N:55678 | history | Query   | 24778 | System lock | load data local infile 'E:/2018/S_L_20180323.csv' into table history_20180323 character set 'gbk' fi |
+| 117 | root | WIN-UHA4VHLFV5N:55690 | history | Query   | 22468 | System lock | load data local infile 'E:/2018/S_L_20180326.csv' into table history_20180326 character set 'gbk' fi |
+| 118 | root | WIN-UHA4VHLFV5N:55718 | history | Query   | 18940 | System lock | load data local infile 'E:/2018/S_L_20180327.csv' into table history_20180327 character set 'gbk' fi |
+| 120 | root | WIN-UHA4VHLFV5N:55770 | history | Query   | 11592 | System lock | load data local infile 'E:/2018/S_L_20180328.csv' into table history_20180328 character set 'gbk' fi |
+| 121 | root | WIN-UHA4VHLFV5N:55776 | history | Query   | 11154 | System lock | load data local infile 'E:/2018/S_L_20180329.csv' into table history_20180329 character set 'gbk' fi |
+| 123 | root | 192.168.1.241:55002   | history | Sleep   |  2530 |             | NULL                                                                                                 |
+| 124 | root | 192.168.1.241:55449   | history | Query   |     0 | init        | show processlist                                                                                     |
+| 126 | root | 192.168.1.215:48556   | history | Query   |     2 | update      | INSERT INTO `history_20190813` VALUES (353339,0,'2019-08-13 09:30:51','002638',0,0,'002638.SZ','勤   |
++-----+------+-----------------------+---------+---------+-------+-------------+------------------------------------------------------------------------------------------------------+
+13 rows in set (0.00 sec)
+
+1. 分库分表的可能性
+mysql> SELECT TABLE_SCHEMA AS "Database Name", ROUND(SUM(data_length + index_length)/1024/1024, 2) AS "Size in (MB)" FROM information_schema.TABLES GROUP BY TABLE_SCHEMA;
++--------------------+--------------+
+| Database Name      | Size in (MB) |
++--------------------+--------------+
+| history            |   9193633.81 |
+| information_schema |         0.01 |
+| mysql              |     17635.23 |
+| performance_schema |         0.00 |
++--------------------+--------------+
+4 rows in set (2 min 34.79 sec)
+
+# How to fix Error Code 2013 Lost connection to MySQL server
+Starting backup of source database hq, table history_20190813 -> destination database history
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+mysql: [Warning] Using a password on the command line interface can be insecure.
+ERROR 2013 (HY000) at line 1106: Lost connection to MySQL server during query
+Delete file : hq.history_20190813.sql completed.
+[ '2019-08-14 12:47:19' ] 'migrate_db' (('rm-bp10t403rcn80qaxmio.mysql.rds.aliyuncs.com:3306:root:K5pMwOrXgPlRc4MZ', '192.168.1.22:3306:root:Cn123456', 'hq.history_20190813>history', 'backup', True), {}) 9401.07 sec
+[ '2019-08-14 12:47:19' ] 'run' ((), {}) 9401.08 sec
+    This error appears when the connection between MySQL client and MySQL server times out. Essentially, it took too long for the query to return data so the connection gets dropped.
+
+```
+
+aliyun RDS config
+-----------------
+```
+automatic_sp_privileges = ON
+auto_increment_increment = 1
+auto_increment_offset = 1
+back_log = 3000
+binlog_cache_size = 2048KB
+binlog_checksum = CRC32
+binlog_order_commits = ON
+binlog_rows_query_log_events = OFF
+binlog_row_image = full
+binlog_stmt_cache_size = 32768
+block_encryption_mode = "aes-128-ecb"
+bulk_insert_buffer_size = 4194304
+character_set_client = utf8
+character_set_filesystem = binary
+character_set_server = utf8
+concurrent_insert = 1
+connect_timeout = 10
+default_storage_engine = InnoDB
+default_time_zone = SYSTEM
+default_week_format = 0
+delayed_insert_limit = 100
+delayed_insert_timeout = 300
+delayed_queue_size = 1000
+delay_key_write = ON
+disconnect_on_expired_password = ON
+div_precision_increment = 4
+end_markers_in_json = OFF
+eq_range_index_dive_limit = 10
+explicit_defaults_for_timestamp = false
+flush_time = 0
+ft_max_word_len = 84
+ft_min_word_len = 4
+ft_query_expansion_limit = 20
+group_concat_max_len = 1024
+host_cache_size = 643
+innodb_adaptive_flushing = ON
+innodb_adaptive_flushing_lwm = 10
+innodb_adaptive_hash_index = ON
+innodb_adaptive_max_sleep_delay = 150000
+innodb_additional_mem_pool_size = 2097152
+innodb_autoextend_increment = 64
+innodb_autoinc_lock_mode = 1
+innodb_buffer_pool_dump_at_shutdown = OFF
+innodb_buffer_pool_instances = 8
+innodb_buffer_pool_load_at_startup = OFF
+innodb_change_buffering = all
+innodb_change_buffer_max_size = 25
+innodb_checksum_algorithm = innodb
+innodb_cmp_per_index_enabled = OFF
+innodb_commit_concurrency = 0
+innodb_compression_failure_threshold_pct = 5
+innodb_compression_level = 6
+innodb_compression_pad_pct_max = 50
+innodb_concurrency_tickets = 5000
+innodb_disable_sort_file_cache = ON
+innodb_flush_method = O_DIRECT
+innodb_flush_neighbors = 1
+innodb_ft_cache_size = 8000000
+innodb_ft_enable_diag_print = OFF
+innodb_ft_enable_stopword = ON
+innodb_ft_max_token_size = 84
+innodb_ft_min_token_size = 3
+innodb_ft_num_word_optimize = 2000
+innodb_ft_result_cache_limit = 2000000000
+innodb_ft_sort_pll_degree = 2
+innodb_ft_total_cache_size = 640000000
+innodb_io_capacity = 2000
+innodb_io_capacity_max = 4000
+innodb_large_prefix = OFF
+innodb_lock_wait_timeout = 50
+innodb_log_compressed_pages = OFF
+innodb_lru_scan_depth = 1024
+innodb_max_dirty_pages_pct = 75
+innodb_max_dirty_pages_pct_lwm = 0
+innodb_max_purge_lag = 0
+innodb_max_purge_lag_delay = 0
+innodb_monitor_disable = 
+innodb_monitor_enable = 
+innodb_old_blocks_pct = 37
+innodb_old_blocks_time = 1000
+innodb_online_alter_log_max_size = 134217728
+innodb_open_files = 3000
+innodb_optimize_fulltext_only = OFF
+innodb_print_all_deadlocks = OFF
+innodb_purge_batch_size = 300
+innodb_purge_threads = 1
+innodb_random_read_ahead = OFF
+innodb_read_ahead_threshold = 56
+innodb_read_io_threads = 4
+innodb_rollback_on_timeout = OFF
+innodb_rollback_segments = 128
+innodb_sort_buffer_size = 1048576
+innodb_spin_wait_delay = 30
+innodb_stats_auto_recalc = ON
+innodb_stats_method = nulls_equal
+innodb_stats_on_metadata = OFF
+innodb_stats_persistent = ON
+innodb_stats_persistent_sample_pages = 20
+innodb_stats_sample_pages = 8
+innodb_stats_transient_sample_pages = 8
+innodb_status_output = OFF
+innodb_status_output_locks = OFF
+innodb_strict_mode = OFF
+innodb_support_xa = ON
+innodb_sync_array_size = 1
+innodb_sync_spin_loops = 100
+innodb_table_locks = ON
+innodb_thread_concurrency = 0
+innodb_thread_sleep_delay = 10000
+innodb_write_io_threads = 4
+interactive_timeout = 7200
+join_buffer_size = 432KB
+key_cache_age_threshold = 300
+key_cache_block_size = 1024
+key_cache_division_limit = 100
+lc_time_names = en_US
+lock_wait_timeout = 31536000
+log_queries_not_using_indexes = OFF
+log_throttle_queries_not_using_indexes = 0
+long_query_time = 1
+loose_gap_lock_raise_error = OFF
+loose_gap_lock_write_log = OFF
+loose_max_statement_time = 0
+loose_optimizer_trace = enabled=off,one_line=off
+loose_optimizer_trace_features = greedy_search=on,range_optimizer=on,dynamic_range=on,repeated_subselect=on
+loose_rds_indexstat = OFF
+loose_rds_max_tmp_disk_space = 10737418240
+loose_rds_set_connection_id_enabled = ON
+loose_rds_tablestat = OFF
+loose_rds_threads_running_high_watermark = 50000
+loose_thread_handling = "one-thread-per-connection"
+loose_thread_pool_oversubscribe = 10
+loose_thread_pool_size = 64
+loose_thread_pool_stall_limit = 30
+loose_tokudb_auto_analyze = 30
+loose_tokudb_buffer_pool_ratio = 0
+loose_validate_password_length = 8
+low_priority_updates = 0
+master_verify_checksum = OFF
+max_allowed_packet = 1024M
+max_binlog_stmt_cache_size = 18446744073709547520
+max_connect_errors = 100
+max_error_count = 64
+max_heap_table_size = 16777216
+max_join_size = 18446744073709551615
+max_length_for_sort_data = 1024
+max_prepared_stmt_count = 16382
+max_seeks_for_key = 18446744073709500000
+max_sort_length = 1024
+max_sp_recursion_depth = 0
+max_write_lock_count = 102400
+metadata_locks_cache_size = 1024
+min_examined_row_limit = 0
+myisam_sort_buffer_size = 262144
+net_buffer_length = 16384
+net_read_timeout = 30
+net_retry_count = 10
+net_write_timeout = 60
+old_passwords = 0
+open_files_limit = 65535
+optimizer_prune_level = 1
+optimizer_search_depth = 62
+optimizer_trace_limit = 1
+optimizer_trace_max_mem_size = 16384
+optimizer_trace_offset = -1
+performance_schema = OFF
+preload_buffer_size = 32768
+query_alloc_block_size = 8192
+query_cache_limit = 1048576
+query_cache_min_res_unit = 4096
+query_cache_size = 3145728
+query_cache_type = 0
+query_cache_wlock_invalidate = OFF
+query_prealloc_size = 8192
+range_alloc_block_size = 4096
+rds_reset_all_filter = 0
+slave_net_timeout = 60
+slow_launch_time = 2
+slow_query_log = ON
+sort_buffer_size = 848KB
+sql_mode = 
+stored_program_cache = 256
+table_definition_cache = 512
+table_open_cache = 2000
+table_open_cache_instances = 1
+thread_cache_size = 100
+thread_stack = 262144
+tls_version = TLSv1,TLSv1.1,TLSv1.2
+tmp_table_size = 2097152
+transaction_alloc_block_size = 8192
+transaction_isolation = READ-COMMITTED
+transaction_prealloc_size = 4096
+updatable_views_with_limit = YES
+wait_timeout = 86400        
+```
+
+```
+mysql> show status;
++-----------------------------------------------+-------------+
+| Variable_name                                 | Value       |
++-----------------------------------------------+-------------+
+| Aborted_clients                               | 3           | -- 客户端没有正确关闭连接已经死掉，已经放弃连接数量
+| Aborted_connects                              | 0           | -- 尝试已经失败的MySQL服务器的连接的次数
+| Binlog_cache_disk_use                         | 418         | -- 
+| Binlog_cache_use                              | 418         |
+| Binlog_stmt_cache_disk_use                    | 0           |
+| Binlog_stmt_cache_use                         | 9           |
+| Bytes_received                                | 243         |
+| Bytes_sent                                    | 192         |
+| Com_admin_commands                            | 0           |
+| Com_assign_to_keycache                        | 0           |
+| Com_alter_db                                  | 0           |
+| Com_alter_db_upgrade                          | 0           |
+| Com_alter_event                               | 0           |
+| Com_alter_function                            | 0           |
+| Com_alter_procedure                           | 0           |
+| Com_alter_server                              | 0           |
+| Com_alter_table                               | 0           |
+| Com_alter_tablespace                          | 0           |
+| Com_alter_user                                | 0           |
+| Com_analyze                                   | 0           |
+| Com_begin                                     | 0           |
+| Com_binlog                                    | 0           |
+| Com_call_procedure                            | 0           |
+| Com_change_db                                 | 0           |
+| Com_change_master                             | 0           |
+| Com_check                                     | 0           |
+| Com_checksum                                  | 0           |
+| Com_commit                                    | 0           |
+| Com_create_db                                 | 0           |
+| Com_create_event                              | 0           |
+| Com_create_function                           | 0           |
+| Com_create_index                              | 0           |
+| Com_create_procedure                          | 0           |
+| Com_create_server                             | 0           |
+| Com_create_table                              | 0           |
+| Com_create_trigger                            | 0           |
+| Com_create_udf                                | 0           |
+| Com_create_user                               | 0           |
+| Com_create_view                               | 0           |
+| Com_dealloc_sql                               | 0           |
+| Com_delete                                    | 0           |
+| Com_delete_multi                              | 0           |
+| Com_do                                        | 0           |
+| Com_drop_db                                   | 0           |
+| Com_drop_event                                | 0           |
+| Com_drop_function                             | 0           |
+| Com_drop_index                                | 0           |
+| Com_drop_procedure                            | 0           |
+| Com_drop_server                               | 0           |
+| Com_drop_table                                | 0           |
+| Com_drop_trigger                              | 0           |
+| Com_drop_user                                 | 0           |
+| Com_drop_view                                 | 0           |
+| Com_empty_query                               | 0           |
+| Com_execute_sql                               | 0           |
+| Com_flush                                     | 0           |
+| Com_get_diagnostics                           | 0           |
+| Com_grant                                     | 0           |
+| Com_ha_close                                  | 0           |
+| Com_ha_open                                   | 0           |
+| Com_ha_read                                   | 0           |
+| Com_help                                      | 0           |
+| Com_insert                                    | 0           |
+| Com_insert_select                             | 0           |
+| Com_install_plugin                            | 0           |
+| Com_kill                                      | 0           |
+| Com_load                                      | 0           |
+| Com_lock_tables                               | 0           |
+| Com_optimize                                  | 0           |
+| Com_preload_keys                              | 0           |
+| Com_prepare_sql                               | 0           |
+| Com_purge                                     | 0           |
+| Com_purge_before_date                         | 0           |
+| Com_release_savepoint                         | 0           |
+| Com_rename_table                              | 0           |
+| Com_rename_user                               | 0           |
+| Com_repair                                    | 0           |
+| Com_replace                                   | 0           |
+| Com_replace_select                            | 0           |
+| Com_reset                                     | 0           |
+| Com_resignal                                  | 0           |
+| Com_revoke                                    | 0           |
+| Com_revoke_all                                | 0           |
+| Com_rollback                                  | 0           |
+| Com_rollback_to_savepoint                     | 0           |
+| Com_savepoint                                 | 0           |
+| Com_select                                    | 1           |
+| Com_set_option                                | 0           |
+| Com_signal                                    | 0           |
+| Com_show_binlog_events                        | 0           |
+| Com_show_binlogs                              | 0           |
+| Com_show_charsets                             | 0           |
+| Com_show_collations                           | 0           |
+| Com_show_create_db                            | 0           |
+| Com_show_create_event                         | 0           |
+| Com_show_create_func                          | 0           |
+| Com_show_create_proc                          | 0           |
+| Com_show_create_table                         | 0           |
+| Com_show_create_trigger                       | 0           |
+| Com_show_databases                            | 0           |
+| Com_show_engine_logs                          | 0           |
+| Com_show_engine_mutex                         | 0           |
+| Com_show_engine_status                        | 0           |
+| Com_show_events                               | 0           |
+| Com_show_errors                               | 0           |
+| Com_show_fields                               | 0           |
+| Com_show_function_code                        | 0           |
+| Com_show_function_status                      | 0           |
+| Com_show_grants                               | 0           |
+| Com_show_keys                                 | 0           |
+| Com_show_master_status                        | 0           |
+| Com_show_open_tables                          | 0           |
+| Com_show_plugins                              | 0           |
+| Com_show_privileges                           | 0           |
+| Com_show_procedure_code                       | 0           |
+| Com_show_procedure_status                     | 0           |
+| Com_show_processlist                          | 0           |
+| Com_show_profile                              | 0           |
+| Com_show_profiles                             | 0           |
+| Com_show_relaylog_events                      | 0           |
+| Com_show_slave_hosts                          | 0           |
+| Com_show_slave_status                         | 0           |
+| Com_show_status                               | 1           |
+| Com_show_storage_engines                      | 0           |
+| Com_show_table_status                         | 0           |
+| Com_show_tables                               | 0           |
+| Com_show_triggers                             | 0           |
+| Com_show_variables                            | 0           |
+| Com_show_warnings                             | 0           |
+| Com_slave_start                               | 0           |
+| Com_slave_stop                                | 0           |
+| Com_stmt_close                                | 0           |
+| Com_stmt_execute                              | 0           |
+| Com_stmt_fetch                                | 0           |
+| Com_stmt_prepare                              | 0           |
+| Com_stmt_reprepare                            | 0           |
+| Com_stmt_reset                                | 0           |
+| Com_stmt_send_long_data                       | 0           |
+| Com_truncate                                  | 0           |
+| Com_uninstall_plugin                          | 0           |
+| Com_unlock_tables                             | 0           |
+| Com_update                                    | 0           |
+| Com_update_multi                              | 0           |
+| Com_xa_commit                                 | 0           |
+| Com_xa_end                                    | 0           |
+| Com_xa_prepare                                | 0           |
+| Com_xa_recover                                | 0           |
+| Com_xa_rollback                               | 0           |
+| Com_xa_start                                  | 0           |
+| Compression                                   | OFF         |
+| Connection_errors_accept                      | 0           |
+| Connection_errors_internal                    | 0           |
+| Connection_errors_max_connections             | 0           |
+| Connection_errors_peer_address                | 0           |
+| Connection_errors_select                      | 0           |
+| Connection_errors_tcpwrap                     | 0           |
+| Connections                                   | 18          | -- 尝试连接MySQL服务器的次数
+| Created_tmp_disk_tables                       | 0           |
+| Created_tmp_files                             | 8           |
+| Created_tmp_tables                            | 0           | -- 创建临时表的数量
+| Delayed_errors                                | 0           |
+| Delayed_insert_threads                        | 0           | -- 延迟插入处理器线程的数量
+| Delayed_writes                                | 0           | --  Insert delayed 写入的行数
+| Flush_commands                                | 1           | -- 执行FLUSH命令的次数
+| Handler_commit                                | 0           |
+| Handler_delete                                | 0           | -- 请求从一张表中删除行的次数
+| Handler_discover                              | 0           |
+| Handler_external_lock                         | 0           |
+| Handler_mrr_init                              | 0           |
+| Handler_prepare                               | 0           |
+| Handler_read_first                            | 0           | -- 请求读入表中第一行的次数
+| Handler_read_key                              | 0           | -- 请求数字基于健读行
+| Handler_read_last                             | 0           | -- 
+| Handler_read_next                             | 0           |
+| Handler_read_prev                             | 0           |
+| Handler_read_rnd                              | 0           |
+| Handler_read_rnd_next                         | 0           |
+| Handler_rollback                              | 0           |
+| Handler_savepoint                             | 0           |
+| Handler_savepoint_rollback                    | 0           |
+| Handler_update                                | 0           |
+| Handler_write                                 | 0           |
+| Innodb_buffer_pool_dump_status                | not started |
+| Innodb_buffer_pool_load_status                | not started |
+| Innodb_buffer_pool_pages_data                 | 511387      |
+| Innodb_buffer_pool_bytes_data                 | 4083597312  |
+| Innodb_buffer_pool_pages_dirty                | 4951        |
+| Innodb_buffer_pool_bytes_dirty                | 81117184    |
+| Innodb_buffer_pool_pages_flushed              | 3370514     |
+| Innodb_buffer_pool_pages_free                 | 8102        |
+| Innodb_buffer_pool_pages_misc                 | 4799        |
+| Innodb_buffer_pool_pages_total                | 524288      |
+| Innodb_buffer_pool_read_ahead_rnd             | 0           |
+| Innodb_buffer_pool_read_ahead                 | 113         |
+| Innodb_buffer_pool_read_ahead_evicted         | 0           |
+| Innodb_buffer_pool_read_requests              | 470742403   |
+| Innodb_buffer_pool_reads                      | 1354537     |
+| Innodb_buffer_pool_wait_free                  | 0           |
+| Innodb_buffer_pool_write_requests             | 185052399   |
+| Innodb_data_fsyncs                            | 204698      |
+| Innodb_data_pending_fsyncs                    | 0           |
+| Innodb_data_pending_reads                     | 0           |
+| Innodb_data_pending_writes                    | 0           |
+| Innodb_data_read                              | 1586827264  |
+| Innodb_data_reads                             | 1406797     |
+| Innodb_data_writes                            | 3524553     |
+| Innodb_data_written                           | 834403840   |
+| Innodb_dblwr_pages_written                    | 3370514     |
+| Innodb_dblwr_writes                           | 66220       |
+| Innodb_have_atomic_builtins                   | ON          |
+| Innodb_log_waits                              | 0           |
+| Innodb_log_write_requests                     | 38821748    |
+| Innodb_log_writes                             | 63212       |
+| Innodb_os_log_fsyncs                          | 64300       |
+| Innodb_os_log_pending_fsyncs                  | 0           |
+| Innodb_os_log_pending_writes                  | 0           |
+| Innodb_os_log_written                         | 14942577152 |
+| Innodb_page_size                              | 16384       |
+| Innodb_pages_created                          | 38571       |
+| Innodb_pages_read                             | 1402983     |
+| Innodb_pages_written                          | 3370514     |
+| Innodb_row_lock_current_waits                 | 0           |
+| Innodb_row_lock_time                          | 0           |
+| Innodb_row_lock_time_avg                      | 0           |
+| Innodb_row_lock_time_max                      | 0           |
+| Innodb_row_lock_waits                         | 0           |
+| Innodb_rows_deleted                           | 0           |
+| Innodb_rows_inserted                          | 1244414     |
+| Innodb_rows_read                              | 0           |
+| Innodb_rows_updated                           | 0           |
+| Innodb_num_open_files                         | 257         |
+| Innodb_truncated_status_writes                | 0           |
+| Innodb_available_undo_logs                    | 128         |
+| Key_blocks_not_flushed                        | 0           |
+| Key_blocks_unused                             | 6698        |
+| Key_blocks_used                               | 0           |
+| Key_read_requests                             | 0           |
+| Key_reads                                     | 0           |
+| Key_write_requests                            | 0           |
+| Key_writes                                    | 0           |
+| Last_query_cost                               | 0.000000    |
+| Last_query_partial_plans                      | 0           |
+| Max_used_connections                          | 4           |
+| Not_flushed_delayed_rows                      | 0           |
+| Open_files                                    | 18          |
+| Open_streams                                  | 0           |
+| Open_table_definitions                        | 313         |
+| Open_tables                                   | 303         |
+| Opened_files                                  | 394         |
+| Opened_table_definitions                      | 0           |
+| Opened_tables                                 | 0           | -- 已经打开表的数量
+| Performance_schema_accounts_lost              | 0           |
+| Performance_schema_cond_classes_lost          | 0           |
+| Performance_schema_cond_instances_lost        | 0           |
+| Performance_schema_digest_lost                | 0           |
+| Performance_schema_file_classes_lost          | 0           |
+| Performance_schema_file_handles_lost          | 0           |
+| Performance_schema_file_instances_lost        | 0           |
+| Performance_schema_hosts_lost                 | 0           |
+| Performance_schema_locker_lost                | 0           |
+| Performance_schema_mutex_classes_lost         | 0           |
+| Performance_schema_mutex_instances_lost       | 0           |
+| Performance_schema_rwlock_classes_lost        | 0           |
+| Performance_schema_rwlock_instances_lost      | 0           |
+| Performance_schema_session_connect_attrs_lost | 0           |
+| Performance_schema_socket_classes_lost        | 0           |
+| Performance_schema_socket_instances_lost      | 0           |
+| Performance_schema_stage_classes_lost         | 0           |
+| Performance_schema_statement_classes_lost     | 0           |
+| Performance_schema_table_handles_lost         | 0           |
+| Performance_schema_table_instances_lost       | 0           |
+| Performance_schema_thread_classes_lost        | 0           |
+| Performance_schema_thread_instances_lost      | 0           |
+| Performance_schema_users_lost                 | 0           |
+| Prepared_stmt_count                           | 0           |
+| Qcache_free_blocks                            | 1           |
+| Qcache_free_memory                            | 1031432     |
+| Qcache_hits                                   | 0           |
+| Qcache_inserts                                | 0           |
+| Qcache_lowmem_prunes                          | 0           |
+| Qcache_not_cached                             | 11          |
+| Qcache_queries_in_cache                       | 0           |
+| Qcache_total_blocks                           | 1           |
+| Queries                                       | 892         |
+| Questions                                     | 2           | -- 查询数量
+| Select_full_join                              | 0           |
+| Select_full_range_join                        | 0           |
+| Select_range                                  | 0           |
+| Select_range_check                            | 0           |
+| Select_scan                                   | 0           |
+| Slave_heartbeat_period                        | 0.000       |
+| Slave_last_heartbeat                          |             |
+| Slave_open_temp_tables                        | 0           |
+| Slave_received_heartbeats                     | 0           |
+| Slave_retried_transactions                    | 0           |
+| Slave_running                                 | OFF         |
+| Slow_launch_threads                           | 0           |
+| Slow_queries                                  | 0           |
+| Sort_merge_passes                             | 0           |
+| Sort_range                                    | 0           |
+| Sort_rows                                     | 0           |
+| Sort_scan                                     | 0           |
+| Ssl_accept_renegotiates                       | 0           |
+| Ssl_accepts                                   | 0           |
+| Ssl_callback_cache_hits                       | 0           |
+| Ssl_cipher                                    |             |
+| Ssl_cipher_list                               |             |
+| Ssl_client_connects                           | 0           |
+| Ssl_connect_renegotiates                      | 0           |
+| Ssl_ctx_verify_depth                          | 0           |
+| Ssl_ctx_verify_mode                           | 0           |
+| Ssl_default_timeout                           | 0           |
+| Ssl_finished_accepts                          | 0           |
+| Ssl_finished_connects                         | 0           |
+| Ssl_server_not_after                          |             |
+| Ssl_server_not_before                         |             |
+| Ssl_session_cache_hits                        | 0           |
+| Ssl_session_cache_misses                      | 0           |
+| Ssl_session_cache_mode                        | NONE        |
+| Ssl_session_cache_overflows                   | 0           |
+| Ssl_session_cache_size                        | 0           |
+| Ssl_session_cache_timeouts                    | 0           |
+| Ssl_sessions_reused                           | 0           |
+| Ssl_used_session_cache_entries                | 0           |
+| Ssl_verify_depth                              | 0           |
+| Ssl_verify_mode                               | 0           |
+| Ssl_version                                   |             |
+| Table_locks_immediate                         | 75          | -- 立即释放表锁数
+| Table_locks_waited                            | 0           | -- 等待的表锁数
+| Table_open_cache_hits                         | 0           |
+| Table_open_cache_misses                       | 0           |
+| Table_open_cache_overflows                    | 0           |
+| Tc_log_max_pages_used                         | 0           |
+| Tc_log_page_size                              | 0           |
+| Tc_log_page_waits                             | 0           |
+| Threads_cached                                | 2           |
+| Threads_connected                             | 2           |
+| Threads_created                               | 4           |
+| Threads_running                               | 1           | -- 运行的线程数量
+| Uptime                                        | 12163       | -- 服务器工作时间
+| Uptime_since_flush_status                     | 12163       |
++-----------------------------------------------+-------------+
+341 rows in set (0.01 sec)
+
+mysql>
+```
+
+MySQL 写压力性能监控与调优
+--------------------------
+```
+1. OS 层面的监控: iostat -x 
+$ iostat -x [yum install sysstat]
+    写入吞吐量: wkB/s 
+    监控系统的io状况: 主要查看%util, r/s, w/s 
+
+2. DB层面监控, 监控各种pending （挂起）
+mysql> show global status like '%pend%';
++------------------------------+-------+
+| Variable_name                | Value |
++------------------------------+-------+
+| Innodb_data_pending_fsyncs   | 2     | -- 被挂起的fsync 
+| Innodb_data_pending_reads    | 0     | -- 被挂起的物理读
+| Innodb_data_pending_writes   | 0     | -- 被挂起的写
+| Innodb_os_log_pending_fsyncs | 1     | -- 被挂起的日志fsync 
+| Innodb_os_log_pending_writes | 0     | -- 被挂起的日志写 
++------------------------------+-------+
+5 rows in set (0.00 sec)
+
+3. 写入速度监控: 日志写，脏页写
+mysql> show global status like '%log%written'; -- 日志写入速度监控
++-----------------------+-------------+
+| Variable_name         | Value       |
++-----------------------+-------------+
+| Innodb_os_log_written | 11863974912 |
++-----------------------+-------------+
+1 row in set (0.00 sec)
+
+mysql> show global status like '%a%written'; -- 脏页写入速度监控
++----------------------------+------------+
+| Variable_name              | Value      |
++----------------------------+------------+
+| Innodb_data_written        | 2395576320 | -- 目前为止写的总的数据量，单位字节
+| Innodb_dblwr_pages_written | 1806643    |
+| Innodb_pages_written       | 1806688    | -- 写数据页的数据
++----------------------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT @@sql_mode;
++----------------------------------------------------------------+
+| @@sql_mode                                                     |
++----------------------------------------------------------------+
+| STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION |
++----------------------------------------------------------------+
+1 row in set (0.00 sec)
+
+# To change the SQL mode at runtime, set the global or session sql_mode system variable using a SET statement
+    SET GLOBAL sql_mode = 'modes';
+    SELECT @@GLOBAL.sql_mode;
+
+    SET SESSION sql_mode = 'modes';
+    SELECT @@SESSION.sql_mode;
+
+# Important 
+    SQL mode and user-defined partitioning. Changing the server SQL mode after creating and inserting data into partitioned tables can cause major changes in the behavior of such tables, and could lead to loss or corruption of data. It is strongly recommended that you never change the SQL mode once you have created tables employing user-defined partitioning.
+    When replicating partitioned tables, differing SQL modes on the master and slave can also lead to problems. For best results, you should always use the same server SQL mode on the master and slave.
+
+更改/etc/my.cnf 
+    [mysqld]
+    sql_mode=NO_ENGINE_SUBSTITUTION 
+考虑到数据的兼容性和准确性，MySQL就应该运行在严格模式下，无论开发环境还是生产环境，否则代码移植到线上可能产生隐藏的问题.
+
+sql_mode常用值说明:
+    SQL语法支持类:
+        ONLY_FULL_GROUP_BY: 对于GROUP BY聚合操作，如果在SELECT中的列，HAVING或者ORDER BY子句的列，没有在GROUP BY中出现，那么这个SQL是不合法的。
+        ANSI_QUOTES: 启动ANSI_UOTES后，不能用双引号来引用字符串，因为“”被解释为标识符，作用与`一样，设置之后，update t set f1="" ... 
+        PIPES_AS_CONCAT: 启动PIPES_AS_CONCAT将||视为字符窜的连接操作而非或运算符，这和Oracle数据库是一样的，也和字符串的拼接函数CONCAT()相类似.
+        NO_TABLE_OPTIONS: 启用后，使用SHOW CREATE TABLE不会输出
+
+    ANSI: This mode changes syntax and behavior to conform more closely to standard SQL. Equivalent to [REAL_AS_FLOAT, PIPES_AS_CONCAT, ANSI_QUOTES, IGNORE_SPACE,ONLY_FULL_GROUP_BY]
+
+    
+    STRICT_TRANS_TABLES: INSERT、UPDATE出现少值或无效值如何处理
+        1. 转给int的空值，严格模式下非法，若启用非严格模式则变为0，产生一个warning
+        2. Out of Range, 变成插入最大边界值
+        3. A value is missing when a new row to be inserted does not contain a value for a non-NULL column that has no explicit DEFAULT clause in its definition.
+    
+    NO_ZERO_IN_DATE:
+    
+    NO_ZERO_DATE:
+    
+    ERROR_FOR_DIVISION_BY_ZERO:
+    
+    NO_AUTO_CREATE_USER:
+    
+    NO_ENGINE_SUBSTITUTION:
+```
+
