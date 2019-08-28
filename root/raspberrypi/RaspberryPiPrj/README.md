@@ -34,6 +34,8 @@ Raspberry Pi Awesome Project
 - [ctripcorp Apollo 分布式配置中心](/root/raspberrypi/RaspberryPiPrj/ctripcorpApollo/README.md)
 - [Monitor Linux Performance](/root/raspberrypi/RaspberryPiPrj/MonitorLinuxPerformance/README.md)
 - [Monitor network bandwidth](/root/raspberrypi/RaspberryPiPrj/MonitorBandwidth/README.md)
+- [Recommended system](/root/raspberrypi/RaspberryPiPrj/RecommendedSystem/README.md)
+- [Linux Performance optimization](/root/raspberrypi/RaspberryPiPrj/Linux101/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)

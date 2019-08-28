@@ -4,6 +4,7 @@ Redis Crash Course
 Introduction
 ------------
 > Redis is an in-memory key-value store known for its flexibility, performance, and wide language support.
+> Redis是互联网技术领域最为广泛的存储中间件[Remote Dictionary Service] "远程字典服务".Redis以其超高的性能、完美的文档、简洁易懂的源码和丰富的客户端库支持在开源中间件领域广泛好评。
 
 Install the Build and Test Dependecies
 --------------------------------------
@@ -258,3 +259,58 @@ GET: 1162790.62 requests per second
         * 
     - Set
     - ZSet
+
+面试问题
+--------
+```
+1. Redis能用来做什么?
+    缓存：是Redis使用最多的领域，相比Memcache更加容易理解、使用和控制
+    分布式锁：
+    Redis业务应用范围非常广泛：
+        点赞数、评论数、点击数 hash
+        ID列表(排序) zset
+        标题、摘要、作者和封面信息用于列表展示 hash 
+        缓存近期热帖，减少数据库压力 hash 
+        实际情况下需求可能没有太多，因为请求压力不大的情况下，很多数据都可以直接从数据库中查询，但请求压力大，以前通过数据库直接存取的数据则必须要挪到缓存里
+
+2. Redis有哪些数据结构?
+    字符串String, 字典Hash, 列表List, 集合Set, 有序集合Sort Set 
+    HyperLogLog, Geo, Pub/Sub,
+    Bloom Filter, Redis Search, Redis-ML 
+
+3. Redis分布式锁？
+    setnx争抢锁，抢到之后，expire给锁加上一个过期时间，防止忘记释放锁 
+    如果在setnx之后，expire之前进程意外Crash或者重启维护，会怎样？
+        同时把setnx和expire合成一条指令使用 
+
+4. 假如Redis里面有1亿个key,其中有10w个key是以某种固定的前缀开头，如何将他们全部找出来?
+    使用keys指令扫描指定模式的key列表,由于Redis是单线程，keys指令会导致线程阻塞一段时间，线上服务会停顿，知道指令执行完毕，服务才回复，这个时候可以使用scan指令，scan指令可以无阻塞的提取出指定模式的可以列表，但是会有一定的重复概率，在客户端做一次去重操作，整体花费会比keys指令时间长
+
+5. 如果使用redis做异步队列？
+    一般使用list结构作为队列，rpush生产消息，lpop消费消息，当lpop没有消息的时候，适当sleep重试
+    list指令中还有一个blpop,在没有消息可消费的情况下会阻塞直到消息到来
+    如何生产一次消费多次？可以使用pub/sub主题订阅模式，可以实现1:N的消息队列
+    pub/sub有什么缺点？在消费者下线的情况下，生产的消息会丢失，可以使用专门的消息队列RabbitMQ
+    redis如何实现延迟队列？可以使用sort set,使用时间戳作为score.消息内容作为key调用zadd来生产消息，消费者使用zrangebyscore指令获取N秒之前的数据轮询进程处理
+
+6. 如果大量的Key需要设置同一时间过期，需要注意什么?
+    如果大量的Key过期时间设置的过于集中，到过期时间，redis可能出现短暂的卡顿现象，一般需要在时间上加上一个随机值，使得过期时间分散一些
+
+7. Redis如何做持久化?
+    bgsave做镜像全量持久化, aof做增量持久化，因为bgsave会耗费较长时间，在停机时候会导致大量丢失数据，所以需要aof配合使用。在redis实例重启时，优先使用aof来恢复内存的状态，如果没有aof日志，就会使用rdb文件来恢复.
+    Redis会定期做aof重写，压缩aof文件日志大小，Redis4.0之后有混合持久化的功能，将bgsave的全量和aof的增量做了融合处理，这样即保证恢复的效率又兼顾数据的安全
+     取决于aof日志sync 属性的配置，如果不要求性能，在每次写指令时都sync一下磁盘，就不会丢失数据，但是高性能的要求下每次都sync是不现实的，一般都是定时sync,比如1s1次，这时候最多会丢失1s数据.
+     bgsave原理是什么： fork, cow,fork是指redis通过创建子线程来进行bgsave操作, cow指copy on write，子进程创建后，父子进程共享数据段，父进程继续提供读写服务，写脏的页面数据会逐渐和子进程分离开来
+
+8. Pipeline的优势？
+    可以将多次I/O往返的时间缩减为一次，前提是pipeline执行的指令之间没有因果相关性，使用redis-benchmark进行压力测试的时候可以发现影响热地说QPS峰值的一个重要因素是pipeline批次指令的数目.
+
+9. Redis同步机制了解么?
+    Redis可以使用主从同步，从从同步，第一次同步时，主节点做一次bgsave,并同时将后续修改操作记录到内存buffer,待完成后将rdb文件全量同步复制到节点，复制节点接受完成后将rdb镜像加载到内存，加载完成后，在通知主节点将期间修改的操作记录同步到复制节点进行重放就完成同步过程.
+
+10. 是否使用过Redis集群，集群的原理是什么?
+    Redis Sentinal高可用，在master宕机时会自动将slave提升为master,继续提供服务
+    Redis Cluster 扩展性，单个redis内存不足时，使用cluster进行分片存储.
+
+Redis内置Lua脚本引擎
+```
