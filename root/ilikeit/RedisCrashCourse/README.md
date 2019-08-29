@@ -20,6 +20,18 @@ $ sudo apt-get install build-essential tcl make gcc
 Download, Compile, and Install Redis 
 ------------------------------------
 ```
+# Docker:
+
+# 拉取redis镜像
+$ docker pull redis 
+
+# 运行redis容器
+$ docker run --name myredis -d -p6379:6379 redis 
+
+# 执行容器中的redis-cli, 可以直接使用命令行操作redis
+$ docker exec -it myredis redis-cli 
+
+# GitHub源代码编译 
 # Since we won't need to keep the source code that we'll compile long term, we will build in the **~** directory.
 $ cd ~ 
 
@@ -245,20 +257,206 @@ GET: 1162790.62 requests per second
     6. Being based on epoll/kqueue, the Redis event loop is quite scalable. Redis has already been benchmarked at more than 60000 connections, and was still able to sustain 50000 q/s in these conditions. 
 ```
 
-* Redis Data Types:
-    - Strings
-        * Strings are the most basic kind of Redis value. Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image or a serialized Ruby object.
-        * A String value can be max 512 Megabytes in length. 
-        * Use Strings as atomic counters using commands in the INCR family: INCR, DECR, INCRBY. 
-        * Append to strings with the APPEND command.
-        * Use Strings as a random access vectors with GETRANGE and SETRANGE.
-        * Encode a lot of data in little space, or create a Redis backed Bloom Filter using GETBIT and SETBIT.
-    - List 
-        * 
-    - Hash 
-        * 
-    - Set
-    - ZSet
+Redis 基础数据结构
+------------------
+```
+- String字符串
+    * 字符串string是Redis最简单的数据结构，Redis所有的数据结构都是以唯一的key字符串作为名称，然后通过这个唯一的key值来获取响应的value数据，不同类型的数据结构的差异就在于value的结构不一样.
+    * Redis字符串是动态字符串，内部结构实现类似Java的ArrayList,采用预分配冗余空间的方法来减少内存的频繁分配。内部当前字符串实际分配的空间capacity一般要高于实际字符串长度len,当字符串长度小于1M时，扩容都是加倍现有的空间，如果超过1M，扩容一次只会多扩1M空间,字符串最大长度为512M.
+    * Strings are the most basic kind of Redis value. Redis Strings are binary safe, this means that a Redis string can contain any kind of data, for instance a JPEG image or a serialized Ruby object.
+    * A String value can be max 512 Megabytes in length. 
+    * Use Strings as atomic counters using commands in the INCR family: INCR, DECR, INCRBY. 
+    * Append to strings with the APPEND command.
+    * Use Strings as a random access vectors with GETRANGE and SETRANGE.
+    * Encode a lot of data in little space, or create a Redis backed Bloom Filter using GETBIT and SETBIT.
+- List列表
+    * Redis的列表相当于Java语言中的LinkedList,Redis的list的插入和删除操作非常快，时间复杂度O(1),但是索引定位很慢，时间复杂度为O(n).当列表弹出最后一个元素之后，该数据结构自动被删除，内存被回收
+    * Redis列表结构常用来做异步队列使用，将需要延后处理的任务结构序列化字符串塞进Redis的列表，另一个线程从这个列表中轮询数据进行处理
+    * lindex: 相当于Java链表的get(int index)方法，需要对链表进行遍历，性能随着参数index增大而变差
+    * ltrim: start_index和end_index定义一个区间，区间外的值删除，可以通过ltrim实现一个定长的链表
+    * Redis
+      列表底层存储使用的快速链表quicklist的结构，首先在列表元素较少的情况下使用一块连续的内存存储，这个结构是ziplist，压缩列表，将所有元素紧挨着一起存储，分配的是一块连续的内存，当数量比较大的时候才会改成quicklist，因为普通链表需要附加指针空间太大，比较浪费空间，而且会加重内存的碎片化。所以Redis将链表和ziplist结合起来组成quicklist，将多个ziplist使用双向指针串联使用，既满足快速的插入删除性能，又不会出现太大的空间冗余.
+- Hash哈希
+    * Redis的字典相当于Java语言中的HashMap，属于无序字典，内部实现同Java中HashMap同样的数组+链表二维结构，第一维hash的数组位置碰撞时，就会将碰撞的元素使用联表串联起来.
+    * Redis的字典值只能是字符串，Java的HashMap的字典很大时，rehash是耗时的操作,需要一次性全部rehash，Redis为了高性能，不能阻塞服务，采用渐进式rehash策略.渐进式rehash会在rehash的同时，保留新旧两个hash结构，查询时同时查询两个hash结构，然后在后续定时任务以及hash操作指令中，循序渐进将旧hash的内容一点点迁移到新的hash结构中，当搬迁完成后，就会使用新的hash结构取而代之.
+    * hash移除最后一个元素之后，该数据结构自动被删除，内存被回收
+    * hash结构的存储消耗要高于单个字符串
+- Set集合
+    * Redis的集合相当于Java语言中HashSet, 内部实现相当于一个特殊的字典，字典中所有的value都是一个值NULL.
+    * 集合中最后一个元素移除之后，数据结构自动删除，内存被回收
+- ZSet有序集合
+    * Redis的zset类似于Java的SortedSet和HashMap的结合体，一方面是一个set,保证内部value的唯一性,另一方面可以给每个value赋于一个score，代表这个value的排序权重，内部实现用的是一种叫做跳跃列表的数据结构
+    * zset中的最后一个value被移除后，数据结构自动删除，内存被回收
+
+```
+
+Common Redis Command 
+--------------------
+```
+健值对
+192.168.1.215:6379[1]> set name codehole
+OK
+192.168.1.215:6379[1]> get name
+"codehole"
+192.168.1.215:6379[1]> exists name
+(integer) 1
+192.168.1.215:6379[1]> del name
+(integer) 1
+192.168.1.215:6379[1]> get name
+(nil)
+
+批量健值对
+192.168.1.215:6379[1]> set name1 codehole
+OK
+192.168.1.215:6379[1]> set name2 holycoder
+OK
+192.168.1.215:6379[1]> mget name1 name2 name3
+1) "codehole"
+2) "holycoder"
+3) (nil)
+192.168.1.215:6379[1]> mset name1 boy name2 girl name3 unknown
+OK
+192.168.1.215:6379[1]> mget name1 name2 name3
+1) "boy"
+2) "girl"
+3) "unknown"
+192.168.1.215:6379[1]>
+
+过期和Set命令扩展
+192.168.1.215:6379[1]> set name codehole
+OK
+192.168.1.215:6379[1]> get name
+"codehole"
+192.168.1.215:6379[1]> expire name 5  # 5s 过期
+(integer) 1
+192.168.1.215:6379[1]> get name
+(nil)
+192.168.1.215:6379[1]> setex name 5 codehole  # 5s后过期，等价于set+expire
+OK
+192.168.1.215:6379[1]> get name
+"codehole"
+192.168.1.215:6379[1]> get name
+(nil)
+192.168.1.215:6379[1]> setnx name codehole # 如果name不存在就执行set创建
+(integer) 1
+192.168.1.215:6379[1]> get name
+"codehole"
+192.168.1.215:6379[1]> setnx name holycoder
+(integer) 0  # 因为name已经不存在，所以set创建不成功
+192.168.1.215:6379[1]> get name
+"codehole"  # 没有更改
+
+计数--整数进行自增操作,自增范围是signed long的最大最小值，超过这个值，Redis会报错
+192.168.1.215:6379[1]> set age 30
+OK
+192.168.1.215:6379[1]> incr age
+(integer) 31
+192.168.1.215:6379[1]> incrby age 5
+(integer) 36
+192.168.1.215:6379[1]> incrby age -5
+(integer) 31
+192.168.1.215:6379[1]> set codehole 9223372036854775807  # Long.Max 
+OK
+192.168.1.215:6379[1]> incr codehole
+(error) ERR increment or decrement would overflow
+
+队列: 右边进左边出
+192.168.1.215:6379[1]> rpush books python java golang
+(integer) 3
+192.168.1.215:6379[1]> llen books
+(integer) 3
+192.168.1.215:6379[1]> lpop books
+"python"
+192.168.1.215:6379[1]> lpop books
+"java"
+192.168.1.215:6379[1]> lpop books
+"golang"
+192.168.1.215:6379[1]> lpop books
+(nil)
+
+栈: 右边进右边出
+192.168.1.215:6379[1]> rpush books python java golang
+(integer) 3
+192.168.1.215:6379[1]> llen books
+(integer) 3
+192.168.1.215:6379[1]> rpop books
+"golang"
+192.168.1.215:6379[1]> rpop books
+"java"
+192.168.1.215:6379[1]> rpop books
+"python"
+192.168.1.215:6379[1]> rpop books
+(nil)
+
+List操作
+192.168.1.215:6379[1]> rpush books python java golang
+(integer) 3
+192.168.1.215:6379[1]> lindex books 1  # O(n) 慎用
+"java"
+192.168.1.215:6379[1]> lrange books 0 -1  # 获取所有元素 O(n) 慎用
+1) "python"
+2) "java"
+3) "golang"
+192.168.1.215:6379[1]> ltrim books 1 -1  # O(n) 慎用
+OK
+192.168.1.215:6379[1]> lrange books 0 -1
+1) "java"
+2) "golang"
+192.168.1.215:6379[1]> ltrim books 1 0  # 清空整个列表,因为区间范围长度为负
+OK
+192.168.1.215:6379[1]> llen books
+(integer) 0
+
+hash 字典
+192.168.1.215:6379[1]> hset books java "think in java"  # 命令行的字符串如果包含空格要用引号括起来
+(integer) 1
+192.168.1.215:6379[1]> hset books golang "concurrency in go"
+(integer) 1
+192.168.1.215:6379[1]> hset books python "python cookbook"
+(integer) 1
+192.168.1.215:6379[1]> hgetall books  # entries(), key和value间隔出现
+1) "java"
+2) "think in java"
+3) "golang"
+4) "concurrency in go"
+5) "python"
+6) "python cookbook"
+192.168.1.215:6379[1]> hlen books
+(integer) 3
+192.168.1.215:6379[1]> hget books java
+"think in java"
+192.168.1.215:6379[1]> hset books golang "learning go programming"
+(integer) 0
+192.168.1.215:6379[1]> hget books golang
+"learning go programming"
+192.168.1.215:6379[1]> hmset books java "effective java" python "learning python" golang "modern golang programming"
+OK
+192.168.1.215:6379[1]> hset user age 26  # hincrby 计数增加
+(integer) 1
+192.168.1.215:6379[1]> hincrby user age 1
+(integer) 27
+
+set集合
+192.168.1.215:6379[1]> sadd books python
+(integer) 1
+192.168.1.215:6379[1]> sadd books python  # 重复
+(integer) 0
+192.168.1.215:6379[1]> sadd books java golang
+(integer) 2
+192.168.1.215:6379[1]> smembers books   # 注意顺序，和插入的并不一致，因为set是无序的
+1) "python"
+2) "golang"
+3) "java"
+192.168.1.215:6379[1]> sismember books java  # 查询某个value是否存在，相当于contains(o)
+(integer) 1
+192.168.1.215:6379[1]> sismember books rust
+(integer) 0
+192.168.1.215:6379[1]> scard books  # 获取长度相当于count() 
+(integer) 3
+192.168.1.215:6379[1]> spop books  # 弹出一个值
+"golang"
+
+```
 
 面试问题
 --------
@@ -313,4 +511,12 @@ GET: 1162790.62 requests per second
     Redis Cluster 扩展性，单个redis内存不足时，使用cluster进行分片存储.
 
 Redis内置Lua脚本引擎
+```
+
+<antirez> blog
+---------------
+
+* English has been my pain for 15 years
+-------------------------------------
+```
 ```
