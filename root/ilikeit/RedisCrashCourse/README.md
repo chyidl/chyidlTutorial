@@ -257,8 +257,9 @@ GET: 1162790.62 requests per second
     6. Being based on epoll/kqueue, the Redis event loop is quite scalable. Redis has already been benchmarked at more than 60000 connections, and was still able to sustain 50000 q/s in these conditions. 
 ```
 
-Redis 基础数据结构
-------------------
+Redis (data structures server)
+------------------------------
+> Redis 本质上是一个数据结构服务器(data structures server)以高效的方式实现多种数据结构
 ```
 - String字符串
     * 字符串string是Redis最简单的数据结构，Redis所有的数据结构都是以唯一的key字符串作为名称，然后通过这个唯一的key值来获取响应的value数据，不同类型的数据结构的差异就在于value的结构不一样.
@@ -287,8 +288,78 @@ Redis 基础数据结构
 - ZSet有序集合
     * Redis的zset类似于Java的SortedSet和HashMap的结合体，一方面是一个set,保证内部value的唯一性,另一方面可以给每个value赋于一个score，代表这个value的排序权重，内部实现用的是一种叫做跳跃列表的数据结构
     * zset中的最后一个value被移除后，数据结构自动删除，内存被回收
+    * zset 内部的排序功能是通过[跳跃列表]数据结构实现的，因为zset需要支持随机的插入和删除，所以不能使用数组表示。当新元素需要查询，首先要定位到特定位置的插入点，这样才能保证联表的有序，通常会使用二分查找寻找插入点，但是二分查找的对象必须是数组，只有数组才能支持快速位置定位，联表不行.
+
+
+- 容器型数据结构
+    * list/set/zset/hash 这四种数据结构是容器型数据结构
+        - create if not exitst: 如果容器不存在，则创建，在操作，
+        - drop if no elements : 如果容器内没有元素，则立即删除元素，释放内存 
+- 过期时间
+    * Redis 所有数据结构都可以设置过期时间，Redis会自动删除响应的对象,需要注意，过期是以对象为单位，比如hash过期是整个hash对象的过期，而不是其中某个子key 
+    * 如果一个字符串已经设置了过期时间，然后set方法会覆盖掉原有的过期时间设置
+```
+
+Redis Data Structure Internal implementation
+--------------------------------------------
+* Memory efficiency: 存储效率
+    - Redis是专用于存储数据，对于计算机资源的主要消耗就在于内存的占用，因此节省内存是非常重要的方面，这意味着Redis一定要非常精细地考虑压缩数据、减少内存碎片等问题
+* Fast reponse time: 快速响应时间
+    - 与快速响应时间相对的是高吞吐量(high throughout). Redis是用于提供在线访问，对于单个请求的响应时间要求很高，因此，快速响应时间是比高吞吐量更重要。
+* Single-threaded:单线程 
+    - Redis的性能瓶颈不在于CPU资源、而在于内存访问和网络I/O，采用单线程的设计带来的好处、极大简化数据结构和算法实现，相反Redis通过异步I/O和pipeline机制实现高速并发访问
+* dict 
+    - dict是一个维护key-value映射关系的数据结构，Redis中
+* sds
+* ziplist 
+* quicklist 
+* skiplist 
+```
 
 ```
+
+分布式锁
+--------
+> 分布式应用进行逻辑处理时经常会遇到并发问题，比如一个操作要修改用户状态，修改状态需要先读取用户状态，在内存里进行修改，改完再存回去,如果这样的操作同时进行，就会出现并发问题，因为读取和保存状态两个操作不是原子操作(原子操作是指不会被线程调度机制打断的操作，这种操作一旦开始就一直运行到结束，中间不会有任何的context
+> switch线程切换)
+```
+分布式锁就是为了解决并发执行的问题，Redis分布式锁使用很广泛。一般首先setnx (set if not exist)指令，然后del指令删除
+192.168.1.215:6379[1]> setnx lock:chyiyaqing true
+(integer) 1
+192.168.1.215:6379[1]> expire lock:chyiyaqing 5
+(integer) 1
+... do something critical ... 
+192.168.1.215:6379[1]> del lock:chyiyaqing
+(integer) 1
+
+如果逻辑执行到中间出现异常，可能回导致del指令没有执行，就会陷入死锁，锁永远得不到释放
+所以我们在拿到锁之后，设置过期时间，这样即使中间出现异常也可以保证5秒之后锁自动释放
+如果在setnx和expire之间服务器进程突然挂掉，就会导致expire得不到执行，也会造成死锁;问题根源在于setnx和expire两条指令不是原子指令。Redis事务特点是全部执行或全部放弃。
+Redis2.8版本中加入set指令的扩展参数，是的setnx和expire指令可以一起执行
+
+192.168.1.215:6379[1]> set lock:chyidl true ex 5 nx  # setnx 和expire组合一起原子执行，分布式锁的基础
+OK
+... do something critical ... 
+192.168.1.215:6379[1]> del lock:chyidl
+(integer) 0
+
+超时问题:
+    Redis分布式锁不能解决超时问题，如果在加锁和释放锁之间的逻辑执行过长，以至于超出锁的超时限制，就会出现问题，因为第一个线程持有锁过期，第一个线程逻辑还没有执行完，第二个线程就提前获取锁，导致代码不能严格的串行执行,为了避免出现上面问题，Redis分布式锁不能用于较长时间的任务。
+解决办法：为set指令的value参数设置一个随机数，释放锁时先匹配随机数是否一致，然后再删除key,这是为了确保当前线程占用的锁不会被其他线程释放，除非这个锁被服务器释放，但是匹配value和删除key不是一个原子操作，Redis也没有提供类似于delifequals这样的指令.需要使用Lua
+# delifequals 
+if redis.call("get", KEYS[1]) == ARGV[1] then 
+    return redis.call("del", KEYS[1])
+else
+    return 0 
+end 
+
+可重复锁:
+    线程在持有锁的情况下再次请求加锁，如果一个锁支持同一个线程的多次加锁，那么这个锁就是可重入，Java语言中ReentrantLock就是可重入锁，Redis分布式锁如果要支持可重入，需要对客户端set方法进行包装，使用线程Threadlocal变量存储当前持有锁的计数. 
+
+
+```
+- [reentrantlock.py](root/ilikeit/RedisCrashCourse/script/py/reentrantlock.py)
+- [RedisWithReentrantLock.java](root/ilikeit/RedisCrashCourse/script/java/RedisWithReentrantLock.java)
 
 Common Redis Command 
 --------------------
@@ -456,6 +527,54 @@ set集合
 192.168.1.215:6379[1]> spop books  # 弹出一个值
 "golang"
 
+zset集合
+192.168.1.215:6379[1]> zadd books 9.0 "think in java"
+(integer) 1
+192.168.1.215:6379[1]> zadd books 8.9 "java concurrency"
+(integer) 1
+192.168.1.215:6379[1]> zadd books 8.6 "java cookbook"
+(integer) 1
+192.168.1.215:6379[1]> zrange books 0 -1  # 按score排序列出，参数区间为排名范围
+1) "java cookbook"
+2) "java concurrency"
+3) "think in java"
+192.168.1.215:6379[1]> zrevrange books 0 -1  # 按score逆序列出,参数区间为排名范围
+1) "think in java"
+2) "java concurrency"
+3) "java cookbook"
+192.168.1.215:6379[1]> zcard books  # 相当于count() 
+(integer) 3
+192.168.1.215:6379[1]> zscore books "java concurrency"  # 获取指定value的score 
+"8.9000000000000004"  # 内部的score使用double类型进行存储，所以存在小数点精度问题
+192.168.1.215:6379[1]> zrank books "java concurrency"  # 排名
+(integer) 1
+192.168.1.215:6379[1]> zrangebyscore books 0 8.91  # 根据分值区间遍历 zset 
+1) "java cookbook"
+2) "java concurrency"
+192.168.1.215:6379[1]> zrangebyscore books -inf 8.91 withscores  # 根据分值区间(-∞, 8.91] 遍历zset，同时返回score值，inf代表infinite, 无穷大
+1) "java cookbook"
+2) "8.5999999999999996"
+3) "java concurrency"
+4) "8.9000000000000004"
+192.168.1.215:6379[1]> zrem books "java concurrency"  # 删除value 
+(integer) 1
+192.168.1.215:6379[1]> zrange books 0 -1
+1) "java cookbook"
+2) "think in java"
+192.168.1.215:6379[1]>
+
+过期时间
+192.168.1.215:6379[1]> set codehole yoyo
+OK
+192.168.1.215:6379[1]> expire codehole 600
+(integer) 1
+192.168.1.215:6379[1]> ttl codehole
+(integer) 597
+192.168.1.215:6379[1]> set codehole yoyo
+OK
+192.168.1.215:6379[1]> ttl codehole
+(integer) -1
+
 ```
 
 面试问题
@@ -518,5 +637,10 @@ Redis内置Lua脚本引擎
 
 * English has been my pain for 15 years
 -------------------------------------
+```
+```
+
+Redis Review Source Code
+------------------------
 ```
 ```
