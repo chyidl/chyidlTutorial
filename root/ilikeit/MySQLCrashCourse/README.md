@@ -1222,6 +1222,15 @@ Delete file : hq.history_20190813.sql completed.
 [ '2019-08-14 12:47:19' ] 'run' ((), {}) 9401.08 sec
     This error appears when the connection between MySQL client and MySQL server times out. Essentially, it took too long for the query to return data so the connection gets dropped.
 
+# How to easily import multiple sql files into a MySQL databases?
+    In Windows(powershell), open a terminal, go to the content folder and write:
+        $ copy /b *.sql all_files.sql   
+        This concate all files in only one, making it really quick to import with PhpMyAdmin. 
+        $ cat *.sql | C:mysql.exe -u user -p database 
+    In Linux and macOS(Bash), Put the result in a separate directory to be safe 
+        $ mkdir concatSql 
+        $ cat *.sql > ./concatSql/all_files.sql 
+        $ cat *.sql | mysql -u user -p database 
 ```
 
 aliyun RDS config

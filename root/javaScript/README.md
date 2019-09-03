@@ -136,4 +136,43 @@ JavaScript是一种动态类型语言，变量的类型没有限制，变量可�
 
 JavaScript引擎的工作方式，先解析代码，获取所有被声明的变量，然后再一行一行的运行。造成的结果就是所有的变量的声明语句，都会被提升到代码的头部。这就叫做变量的提升(hoisting).
 
+标识符identifier: 
+    1. 第一个字符可以是任意Unicode字母以及美元符号$和下划线
+    2. 第二个字符及后面字符，除了Unicode字母、美元符号和下划线还可以使用数字
+JavaScript保留字：
+    arguments, break, case, catch, class, const, continue, debugger, default, delete, do, else, enum, eval, export, extends, false, finally, for, function, if, implements, import, in, instanceof, interface, let, new, null, package, private, protected, public, return, static, super, switch, this, throw, true, try, typeof, var, void, while, with, yield
+
+JavaScript提供两种注释:
+    单行注释 // 
+    多行注释 /* */ 
+
+JavaScript Block: 区块
+    区块对于var命令不构成单独的作用域，与不属于区块的情况没有任何区别
+
+ =   : 赋值表达式
+ === : 严格相等运算符
+ ==  : 相等运算符 
+
+JavaScript条件语句:
+    if - else : 
+    switch    :  注意，switch语句后面的表达式与case语句后面的表达式比较运算结果时，采用的是严格相等运算符(===)而不是相等运算符(==),意味着比较时不会发生类型转换
+    三元运算符 (条件) ? 表达式1: 表达式2 
+
+JavaScript循环语句:
+    while: 
+    do ... while: 
+    for: 初始化表达式initialize, 条件表达式test, 递增表达式increment
+    break: 跳出代码块或循环
+    continue: 立刻终止本轮循环、返回循环结构的头部
+    break语句和continue语句只针对最内层循环
+
+JavaScript: 
+    标签label: 相当于定位符，用于跳转程序的任意位置
+
+```
+
+数据类型
+--------
+```
+
 ```

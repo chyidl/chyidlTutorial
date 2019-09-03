@@ -176,6 +176,7 @@ mv ${CUR_LOGS_PATH}/error.log ${LOGS_PATH}/error_$(YESTERDAY).log
 kill -USR1 ${cat /home/pi/chyidl.com/nginx/logs/nginx.pid}
 
 # Nginx 搭建静态资源Web服务器
+    alias chyidlTutorial/;
     autoindex on; 
     limit_rate rate; -- limits the rate of response transmission to a client. 
 
