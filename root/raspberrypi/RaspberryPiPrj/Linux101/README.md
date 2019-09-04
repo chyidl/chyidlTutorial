@@ -247,6 +247,7 @@ Linux为每一个CPU都维护一个就绪队列，将活跃进程(即正在运�
     in: (interrupt) 每秒中断的次数
     r: (Running or Runnable) 就绪队列的长度，正在运行和等待CPU的进程数 
     b: (Blocked) 处于不可中断睡眠状态的进程数 
+    us(user), sy(system)
 # pidstat -w : 查看每个进程上下文切换
 ╰─ pidstat -w 5
 Linux 4.15.0-1043-raspi2 (RPi3BPlus)    09/02/2019      _aarch64_       (4 CPU)
@@ -291,5 +292,182 @@ Linux 4.15.0-1043-raspi2 (RPi3BPlus)    09/02/2019      _aarch64_       (4 CPU)
 06:30:24 PM  1001     31606      0.40      0.00  ssh
     cswch/s: 每秒自愿上下文切换(voluntary context switches) 
     nvcswch/s: 每秒非自愿上下文切换(non voluntary context switches) 次数
+    自愿上下文切换: 是指进程无法获取所需资源，导致的上下文切换 (I/O,内存等系统资源不足，发生自愿上下文切换)
+    非自愿上下文切换: 是指进程由于时间片耗尽等原因，被系统强制调度，进而发生上下文切换. (大量进程在争抢CPU时，就容易发生非自愿上下文切换)
 
+# sysbench: 多线程基准测试工具,评估不同系统参数下的数据库负载情况 
+$ sudo apt-get install sysbench 
+
+# vmstat查看空闲系统上下文切换次数
+$ vmstat 1 1  # 间隔1秒输出1组数据
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 0  0 296308  25092 193212 562232    1    1    59    16    6   20  3  2 94  1  0
+
+# 以10个线程运行5分钟的基准测试，模拟多线程切换问题
+$ sysbench --threads=10 --max-time=300 threads run 
+
+$ vmstat 1
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 8  0 296308  21200 193328 563824    1    1    59    16    8   21  3  2 94  1  0
+ 5  0 296308  21076 193328 563824    0    0     0     0 58111 199585  6 68 26  0  0
+ 4  0 296308  21092 193328 563824    0    0     0     0 62652 207594  7 64 29  0  0
+ 7  0 296308  21092 193328 563824    0    0     0     0 69439 235364  7 65 28  0  0
+ 5  0 296308  21092 193328 563824    0    0     0     0 61985 202831  6 66 28  0  0
+11  0 296308  18976 193328 563824    0    0     0     0 43352 225974 11 74 14  0  0
+
+# pidstat 查看CPU和进程上下文切换
+$ pidstat -wt  # 表示输出线程的上下文切换指标
+Average:      UID       PID   cswch/s nvcswch/s  Command
+Average:        0         7     12.02      0.00  ksoftirqd/0
+Average:        0         8     61.02      0.00  rcu_preempt
+Average:        0         9      2.99      0.00  rcu_sched
+Average:        0        11      0.44      0.00  migration/0
+Average:        0        14      0.31      0.00  migration/1
+Average:        0        15     10.52      0.00  ksoftirqd/1
+Average:        0        20      7.35      0.00  ksoftirqd/2
+Average:        0        24      0.31      0.00  migration/3
+Average:        0        25      7.60      0.00  ksoftirqd/3
+Average:        0       158      0.37      0.00  mmcqd/0
+Average:        0       585      0.19      0.00  jbd2/mmcblk0p2-
+Average:        0       923    152.93      0.00  kworker/u8:1
+Average:        0      1302      0.06      0.00  irqbalance
+Average:        0      1339      0.12      0.00  wpa_supplicant
+Average:      111      1356      9.96      0.00  redis-server
+Average:     1001      1409      1.00      0.06  gitstatusd-linu
+Average:      114      1856      0.12      0.00  postgres
+Average:      114      1857      0.19      0.00  postgres
+Average:     1001      3167      3.86      9.78  tmux: server
+Average:     1001      3484      0.50      0.31  ssh
+Average:     1001      3745      1.00      0.00  gitstatusd-linu
+Average:     1001      3934      1.00      0.00  gitstatusd-linu
+Average:     1001      4480      1.00      0.00  gitstatusd-linu
+Average:     1001      5726      1.00      0.00  gitstatusd-linu
+Average:        0     15260    107.16      0.00  kworker/u8:0
+Average:     1001     17249      1.00      0.00  gitstatusd-linu
+Average:        0     17546     24.91      0.00  kworker/3:2
+Average:     1001     17624      1.00      0.00  gitstatusd-linu
+Average:     1001     17862     42.84      9.65  sshd
+Average:     1001     18009      0.75      0.31  ssh
+Average:        0     18030     27.09      0.00  kworker/1:1
+Average:        0     18917     27.15      0.00  kworker/2:2
+Average:        0     18918     24.35      0.00  kworker/0:0
+Average:     1001     19299      1.00    392.78  pidstat
+Average:     1001     22813      1.00      0.12  gitstatusd-linu
+Average:     1001     24193      0.12      0.00  ssh
+Average:     1001     29139      1.99      0.93  ssh
+Average:        0     30734      0.06      0.00  kworker/1:0
+Average:     1001     31596      1.00      0.06  gitstatusd-linu
+Average:     1001     31606      0.12      0.00  ssh
+
+# /proc/interrupts
+    /proc是Linux的虚拟文件系统，用于内存空间与用户空间之间的通信
+    /proc/interrupts: 提供只读中断使用情况
+    
+$ watch -d cat /proc/interrupts  # -d 参数表示高亮显示变化的区域
+Every 2.0s: cat /proc/interrupts                                            RPi3BPlus: Tue Sep  3 18:34:26 2019
+           CPU0       CPU1       CPU2       CPU3
+  2:   25926363   28694111   26208155   27868740  bcm2836-timer   1 Edge      arch_timer
+  6:     495749     492728     495516     489639  ARMCTRL-level   1 Edge      3f00b880.mailbox
+  7:          1          0          0          0  ARMCTRL-level   2 Edge      VCHIQ doorbell
+  9:          0          0          0          0  bcm2836-pmu   9 Edge      arm-pmu
+ 15:  238759636  221331334  238767919  221407049  ARMCTRL-level  64 Edge      dwc_otg, dwc_otg_pcd, dwc_otg_hcd:usb1
+ 41:  902420602  884308649  902303339  884295265  ARMCTRL-level  41 Edge      dwc_otg_sim-fiq
+ 48:          0          0          0          0  ARMCTRL-level  48 Edge      bcm2708_fb dma
+ 50:          0          0          0          0  ARMCTRL-level  50 Edge      DMA IRQ
+ 52:          0          0          0          0  ARMCTRL-level  52 Edge      DMA IRQ
+ 53:          0          0          0          0  ARMCTRL-level  53 Edge      DMA IRQ
+ 56:          0          0          0          0  ARMCTRL-level  56 Edge      DMA IRQ
+ 57:      74887      74814      74435      79090  ARMCTRL-level  57 Edge      DMA IRQ
+ 58:     642815     643607     643224     644507  ARMCTRL-level  58 Edge      DMA IRQ
+ 61:          5          1          4          4  ARMCTRL-level  61 Edge      bcm2835-auxirq
+ 68:          0          0          0          0  ARMCTRL-level  85 Edge      3f804000.i2c
+ 69:          0          0          0          0  ARMCTRL-level  86 Edge      3f204000.spi
+ 71:     122183     121499     121409     121484  ARMCTRL-level  88 Edge      mmc0
+ 77:    4332185    4346108    4174511    4521970  ARMCTRL-level  94 Edge      mmc1
+151:          4          1          3          4  bcm2835-auxirq   0 Edge      ttyS0
+154:          0          0          0          0  lan78xx-irqs  17 Edge      usb-001:004:01
+IPI0:  19104211   20438903   23613907   19665014       Rescheduling interrupts
+IPI1:       167       2592       2562       2614       Function call interrupts
+IPI2:         0          0          0          0       CPU stop interrupts
+
+RES(Rescheduling interrupts) 重调度中断: 唤醒空闲状态CPU调度新任务运行,这是多处理器系统SMP中调度器用来分散任务到不同CPU的机制，通常也被称为处理器间中断(Inter-Processor Interrupts, IPI)
+```
+
+CPU使用率
+---------
+```
+Linux 作为一个多任务操作系统，将每个CPU的时间划分为很短时间片，再通过调度器轮流分配给各个任务使用，因此造成多任务同时运行的错觉.
+
+# 查看节拍率HZ的内核可配选项
+$ sudo grep 'CONFIG_HZ='  /boot/config-$(uname -r)
+[sudo] password for pi:
+CONFIG_HZ=250
+
+USER_HZ = 100 # 1/100 秒 == 10ms 
+
+/proc/stat : 系统统计CPU和任务统计信息
+$ cat /proc/stat | grep ^cpu
+cpu  557751 33324 475185 101564282 165505 0 49939 0 0 0   # 以下各行累加值
+cpu0 178851 12729 72549 25343809 38723 0 18555 0 0 0
+cpu1 129852 5960 136469 25399794 40833 0 5550 0 0 0
+cpu2 124554 5430 133233 25408847 42225 0 20515 0 0 0
+cpu3 124493 9204 132932 25411831 43722 0 5318 0 0 0
+    
+    user (us) 代表用户态CPU的时间
+    nice (ni) 代表低优先级用户态CPU时间，进程nice值为1-19之间的CPU时间，nice值可取范围是-20到19,数值越大，优先级反而越低
+    system (sys): 代表内核态CPU的时间
+    idle (id): 代表空闲时间，不包括等待IO的时间iowait 
+    iowait (wa): 代表等待I/O的CPU时间
+    irq (hi): 代表处理硬中断的CPU时间
+    softirq (si): 代表处理软件中断的CPU时间
+    steal (st): 代表当系统运行在虚拟机中时候，被其他虚拟机占用的CPU时间
+    guest (guest): 代表通过虚拟化运行其他操作系统的时间，也就是运行虚拟机是的CPU时间
+    guest_nice (gnice): 代表低优先级运行虚拟机的时间
+
+CPU 使用率: 就是除去空闲外的其他时间占总CPU时间的百分比
+
+性能分析工具给出的都是间隔一段时间的平均CPU使用率
+
+$ top : 显示系统总体的CPU和内存使用情况，以及各个进程的资源使用情况
+    默认每3秒刷新一次，默认是所有CPU的平均值，按下数字1，切换到每个CPU的使用率
+
+$ pidstat: 显示进程CPU使用率 
+    %usr: 用户态CPU使用率
+    %system: 内核态CPU使用率
+    %guest: 运行虚拟机CPU使用率
+    %wait: 等待CPU使用率
+    %CPU: 总的CPU使用率
+
+$ ps: 只显示每个进程的资源使用情况
+
+GDB: The GNU Project Debugger: 程序调试
+$ sudo apt-get install linux-tools-common 
+$perf: Linux2.6.31之后性能分析工具,以性能时间采集为基础,不仅可以分析系统的各种时间和内核性能，还用于分析指定应用程序的性能问题.
+$ perf top : 显示占用CPU时钟最多的函数或者指令，用于查找热点函数
+采样率          事件类型            事件总数
+Samples: 53K of event 'cycles:ppp', Event count (approx.): 1734264782
+Overhead  Shared Object                                   Symbol
+  32.68%  [kernel]                                        [k] arch_cpu_idle
+   4.58%  [kernel]                                        [k] _raw_spin_unlock
+   3.28%  [kernel]                                        [k] _raw_spin_unlock
+   1.45%  perf                                            [.] d_print_comp_inn
+   1.37%  perf                                            [.] rb_next
+   1.27%  containerd                                      [.] _start
+   1.20%  perf                                            [.] __hists__add_ent
+   1.20%  perf                                            [.] perf_hpp__is_dyn
+   1.19%  [kernel]                                        [k] rcu_idle_exit
+   1.16%  perf                                            [.] sort__sym_cmp
+   1.11%  [kernel]                                        [k] __softirqentry_t
+   1.01%  perf                                            [.] __symbols__inser
+   0.89%  libc-2.27.so                                    [.] strcmp
+   0.82%  libc-2.27.so                                    [.] __libc_calloc
+   0.80%  [kernel]                                        [k] format_decode
+   0.79%  perf                                            [.] sort__dso_cmp
+   0.77%  [kernel]                                        [k] vsnprintf
+   0.74%  [kernel]                                        [k] tick_nohz_idle_e
+no symbols found in /bin/dash, maybe install a debug package?
+
+Overhead: 该符号的性能事件所有采样中的比例
 ```

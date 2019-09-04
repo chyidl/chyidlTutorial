@@ -1,6 +1,48 @@
 Oh-My-Zsh+Vim+Tmux OMG!
 ======================
 
+Use Homebrew zsh instead of the OS X Default
+--------------------------------------------
+> If the zsh shell that Apple provides in Mac OS X is out of date, as it has been in Yosemite and EI Capitan, it's trivial to install the latest version, available on homebrew.
+```
+# Confirm the current active zsh version:
+$ zsh --version 
+zsh 5.3 (x86_64-apple-darwin18.0)
+
+# Confirm the location of zsh:
+$ which zsh 
+/bin/zsh 
+
+# Confirm the shell that's set for your user:
+$ dscl . -read /Users/$USER UserShell 
+UserShell: /bin/zsh
+
+The . is short for locahost, and the $USER variable expands t your username. 
+
+# Upgrade zsh with brew 
+$ brew install zsh 
+
+# Confirm brew's zsh location 
+Apple provides /usr/local for OS X users to install packages to and it's already in your system path, so that's where brew installs, Confirm it:
+$ ls -la /usr/local/bin/zs* 
+lrwxr-xr-x  1 chyiyaqing  admin  27 Sep  3 23:42 /usr/local/bin/zsh -> ../Cellar/zsh/5.7.1/bin/zsh
+lrwxr-xr-x  1 chyiyaqing  admin  33 Sep  3 23:42 /usr/local/bin/zsh-5.7.1 -> ../Cellar/zsh/5.7.1/bin/zsh-5.7.1
+
+# Use the zsh that brew installed, use dscl. 
+$ sudo dscl . -create /Users/$USER UserShell /usr/local/bin/zsh 
+After that, restart your Terminal to have it take effect.
+$ which zsh 
+/usr/local/bin/zsh 
+$ zsh --version 
+zsh 5.7.1 (x86_64-apple-darwin18.2.0)
+
+# Confirm You're Running Brew zsh 
+$ echo $SHELL 
+
+# Handling Upgrades 
+$ sudo chown -R $(whoami):admin /usr/local 
+```
+
 Oh-My-Zsh + Bullet Train Theme 
 ------------------------------
 * Requirements:
