@@ -469,5 +469,68 @@ Overhead  Shared Object                                   Symbol
    0.74%  [kernel]                                        [k] tick_nohz_idle_e
 no symbols found in /bin/dash, maybe install a debug package?
 
-Overhead: 该符号的性能事件所有采样中的比例
+第一列Overhead: 该符号的性能事件所有采样中的比例
+第二列Shared Object: 是指函数或指令所在动态共享对象(Dynamic Shared Object) 内核、进程名、动态链接库名、内核模块名
+第三列Object: 动态共享对象的类型 [.]用户空间的可执行程序或动态链接库 [k]内核空间
+第四列Symbol: 函数名，函数名未知时使用十六进制地址表示
+
+$ perf record -g  # 展示系统性能信息并保存
+[sudo] password for pi:
+^C[ perf record: Woken up 13 times to write data ]
+[ perf record: Captured and wrote 3.657 MB perf.data (71445 samples) ]
+
+$ pref report  # 解析保存后的perf record 
+```
+![Linux perf report command](/imgs/raspberrypi/Linux101/perf_report.png?raw=true)
+
+* Nginx + PHP Performance Test
+```
+$ sudo apt-get install docker.io sysstat linux-tools-common apache2-utils 
+
+ab (apache bench): 是一个常用的HTTP服务性能测试工具
+    虚拟机01: Nginx Php  - Web服务器
+        $ docker run --name nginx -p 10000:80 -itd feisky/nginx 
+        $ docker run --name phpfpm -itd --network container:nginx feisky/php-fpm 
+    虚拟机02: ApacheBench - Web客户端
+        $ ab -c 10 -n 100 http://chyidl.com:10000/  
+             -c 10      # 并发10个请求
+             -n 100     # 总共测试100请求
+        This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
+        Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+        Licensed to The Apache Software Foundation, http://www.apache.org/
+        Benchmarking chyidl.com (be patient).....done
+        Server Software:        nginx/1.15.4
+        Server Hostname:        chyidl.com
+        Server Port:            10000
+        Document Path:          /
+        Document Length:        9 bytes
+        Concurrency Level:      10
+        Time taken for tests:   6.783 seconds
+        Complete requests:      100
+        Failed requests:        0
+        Total transferred:      17200 bytes
+        HTML transferred:       900 bytes
+        Requests per second:    14.74 [#/sec] (mean)
+        Time per request:       678.304 [ms] (mean)
+        Time per request:       67.830 [ms] (mean, across all concurrent requests)
+        Transfer rate:          2.48 [Kbytes/sec] received
+
+        Connection Times (ms)
+                      min  mean[+/-sd] median   max
+        Connect:      168  199 144.6    176    1206
+        Processing:   272  414 180.0    371    1309
+        Waiting:      272  399 148.3    371    1309
+        Total:        444  613 225.2    549    1572
+
+        Percentage of the requests served within a certain time (ms)
+          50%    549
+          66%    590
+          75%    611
+          80%    626
+          90%    876
+          95%   1304
+          98%   1529
+          99%   1572
+         100%   1572 (longest request)
+
 ```

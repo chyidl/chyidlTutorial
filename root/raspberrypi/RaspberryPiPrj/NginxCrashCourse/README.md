@@ -185,10 +185,77 @@ kill -USR1 ${cat /home/pi/chyidl.com/nginx/logs/nginx.pid}
     upstream local {
         server 127.0.0.1:8080; 
         ...
-
     }
 
-```
+# GoAccess 实施分析Access log文件
+https://goaccess.io 
+GoAccess is an open source real time Web log analyzer and interactive viewer that runs in a terminal in linux systems or through your browser.
+$ sudo apt-get install goaccess 
+$ goaccess logs/access.log -o  html/report.html --real-time-html  --time-format='%H:%M:%S' --date-format='%d/%b/%Y' --log-format=COMBINED 
+
+# TLS/SSL 安全协议 
+SSL: Secure Sockets Layer
+TLS: Transport Layer Security 
+1995 SSL3.0 -> 1999 TLS1.0 -> 2006 TLS1.1 -> 2008 TLS1.2 -> 2018 TLS1.3 
+ISO/OSI七层模型: 物理层-> 数据链路层 -> 网络层 -> 传输层 -> 会话层 -> 表示层 -> 应用层 
+四层模型: 链路层 -> 网络层 -> 传输层 -> 应用层 
+HTTP协议所属于应用层
+SSL/TLS 所属于表示层
+    握手
+    交换密钥
+    告警
+    对称加密应用数据
+SSL/TLS安全密码套件: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 
+    ECDHE: 密钥交换 -- 密钥交换算法
+    RSA:身份验证 -- 身份验证算法
+    AES_128_GCM: 密码, AES算法、128强度、GCM模式 -- 对称加密算法、强度、分组模式
+    SHA256: MAC 或 PRF -- 签名hash算法
+
+# 对称加密算法和非对称加密算法
+对称加密:
+    RC4序列算法: 密钥序列1010、明文0110、密钥 异或 明文 = 密文1100
+    异或运算有对称特性
+非对称加密算法:
+    公钥加密后的明文转变为密文，密文只能使用私钥才能解密
+    私钥加密后的明文转变为密文，密文只能使用公钥才能解密
+
+# PKI公钥基础设施
+    CA机构负责颁发证书
+    证书类型:
+        域名验证 domain validated DV证书 
+        组织验证 organization validated OV证书 
+        扩展验证 extended validation EV证书 
+    证书链:
+        根证书-二级证书-子证书
+
+# TLS/SSL 通讯过程
+    验证身份   
+    打成安全套件共识
+    传递密钥
+    加密通讯
+    1. Client Hello         --->   
+                    - Support Ciphers 
+                    - Random number 
+                    - Seconds ID(if any) 
+                            <---      2. Server Hello 
+                    - choose ciphers 
+                    - random number 
+                    - Session ID 
+                    - (Re-use, or new) 
+                            <---      3. Server Certification 
+    Check Certificate validity
+                            <---      4. Server Hello Done 
+    5. Create Key           --->      
+Exchange Message    - Encrypted       6. Key generation 
+                    premanter secret
+    6. Key generation
+    CipherSpec Exchange     --->    
+    7. Finished
+                            <---      7. CipherSpec Exchange 
+                                        Finished.
+
+``` 
+![PKI 公钥基础设施](/imgs/raspberry/NginxCrashCourse/pki.png?raw=true)
 
 Nginx架构基础
 --------
