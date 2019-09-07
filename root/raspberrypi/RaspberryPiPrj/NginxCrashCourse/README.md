@@ -74,10 +74,16 @@ Nginx版本发布情况mainline:
             ngx_modules.c -- 指定编译时那些模块
 2. 编译 
     $ ./configure --help 
-    $ ./configure --prefix=/usr/local
+    $ ./configure --prefix=/usr/local/openresty --with-http_ssl_module 
     $ make -j4 
     $ sudo make install 
-    $ nginx 
+    $ nginx   # 启动nginx 
+    # If you get following error, when you try to start nginx... 
+    nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)
+    nginx: [emerg] bind() to [::]:80 failed (98: Address already in use)
+    # Then it means nginx or some other process is already using port 80. 
+    # you can kill it using:
+    $ sudo fuser -k 80/tcp 
 3. Nginx配置语法
     配置文件由指令与指令快构成
     每条指令以;分号结尾，指令与参数间以空格符号分隔
@@ -176,22 +182,55 @@ mv ${CUR_LOGS_PATH}/error.log ${LOGS_PATH}/error_$(YESTERDAY).log
 kill -USR1 ${cat /home/pi/chyidl.com/nginx/logs/nginx.pid}
 
 # Nginx 搭建静态资源Web服务器
+    log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '"$http_user_agent" "$http_x_forwarded_for"';
+
+    gzip on;
+    gzip_min_length 10;
+    gzip_comp_level 2;
+    gzip_types text/plain application/x-javascript text/css application/xml text/javascript applicatio/x-httpd-php image/jpeg image/gif image/png; 
+
     alias chyidlTutorial/;
-    autoindex on; 
-    limit_rate rate; -- limits the rate of response transmission to a client. 
+    autoindex on; # Enables or disables the directory listing output.
+    set $limit_rate 10k; -- limits the rate of response transmission to a client. 
 
 # Nginx 搭建具备缓存功能的反向代理服务
-    添加上游服务
+    反向代理 + 多个上游服务
+
     upstream local {
         server 127.0.0.1:8080; 
         ...
+    }
+    
+    proxy_cache_path /tmp/nginxcache levels=1:2 keys_zone=my_cache:10m max_size=1g 
+        inactive=60m use_temp_path=off;
+
+    location / {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr; 
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        proxy_cache my_cache;
+        proxy_cache_key $host$uri$is_args$args;
+        proxy_cache_valid 200 304 302 1d;
+
+        proxy_pass http://local;
     }
 
 # GoAccess 实施分析Access log文件
 https://goaccess.io 
 GoAccess is an open source real time Web log analyzer and interactive viewer that runs in a terminal in linux systems or through your browser.
 $ sudo apt-get install goaccess 
-$ goaccess logs/access.log -o  html/report.html --real-time-html  --time-format='%H:%M:%S' --date-format='%d/%b/%Y' --log-format=COMBINED 
+Websocket: 协议
+    
+    location /report.html {
+        alias /home/chyi/chyidl.com/ReverseProxy/nginx/html/report.html;
+    }
+
+$ sudo goaccess logs/access.log -o  html/report.html --real-time-html  --time-format='%H:%M:%S' --date-format='%d/%b/%Y' --log-format=COMBINED 
+WebSocket server ready to accept new client connections
+
 
 # TLS/SSL 安全协议 
 SSL: Secure Sockets Layer
@@ -254,6 +293,40 @@ Exchange Message    - Encrypted       6. Key generation
                             <---      7. CipherSpec Exchange 
                                         Finished.
 
+# Encrypt with Nginx Server
+Certificate Authority(CA) that provides an easy way to obtain and install free TLS/SSL certificates, thereby enabliing encrypted 
+    Installing Certbot 
+    $ sudo add-apt-repository ppa:certbot/certbot   # First, add the repository 
+    $ sudo apt-get update  # Then, update the package list to pick up the new repository package information 
+    $ sudo apt-get install python-certbot-nginx  # Finally, install Cerbot's Nginx package with apt-get.
+    Config HTTPS 
+    $ certbot --nginx --nginx-server-root=/home/chyi/chyidl.com/ReverseProxy/nginx/conf/ -d chyidl.com
+
+# OpenResty & Lua Language
+OpenResty is a dynamic web platform based on NGINX and LuaJIT.
+    # Download Source Code 
+    $ wget https://openresty.org/download/openresty-1.15.8.1.tar.gz 
+    $ tar -xvf openresty-1.15.8.1.tar.gz 
+    $ cd openresty-1.15.8.1 
+    $ tree -L 1
+    .
+    ├── bundle   -- Nginx 源代码存储位置
+    ├── configure
+    ├── COPYRIGHT
+    ├── patches
+    ├── README.markdown
+    ├── README-windows.txt
+    └── util
+    3 directories, 4 files
+    $ ./configure --prefix=/home/chyi/chyidl.com/openresty 
+    $ make -j2
+    $ make install 
+    
+    location /lua {
+        default_type text/html;
+        content_by_lua 'ngx.say("User-Agent: ", ngx.req.get_headers()["User-Agent"])';
+    }
+    
 ``` 
 ![PKI 公钥基础设施](/imgs/raspberry/NginxCrashCourse/pki.png?raw=true)
 
