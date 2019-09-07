@@ -333,7 +333,230 @@ OpenResty is a dynamic web platform based on NGINX and LuaJIT.
 Nginx架构基础
 --------
 ```
-```
+Master - Worker 架构模型，Worker数量与CPU核心数相匹配、多个Worker之间共享数据
+#Nginx请求处理流程 
+    Nginx 内部有三大状态机:
+        传输层状态机    -- 传输层
+        HTTP状态机      -- 应用层
+        Mail状态机      -- 
+    Nginx核心属于：非阻塞的事件驱动处理引擎(epoll)，通常使用异步需要使用状态机识别和处理.使用线程池处理磁盘阻塞调用。大多数Nginx作为负载均衡和反向代理使用
+    Nginx可以通过协议将请求传输给HTTP,Mail,Stream(TCP)代理，或者利用应用层相关协议FastCGI, uWSGI, SCGI,代理应用服务器
+    Web/Email/TCP流量 --> 
+
+# Nginx进程结构
+    1. 单进程结构 -- 适合开发调试使用
+    2. 多进程结构 --  Nginx要提高高可用性，由于线程使用共享内存，所以个别线程错误会引发连锁反应导致Nginx不可用.
+        Master Process -- 父进程 : 主要用作Worker进程的监控管理
+        Worker Process -- 子进程 : 处理请求，需要和CPU核心数一致并且绑定，可以提高使用CPU缓存的命中率
+        Cache Manager  -- 子进程 : 缓存的管理
+        Cache loader   -- 子进程 ：缓存的加载
+        Worker, Cache manager, Cache loader之间的进程间通信通过使用共享内存。
+
+$ ps -ef | grep nginx  # 查看当前进程ID，父进程ID
+pi       10280     1  0 Sep02 ?        00:00:00 nginx: master process ./sbin/nginx
+pi       11958 10280  0 11:22 ?        00:00:00 nginx: worker process
+pi       11959 10280  0 11:22 ?        00:00:00 nginx: worker process
+$ sudo ./sbin/nginx -s reload  # 退出旧Worker进程,重新创建Worker进程
+$ ps -ef | grep nginx
+pi       10280     1  0 Sep02 ?        00:00:00 nginx: master process ./sbin/nginx
+pi       11985 10280  0 11:26 ?        00:00:00 nginx: worker process
+pi       11986 10280  0 11:26 ?        00:00:00 nginx: worker process
+$ kill -SIGHUP 10280 
+$ ps -ef | grep nginx
+pi       10280     1  0 Sep02 ?        00:00:00 nginx: master process ./sbin/nginx
+pi       11999 10280  0 11:29 ?        00:00:00 nginx: worker process
+pi       12000 10280  0 11:29 ?        00:00:00 nginx: worker process
+$ kill -SIGTERM 11999  # 退出Worker进程
+$ ps -ef | grep nginx
+pi       10280     1  0 Sep02 ?        00:00:00 nginx: master process ./sbin/nginx
+pi       12000 10280  0 11:29 ?        00:00:00 nginx: worker process
+pi       12011 10280  0 11:31 ?        00:00:00 nginx: worker process
+
+Nginx许多命令本质上是向Nginx Master进程发送信号
+
+# Nginx 进程管理: 信号
+    Nginx多进程间通信使用共享内存、信号量，进程间管理通常使用信号
+    Master进程:
+        监控Worker进程
+            CHLD: --当子进程终止会向父进程发送CHLD信号 
+        管理Worker进程-接收信号
+            TERM, INT -- 立刻停止Nginx进程 
+            QUIT -- 优雅停止Nginx进程
+            HUP -- 重新加载Nginx配置文件
+            USR1 -- 重新打开日志文件，对日志文件进行切割
+            USR2 -- kill -USR2 Nginx Master pid 
+            WINCH -- kill -WINCH Nginx Master pid 
+    Worker 进程-接收信号
+            TERM, INT 
+            QUIT 
+            USR1
+            WINCH 
+    Nginx命令 
+        reload: HUP  
+        reopen: USR1
+        stop: TERM 
+        quit: QUIT 
+
+# Nginx reload nginx.conf 原理
+$ sudo ./sbin/nginx -s reload 
+    1. 向Nginx Master进程发送HUP信号 (reload命令)
+    2. Nginx Master 进程检验conf/nginx.conf配置语法是否正确
+    3. Nginx master进程打开新的监听端口[子进程会继承所有父进程打开的端口和文件]
+    4. Nginx Master 进程使用新配置文件启动新的Worker子进程
+    5. Nginx Master 进程会向老的Worker子进程发送QUIT信号(优雅关闭)
+    6. 老的Worker进程关闭监听句柄，处理完当前连接后结束进程
+
+# Nginx 热升级原理
+    1. 将旧的Nginx可执行文件替换成新的Nginx可执行文件(注意备份旧的Binary文件)
+    2. 向旧的Nginx Master 进程发送USR2信号
+    3. 旧的Nginx Master进程修改pid文件名，加上后缀.oldbin 
+    4. 旧的Nginx Master进程使用新的Nginx binary文件启动新的Nginx Master进程 [目前新的Nginx Master 进程是就Nginx Master进程的子进程]
+    5. 向旧的Nginx Master进程发送WINCH信号，关闭旧的Nginx Worker 进程 
+    6. 回滚，向旧的Nginx Master 发送HUP，向新的Nginx Master发送QUIT.
+
+# 关闭worker进程 
+    QUIT Nginx Worker进程 HTTP 请求
+        1. 设置定时器 Worker_Shutdown_Timeout 
+        2. 关闭监听句柄 
+        3. 关闭空闲的连接
+        4. 再循环中等待全部连接关闭
+        5. 退出进程
+
+# Nginx事件
+    Nginx属于事件(网络事件)驱动框架，每一个网络连接对应两个事件(读事件、写事件)
+
+    应用层->传输层->网络层->链路层->[以太网]
+                                        |--> 链路层->网络层
+                                        |<-- 链路层 <--|
+                                    [广域网]    
+                                        |--> 链路层->网络层
+                                        |<-- 链路层 <--|
+    应用层<-传输层<-网络层<-链路层<-[以太网]
+
+TCP Stream 报文: 
+    TCP/IP 协议层级
+        应用层:                                       DATA [HTTP, SMTP, POP3, IMAP, SSH, DNS]
+        传输层:               Source Port/Dest Port + DATA [TCP, UDP]
+        网络层:         Source IP/Dest IP + Source Port/Dest Port + DATA [IP, ICMP, DHCP, ARP]
+    数据链路层:         Source Mac addr/Dest Mac addr + Source IP/Dest IP + Source Port/Dest Port + DATA + Footer(Ethernet) 
+
+    HTTP协议拆分成小的报文，网络层报文MTU = 1500 byte，报文大小称为MSS
+
+TCP协议与非阻塞接口:
+    读事件:
+        Accept 建立连接
+        Read读消息
+    写事件:
+        Write写消息
+        TCP协议         ：非阻塞接口
+    请求建立TCP连接事件 : 读事件中Accep建立连接事件
+    TCP连接可读事件     : 读事件中Read读消息
+    TCP连接关闭事件     : 读事件中Read 
+    TCP连接可写事件     : 写事件中Write
+    异步读写磁盘事件    : 
+    定时器事件          : 
+
+    事件收集分发器: 事件属于生产者
+
+# Wireshark 
+    Capture using this filter: host 176.122.152.20 and port 443
+    TCP三次握手 192.168.1.188   176.122.152.20.16clouds.com TCP 78  54927 → https(443) [SYN] Seq=0 Win=65535 Len=0 MSS=1460 WS=64 TSval=998541513 TSecr=0 SACK_PERM=1
+        Transmission Control Protocol, Src Port: 54927 (54927), Dst Port: https (443), Seq: 0, Len: 0  [进程端口与进程端口通信]
+        Internet Protocol Version 4, Src: 192.168.1.188 (192.168.1.188), Dst: 176.122.152.20.16clouds.com (176.122.152.20)
+    TCP 三次握手:
+        Src -> Dst  [SYN] 0x002
+        Src <- Dst  [PSH, ACK] 0x018
+        Src -> Dst  [ACK] 0x010
+        Src <- Dst  [SYN, ACK] 0x012 
+
+# Nginx 事件驱动模型
+    Nginx事件循环 Nginx Event Loop 
+        1. Wait For Event On Connections(epoll Wait) --> 2, 3 
+        2. Linux Kernel 将事件存放在事件队列中 -- > 4 
+        3. Get New Events 
+        4. 事件存放队列 
+        5. Process The Events 
+    Nginx Events Queue Processing Cycle:
+        
+# epoll 原理
+    Nginx如何快速从Linux Kernel中获取等待处理的事件
+    epoll, Kqueue, Poll, Select : 网络事件收集分发器, epoll和Kqueue性能要远远好于poll, Select 
+    epoll要求高并发连接中，每次处理活跃连接数量占比要很小
+    epoll实现原理:
+        红黑树: 
+        链表: 
+        
+        eventpoll: 
+            +lock
+            +mtx
+            +wq
+            +poll_wait 
+            +rdllist: 红黑树中每个结点都是基于epitem结构中的rdllink成员 
+            +rbr: 红黑树中每个结点都是基于epitem结构中的rbn成员
+            +ovflist 
+            +user 
+        
+        epitem:
+            +rbn 
+            +rdllink 
+            +next 
+            +ffd 
+            +nwait 
+            +pwqlist 
+            +ep 
+            +fllink 
+    epoll使用:
+        创建 
+        操作: 添加/修改/删除
+        获取句柄
+        关闭
+
+# Nginx 请求切换
+    Traditional Server: Apache, Tomcat : 线程仅处理一个连接，并且依赖OS进程调度实现并发
+    Nginx Server: 线程同时处理多连接，用户态代码完成连接切换，尽量减少操作系统进程切换.
+    操作系统分配的事件片的长度一般是5ms - 800ms,Nginx Worker将进程优先级配置-19,这样操作系统往往会分配比较大的时间片.
+    
+# 同步&异步 阻塞&非阻塞
+    阻塞&非阻塞主要是操作系统底层C库提供的方法或者系统调用，方法可能会导致进程进入Sleep状态(当前条件不满足的情况下，操作系统主动切换进程)。非阻塞方法是操作系统不会在进程的事件片没有使用完之前提前切换进程.
+    阻塞调用: 进程间主动切换
+    非阻塞调用: 代码控制是否切换新任务
+        非阻塞调用下的同步：
+            Openresty同步调用代码
+                local client = redis:new()
+                client:set_timeout(30000)
+                local ok, err = client:connect(ip, port) // 同步调用，内部实现是非阻塞方法
+                if not ok then 
+                    ngx.say('failed:', err)
+                    return 
+                end 
+
+        标准的异步调用
+            rc = ngx_http_read_request_body(r, ngx_http_upstream_init);
+            if (rc >= NGX_HTTP_SPECIAL_RESPONSE) {
+                return rc;
+            }
+
+# Nginx 模块
+    使用Nginx第三方模块需要
+        首先编译进Nginx binary 
+        熟悉第三方模块提供哪些配置项
+        熟悉第三方模块何时被开启
+        熟悉第三方模块的变量
+    $ ./configure 
+    $ cd objs/
+    $ vim ngx_modules.c 
+        find ngx_module_t *ngx_modules[] 
+    $ cd src/http/modules/
+    $ vim ngx_http_gzip_filter_module.c 
+        find ngx_command_t -- 表示支持的指令名
+
+    Nginx模块：高内聚，抽象 
+
+         
+
+
+```     
+![Nginx 网络事件抓包](/imgs/raspberrypi/NginxCrashCourse/Wireshark_Capture.png?raw=True)
 
 详解HTTP模块
 -----------
