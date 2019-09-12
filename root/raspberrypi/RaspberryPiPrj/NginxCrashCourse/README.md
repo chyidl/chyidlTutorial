@@ -74,7 +74,7 @@ Nginx版本发布情况mainline:
             ngx_modules.c -- 指定编译时那些模块
 2. 编译 
     $ ./configure --help 
-    $ ./configure --prefix=/usr/local/openresty --with-http_ssl_module 
+    $ ./configure --prefix=/usr/local/openresty --with-http_ssl_module --add-module=../tengine-2.3.2/modules/ngx_slab_stat/
     $ make -j4 
     $ sudo make install 
     $ nginx   # 启动nginx 
@@ -552,15 +552,206 @@ TCP协议与非阻塞接口:
 
     Nginx模块：高内聚，抽象 
 
+    Nginx 模块分类
+        NGX_CORE_MODULE:
+            events:
+            core  
+            errlog 
+            thread_pool
+            openssl 
+            http
+            mail
+            stream
+        NGX_CONF_MODULE: 负责解析nginx.conf文件
+            ngx_conf_module 
+        NGX_EVENT_MODULE:
+            epoll
+            event_core : 所有子模块共有通用模块 
+        NGX_HTTP_MODULE:
+            ngx_http_core_module 
+            请求处理模块
+            响应过滤模块
+            upstream相关模块
+        NGX_MAIL_MODULE:
+            ngx_mail_core_module 
+        NGX_STREAM_MODULE:
+            ngx_stream_core_module 
          
+# Nginx 连接池
+    ngx_cycle_t 数据结构
+        connections : 连接池数组 worker_connections default 512;
+        read_events : default 与connections 数量大小一致
+        write_events :  
+        connections 指向的连接池中每个连接所需要的读写事件都以相同的数组序号对应着read_events, write_events读写事件数组，所以相同序号下三个数组的元素是配合使用的.
 
+    ngx_connection_s : 每个连接使用结构体
+        void            *data;
+        ngx_event_t     *read;      读事件
+        ngx_event_t     *write;     写事件
+        ngx_socket_t    fd;
+        ngx_recv_pt     recv;
+        ngx_send_pt     send;   抽象解耦OS底层方法
+        off_t           sent;   bytes_send变量
+        ngx_log_t       *log;
+        ngx_pool_t      *pool;  初始connection_pool_size配置
+        int             type;
+        struct socketaddr *sockaddr;
+        socklen_t       socklen;
+        ngx_str_t       addr_text;
+        ngx_str_l       proxy_protocol_addr;
+        in_port_t       proxy_protocol_port;
+        ngx_buf_t       *buffer;
+        ngx_queue_t     queue;
+    ngx_event_s : 
 
+    内存池：减少内存碎片的产生、
+        连接内存池：connection_pool_size 256|512; bytes
+        请求内存池：request_pool_size 4k; 
+
+# Nginx Worker 进程间通讯
+    Nginx进程间的通讯方式
+        信号、共享内存(锁、Slab内存管理器)
+    共享内存:跨worker进程通讯
+        ngx_http_lua_api:  
+        rbtree: 红黑树
+            Ngx_stream_limit_conn_module  流控
+            Ngx_http_limit_conn_module
+            Ngx_stream_limit_req_module 
+            Ngx_http_file_cache 
+            Ngx_http_proxy_module 
+            Ngx_http_scgi_module 
+            Ngx_http_uwsgi_module 
+            Ngx_http_fastcgi_module 
+            Ngx_http_ssl_module 
+            Ngx_mail_ssl_module 
+            Ngx_stream_ssl_module 
+        单链表: 
+            Ngx_http_upstream_zone_module 
+            Ngx_stream_upstream_zone_module 
+    Slab内存分配管理:
+        Bestfit: 最多两倍内存消耗
+            合适小对象、避免碎片、避免重复初始化
+        ngx_slab_stat: 统计Slab使用状态 
+(Tengine) http://tengine.taobao.org/document/ngx_slab_stat.html
+    $ wget http://tengine.taobao.org/download/tengine-2.3.2.tar.gz
+    $ extract tengine-2.3.2.tar.gz 
+    $ cd tengine-2.3.2/modules/ngx_slab_stat 
+    $ cd openresty-1.15.8.1
+    $ ./configure --prefix=/home/chyi/chyidl.com/openresty --add-module=../tengine-2.3.2/modules/ngx_slab_stat/
+
+    location = /slab_stat {
+        slab_stat;
+    }
+
+    $curl https://chyidl.com/set                
+    STORED
+    $ curl https://chyidl.com/get 
+    8 
+    $ curl https://chyidl.com/slab_stat        
+    * shared memory: dogs
+    total:       10240(KB) free:       10168(KB) size:           4(KB)
+    pages:       10168(KB) start:00007FE18625E000 end:00007FE186C4E000
+    slot:           8(Bytes) total:           0 used:           0 reqs:           0 fails:           0
+    slot:          16(Bytes) total:           0 used:           0 reqs:           0 fails:           0
+    slot:          32(Bytes) total:         127 used:           1 reqs:           1 fails:           0
+    slot:          64(Bytes) total:           0 used:           0 reqs:           0 fails:           0
+    slot:         128(Bytes) total:          32 used:           2 reqs:           2 fails:           0
+    slot:         256(Bytes) total:           0 used:           0 reqs:           0 fails:           0
+    slot:         512(Bytes) total:           0 used:           0 reqs:           0 fails:           0
+    slot:        1024(Bytes) total:           0 used:           0 reqs:           0 fails:           0
+    slot:        2048(Bytes) total:           0 used:           0 reqs:           0 fails:           0
+
+# Nginx容器
+    数组：
+    链表：
+    队列：
+    哈希表：
+        ngx_hash_t 
+        ngx_hash_elt_t: 结构体
+        Nginx hash表主要应用于静态不变的内容
+            Max size
+            Bucket size 需要考虑CPU Cache Size对齐问题 
+            (http/stream) - variables: 
+                variables_hash_bucket_size 
+                variables_hash_max_size 
+            (http/stream) - map:
+                map_hash_bucket_size 
+                map_hash_max_size 
+            http proxy:
+                proxy_headers_hash_bucket_size 
+                proxy_headers_hash_max_size 
+            ngx_http_uwsgi_module:
+            ngx_http_scgi_module:
+            ngx_http_fastcgi_module 
+            http module:
+                ngx_http_referer_module:
+                    referer_hash_bucket_size 
+                    referer_hash_max_size 
+                ngx_http_ssi_module:
+                    ngx_cacheline_size 
+                    1024 
+                ngx_http_scrache_filter_module:
+                    ngx_cacheline_size 
+                server name:
+                    server_names_hash_bucket_size 
+                    server_names_hash_max_size 
+                MIME types:
+                    types_hash_bucket_size 
+        hash表遍历复杂度为O(n)
+    红黑树：
+        ngx_rbtree_t: 描述红黑树的结构体
+            root
+            sentinel 
+            insert 
+            ngx_rbtree_init() 
+            ngx_rbtree_insert()
+            ngx_rbtree_delete() 
+        红黑树：根结点，左子节点、右子节点、NIL哨兵节点;二叉查找树
+        红黑树做定时器，查找最小和最大值 
+        自平衡二叉查找树：
+            高度不会超过2倍的logn(n)
+            增删改查算法复杂度O(log(n))
+            遍历复杂度O(n)
+        Nginx中使用红黑树的模块:
+            ngx_conf_module: 
+            ngx_event_timer_rbtree 
+            Ngx_http_file_cache  
+            Ngx_http_geo_module 
+            Ngx_http_limit_conn_module 
+            Ngx_http_limit_req_module 
+            Ngx_http_lua_shdict:ngx.shared.DICT  LRU链表性质
+            resolver 
+            Ngx_stream_geo_module 
+            Ngx_stream_limit_conn_module 
+    基数数：
+
+# Nginx 动态模块
+    Nginx使用静态模块的过程：
+        Nginx Source + Module Souce --> Nginx Build System --> Nginx Executable 
+    动态模块-减少编译环节
+        Nginx Source + Module Source --> Nginx Build System --> Nginx Executable + Module Shared Object 
+
+    静态库:会将源代码直接编译到可执行二进制文件中
+    动态库:会在二进制文件中保留动态库的位置，执行时直接调用动态库
+
+    1. Configure 加入动态模块
+    2. 编译进binary 
+    3. 启动时初始化模块数组
+    4. 读取load_module配置 指明动态模块的路径
+    5. 打开动态库并加入模块数组
+    6. 基于模块数组开始初始化
+    
+    --with-http_xslt_module=dynamic
+    $ ./configure --prefix=/home/chyi/chyidl.com/nginx --with-http_image_filter_module=dynamic
+    $ cd modules && ls 
+    ngx_http_image_filter_module.so 
 ```     
 ![Nginx 网络事件抓包](/imgs/raspberrypi/NginxCrashCourse/Wireshark_Capture.png?raw=True)
 
 详解HTTP模块
 -----------
 ```
+
 ```
 
 反向代理与负载均衡

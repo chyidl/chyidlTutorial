@@ -355,8 +355,6 @@ end
 
 可重复锁:
     线程在持有锁的情况下再次请求加锁，如果一个锁支持同一个线程的多次加锁，那么这个锁就是可重入，Java语言中ReentrantLock就是可重入锁，Redis分布式锁如果要支持可重入，需要对客户端set方法进行包装，使用线程Threadlocal变量存储当前持有锁的计数. 
-
-
 ```
 - [reentrantlock.py](root/ilikeit/RedisCrashCourse/script/py/reentrantlock.py)
 - [RedisWithReentrantLock.java](root/ilikeit/RedisCrashCourse/script/java/RedisWithReentrantLock.java)
@@ -575,6 +573,162 @@ OK
 192.168.1.215:6379[1]> ttl codehole
 (integer) -1
 
+```
+
+延时队列
+--------
+```
+消息中间件 RabbitMQ, Kafka增加异步消息传递功能，Redis构建的消息队列不是专业的消息队列，没有非常多的高级特性，没有ACK保证。
+
+Redis list列表数据结构常用来作为异步消息队列使用，使用rpush/lpush 操作入队列，使用lpop和rpop出队列.
+如果Redis队列中为空，客户端可能会陷入pop死循环，不停的pop没有数据，这样会浪费生命的轮询，空轮训会拉高客户端的CPU，QPS.
+
+使用blpop/brpop代替lpop/rpop,阻塞读队列.此处注意--空闲连接的问题,如果线程一直阻塞blocking,Redis客户端连接就成为闲置连接，闲置过久，服务器会主动断开连接，减少闲置资源占用，这时候blpop/brpop会抛出异常.此处便携客户端消费者需要捕获异常，而且需要重试连接.
+
+sleep会阻塞当前的消息处理线程,会导致队列的后续消息处理出现延迟.
+
+延迟队列可以通过Redis的zset(有序列表)来实现，将消息序列化成一个字符串作为zset的value,消息到期处理时间作为score.然后使用多线程轮询zset获取到期的任务进行处理，多线程保障可用性，因为使用多线程需要考虑并发争抢任务，避免不能被多次执行.
+
+优化: 可以使用lua scripting 优化将zrangebyscore和zrem在服务端进行原子化操作，这样多个进程之间争抢任务就不会出现浪费.
+```
+```
+192.168.1.243:6379[1]> rpush notify-queue apple banana pear
+(integer) 3
+192.168.1.243:6379[1]> llen notify-queue
+(integer) 3
+192.168.1.243:6379[1]> lpop notify-queue
+"apple"
+192.168.1.243:6379[1]> llen notify-queue
+(integer) 2
+192.168.1.243:6379[1]> lpop notify-queue
+"banana"
+192.168.1.243:6379[1]> llen notify-queue
+(integer) 1
+192.168.1.243:6379[1]> lpop notify-queue
+"pear"
+192.168.1.243:6379[1]> llen notify-queue
+(integer) 0
+192.168.1.243:6379[1]> lpop notify-queue
+(nil)
+```
+
+位图 - 数据结构
+---------------
+```
+Redis提供位图数据结构，其实就是普通的字符串，也就是byte数组.可以使用普通的get/set直接获取和设置整个位图的内容，也可以使用位图操作getbit/setbit等将byte数组看成位数组来处理.
+
+Redis位数组是自动扩展，如果设置某个偏移位置超过现有的内容范围就会自动将位数组进行零扩充.
+Redis提供位图统计执行bitcount和位图查找bitpos, bitcount用来统计指定位置范围内1的个数，bitpos用来查找指定范围内出现第一个0或1的位置
+    bitcount统计用户一共签到多少天
+    bitpos指令查找用户从那一天开始第一次签到,如果指定范围参数[start, end]，就可以统计某一个时间范围内用户签到多少天。
+    start和end参数是字节索引，也就是说指定的位参数必须是8的倍数.
+
+bitfield: 三个子指令,分别是get/set/incrby都可以对指定片段进行读写,但是最多只能处理64个连续的位,如果超过64位，就需要使用多个子指令，bitfiled可以一次执行多个子指令.
+BITFILED command supports different subcommands:
+    SET <type> <offset> <value> -- Set the specified value and return its previous value. 
+    SET <type> <offset> - GET the specified value. 
+    INCRBY <type> <offset> <increment> -- Increment the specified counter.
+
+```
+```
+使用位操作将字符串设置为hello(不是直接使用set指令)首先需要得到hello的ASCII码，用Python命令行可以很方便地得到每个字符的ASCII的二进制值
+Python 3.7.4 (default, Sep  7 2019, 18:27:02)
+[Clang 10.0.1 (clang-1001.0.46.4)] on darwin
+Type "help", "copyright", "credits" or "license" for more information.
+>>> bin(ord('h'))
+'0b1101000'     #高位 -> 地位
+>>> bin(ord('e'))
+'0b1100101'
+>>> bin(ord('l'))
+'0b1101100'
+>>> bin(ord('l'))
+'0b1101100'
+>>> bin(ord('o'))
+'0b1101111'
+>>>
+使用redis-cli设置第一个字符,hello(0110100001100101011011000110110001101111),位数组的顺序和字符位的顺序是相反的。
+192.168.1.243:6379[1]> setbit str 1 1
+0
+192.168.1.243:6379[1]> setbit str 2 1
+0
+192.168.1.243:6379[1]> setbit str 4 1
+0
+192.168.1.243:6379[1]> setbit str 9 1
+0
+192.168.1.243:6379[1]> setbit str 10 1
+0
+192.168.1.243:6379[1]> setbit str 13 1
+0
+192.168.1.243:6379[1]> setbit str 15 1
+0
+192.168.1.243:6379[1]> setbit str 17 1
+0
+192.168.1.243:6379[1]> setbit str 18 1
+0
+192.168.1.243:6379[1]> setbit str 20 1
+0
+192.168.1.243:6379[1]> setbit str 21 1
+0
+192.168.1.243:6379[1]> setbit str 25 1
+0
+192.168.1.243:6379[1]> setbit str 26 1
+0
+192.168.1.243:6379[1]> setbit str 28 1
+0
+192.168.1.243:6379[1]> setbit str 29 1
+0
+192.168.1.243:6379[1]> setbit str 33 1
+0
+192.168.1.243:6379[1]> setbit str 34 1
+0
+192.168.1.243:6379[1]> setbit str 36 1
+0
+192.168.1.243:6379[1]> setbit str 37 1
+0
+192.168.1.243:6379[1]> setbit str 38 1
+0
+192.168.1.243:6379[1]> setbit str 39 1
+0
+192.168.1.243:6379[1]> get str
+hello
+192.168.1.243:6379[1]> getbit str 1    # 获取某个具体位置的值 0/1 
+1
+192.168.1.243:6379[1]> set str1 hello  # 整存 
+OK
+192.168.1.243:6379[1]> getbit str1 1   # 获取某个位置的值 0/1 
+1
+192.168.1.243:6379[1]>
+注意，对应位的字节是不可打印字符，redis-cli会显示该字符的16进制形式 
+
+bitcount 指令和bitpos指令
+192.168.1.243:6379[1]> bitcount str
+21
+192.168.1.243:6379[1]> bitcount str 0 0      # 第一个字符中1的位数
+3   
+192.168.1.243:6379[1]> bitcount str 0 1      # 前两个字符中1的位数 
+7
+192.168.1.243:6379[1]> bitpos str 0          # 第一个0位
+0
+192.168.1.243:6379[1]> bitpos str 1          # 第一个1位
+1
+192.168.1.243:6379[1]> bitpos str 1 1 1      # 从第二个字符算起，第一个1位
+9
+192.168.1.243:6379[1]> bitpos str 1 2 2      # 从第三个字符算起，第一个1位
+17
+192.168.1.243:6379[1]>
+
+192.168.1.243:6379[1]> set w hello
+OK
+192.168.1.243:6379[1]> bitfield w get u4 0      # 从第一位开始取4位，结果是无符号数u 
+6
+192.168.1.243:6379[1]> bitfield w get u3 2      # 从第三位开始取3位，结果是无符号数u 
+5
+192.168.1.243:6379[1]> bitfield w get i4 0      # 从第一个位开始取4位，结果是有符号i
+6
+192.168.1.243:6379[1]> bitfield w get i3 2      # 从第三个位开始取3位，结果是有符号数i 
+-3
+192.168.1.243:6379[1]>
+所谓的有符号数是指获取的位数组中第一个位是符号位，剩下的才是值，如果第一位是1，就是负数，无符号表示非负数，没有符号位，获取的位数组全部都是值。有符号数最多可以获取64位，无符号数只能获取63位（因为Redis协议中integer是由符号数，最大64位，不能传递64位无符号值）如果超过位数限制，Redis就会参数出错.
 ```
 
 面试问题

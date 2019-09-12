@@ -397,6 +397,7 @@ RES(Rescheduling interrupts) 重调度中断: 唤醒空闲状态CPU调度新任�
 
 CPU使用率
 ---------
+> CPU使用率是单位时间内CPU使用情况的统计.
 ```
 Linux 作为一个多任务操作系统，将每个CPU的时间划分为很短时间片，再通过调度器轮流分配给各个任务使用，因此造成多任务同时运行的错觉.
 
@@ -405,28 +406,36 @@ $ sudo grep 'CONFIG_HZ='  /boot/config-$(uname -r)
 [sudo] password for pi:
 CONFIG_HZ=250
 
+# Jiffies 记录开机以来的Jiffy数(每发生一次时间中断, jiffies值加1)
+# How to obtain the current number of jiffies since reboot in Linux?
+Historically, the kernel used 100 as the value for HZ, yielding a jiffy interval of 10ms. With 2.4, the HZ value for i386 was changed to 1000, yeilding a jiffy interval of 1ms. Recently(2.6.13) the kernel changed HZ for i386 to 250. (1000 was deemed too high).
+
+# 用户空间节拍率
 USER_HZ = 100 # 1/100 秒 == 10ms 
 
+# Linux通过/proc虚拟文件系统向用户空间提供系统内部状态的信息
 /proc/stat : 系统统计CPU和任务统计信息
 $ cat /proc/stat | grep ^cpu
-cpu  557751 33324 475185 101564282 165505 0 49939 0 0 0   # 以下各行累加值
-cpu0 178851 12729 72549 25343809 38723 0 18555 0 0 0
+cpu  557751 33324 475185 101564282 165505 0 49939 0 0 0     # 以下各行累加值
+cpu0 178851 12729 72549 25343809 38723 0 18555 0 0 0        # 不同场景下CPU的累计节拍数，单位为USER_HZ 
 cpu1 129852 5960 136469 25399794 40833 0 5550 0 0 0
 cpu2 124554 5430 133233 25408847 42225 0 20515 0 0 0
 cpu3 124493 9204 132932 25411831 43722 0 5318 0 0 0
     
-    user (us) 代表用户态CPU的时间
+    user (us) 代表用户态CPU的时间,不包括nice时间,包括guest时间
     nice (ni) 代表低优先级用户态CPU时间，进程nice值为1-19之间的CPU时间，nice值可取范围是-20到19,数值越大，优先级反而越低
     system (sys): 代表内核态CPU的时间
     idle (id): 代表空闲时间，不包括等待IO的时间iowait 
     iowait (wa): 代表等待I/O的CPU时间
     irq (hi): 代表处理硬中断的CPU时间
-    softirq (si): 代表处理软件中断的CPU时间
+    softirq (si): 代表处理软中断的CPU时间
     steal (st): 代表当系统运行在虚拟机中时候，被其他虚拟机占用的CPU时间
     guest (guest): 代表通过虚拟化运行其他操作系统的时间，也就是运行虚拟机是的CPU时间
     guest_nice (gnice): 代表低优先级运行虚拟机的时间
 
 CPU 使用率: 就是除去空闲外的其他时间占总CPU时间的百分比
+
+# Linux 每个进程提供运行情况统计情况
 
 性能分析工具给出的都是间隔一段时间的平均CPU使用率
 
