@@ -13,6 +13,7 @@ image = cv2.imread(args["image"])
 cv2.imshow("Original", image)
 
 # Numpy arrays with the height first and the width second.
+# Start y : End y, Start x : End x
 cropped = image[30:120, 240:335]
 cv2.imshow("T-Rex Face", cropped)
 cv2.waitKey(0)

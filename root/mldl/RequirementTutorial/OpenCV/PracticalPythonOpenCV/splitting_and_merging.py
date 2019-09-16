@@ -10,6 +10,7 @@ ap.add_argument("-i", "--image", required = True,
 args = vars(ap.parse_args())
 
 image = cv2.imread(args["image"])
+# Splitting the channels
 (B, G, R) = cv2.split(image)
 
 cv2.imshow("Red", R)

@@ -168,11 +168,117 @@ JavaScript循环语句:
 
 JavaScript: 
     标签label: 相当于定位符，用于跳转程序的任意位置
-
 ```
 
 数据类型
 --------
 ```
+原始类型 primitive type:
+    number: 数值 (整数和小数)
+    string: 字符串 
+    boolean: 布尔值 true, false 
 
+合成类型 complex type: 
+    object: 对象 各种值组成的集合
+        object: 狭义的对象
+        array: 数组
+        function: 函数 -- JavaScript函数式编程
+特殊类型:
+    undefined: 未定义
+    null: 空值
+ES6新增类型
+    symbol: 
+
+JavaScript三种方法确定值类型:
+    _instanceof_ 运算符:
+    _Object.prototype.toString_方法
+    _typeof_运算符: 返回一个值的数据类型
+Welcome to Node.js v12.10.0.
+Type ".help" for more information.
+> typeof 123
+'number'
+> typeof '123'
+'string'
+> typeof true
+'boolean'
+> function f() {}
+undefined
+> typeof f
+'function'
+> typeof undefined
+'undefined'
+> typeof {}  // 对象
+'object'
+> typeof []  // 数组本质上只是一种特殊的对象
+'object'
+> var o = {};
+undefined
+> var a = [];
+undefined
+> o instanceof Array; // instanceof 运算符可以区分数组和对象
+false
+> a instanceof Array;
+true
+> typeof null // null 返回 对象
+'object'
+// null 与 undefined 都表示没有，if语句中都自动转换为false
+> if (!undefined) {console.log('undefined is false')}
+undefined is false
+undefined
+> if (!null) {console.log('null is false')}
+null is false
+undefined
+> undefined == null // 
+true
+> Number(null) // null 表示空值，此处值现在为空, 可以自动转为0
+0
+> Number(undefined) // undefined表示未定义,转为数值为NaN 
+NaN
+> var i; // 变量声明，没有赋值
+undefined
+> i
+undefined
+> function f(x) {return x;} // 调用函数时，应该提供参数没有提供，参数等于undefined，
+undefined
+> f()
+undefined
+> var o = new Object(); // 对象没有赋值的属性
+undefined
+> o.p
+undefined
+> function f() {} // 函数没有返回值时，默认返回undefiend
+undefined
+> f()
+undefined
+
+_boolean布尔值_
+    !Not
+    ===, !==, ==, != 
+    >, >=, <, <= 
+JavaScript除了下面值转为false，其他值都为true 
+    undefined、null、false、0、NaN、“”或者'' 空字符串
+[]空数组、{}空对象对应的布尔值都是true
+
+_Number_整数、浮点数
+    JavaScript内部所有数字都是以64位浮点数形式存储，即使整数也是一样,JavaSript语言底层根本没有整数，所有数字都是小树(64位浮点数),某些运算需要整数，此时JavaScript自动将64位浮点数转为32位整数，然后参与运算.
+> 1 == 1.0
+true
+> 1 == 1.0
+true
+> 0.1 + 0.2 === 0.3 // 由于浮点数不是精确的值
+false
+> 0.3 / 0.1
+2.9999999999999996
+> (0.3 - 0.2) === (0.2 - 0.1)
+false
+    国际标准IEEE 754, JavaScript浮点数64位二进制表示:
+        第一位：符号位，0表示整数，1表示负数
+        第二位到第十二位：指数部分: 大小范围是0-2047
+        第十三位到六十四位：小树部分(有效数字)
+        如果指数部分值在0-2047之间，有效数字的
+
+
+
+
+tyepof 用来检查一个没有声明的变量而不报错.
 ```

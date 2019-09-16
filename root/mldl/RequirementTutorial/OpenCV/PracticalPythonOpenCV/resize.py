@@ -17,8 +17,12 @@ cv2.imshow("Original", image)
 r = 150.0 / image.shape[1]
 dim = (150, int(image.shape[0] * r))
 
-# interpolation method 插入方法, which is the algorithm working behind the scenes
+# interpolation method, which is the algorithm working behind the scenes
 # to handle how the actual image is resized
+# cv2.INTER_AREA
+# cv2.INTER_LINEAR
+# cv2.INTER_CUBIC
+# cv2.INTER_NEAREST
 resized = cv2.resize(image, dim, interpolation = cv2.INTER_AREA)
 cv2.imshow("Resized (Width)", resized)
 

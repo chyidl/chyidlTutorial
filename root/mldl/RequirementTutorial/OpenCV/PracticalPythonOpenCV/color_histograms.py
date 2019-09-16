@@ -13,6 +13,7 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 cv2.imshow("Original", image)
 
+# Split the image into three channels: blue, green, and red
 chans = cv2.split(image)
 colors = ("b", "g", "r")
 plt.figure()
@@ -33,6 +34,7 @@ fig = plt.figure()
 
 ax = fig.add_subplot(131)
 # Green and Blue
+# Most applications use somewhere between 8 and 64 bins when computing multi-dimensional histograms.
 hist = cv2.calcHist([chans[1], chans[0]], [0, 1], None,
     [32,32], [0, 256, 0, 256])
 p = ax.imshow(hist, interpolation = "nearest")

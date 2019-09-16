@@ -14,12 +14,17 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 cv2.imshow("Original", image)
 
-# specify around which point rotate
+# grabs the width and height of the image. Integer division is used here "//"
 (h, w) = image.shape[:2]
 # "//" to ensure we receive whole integer numbers
 center = (w // 2, h // 2)
 
-
+"""
+cv2.getRotationMatrix2D
+    the first argument: which image
+    the second argument: degrees
+    the thrid argument: the scale of the image
+"""
 M = cv2.getRotationMatrix2D(center, 45, 1.0)
 rotated = cv2.warpAffine(image, M, (w, h))
 cv2.imshow("Rotated by 45 Degrees", rotated)

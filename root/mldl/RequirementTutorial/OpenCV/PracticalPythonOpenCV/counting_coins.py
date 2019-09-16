@@ -11,17 +11,23 @@ args = vars(ap.parse_args())
 
 image = cv2.imread(args["image"])
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-blurred = cv2.GaussianBlur(gray, (11, 11), 0)
+blurred = cv2.GaussianBlur(gray, (15, 15), 0)
 cv2.imshow("Image", image)
 
-edged = cv2.Canny(blurred, 30, 150)
+edged = cv2.Canny(blurred, 50, 100)
 cv2.imshow("Edges", edged)
 
-# The First argument :
-# The second argument :
-(_, cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL,
-    cv2.CHAIN_APPROX_SIMPLE)
-
+"""
+cv2.findContours
+    the first param: edged image
+    the second param: the type of contours (
+        cv2.RETR_EXTERNAL: retrieve only the outermost contours;
+        cv2.RETR_LIST: grab all contours
+        cv2.RETR_COMP、cv2.RETR_TREE
+    )
+    the thrid param: cv2.CHAIN_APPROX_SIMPLE
+"""
+(cnts, _) = cv2.findContours(edged.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 print("I count {} coins in this image".format(len(cnts)))
 
 coins = image.copy()

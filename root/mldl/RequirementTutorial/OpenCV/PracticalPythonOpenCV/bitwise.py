@@ -1,8 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 # Bitwise operations operate in a binary manner and are represented as grayscale
-# images. A given pixel is turned "off" if it has a value of zero, and it is turned
+# images.
+# A given pixel is turned "off" if it has a value of zero, and it is turned
 # "on" if the pixel has a value greater than zero
+"""
+bitwise operation:
+    AND : A bitwise AND is true if and only if both pixels are greater than zero
+    OR  : A bitwise OR is true if either of the two pixels are greater than zero
+    XOR : A bitwise XOR is true if and only if either of the two pixels are greater than zero, but not both
+    NOT : A bitwise NOT inverts the "on" and "off" pixels in an image.
+"""
 import numpy as np
 import cv2
 

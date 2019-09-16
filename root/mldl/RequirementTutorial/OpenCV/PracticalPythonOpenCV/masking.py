@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
+"""
+Using a mask allows us to focus only on the portions of the image that interests us.
+"""
 import numpy as np
 import argparse
 import cv2

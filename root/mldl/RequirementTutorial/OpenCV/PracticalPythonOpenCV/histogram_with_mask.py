@@ -7,6 +7,12 @@ import cv2
 
 
 def plot_histogram(image, title, mask = None):
+    """
+    plot_histogram function simply computes a histogram for each channel in the image and plots it.
+    @param image:
+    @param title:
+    @param mask:
+    """
     chans = cv2.split(image)
     colors = ("b", "g", "r")
     plt.figure()
@@ -30,17 +36,19 @@ image = cv2.imread(args["image"])
 cv2.imshow("Original", image)
 plot_histogram(image, "Histogram for Original Image")
 
+mask = np.zeros(image.shape[:2], dtype="uint8")
+cv2.rectangle(mask, (15, 15), (120, 100), 255, -1)
+cv2.imshow("Mask", mask)
+
+masked = cv2.bitwise_and(image, image, mask = mask)
+cv2.imshow("Applying the Mask", masked)
+
+plot_histogram(image, "Histogram for Masked Image", mask = mask)
+plt.show()
+
 # Construct a mask
 height, width = image.shape[:2]
 mask = np.zeros((height, width), dtype = "uint8")
 # draw a white rectangle
 cv2.rectangle(mask, (height // 2 - 50, width // 2 - 50), (height // 2 + 50, width // 2 + 50), 255, -1)
 cv2.imshow("Mask", mask)
-
-masked = cv2.bitwise_and(image, image, mask = mask)
-cv2.imshow("Applying the Mask", masked)
-
-# compute a histogram for our masked image
-plot_histogram(image, "Histogram for Masked Image", mask = mask)
-
-plt.show()

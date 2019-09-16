@@ -628,6 +628,10 @@ BITFILED command supports different subcommands:
     SET <type> <offset> <value> -- Set the specified value and return its previous value. 
     SET <type> <offset> - GET the specified value. 
     INCRBY <type> <offset> <increment> -- Increment the specified counter.
+    OVERFLOW SAT - Saturation, so that overflowing in one direction or the other, will saturate the integer to its maximum value in the direction of the overflow.
+    OVERFLOW WRAP - This is usual wrap around, but the interesting thing is that this also works for signed integers, by wrapping towards the most negative or most positive values.
+    OVERFLOW FALT - In this mode the operation is not performed at all if the value would overflow.
+
 
 ```
 ```

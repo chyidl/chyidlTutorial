@@ -15,6 +15,7 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 cv2.imshow("Original", image)
 
+# Translation matrix M. This matrix how many pixels to the left or right, and up or down, the image will be shifted
 # [1, 0, tx] shift the image left or right, tx Negative shift left; positive right
 # [0, 1, ty] shift the image up or down, Negative ty shift up and positive shift down
 M = np.float32([[1, 0, 25], [0, 1, 50]])

@@ -96,6 +96,12 @@ Installation:
         samsung-i9100, samsung-i9195, samsung-i927, samsung-i9305, samsung-j1mini3g, samsung-jflte, samsung-klte, samsung-kminilte, samsung-kylepro, samsung-kylessopen, samsung-kylevess, samsung-lt01wifi, samsung-lt023g, samsung-maguro, samsung-manta, samsung-matissewifi, samsung-n5110, samsung-n7100, samsung-p4wifi, samsung-s6500d, samsung-serranodsdd, samsung-zanin, semc-anzu, semc-smultron, sony-amami, sony-aries, sony-castor-windy, sony-coconut, sony-honami, sony-nicki,
         sony-scorpion, sony-seagull, sony-sirius, sony-suzu, sony-taoshan, sony-tulip, sony-yuga, surftab-wintron7.0, t2m-flame, tablet-x64uefi, teclast-x80pro, wiko-lenny3, wileyfox-crackling, wingtech-wt88047, xiaomi-aries, xiaomi-armani, xiaomi-cancro, xiaomi-ido, xiaomi-kenzo, xiaomi-mido, xiaomi-santoni, xiaomi-tissot, zte-kis3, zte-p731a20
         [17:48:14] Device [samsung-i9100]:
+        [16:28:44] This device has proprietary components, which trade some of your freedom with making more peripherals work.
+        [16:28:44] We would like to offer full functionality without hurting your freedom, but this is currently not possible for your device.
+        [16:28:44] device-nokia-n900-nonfree-firmware: Wifi firmware
+        [16:28:44] Enable this package? (y/n) [y]: y
+        [16:30:20] Available keymaps for device (3): us/rx51_us, ch/rx51_ch, it/rx51_it
+        [16:30:20] Keymap [us/rx51_us]:
         [17:49:33] Available user interfaces (12):
         [17:49:33] * none: No graphical environment
         [17:49:33] * hildon: (X11) Lightweight GTK+2 UI (optimized for single-touch touchscreens)

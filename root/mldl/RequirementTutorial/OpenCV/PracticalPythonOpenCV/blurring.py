@@ -12,8 +12,10 @@ args = vars(ap.parse_args())
 image = cv2.imread(args["image"])
 cv2.imshow("Original", image)
 
-# The first blurring method : averaging
-# hstack function stack our output images together
+# The first blurring method : Averaging
+# define a k x k sliding window, where k is alway an odd number.
+# the center of this marix set to be the average of all other pixels surrounding it.
+# hstack: horizontally stacks
 blurred = np.hstack([
     # blur function
     cv2.blur(image, (3, 3)),
@@ -33,7 +35,7 @@ blurred = np.hstack([
 cv2.imshow("Gaussian", blurred)
 cv2.waitKey(0)
 
-# The Third blurring method : median
+# The Third blurring method : Median
 # Using the median blur method, can remove the salt and pepper from image
 blurred = np.hstack([
     # replace the central pixel with the median of the neighborhood
