@@ -306,12 +306,119 @@ JavaScript整数提供四种进制表示方法:
     八进制: 前缀0o, 0O,或者前导0,且只用到0-7, 出现数值8,9视为十进制
     十六进制: 前缀0x, 0X
     二进制: 0b, 0B
+JavaScript 正零+0,负零-0区别是64位浮点数表示法的符号位不同.
+(1/+0) === (1/-0) // false  +Infinity != -Infinity 
+JavaScript中的NaN表示非数字(Not a Number),NaN不是独立的数据类型，而是特殊数值，数据类型属于Number, NaN不等于任何值，包括自己本身.数组indexOf方法内部使用严格相等运算符，[NaN].indexOf(NaN) // -1, NaN布尔运算为false,NaN与运算都得NaN.
+JavaScript Infinity表示“无穷”,表示正的数值太大，或者负的数值太小，无法表示，另一种是非0数值除以0，得到Infinity.
+由于JavaScript数值正向溢出OverFlow、负向溢出underflow和被0除，都不报错
+Infinity大于一切数值(除了NaN)，-Infinity小于一切数值(除了NaN); Infinity与NaN比较总是返回false.
+> 0 * Infinity
+NaN
+> 0 / Infinity
+0
+> Infinity / 0
+Infinity
+Infinity与null运算，null会自动转换为0，等同于与0计算
+Infinity与undefined运算，返回都是NaN.
 
+parseInt用于将字符串转为整数;字符串转为整数，是一个个字符依次转换，遇到不能转为数字的字符就不再进行下去，返回已经转好的部分,如果第一个字符不能转为数字，返回NaN,因此parseInt返回值只有两种可能，要么是十进制整数，要么是NaN.如果字符串以0x或0X开头，parseInt将按照十六进制解析，如果字符串以0开头，将按照10进制解析.parseInt第二参数表示被解析的值的进制。第二参数不是数值会被自动转为一个整数，这个整数只有2到36之间，才能得到有意义的结果，超出范围返回NaN.如果第二参数为0，undefiend,null直接忽略.
+JavaScript不再允许将带有前缀0的数字视为八进制数，而是要求忽略这个0
 
+parseFloat用于将字符串转为浮点数,parseFloat会将空字符串转为NaN.
 
+isNaN()判断一个值是否为NaN.isNaN只对数值有效，如果传入其他值，会被先转成数值，isNaN为true有可能不是NaN,而是一个字符串.[]可以被Number函数转为数值.判断NaN最好的方法是利用NaN不等于自身的值这一特点.
 
+isFinite()方法返回一个布尔值，表示某个值是否为正常的数值.除了Infinity、-Infinity、NaN和undefined返回false,isFinite对于其他数值都返回true.
 
+字符串String:
+    由于HTML语言的属性值使用双引号，所以很多项目约定JavaScript语言的字符串只使用单引号.
+    转义符:
+        \0  : null \u0000
+        \b  : 后退键\u0008
+        \f  : 换页符\u000C
+        \n  : 换行符\u000A
+        \r  : 回车键\u000D
+        \t  : 制表符\u0009
+        \v  : 垂直制表符\u000B
+        \'  : 单引号 \u0027
+        \"  : 双引号 \u0022
+        \\  : 反斜杠 \u005C 
+    \HHH: 反斜杠紧跟三个八进制数代表一个字符
+    \xHH: \x紧跟两个十六进制代表一个字符
+    \uXXXX: \u紧跟四个十六进制数，代表一个字符
+    在非特殊字符前面使用反斜杠，反斜杠自动省略
 
+字符串与数组，无法该比那字符串中的单个字符。'string'.length返回字符串的长度，该属性无法改变.
+JavaScript使用Unicode字符集，JavaSCript引擎内部使用Unicode表示，JavaScript自动识别字符是字面形式表示还是Unicode形式表示，输出给用户的时候，所有字符都会转成字面形式.JavaScript内部每个字符都是使用16位的UTF-16格式存储，对于码点U+10000到U+10FFFF之间的字符，JavaScript总是认为是两个字符，length属性为2,JavaScript返回的字符串长度可能是不正确的.
+
+Base64转码: 编码方式，将任意值转成0-9,A-Z,a-z,+,/ 64个字符组成的可打印字符，使用目的不是为了加密，而是为了不出现特殊字符，简化程序处理.
+    JavaScript原生提供两个Base64方法：这两种方法不适合非ASCII字符，会报错，要将非ASCII字符转为Base64编码，中间需要转码
+        btoa(): 将任意值转为Base64编码
+        atob(): Base64编码转为原来的值
+    $ npm install --save buffer 
+    Ensure Buffer, btoa, and atob are loaded as a globals:
+        global.Buffer = global.Buffer || require('buffer').Buffer;
+        if (typeof btoa === 'undefined') {
+            global.btoa = function(str) {
+                return new Buffer(str. 'binary').toString('base64');
+            };
+        }
+
+        if (typeof atob === 'undefined') {
+            global.atob = function(b64Encoded) {
+                return new Buffer(b64Encoded, 'base64').toString('binary');
+            };
+        }
+
+        function b64Encode(str) {
+            return btoa(encodeURIComponent(str));
+        }
+
+        function b64Decode(str) {
+            return decodeURIComponent(atob(str));
+        }
+        b64Encode('你好')
+        b64Decode('')
+
+JavaScript Object: 是一组“健值对key-value集合”是一种无序的复合数据集合.所有键名都是字符串(ES6引入Symbol值作为键名),键名是数值，会被自动转为字符串.如果键名不符合标识名的条件(比如第一个字符为数字，或者含有空格或运算符)且也不是数字，则必须加上引号，否则会报错.
+    对象的每一个键名称为"属性"property: 键值可以是任何数据类型,如果键值为函数，则把属性称为“方法”.如果属性的值还是一个对象，就形成链式引用.属性可以动态创建，不必在对象声明时就指定
+    值拷贝，对象引用, JavaScript引擎如果遇到行首是大括号，无法确定是对象还是代码块，一律解释为代码块.如果要解释为对象，对好在大括号前加上圆括号.
+    eval解释
+    读取对象的属性的两种方法: 点运算符, 方括号运算符(键名必须放在引号里面，否则当作变量处理, 数字键可以不加引号，会自动转成字符串,数字键名不能使用点运算符,只能使用方括号运算符)
+    查看一个对象本身的所有属性名:使用Object.keys; 属性的函数delete命令，delete命令只能删除对象本身的属性，无法删除继承的属性.属性是否存在: in运算符(不能识别那些属性是对象自身，那些属性是继承). hasOwnProperty方法判断是否对象自身属性
+    属性的遍历 for...in循环:[1. 遍历对象所有可遍历enumerable属性，跳过不可遍历的属性; 2.不仅遍历对象自身属性，还遍历继承的属性; hasOwnProperty判断属性是否是对象自身的属性]
+    with语句：操作同一个对象的多个属性提供方便,如果with区块内部有变量的赋值操作，必须是当前对象已经存在的属性，否则会创造一个当前作用域的全局变量,因为with区块没有改变作用域，内部依然是当前作用域,建议不要使用with语句，可以考虑使用临时变量代替with.
+
+JavaScript: 有三种声明函数的方法:
+    1. function命令声明的代码区块，就是一个函数，function命令后面是函数名，函数名后面是一对圆括号，里面是传入函数的参数，函数体放在大括号内.
+    2. 函数表达式: var print = function(s) {console.log(s);} 采用函数表达式声明函数，function命令后面不带有函数名,如果加上函数名，函数名只在函数体内部有效[1: 可以在函数体内部调用自身 2: 调试共建显示函数调用栈将显示函数名，不再显示匿名函数]
+    3. Function构造函数: 可以传递任意数量的参数给Function构造函数，最后一个参数被当做函数体，如果只有一个参数，该参数就是函数体.
+    函数被多次声明，后面的声明就会覆盖前面的声明
+
+    JavaScript语言中称函数为第一等公民.JavaScript引擎被函数名视为变量名，采用function命令声明函数，整个函数会像变量声明一样.被提升到代码头部,如果同时采用function命令和赋值语句声明同一个函数，最后总是采用赋值语句的定义。
+    函数的name属性返回函数名; 函数的length属性返回函数预期传入的参数个数,length属性提供一种机制，判断定义时含调用时参数的差异，以便实现面向对象编程的“方法重载”overload.
+    函数的toString方法返回一个字符串，内容是函数的源码.对于原生函数，toString()方法返回function() {[native code]}, 函数内部注释可以
+    函数作用域: scope, ES5规范中JavaScript只有两种作用域[1.全局作用域global variable, 2:函数作用域local variable] ES6新增快级别作用域; 对于var命令，局部变量只能在函数内部声明，在其他区块中声明，一律都是全局变量.
+    函数内部的变量提升,var命令声明的变量，不管在什么位置，变量声明都会被提升到函数体的头部.
+    函数执行时所在的作用域时定义时的作用域，而不是调用时所在的作用域.函数体内部声明的函数，作用域绑定函数体内部
+    函数参数: 省略靠前的参数需要显式传入undefined.函数参数的传递方式: 原始类型的值(数值、字符串、布尔值)传递方式是传值传递(passes by value),如果函数参数是复合类型的值(数组、对象、其他函数)传递方式是传址传递(pass by reference)
+    函数同名参数，取最后出现的值,
+    JavaScript允许函数有不定数目的参数, arguments对象包含函数运行时所有的参数，arguments只有在函数体内部使用,严格模式下，arguments对象与函数参数不具有联动关系，修改arguments对象不会影响到实际的函数参数.通过arguments.length属性可以判断函数调用时到底带几个参数.argument很像数组，但是一个对象，数组专用方法(slice, forEach)不能在arguments对象上直接使用. 可以将arguments对象转为数组 var args = Arrays.prototype.slice.call(arguments);
+    arguments对象带有callee属性，返回对应的原函数,这个属性在严格模式里面是禁止使用，因此不建议使用.
+    闭包closure: JavaScript语言特有的“链式作用域”结构chain scope. 子对象会一级一级向上寻找所有父对象的变量，所以，父对象的所有变量，对子对象都是可见的. 闭包简单理解为“定义在一个函数内部的函数”闭包就是将函数内部和函数外部连接起来的一座桥梁.
+        闭包两大用处：[1. 读取函数内部的变量。 2.让变量始终保持在内存中]闭包可以看作函数内部作用域的一个接口
+        闭包另外用处, 是封装对象的私有属性和私有方法: 外层函数每次运行，都会生成一个新的闭包，而这个闭包只会保留外层函数的内部变量，所以内存消耗很大，因此不能滥用闭包，否则会造成网页的性能问题.
+    JavaScript的圆括号()是一种运算符，JavaScript引擎规定，如果function关键字出现在行首，认为是函数的定义，不应该以圆括号结尾.解决办法就是将其放在一个圆括号里面,转变为表达式 "立刻调用的函数表达式Immediately Invoked Function Expression" IIFE.通常情况下只对匿名函数使用这种"立刻执行的函数表达式"好处是不必为函数命名，避免污染全局变量，IIFE内部形成一个单独的作用域.
+    eval命令: 接收一个字符串作为参数,并将字符串当作语句执行,如果eval参数不是字符串，那么会原样返回.eval没有自己的作用域,JavaScript规定，使用严格模式，eval内部声明的变量不会影响外部作用域,eval常见场合解析JSON数据的字符串,正确的做法应该是使用原生的JSON.parse方法.为了保证eval别名不影响代码优化，JavaScript标准规定，凡事使用别名执行eval，eval内部一律是全局作用域.
+    eval.call(null, '...') window.eval('...') (1, eval)('...') (eval, eval)('...') 别名调用，作用域都是全局作用域.
+
+JavaScript Array:
+    任何类型的数据都可以存放数组.数组属于一种特殊的对象，typeof运算符会返回数组的类型是object 数组的特殊性体现在，键名是按次序排列的一组整数(0,1,2) JavaScript语言规定，对象的键名一律为字符串，所以，数组的键名其实也是字符串。数组成员只能使用方括号arr[0]表示(方括号是运算符，可以接收数值)
+    数组的length属性，返回数组的成员数量.JavaScript使用一个32位整数,保存数组的元素个数,意味着，数组成员最多只有2³²-1
+    (4294967295)，数组的length属性是一个动态值，等于键名中最大整数加上1.JavaScript数组是一种动态的数据结构，可以随时增减数组的成员.length属性是可写的，如果人为设置一个小于当前成员个数的值，该数组的成员会自动减少到length设置的值.清空数组的一个有效方法，就是将length属性设为0,数组本身是一种对象，所以可以为数组添加属性，但是这不影响length属性的值, 
+    in运算符检查键名是否存在，适用于对象，也适用数组.如果数组的某个位置是空位，in运算符返回false. 
+    for...in 循环和数组的遍历: for...in不仅会遍历数组所有的数字键，还会遍历非数字键.数组遍历可以考虑使用for循环或while循环.数组forEach方法，用来遍历数组, 数组的空位是可以读取的，返回undefined.使用delete命令删除一个数组成员，会形成空位，并且不会影响length属性. 使用数组forEach方法、for...in结构，Object.keys方法遍历，空位会被跳过,空位就是数组没有
+        
 
 tyepof 用来检查一个没有声明的变量而不报错.
 ```
