@@ -299,3 +299,64 @@ Kali Linux Rolling Edition
     - Step 7: Configure your Kali OS on your first boot.
     - Step 8: Login with username 'user' and password with the password that you have specified during configuration.
     - Step 9: After everything works fine, shutdown your device and resize your sdcard's existing partition using any parition using any partition managing tool and your can add a 'swap' partition to your sdcard if your want.
+
+Maemo Leste - A Debian/Devuan based mobile hacker OS 
+----------------------------------------------------
+> Maemo Leste is community a Debian/Devuan based GNU/Linux distribution for smartphones and tablets aimed at free software hackers. 
+
+* What is Maemo Leste?
+    - Mobile OS for phones and tablets
+    - Based on Devuan (ascii release - Debian stretch based)
+    - No vendor kernels: only mainline (with minimal patches)
+    - GNU/Linux experience: freedom, hackability
+
+* Why Maemo Leste?
+    - Tired of Android, other mobile OSes
+    - Open, hackanle, not locked down 
+    - Practical, lots of software exists already 
+    - Community developed.
+
+* History: Maemo Fremantle?
+    - Mobile OS made by Nokia for the N900.
+    - GNU/Linux 
+    - Uses the debian package manager.
+    - Many FOSS gtk and qt based applications available.
+    - Only some parts are open source .
+    - Still maintained by the community: CSSU (Community Seamless Software Update)
+
+* Status:
+    - Maemo Lests is in a pre-alpha stage
+    - The following mostly just works:
+        * USB host/peripheral/otg
+        * Virtual keyboard 
+        * Wireless 
+        * Audio 
+        * Charging 
+    - https://leste.maemo.org/Status 
+
+* Infrastructure / CI 
+    - Hosted on maemo.org servers, along with some of our personal hardware.
+    - Jenkins + jenkins-debian-glue builds our packages 
+    - Build slaves are Allwinner and Softiron Overdriver machines.
+
+* Similar efforts
+    - Nemo Mobile 
+    - postmarketOS
+    - UBPorts 
+    - KDE Plasma
+    - PureOS 
+
+* Resources
+    - Homepage: https://maemo-leste.github.io/
+    - Wiki: https://leste.maemo.org 
+    - Source: https://github.com/maemo-leste/
+    - Bugtracker: https://github.com/maemo-leste/bugtracker 
+    - Maemo community: https://maemo.org 
+    - IRC: irc.freenode.net #maemo-leste 
+    - Mailing list: https://mailinglists.dyne.org/cgi-bin/mailman/listinfo/maemo-leste
+
+* Nokia N900 Install
+```
+Images: http://maedevu.maemo.org/images/n900/ 
+    
+```

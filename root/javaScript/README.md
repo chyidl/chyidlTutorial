@@ -417,8 +417,264 @@ JavaScript Array:
     数组的length属性，返回数组的成员数量.JavaScript使用一个32位整数,保存数组的元素个数,意味着，数组成员最多只有2³²-1
     (4294967295)，数组的length属性是一个动态值，等于键名中最大整数加上1.JavaScript数组是一种动态的数据结构，可以随时增减数组的成员.length属性是可写的，如果人为设置一个小于当前成员个数的值，该数组的成员会自动减少到length设置的值.清空数组的一个有效方法，就是将length属性设为0,数组本身是一种对象，所以可以为数组添加属性，但是这不影响length属性的值, 
     in运算符检查键名是否存在，适用于对象，也适用数组.如果数组的某个位置是空位，in运算符返回false. 
-    for...in 循环和数组的遍历: for...in不仅会遍历数组所有的数字键，还会遍历非数字键.数组遍历可以考虑使用for循环或while循环.数组forEach方法，用来遍历数组, 数组的空位是可以读取的，返回undefined.使用delete命令删除一个数组成员，会形成空位，并且不会影响length属性. 使用数组forEach方法、for...in结构，Object.keys方法遍历，空位会被跳过,空位就是数组没有
-        
-
+    for...in 循环和数组的遍历: for...in不仅会遍历数组所有的数字键，还会遍历非数字键.数组遍历可以考虑使用for循环或while循环.数组forEach方法，用来遍历数组, 数组的空位是可以读取的，返回undefined.使用delete命令删除一个数组成员，会形成空位，并且不会影响length属性.
+        使用数组forEach方法、for...in结构，Object.keys方法遍历，空位会被跳过,空位就是数组没有这个元素，所以不会被遍历到，而undefined表示数组有这个元素，值是undefined，所以遍历不会跳过.
+    对象的所有键名都是正整数或零，并且有length属性，则这个对象称为“类似数组的对象”array-like object.类似数组的对象“根本特征”就是具有length属性，只要有length属性，就可以认为这个对象类似于数组
+    数组的slice方法可以将“类似数组的对象”变成真正的数组.var arr = Array.prototype.slice.call(arrayLike);
+    "类似数组的对象"可以使用数组的方法通过call()把数组的方法放到对象上面,这种方法比直接使用数组原生forEach要慢，所以最好还是将“类似数组的对象”转为真正的数组，然后再直接调用forEach方法.
 tyepof 用来检查一个没有声明的变量而不报错.
+```
+
+运算符
+------
+```
+_算术运算符_
+    JavaScript提供10个算数运算符：
+        1. 加法运算符 + 
+            JavaScript允许非数值相加 true + true = 2 ; 两个字符串相加会变成连接运算符; 加法运算符是在运行时决定的，到底是执行加法还是连接，运算子的不同，导致不同的语法行为，这种现象称为“重载overload”. 除了加法运算符，其他算术运算符都不会发生重载. 减法、除法、和乘法运算符都是将字符串自动转为数值，然后再运算.
+            对象obj向加，必须先转为原始类型的值[object Object], 对象自动调用valueOf()，返回对象本身,再调用对象toString()转为字符串 obj.valueOf().toString() 返回[object Object]
+            toString() 方法有限valueOf()方法
+        2. 减法运算符 - 
+        3. 乘法运算符 * 
+        4. 除法运算符 / 
+        5. 指数运算符 ** 
+            指数运算符是右结合,多个指数运算符连用时，先进性最右边的计算
+        6. 余数运算符 % 
+            运算结果的正负号由第一个运算子的正负号决定
+        7. 自增运算符 ++x x++ 
+        8. 自减运算符 --x x-- 
+            自增自减运算符是一元运算符,只需要一个运算子,运算后，变量的值发生变化，这种效应叫做运算的副作用(side effect)
+        9. 数值运算符 +x 
+        10. 负数运算符 -x 
+            数值运算符的作用可以将任何值转为数值（与Number函数的作用相同);数值运算符号和负数值运算符，返回一个新的值，而不会改变原始变量的值
+        11. 赋值运算符
+            赋值运算符(Assignment Operators) 用于变量赋值;赋值运算符与其他运算符结合，都是先进性指定运算，然后得到值返回给左边的变量
+
+_比较运算符_
+    1. 大于运算符 >
+    2. 小于运算符 < 
+    3. 小于或等于运算符 <= 
+    4. 大于或等于运算符 >= 
+    5. 等于运算符 == 
+    6. 严格相等运算符 === 
+    7. 不相等运算符 != 
+    8. 严格不相等运算符 !== 
+    
+    非相等比较：算法先看两个运算子是否都是字符串，如果是，按照字典顺序比较(实际上比较Unicode码点)否则是将两个运算子转成数值，在比较数值大小;
+    任何值(包括NaN本身)与NaN比较，返回的都是false. 对象转换成原始类型值，算法先调用valueOf方法：如果返回的还是对象，接着返回toString() 
+
+    JavaScript提供两种相等运算符 == 和 === 
+        ==: 比较两个值是否相等 
+        ===: 严格相等运算符比较是否为“同一个值” NaN与任何值都不相等(包括自身); 复合类型(对象、数组、函数)的数据比较，不是比较值是否相等，而是比较是否指向同一个地址;对于两个对象的比较，严格相等运算符比较的是地址，而大于或小于运算符比较的是值
+        undefined 和 null与自身严格相等; 由于变量声明后默认值是undefined,因此两个只声明未赋值的变量是相等的
+    !== 严格不相等：算法就是先求严格先等运算符的结果，然后返回相反的值
+    undefined 和 null与其他类型的值比较时，结果都为false,他们相互比较时结果是true.
+    相等运算符隐藏类型转换，会带来一些违反直觉的结果,建议不要使用相等运算符==,最好使用严格相等运算符===
+
+_布尔运算符_
+    1. 取反运算符 !
+        对一个值连续做两次取反运算，等于将其转为对应的布尔值，与Boolean函数作用相同.
+    2. 且运算符 && 
+        &&往往用于多个表达式的求值，如果第一个运算子的布尔值为true,则返回第二个运算子的值(注意是值，不是布尔值)如果第一个运算子的布尔值为false，则直接返回第一个运算子的值，且不再对第二个运算子求值
+    3. 或运算符 ||
+        如果第一个运算子的布尔值为true,返回第一个元算子的值，且不再对第二个运算子求值，如果第一个元算子的布尔值为false,则返回第二个运算子的值.或运算符用于对一个变量设置默认值
+    4. 三元运算符 ?: 
+        如果第一个表达式的布尔值为true,则返回第二个表达式的值，否则返回第三个表达式的值; if...else是语句没有返回值,三元条件表达式是表达式，具有返回值.
+
+_二进制位运算符_
+    1. 二进制或运算符(or) | 
+    2. 二进制与运算符(and) & 
+    3. 二进制否运算符(not) ~ 
+        ~ 3 // -4 
+        JavaScript内部将所有的运算子都转为32位二进制整数再进行运算: 3的32位整数形式00000000000000000000000000000011, 二进制否运算以后得到11111111111111111111111111111100,由于第一位(符号位)是1，所以这个数是一个负数，JavaScript内部采用补码形式表示负数，即需要将这个数减1，在取反，然后加上负号,才能得到这个负数对应的十进制.10000000000000000000000000000100,可以简单一个数与自身的取反值相加等于-1.
+        二进制否运算符取整是所有取整方法中最快的一种;
+        ~NaN // -1 
+        ~null // -1
+    4. 异或运算符(xor) ^ 
+        异或运算：连续对两个数a和b进行三次异或运算，a^=b; b^=a; a^=b;可以互换他们的值，使用异或运算可以在不引入临时变量的前提下，互换两个变量的值.这是互换两个变量的值最快的方法;异或运算也可以用来取整
+    5. 左移运算符(left shift) << 
+        左移运算符<<表示将一个数的二进制值向左移动指定的位数，尾部补0，最高位的符号位一起移动.
+        var color = {r: 186, g: 218, b:85}
+        var rgb2hex = function(r, g, b) {
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b)
+                .toString(16)  // 转成16进制，然后返回字符串
+                .substr(1); // 去除字符串的最高位，返回后面六个字符串
+        }
+        rgb2hex(color.r, color.g, color.b)
+    6. 右移运算符(right shift) >> 
+        右移运算符(>>) 表示一个数的二进制向右移动指定的位数，如果是正数，头部全部补充0，如果是负数，头部全部补1，右移运算符基本相当于除以2的指定次方
+    7. 头部补零的右移运算符(zero filled right shift) >>>
+        将一个值转为32位无符号整数,查看一个负整数在计算机内部的存储形式，最快的方法就是使用这个运算符
+    位运算只操作整数，运算子不是整数会自动转为整数，JavaScript内部数值都是以64位浮点数的形式存储，但是做位运算的时候，是以32位符号的整数进行运算,并且返回值也是一个32位带符号的整数.
+    i = i | 0; 将i(不管是整数或小数)转为32位整数
+
+_运算顺序_
+    1. void 运算符
+        void运算符作用是执行一个表达式，然后不反悔任何值，或者返回undefined; 主要用途是浏览器的书签工具Bookmarklet,以及在超链接中插入代码防止网页跳转.
+    2. 逗号运算符
+        逗号运算符用于对两个表达式求值，并返回后一个表达式的值
+    3. 运算顺序
+        JavaScript各种元算符的优先级别Operator Precedence是不一样，优先级高的运算符先执行，优先级低的运算符后执行.
+        圆括号()可以用来提高运算符的优先级，圆括号两种用法：1. 把表达式放在圆括号之中，提升运算的优先级，另一种跟在函数的后面，作用是调用函数;圆括号之中，只能放置表达式，如果将语句放在圆括号中，就会报错
+        左结合left-to-right associativity 从左边开始计算
+        右结合right-to-left associativity （赋值元算符=， 三元条件运算符?:, **指数运算也是右结合）
+```
+
+语法专题
+--------
+```
+_数据类型转换_
+    JavaScript是一种动态类型语言，变量没有类型限制，可以随时赋予任意值.
+    JavaScript强制类型转换主要使用Number(), String(), Boolean()
+        Number()函数将字符串转为数值要比parseInt()函数严格的多, parseInt逐个解析字符，Number整体转换字符串的类型
+        parseInt和Number函数都会自动过滤一个字符串前导和后缀的空格
+        Number方法参数是对象时，返回NaN,除非包含单个数值的数组; 
+        Number背后的转换规则：
+            1. 调用对象的valueOf()如果返回原始类型值，直接对值使用Number函数，不再进行后续步骤
+            2. 如果valueOf方法返回还是对象，该调用自身的toString方法，如果toString放回原始类型的值则对值使用Number函数,不再进行后续步骤
+            3. 如果toString返回对象，则报错
+    String()函数可以将任意类型的值转为字符串
+        String方法背后的转换规则与Number方法基本相同，只是互换了valueOf方法和toString方法的执行顺序
+            1. 先调用toString方法，如果返回原始类型的值，则对该值使用String函数，不再进行下面步骤
+            2. 如果roString方法返回的是对象，再调用原对象的valueOf方法，如果valueOf方法返回原始类型值，则对该值使用String函数，不再进行一下步骤
+            3. 如果valueOf()返回是对象，报错
+    Boolean() 函数将任意类型的值转为布尔值
+        所有对象(包括空对象)的转换结果都是true,甚至连false对应的布尔对象new Boolean(false) 也是true
+    自动转换:
+        1. 不同类型的数据互相运算
+        2. 对非布尔值类型的数据求布尔值
+        3. 对非数值类型的值使用一元运算符
+        由于自动转换具有不确定性，而且不易除错，建议在预期位布尔值、数值、字符串的地方，全部使用Boolean, Number, String函数进行显示转换。
+        JavaScript遇到预期位字符串的地方，就会将非字符串的值自动转为字符串，具体规则是，先将复合类型的值转为原始类型的值，在将原始类型的值转为字符串.
+        一元运算符会把运算子转为数值
+
+_错误处理机制_
+    JavaScript原生提供Error构造函数，所有抛出的错误都是这个构造函数的实例;抛出Error实例对象以后，整个程序就中断在发生错误的地方
+        var err = new Error('出错了');
+        err.message // 错误提示信息
+        err.name  // 错误名称 (非标准属性)
+        err.stack // 错误的堆栈 (非标准)
+    Error实例是最一般的错误类型，JavaScript还定义其他6种错误对象，存在Error的6个派生对象.
+        1. SyntaxError: 对象是解析代码发生语法错误 
+        2. ReferenceError: 对象是引用一个不存在的变量时发生错误 
+        3. RangeError: 对象是一个值超出有效范围时发生的错误
+        4. TypeError: 对象是变量或参数不是预期类型时发生错误
+        5. URIError: 对象是URI相关函数的参数不正确时抛出的错误
+            encodeURI() decodeURI() encodeURIComponent() decodeURIComponent() escapse() unescape() 
+        6. EvalError: eval函数没有被正确执行时，该错误类型已经不再使用只是为了保证与以前代码兼容，才继续保留
+    自定义错误:
+        function UserError(message) {
+            this.message = message || '默认信息';
+            this.name = 'UserError';
+        }
+
+        UserError.prototype = new Error();
+        UserError.prototype.constructor = UserError;
+        new UserError('这是自定义的错误!');
+    throw语句作用是手动中断程序的执行，抛出一个错误; throw可以抛出任何类型的值，参数可以是任意值;JavaScript引擎，遇到throw语句，程序就中止，引擎会接收到throw 抛出的信息，可能是错误实例也可能是其他类型的值
+    try...catch结构:
+        catch接收一个参数，表示try代码块抛出的值
+    finally代码块: 表示不管是否出现错误，都必须在最后运行的语句;return语句的执行是排在finally代码之前只能等finally代码执行完毕后才返回,进入catch代码块之后，一遇到throw语句，就会去执行finally代码。
+
+_编程风格_
+    Programming style: 编程风格指的是编写代码的样式规则
+    编译器规范叫做"语法规则" grammar.这是程序员必须遵守的，而编译器忽略的部分叫做"编程风格Programming style",这是程序员可以自由选择的,
+    缩进: indent 不要Tab和空格混合使用
+    区块: 建议使用大括号表示区块, 使用起首的大括号跟在关键字后面, 因为JavaScript自动会添加句末的分号，导致难以察觉的错误
+    JavaScript 中圆括号有两种作用: 
+        1. 表示函数的调用, 表示函数调用时，函数名与左括号之间没有空格，函数定义时，函数名与左括号之间没有空格
+        2. 表达式的组合grouping : 其他前面的语法元素与左括号之间都有一个空格
+    行尾的分号:
+        for, while 循环行尾没有分号; do...while循环有分号;
+        分支语句: if, switch, try: 没有分号
+        函数声明语句没有分号; 函数表达式要使用分号
+    ASI: Automatic Semicolon Insertion: 分号的自动添加; 如果一行行首是“自增++”或"自减--"运算符，则他们的前面会自动添加分号; continue, break, return, throw后面直接跟换行符，则会自动添加分号; 
+    由于解释引擎自动添加分号的行为难以预测，因此编写代码的时候不应该省略行尾的分号，JavaScript代码压缩器uglifier不会自动添加分号，因此遇到没有分号的结尾，就会让代码保持原状，而不是压缩成一行，是的压缩无法得到最优的结果,不写结尾的分号可能会导致脚本合并出错.
+    全局变量: 建议避免使用全局变量，使用大写字母表示变量名，这样更容易看出全局变量
+    JavaScript会自动将变量声明“提升hoist”到代码块block的头部;所有函数都应该在使用之前定义，函数内部的变量声明都应该放在函数的头部
+    相等和严格相等: 相等运算符会自动转换变量类型，造成很多意想不到的情况，建议不要使用相等运算符(==)只使用严格相等运算符(===)
+    switch...case结构在每一个case语句之后必须是break语句，否则会接着运行下一个case.建议switch...case结构可以使用
+
+_console_
+    console对象是JavaScript原生对象，可以输出各种信息到控制台,并且还提供很多有用的辅助方法
+        console常见用途:
+            1. 调试程序，显示网页代码运行时错误信息
+            2. 提供一个命令行接口，用来与网页代码互动
+        Command + Option + i: 打开Chrome浏览器“开发者工具”
+            Elements: 查看网页的HTML源码和CSS代码
+            Sources: 查看网页加载的各种资源文件(代码文件、字体文件CSS，以及在硬盘上创建的各种内容)
+            Network: 查看网页的HTTP通信情况
+            Performance: 查看网页的性能情况，比如CPU，内存消耗
+            Console: 运行JavaScript命令
+    console.log() 方法用于在控制台输出信息,自动换行;如果第一个参数是格式化字符串(使用格式占位符).
+        %s: 字符串 %d: 整数 %i: 整数 %f: 浮点数 %o: 对象的链接 %c: CSS格式字符串
+    console.info是console.log方法的别名，console.info方法会在输出信息的前面加上一个蓝色图标
+        ['log', 'info', 'warn', 'error'].forEach(function(method) {  // 显示结果添加当前时间
+            console[method] = console[method].bind(
+                console, new Date().toISOString()
+            );
+        });
+    console.warn(), console.error() 
+    log(),info()方法写入标准输出stdout, warn(), error()写入标准错误stderror
+    console.table() 可以将复合类型的数据转为表格显示
+        > var languages = [{name: 'JavaScript', fileExtension: '.js'},{name:'TypeScript', fileExtension: '.ts'}, {name: 'CoffeeScript', fileExtension: '.coffee'}];
+        undefined
+        > console.table(languages)
+        ┌─────────┬────────────────┬───────────────┐
+        │ (index) │      name      │ fileExtension │
+        ├─────────┼────────────────┼───────────────┤
+        │    0    │  'JavaScript'  │     '.js'     │
+        │    1    │  'TypeScript'  │     '.ts'     │
+        │    2    │ 'CoffeeScript' │   '.coffee'   │
+        └─────────┴────────────────┴───────────────┘
+        undefined
+        >
+    console.count() 用于计数，输出被调用多少次
+    console.dir() 用来对一个对象进行检查inspect,并以易于阅读和打印的格式显示
+    console.dirxml()主要用于目录树的形式显示DOM节点,如果参数不是DOM节点而是普通的JavaScript对象，console.dirxml等同于console.dir
+    console.assert()程序运行过程中条件判断，两个参数：1.参数是表达式2.参数字符串,只有第一个参数位false才会提示有错误，在控制台输出第二个参数，否则不会有任何结果
+    console.time(), console.timeEnd() 用于计时，算出一个操作花费的准确的时间 console.time()表示计时开始, console.timeEnd()表示计时结束,参数时计时器的名称，调用timeEnd方法之后控制台显示“计数器名称：所消耗的时间”
+    console.group(), console.groupEnd(): 显示信息分组，console.groupCollapsed()第一次显示时是收起collapsed 
+    console.trace() 显示当前执行的代码在堆栈中调用的路径
+    console.clear() 清除当前控制台的所有输出,将光标回置到第一行
+    preserve log: 保留日志
+    
+    控制台命令行API:
+        $_: 返回上一个表达式的值
+        $0 - $4: 控制台保存最近五个Elements面板选中的DOM元素, $0代表倒数第一个,$1代表倒数第二个
+        $(selector): 返回第一个匹配的元素,等同于document.querySelector() 
+        $$(selector): 返回选中的DOM对象,document.querySelectorAll 
+        $x(path): 返回一个数组,包含匹配特定的XPath表达式的所有DOM元素
+        inspect(object): 打开相关面板，并选中响应的元素
+        getEventListeners(object): 返回一个对象，该对象成员为object登记回调函数的各种事件，每个事件对应一个数组，数组的成员为该事件的回调函数
+        keys(object), values(object): keys(object)返回一个数组，包含object所有键名; values(object)方法返回一个数组，包含object所有键值
+        moitorEvents(object[, events]), unmonitorEvents(object[, events]): 监听特定对象发生的特定事件，时间发生时，返回一个Event对象，包含该时间的相关信息，unmonitorEvents停止监听
+            所有事件分为四大类:
+                mouse: mousedown, mouseup, click, dblclick, mousemove, mouseover, mouseout, mousewheel 
+                key: keydown, keyup, keypress, textInput 
+                touch: touchstart, touchmove, touchend, touchcancel 
+                control: resize, scroll, zoom, focus, blur, select, change, submit, reset.
+        命令行API其他方法:
+            clear() 清除控制台的历史
+            copy(object):复制特定DOM元素到剪贴板 
+            dir(object): 显示特定对象的所有属性是console.dir方法的别名
+            dirxml(object)显示特定对象的XML形式，是console.dirxml方法的别名
+        debugger语句: 设置断点，如果有正在运行的除错工具，程序运行到debugger语句时回自动停下，如果没有除错工具，debugger语句不会产生任何结果，JavaScript引擎自动跳过    
+```
+
+标准库
+-----
+```
+_Object对象_
+    JavaScript原生提供Object对象，其他所有对象都继承自Object对象，都是Object对象的实例,Object对象的原生方法分为两类: 
+        1. Object本身的方法
+            直接定义在Object对象的方法 Object.print = function (o) { console.log(o) };
+        2. Object实例方法
+            直接定义在Object原型对象Object.prototype上的方法.
+            Object.prototype.print = function () { console.log(this); }; 
+            直接定义在Object.prototype对象上面的属性和方法，将被所有实例对象共享就可以了
+    Object本身是一个函数，可以将任意值转为对象,如果参数为空(或者undefiend, null)Object()返回一个空对象
+        instanceof验证一个对象是否为指定的构造函数的实例
+
+
 ```
