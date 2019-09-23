@@ -117,7 +117,7 @@ $ mkdir -p ~/.vim/bundle
 * Add vundle (Vundle, the plug-in manager for Vim)
 ```
 # Vundle is short for Vim bundle and is a Vim plugin manager.
-$ git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim 
+$ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim 
 ```
 
 * Configure Plugins:

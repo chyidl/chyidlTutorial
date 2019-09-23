@@ -675,6 +675,110 @@ _Object对象_
             直接定义在Object.prototype对象上面的属性和方法，将被所有实例对象共享就可以了
     Object本身是一个函数，可以将任意值转为对象,如果参数为空(或者undefiend, null)Object()返回一个空对象
         instanceof验证一个对象是否为指定的构造函数的实例
+        如果参数是原始类型的值，Object方法将其转为对应的包装对象的实例
+        如果Object方法的参数是一个对象，总是返回该对象，既不用转换
+            function isObject(value) {
+                return value === Object(value);
+            }
+    Object构造函数: Object(value)表示将value转为一个对象，new Object(value)表示新生成一个对象,值是value.
+        Object.keys(): 遍历对象的属性，参数是一个对象，返回一个数组，成员都是对象自身(而不是继承)的属性名
+        Object.getOwnPropertyNames(): 遍历对象的属性,返回一个数组，包含该对象自身的所有属性名. 
+            涉及不可枚举属性：Object.keys()返回可枚举的属性, Object.getOwnPropertyNames返回所有枚举的属性名
+        Object.keys().length: 计算对象属性个数的方法
+    1. 对象属性模型的相关方法:
+        Object.getOwnPropertyDescriptor(): 获取某个属性的描述对象
+        Object.defineProperty():通过描述对象，定义某个属性
+        Object.defineProperties():通过描述对象，定义多个属性
+    2. 控制对象状态的方法:
+        Object.preventExtensions():防止对象扩展
+        Object.isExtensible()判断对象是否可以扩展
+        Object.seal():禁止对象配置
+        Object.isSealed():判断一个对象是否可配置
+        Object.feeeze():冻结一个对象
+        Object.isFrozen():判断一个对象是否被冻结
+    3. 原型链相关方法
+        Object.create(): 该方法可以指定原型对象和属性，返回一个新的对象
+        Object.getPrototypeof():返回对象的Prototype 
+    Object实例方法:
+        定义在Object.prototype对象，所有的Object实例对象都继承这些方法
+        Object.prototype.valueOf():返回当前对象对应的值
+        Object.prototype.toString():返回当前对象对应的字符串形式
+            对一个对象调用toString()方法，返回字符串[object Object]:第二个Object表示该值的构造函数,
+            Object.prototype.toString.call(1)  [object Number]
+            Object.prototype.toString.call('1') [object String]
+            Object.prototype.toString.call(true) [object boolean]
+            Object.prototype.toString.call(Undefined) [object Undefined]
+            Object.prototype.toString.call(null) [object Null]
+            Object.prototype.toString.call([1,2]) [object Array]
+            Object.prototype.toString.call({}) [object Object]
+            Object.prototype.toString.call(function(){}) [object Function]
+            Object.prototype.toString.call(Error()) [object Error]
+            Object.prototype.toString.call(new Date()) [object Date]
+            Object.prototype.toString.call(RegExp()) [object RegExp]
+            Object.prototype.toString.call(Math) [object Math]
 
+            var type = function (0) {
+                var s = Object.prototype.toString.call(o);
+                return s.match(/\[object (.*?)\]/)[1].toLowerCase();
+            }
+
+            ['Null', 'Undefined', 'Object', 'Array', 'String', 'Number', 'Boolean', 'Function', 'RegExp'].forEach(function (t) {type['is' + t] = function (o) {return type(o) === t.toLowerCase();};});
+
+            type.isObject({});
+            type.isNumber(NaN);
+            数组、字符串、函数、Date对象分别部署自定义的toString()方法
+        Object.prototype.toLocalString():返回当前对象对应的本地字符串形式
+            主要有三个对象自定义了toLocalString方法
+                Array.prototype.toLocalString() 
+                Number.prototype.toLocalString()
+                Date.prototype.toLocalString()
+                    > var date = new Date();
+                    undefined
+                    > date.toString();
+                    'Thu Sep 19 2019 22:45:10 GMT+0800 (China Standard Time)'
+                    > date.toLocaleString()
+                    '9/19/2019, 10:45:10 PM'
+        Object.prototype.hasOwnProperty():某个属性是否为当前对象自身的属性，还是继承自原型对象的属性
+            自身属性返回true,继承属性返回 false 
+        Object.prototype.isPrototypeOf():判断当前对象是否为另一个对象的原型
+        Object.prototype.propertyIsEnumerable():判断某个属性是否可枚举
+
+_属性描述对象_
+    属性描述对象attributes object: 每一个属性都有自己对应的属性描述对象，保存属性的一些元信息.
+        {
+            value: 属性的属性值,默认为undefined; value属性是目标属性的值
+            writeable:布尔值，表示属性值value是否可改变,默认为true;如果原型对象的某个属性的writeable为false,那么子对象将无法自定义这个属性
+            enumerable:布尔值,表示属性是否可遍历，默认为true,
+            configurable:布尔值，表示是否可配置，默认为true; writeable只有在false改为true会报错，true改为false允许；value,只要writable和configurable又一个为true,就允许改动
+            get:函数，表示该属性的取值函数getter，默认为undefined.取值函数getter
+            set:函数，表示该属性的存值函数setter,默认为undefined.存值函数setter
+                对目标属性定义存取器，那么存取的时候都将执行对应的函数；取值函数get不能接受参数，存值函数set只能接受一个参数
+        }
+    Object.getOwnPropertyDescriptor()获取属性的描述对象.第一参数是目标对象，第二参数是一个字符串
+    Object.getOwnPropertyNames(): 返回一个数组，成员是参数对象自身的全部属性的属性名,不管该属性是否可遍历
+    Object.defineProperty():通过属性描述对象，定义或修改一个属性，然后返回修改后的对象
+        Object.defineProperty(object, propertyName, attributesObject)
+            object: 属性所在的对象
+            propertyName: 字符串，属性名
+            attributesObject:属性描述对象
+        定义取值函数get需要设置writable为true.
+        如果一次性定义或修改多个属性，可以使用Object.defineProperties()方法;一旦定义了取值函数get(或者存值函数set)就不能将writeable属性设为true,或者同时定义value属性
+        writeable, configurable, enumerable三个属性都为false 
+    Object.prototype.propertyIsEnumerable(): 返回布尔值，判断某个属性是否可以遍历,该方法只能判断自身属性，继承的属性返回false.
+    
+    对象的拷贝:
+        var extend = function (to, from) {
+            for (var property in from) {
+                if (!from.hasOwnProperty(property)) 
+                    continue;
+                Object.defineProperty(to, property, Object.getOwnPropertyDescriptor(from, property));
+            }
+            return to;
+        }
+
+    控制对象状态:
+        Object.preventExtensions : 使得对象无法添加新的属性
+        Object.seal : 
+        Object.freeze : 
 
 ```

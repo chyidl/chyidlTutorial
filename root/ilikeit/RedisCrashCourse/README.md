@@ -733,6 +733,21 @@ OK
 所谓的有符号数是指获取的位数组中第一个位是符号位，剩下的才是值，如果第一位是1，就是负数，无符号表示非负数，没有符号位，获取的位数组全部都是值。有符号数最多可以获取64位，无符号数只能获取63位（因为Redis协议中integer是由符号数，最大64位，不能传递64位无符号值）如果超过位数限制，Redis就会参数出错.
 ```
 
+HyperLogLog
+-----------
+```
+UV: Unique visitor: 通过互联网访问、浏览网页的自然人。一天内同一访客多次访问仅计算一个UV
+IP: Internet Protocol: 独立IP访问过某站点的IP总数,一天内相同IP地址只被计算一次
+PV: Page View: 页面的浏览量或点击量
+VV: Visit View 统计所有访客1天内访问网站的次数
+HyperLogLog数据结构提供不精确的去除重复计数方案.准确误差0.81% 
+HyperLogLog提供两个指令pfadd, pfcount
+    pfadd:增加计数
+    pfcount:获取计数
+```
+- [hyperloglog.py](root/ilikeit/RedisCrashCourse/script/py/hyperloglog.py)
+
+
 面试问题
 --------
 ```

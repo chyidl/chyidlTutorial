@@ -1,8 +1,8 @@
-# VIM 
+VIM
+===
 
-Vim a highly configurable text editor for effieciently creating and changing any kind of text. It is included as "vi" with most UNIX systems and with Apple OS X. 
-
-Vim is rock stable and is continuously being developed to become even better. Among its features are:
+> Vim a highly configurable text editor for effieciently creating and changing any kind of text. It is included as "vi" with most UNIX systems and with Apple OS X. 
+> Vim is rock stable and is continuously being developed to become even better. Among its features are:
     
 - persistent, multi-level undo tree 
 - extensive plugin system
@@ -10,6 +10,7 @@ Vim is rock stable and is continuously being developed to become even better. Am
 - powerful search and replace 
 - integrates with many tools 
 
-## VIM Tips 
-
+VIM Tips 
+--------
 - [Entering special characters in VIM](/root/ilikeit/vim/VimTipsWiki/Tip_51_Entering_special_characters.md)
+- [Insert current date or time in VIM](/root/ilikeit/vim/VimTipsWiki/Tip_97_Insert_current_date_or_time.md)

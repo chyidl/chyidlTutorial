@@ -261,3 +261,91 @@ setPriority():设置一个线程的优先级
 补码：正数的补码是其本身，负数的补码是在其原码基础上，符号位不变，其余位取反，最后加1
 使用补码，不仅仅修复0的符号以及存在两个编码的问题，而且还能够多表示一个最低数，使用补码表示的范围为[-128, 127] 
 ```
+
+Java核心技术
+-----------
+
+* 1. Java基础 
+    - Java平台的理解
+```
+Java是一种面向对象的语言
+    Write Once, run anywhere.
+    GC, Garbage Collection: Java通过垃圾收集器(Garbage Collector) 回收分配内存 
+    JRE, Java Runtime Environment: Java运行环境(包括JVM,Java类库)
+    JDK, Java Development Kit(JRE超集，提供更多工具，比如编译器、各种诊断工具)
+    .java文件(源代码) -- javac编译 -- .class（字节码）-- Java虚拟机(JVM)解释器将字节码转换成最终的机器码. Oracle JDK 提供Hosspot JVM,提供JIT（Just-In-Time）编译器-动态编译器，JIT能够在运行时将热点代码编译成机器码，这种情况下部分热点代码就属于编译执行而不是解释执行.
+    JVM通过类加载器(Class-Loader)加载字节码，解释或者编译执行,JDK8是解释和编译混合的一种模式，即所谓的混合模式(-Xmixed).运行在Server模式的JVM，会进行上万次调用收集足够的信息进行高效的编译,Client模式的JVM门限石1500次，Oracle Hotspot JVM内置两个不同的JIT compiler，C1对应前面讲的client模式，适用于启动速度敏感的应用(普通Java桌面应用),C2对应server模式,优化长时间运行的服务器端应用设计.默认采用分层编译(Tiered Compilation).
+    JVM虚拟机启动时可以指定不同参数对运行模式进行选择
+        -Xint: JVM只进行解释执行,不对代码进行编译,这种模式抛弃JIT带来的性能优势
+        -Xcomp: 不进行解释执行,最大优化级别，会导致JVM启动变慢，同时有些JIT编译器优化方法，比如分支预测，如果不进行profiling往往并不能进行有效的优化
+    AOT（Ahead-of-Time Compilation):直接将字节码编译成为机器代码。避免JIT预热开销，JDK9引入实验性的AOT特征，并且增加新的jaotc工具
+        # 下面命令将某个类或某个模块编译成AOT库
+        $ jaotc --output libHellWorld.so HelloWorld.class 
+        $ jaotc --output libjava.base.so --module java.base 
+        # 启动时直接指定
+        $ java -XX:AOTLibrary=./libHellWorld.so,./libjava.base.so HelloWorld
+    JVM作为强大的平台，不仅仅只有Java语言可以运行在JVM上，本质上合规的字节码都可以运行，类似Clojure,Scala,Grovy,JRuby,Jypthon 
+
+    Java语言特性
+        面向对象
+        反射
+        泛型
+    Java类库
+        核心类库: 
+            IO/NIO
+            网络
+            utils 
+        安全类库:
+        jdk,management类库:
+        第三方类库:
+    Java虚拟机
+        垃圾收集器
+        运行时
+        动态编译
+        辅助功能、JFR 
+    Java辅助工具
+        辅助工具:
+            jlink
+            jar
+            jdeps 
+        编译器
+            javac: Javac编译，编译Java源代码生成.class文件字节码
+            sjavac 
+        诊断工具
+            jmap
+            jstack 
+            jconsole 
+            jcmd 
+```
+    - Exception 和 Error区别?
+```
+    Exception 和 Error都是继承Throwable类，Java中只有Throwable类型的实例才可以被抛出(throw)或者捕获(catch).是异常处理机制的基本组成类型
+        Exception是程序正常运行中可以预料的意外情况，可以并且应该被捕获并处理.
+            Exception分为可检查异常(checked)和非检查异常(unchecked)
+            可检查异常再源代码中必须显式进行捕获处理
+            不检查异常就是所谓的运行时异常 NullPointException, ArrayIndexOutOfBoundsException
+        Error是程序正常情况下不大可能出现的情况，绝大部分的Error都会导致程序(JVM本身)处于非正常、不可恢复状态。比如OutOfMemoryError
+        Object -> Throwable -> Error  [OutOfMemoryError,StackOverflowError,VirtualMachineError,NoClassDefFoundError,ExceptionInInitializerError]
+                            -> Exception [IOException, RuntimeException, NullPointerException,ClassCastException,SecurityException]
+    NoClassDefFoundError和ClassNotFoundException区别?
+        ...
+    try-catch-finally, throw, throws
+    try-with-resources, multiple catch. 
+        try (BufferedReader br = new BufferedReader(...); BufferedWriter writer = new BufferedWriter())
+```             
+
+* 2. Java进阶
+```
+```
+
+* 3. Java应用开发扩展
+```
+```
+
+* 4. Java安全基础 
+```
+```
+
+* 5. Java性能基础
+```
+```

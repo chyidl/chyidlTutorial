@@ -61,6 +61,7 @@ About Python language, Tensorflow Machine learning, Opencv image Processing stud
 - [Design Patterns](/root/ilikeit/DesignPatterns/README.md)
 - [SSH - Secure Shell](/root/ilikeit/SSH/README.md)
 - [Vim Tips](root/ilikeit/vim/README.md)
+- [Mastering Emacs](root/ilikeit/Emacs/README.md)
 - [Vim+Tmux OMG!](/root/ilikeit/Vim+Tmux/README.md)
 - [Bash Script](root/ilikeit/Scripts/README.md)
 - [Git Crash Course](/root/ilikeit/GitCrashCourse/README.md)
