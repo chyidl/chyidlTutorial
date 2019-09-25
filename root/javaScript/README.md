@@ -744,18 +744,36 @@ _Object对象_
         Object.prototype.propertyIsEnumerable():判断某个属性是否可枚举
 
 _属性描述对象_
+    JavaScript提供一个内部数据结构，用来描述对象的属性，控制行为
     属性描述对象attributes object: 每一个属性都有自己对应的属性描述对象，保存属性的一些元信息.
         {
             value: 属性的属性值,默认为undefined; value属性是目标属性的值
             writeable:布尔值，表示属性值value是否可改变,默认为true;如果原型对象的某个属性的writeable为false,那么子对象将无法自定义这个属性
-            enumerable:布尔值,表示属性是否可遍历，默认为true,
+            enumerable:布尔值,表示属性是否可遍历，默认为true,如果为false,for...in,JSON.stringify循环 Object.keys()将跳过该属性
             configurable:布尔值，表示是否可配置，默认为true; writeable只有在false改为true会报错，true改为false允许；value,只要writable和configurable又一个为true,就允许改动
             get:函数，表示该属性的取值函数getter，默认为undefined.取值函数getter
             set:函数，表示该属性的存值函数setter,默认为undefined.存值函数setter
                 对目标属性定义存取器，那么存取的时候都将执行对应的函数；取值函数get不能接受参数，存值函数set只能接受一个参数
         }
-    Object.getOwnPropertyDescriptor()获取属性的描述对象.第一参数是目标对象，第二参数是一个字符串
+    Object.getOwnPropertyDescriptor()获取属性的描述对象.第一参数是目标对象，第二参数是一个字符串,只适用于自身属性，不适用于继承属性
     Object.getOwnPropertyNames(): 返回一个数组，成员是参数对象自身的全部属性的属性名,不管该属性是否可遍历
+    Object.keys(): 值返回对象自身可遍历属性的全部属性名
+    Object.prototype: 所有的实例继承它,自身的属性都是不可遍历
+        > Object.getOwnPropertyNames(Object.prototype)
+        [
+          'constructor',
+          '__defineGetter__',
+          '__defineSetter__',
+          'hasOwnProperty',
+          '__lookupGetter__',
+          '__lookupSetter__',
+          'isPrototypeOf',
+          'propertyIsEnumerable',
+          'toString',
+          'valueOf',
+          '__proto__',
+          'toLocaleString'
+        ]
     Object.defineProperty():通过属性描述对象，定义或修改一个属性，然后返回修改后的对象
         Object.defineProperty(object, propertyName, attributesObject)
             object: 属性所在的对象
@@ -765,7 +783,11 @@ _属性描述对象_
         如果一次性定义或修改多个属性，可以使用Object.defineProperties()方法;一旦定义了取值函数get(或者存值函数set)就不能将writeable属性设为true,或者同时定义value属性
         writeable, configurable, enumerable三个属性都为false 
     Object.prototype.propertyIsEnumerable(): 返回布尔值，判断某个属性是否可以遍历,该方法只能判断自身属性，继承的属性返回false.
-    
+    writeable只有在false改为true会报错,true改为false是允许的
+    value属性只要writeable和configurable有一个为true,就允许改动
+    configurable:决定属性是否可以被删除
+    get取值函数不能接受参数，存值函数set只能接受一个参数(属性值)
+
     对象的拷贝:
         var extend = function (to, from) {
             for (var property in from) {
@@ -778,8 +800,24 @@ _属性描述对象_
 
     控制对象状态:
         Object.preventExtensions : 使得对象无法添加新的属性
-        Object.seal : 
-        Object.freeze : 
+        Object.isExtensible: 检查是否可以为一个对象添加属性
+        Object.seal : 使得对象无法添加新属性也无法删除旧属性;实质上是将属性描述符对象的configurable属性设为false,因此属性描述对象不在改变;只是禁止新增或删除属性，不影响修改某个属性的值
+        Object.isSealed():检查一个对象是否使用了Object.seal()
+        Object.freeze : 使得对象无法添加新属性、无法删除就属性，无法改变属性值，是的这个对象实际上变成常量
+        Object.isFrozen(): 检查一个对象是否使用Object.freeze() 
+
+_Array对象_
+    Array是JavaScript的原生对象，也是一个构造函数
+    Array构造函数的参数是一个正整数，返回数组成员都是空位,获取不到键名
+    Array.isArray(): 返回一个布尔值，表示参数是否为数组,弥补typeof运算符的不足
+        valueOf返回数组本身
+        toString()返回数组的字符串形式
+        push()在数组末端添加一个或多个元素,返回数组长度
+        pop()方法用于删除数组的最后一个元素,返回该元素,空数组使用pop方法，返回undefined
+        push,pop结合使用构成“后进先出”的栈结构(stack)
+        shift()删除数组的第一个元素,并返回该元素
+        push,shift结合使用构成“先进先出”的队列结构 queue 
+        unshift()在数组第一个元素添加元素，并返回添加后的数组长度,接收多个参数
 
 ```
 

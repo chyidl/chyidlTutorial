@@ -108,10 +108,10 @@ plugins=(
 )
 ```
 ![bullet-train](/imgs/ilikeit/Vim+Tmux/bullet-train.png?raw=true)
--[MesloLGS NF Regular.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Regular.ttf)
--[MesloLGS NF Bold.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Bold.ttf)
--[MesloLGS NF Italic.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Italic.ttf)
--[MesloLGS NF Bold Italic.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Bold\ Italic.ttf)
+- [MesloLGS NF Regular.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS_NF_Regular.ttf)
+- [MesloLGS NF Bold.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS_NF_Bold.ttf)
+- [MesloLGS NF Italic.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS_NF_Italic.ttf)
+- [MesloLGS NF Bold Italic.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS_NF_Bold_Italic.ttf)
 
 Vim Setup Instructions
 ----------------------
