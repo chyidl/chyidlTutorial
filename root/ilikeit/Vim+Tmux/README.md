@@ -83,6 +83,20 @@ $ vim ~/.zshrc
 # add export LANG=en_US.UTF-8
 # add export LC_TYPE=en_US.UTF-8
 
+5. Or powerlevel10k -- A fast reimplementation of Powerlevel9k ZSH theme 
+$ git clone https://github.com/romkatv/powerlevel10k.git $ZSH_CUSTOM/themes/powerlevel10k 
+# Set ZSH_THEME=powerlevel10k/powerlevel10k in your ~/.zshrc 
+# Fonts -- Recommended: Meslo Nerd Font patched for Powerlevel10k 
+    MesloLGS NF Regular.ttf 
+    MesloLGS NF Bold.ttf 
+    MesloLGS NF Italic.ttf 
+    MesloLGS NF Bold Italic.ttf 
+# This will make MesloLGS NF font available to all applications on your system. Configure your terminal to use this font:
+    iTerm2: Open iTerm2 -> Preferences -> Profiles -> Text and set Font to MesloLGS NF.
+    Visual Studio Code: Open File -> Preferences -> Settings, enter terminal.integrated.fontFramily in the search box and set the value to MesloLGS NF.
+    GNOME Terminal (the default Ubuntu termine): Open Terminal -> Preferences and click on the selected profile under Profiles. Check Custom font under Text Appearance and select MesloLGS NF Regular.
+# Run p10k configure to pick the best style for your new font.
+
 6. Let all changes be valid 
 $ source ~/.zshrc 
 
@@ -94,6 +108,10 @@ plugins=(
 )
 ```
 ![bullet-train](/imgs/ilikeit/Vim+Tmux/bullet-train.png?raw=true)
+-[MesloLGS NF Regular.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Regular.ttf)
+-[MesloLGS NF Bold.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Bold.ttf)
+-[MesloLGS NF Italic.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Italic.ttf)
+-[MesloLGS NF Bold Italic.ttf](/root/ilikeit/Vim+Tmux/fonts/MesloLGS\ NF\ Bold\ Italic.ttf)
 
 Vim Setup Instructions
 ----------------------

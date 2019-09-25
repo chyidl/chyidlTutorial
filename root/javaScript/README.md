@@ -782,3 +782,41 @@ _属性描述对象_
         Object.freeze : 
 
 ```
+
+HOW TO START A NODE.JS PROJECT
+------------------------------
+```
+$ node --version                                                                                                 
+v12.10.0
+$ npm --version                                                                                                  
+6.11.3
+
+1. First, use npm to generate initial project
+$ npm init  # builds a package.json file 
+OR
+$ npx license mit > LICENSE     # use the license package to download a license of choice, in this case the MIT license.
+$ npx gitignore node            # uses the gitignore package to automatically download the relevant .gitignore file from GitHub's repo
+$ npx covgen YOUR_EMAL_ADDRESS  # uses the covgen package to generate the Contributor Covenant and give your project a code of conduct that will be welcoming to all contributors
+$ npm init -y                   # accepts all of the default options that npm init asks you about
+
+2. CUSTOMISING npm init
+$ npm config list   # check current npm config 
+# author name, author email, author url, the license, and the version
+$ npm set init.author.name "ChyiYaqing"
+$ npm set init.author.email "ChyiYaqing@gamil.com"
+$ npm set init.author.url "https://chyidl.com"
+$ npm set init.license "MIT"
+$ npm set init.version "0.0.1"
+
+3. BUILDING YOUR OWN INIT SCRIPT 
+    function node-project {
+        git init 
+        npx license $(npm get init.licese) -o "$(npm get init.author.name)" > LICENSE
+        npx gitignore node 
+        npx covgen "$(npm get init.author.email)"
+        npm init -y
+        git add -A 
+        git commit -m "Initial commit"
+    }
+    You can take this function and add it to your ~/.zshrc OR ~/.bash_profile. or open a new command line window and run node-project.
+```

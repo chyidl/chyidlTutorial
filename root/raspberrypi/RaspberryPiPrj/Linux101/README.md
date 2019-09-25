@@ -497,49 +497,55 @@ $ pref report  # 解析保存后的perf record
 $ sudo apt-get install docker.io sysstat linux-tools-common apache2-utils 
 
 ab (apache bench): 是一个常用的HTTP服务性能测试工具
-    虚拟机01: Nginx Php  - Web服务器
+    虚拟机01: Nginx php  - Web服务器
         $ docker run --name nginx -p 10000:80 -itd feisky/nginx 
         $ docker run --name phpfpm -itd --network container:nginx feisky/php-fpm 
     虚拟机02: ApacheBench - Web客户端
+        $ curl http://[VM1 Public IP]:10000 
+        It works!
+        $ (centos) yum -y install httpd-tools
         $ ab -c 10 -n 100 http://chyidl.com:10000/  
              -c 10      # 并发10个请求
              -n 100     # 总共测试100请求
-        This is ApacheBench, Version 2.3 <$Revision: 1826891 $>
-        Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-        Licensed to The Apache Software Foundation, http://www.apache.org/
-        Benchmarking chyidl.com (be patient).....done
-        Server Software:        nginx/1.15.4
-        Server Hostname:        chyidl.com
-        Server Port:            10000
-        Document Path:          /
-        Document Length:        9 bytes
-        Concurrency Level:      10
-        Time taken for tests:   6.783 seconds
-        Complete requests:      100
-        Failed requests:        0
-        Total transferred:      17200 bytes
-        HTML transferred:       900 bytes
-        Requests per second:    14.74 [#/sec] (mean)
-        Time per request:       678.304 [ms] (mean)
-        Time per request:       67.830 [ms] (mean, across all concurrent requests)
-        Transfer rate:          2.48 [Kbytes/sec] received
-
-        Connection Times (ms)
-                      min  mean[+/-sd] median   max
-        Connect:      168  199 144.6    176    1206
-        Processing:   272  414 180.0    371    1309
-        Waiting:      272  399 148.3    371    1309
-        Total:        444  613 225.2    549    1572
-
-        Percentage of the requests served within a certain time (ms)
-          50%    549
-          66%    590
-          75%    611
-          80%    626
-          90%    876
-          95%   1304
-          98%   1529
-          99%   1572
-         100%   1572 (longest request)
+This is ApacheBench, Version 2.3 <$Revision: 1430300 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+Benchmarking xxx.xxx.xxx.xxx (be patient).....done
+Server Software:        nginx/1.15.4
+Server Hostname:        xxx.xxx.xxx.xxx
+Server Port:            10000
+Document Path:          /
+Document Length:        9 bytes
+Concurrency Level:      10
+Time taken for tests:   4.221 seconds
+Complete requests:      100
+Failed requests:        0
+Write errors:           0
+Total transferred:      17200 bytes
+HTML transferred:       900 bytes
+Requests per second:    23.69 [#/sec] (mean) -- Nginx能承受的每秒平均请求数
+Time per request:       422.150 [ms] (mean)
+Time per request:       42.215 [ms] (mean, across all concurrent requests)
+Transfer rate:          3.98 [Kbytes/sec] received
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.0      0       0
+Processing:    89  399  86.4    401     589
+Waiting:       89  399  86.4    401     589
+Total:         89  399  86.4    401     589
+Percentage of the requests served within a certain time (ms)
+  50%    401
+  66%    421
+  75%    439
+  80%    460
+  90%    517
+  95%    546
+  98%    583
+  99%    589
+ 100%    589 (longest request)
+        $ ab -c 10 -n 10000 http://chyidl.com:10000/
+        $ perf top -g -p 21027 
+            -g 开启调用关系分析
+            -p 指定php-fpm进程号21027
 
 ```
