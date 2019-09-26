@@ -37,6 +37,7 @@ Raspberry Pi Awesome Project
 - [Recommended system](/root/raspberrypi/RaspberryPiPrj/RecommendedSystem/README.md)
 - [Linux Performance optimization](/root/raspberrypi/RaspberryPiPrj/Linux101/README.md)
 - [Nginx Crash Course](/root/raspberrypi/RaspberryPiPrj/NginxCrashCourse/README.md)
+- [Prometheus - From metrics to insight](/root/raspberrypi/RaspberryPiPrj/Prometheus/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)

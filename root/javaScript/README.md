@@ -818,6 +818,208 @@ _Array对象_
         shift()删除数组的第一个元素,并返回该元素
         push,shift结合使用构成“先进先出”的队列结构 queue 
         unshift()在数组第一个元素添加元素，并返回添加后的数组长度,接收多个参数
+        join():指定参数作为分隔符，将所有数组成员连接为一个字符串返回,默认使用逗号分隔;如果数组成员是undefined或null或空位，会被转为空字符串
+        Array.prototype.join.call(): 用于字符串或类似数组的对象
+        concat()用于多个数组的合并，将新数组的成员，添加到原数组成员的后部，然后返回一个新数组,原数组不变
+        reverse():颠倒排列数组元素,返回改变后的数组,
+        slice(): 提取目标数组的一部分,返回一个新数组,原数组不变, slice()方法没有参数，实际上等于返回一个原数组的拷贝;slice方法一个重要应用是将类似数组的对象转为真正的数组
+        splice():删除原数组的一部分数据,并可以在删除的位置添加新的数组成员，返回值是删除的元素
+        sort():对数组成员进行排序，默认是按照字典顺序排序,排序后，原数组将被改变;数组自动转为字符串，在按照字典顺序比较;
+            sort方法按照自定义方式排序，可以传入一个函数作为参数
+            [10111, 1101, 111].sort(function (a, b){return a-b;}) ; 如果函数返回值大于0,表示第一个成员排在第二个成员的后面，其他情况下，都是第一个元素排在第二元素前面.
+        map():将数组所有成员一次传入参数函数,然后把每一次执行的结果组成一个新数组返回,原数组不变
+            map方法接受一个函数作为参数，该函数调用时，map方法向它传入三个参数，当前成员、当前位置和数组本身
+            [1, 2, 3].map(function(elem, index, arr){
+                return elem * index;
+            });
+            map方法接受第二参数，用来绑定回调函数内部的this变量
+                var arr = ['a', 'b', 'c'];
+                [1,2,3].map(function (e) {return this[e];}, arr) // 将回调函数内部的this对象指向arr数组
+            数组上的空位(除了undefined, null)会被map方法回调函数跳过
+        forEach()与map()方法类似，同样是对数组所有成员依次执行参数函数，forEach方法不返回值，只用来操作数据, forEach方法无法中断执行，总是会将所有成员遍历完，无法使用break语句,forEach回跳过数组的空位
+        filter():过滤数组成员，满足条件的成员组成一个新数组返回,参数是一个函数，所有数组成员依次执行该函数，返回结果为true的成员组成一个新数组返回,原数组不变
+        some():只要有一个成员的返回值是true,整个some方法返回值为true,否则false; 空数组some方法返回false,回调函数不执行
+        every():所有成员的返回值都是true,整个every方法才返回true.否则返回false;空数组every方法返回true,回调函数不执行
+        reduce(): 依次处理数组的每个成员，最终累计一个值，顺序是从左到右
+        reduceRight(): 依次树立数组的每个成员，最终累计一个值，顺序是从右到左
+            reduce方法和reduceRight方法的函数的四个参数
+                1.累积变量:默认为数组的第一个成员
+                2.当前变量:默认为数组的第二个成员
+                3.当前位置(从0开始)
+                4.原始数组
+            [1,2,3,4,5].reduce(function (a, b){return a+b;}, 10);
+        indexOf(): 返回给定元素在数组中第一次出现的位置,否则返回-1, 第二参数表示搜索的开始位置
+        lastIndexOf(): 返回给定元素在数组中最后依次出现的位置，否则返回-1
+            indexOf, lastIndexOf无法搜索NaN的位置，无法确定数组成员是否包含NaN,因为上述方法使用严格相等运算符(===)进行比较，而NaN是唯一一个不等于自身的值
+
+_包装对象_
+    原始类型的值：数值、字符串、布尔值--在一定条件下，会自动转为对象(wrapper-包装对象:Number, String, Boolean)
+    对象是JavaScript语言中最主要的数据类型
+    Number, String, Boolean:作为构造函数(new)时，可以使得原始类型的值转为对象;作为普通函数使用时(不带new)可以将任何类型的值，转为原始类型的值
+    原始类型与实例对象的自动转换
+
+_Boolean对象_
+    双重否运算符!!可以将任何值转为对应的布尔值
+
+_Number对象_
+    Number对象的静态属性:
+        Number.POSITIVE_INFINITY: 正无穷,指向Infinity
+        Number.NEGATIVE_INFINITY: 负无穷,指向-Infinity
+        Number.NaN: 表示非数值,
+        Number.MIN_VALUE:表示最小的正数
+        -Number.MIN_VALUE:
+        Number.MAX_SAFE_INTEGER:表示精确表示的最大整数
+        Number.MIN_SAFE_INTEGER:表示精确表示的最小整数
+    Number.prototype.toString(): 将一个数值转为字符串形式; toString方法只能将十进制数转为其他进制的字符串，如果要将其他进制的数转回十进制，需要使用parseInt() 
+    Number.prototype.toFixed():将数转为指定位数的小树,然后返回这个小树的字符串(有效范围为0-20,超出返回将抛出RangeError)
+    Number.prototype.toExponential(): 将一个数转为科学计数形式，参数是小数点后有效数字的位数(范围是0到20)
+    Number.prototype.toPrecision(): 将一个数转为指定位数的有效数字(范围是0-21)
+
+_String对象_
+    String.fromCharCode(): 方法的参数是一个或多个数值，代表Unicode码点，返回值是这些码点组成的字符串;不支持Unicode码点大于0xFFFF的字符(2个字节) UTF-16
+    String.prototype.length: length属性返回字符串的长度
+    String.prototype.charAt(): 返回指定位置的字符，参数是从0开始编号的位置;可以用数组下标替代;参数为负数或大于字符串的长度，charAt返回空字符串.
+    String.prototype.charCodeAt(): 返回字符串指定位置的Unicode码点(十进制表示),没有参数，返回首字符的Unicode码点;如果参数为负数，或大于等于字符串的长度，charCodeArt返回NaN.
+    String.prototype.concat(): 连接两个字符串，返回一个新字符串，不改变原字符串
+    String.prototype.slice(): 从原字符串取出子字符串并返回,并不改变字符串.
+    String.prototype.substring(): 用于从原字符串取出子字符串并返回，不改变原字符串.;如果第一参数大于第二参数，自动更换两个参数位置;如果参数是负数，substring方法自动将负数转为0.
+        优先使用slice > substring 
+    String.prototype.substr(): 用于从原字符串取出子字符串并返回，不改变原字符串.第一参数是开始位置，第二参数是字符串长度
+    String.prototype.indexOf(): 第一次出现的位置，-1表示不匹配
+    String.prototype.lastIndexOf():最后一次出现的位置，-1表示不匹配
+    String.prototype.trim(): 去除字符串两端的空格，返回一个新字符串，不改变原字符串; 去除的包括(space, \t, \v, \n \r)
+    String.prototype.toLowerCase(): 将字符串转为小写
+    String.prototype.toUpperCase(): 将字符串转为大写
+    String.prototype.match(): 确定原字符串是否匹配某个字符串;返回数组还有index属性和input属性，分别表示匹配字符串开始的位置和原始字符串;可以使用正则表达式作为参数
+    String.prototype.search(): 返回匹配的第一个位置
+    String.prototype.replace():替换匹配的子字符串，一般情况下只替换第一匹配(除非使用g修饰符的正则表达式)
+    String.prototype.split(): 按照给定规则分隔字符串,返回一个分割的子字符串组成的数组;第二参数限定返回数组的最大成员数
+    String.prototype.localeCompare(): 比较两个字符串;第二参数指定使用的语言(默认是英语)
+
+_Math对象_
+    Math是JavaScript原生对象，提供各种数学功能,该对象不是构造函数，不能生成实例，所有的属性和方法都必须在Math对象上调用.
+    Math.E: 常数e 
+    Math.LN2: 2的自然对数
+    Math.LN10: 10自然对数
+    Math.LOG2E: 以2为底的e的对数
+    Math.LOG10E:以10为底的e的对数
+    Math.PI:常数
+    Math.SQRT_2: 0.5的平方根
+    Math.SQRT2:2的平方根
+    Math.abs(): 绝对值
+    Math.ceil(): 向上取整: 大于参数值的最小整数
+    Math.floor():向下取整: 小于参数值的最大整数
+    Math.max(): 最大值: 参数如果为空，返回-Infinity
+    Math.min():最小值:参数如果为空,返回Infinity
+    Math.pow():指数运算:返回第一个参数为底数，第二个参数为幂的指数值
+    Math.sqrt():平方根
+    Math.log():自然对数
+    Math.exp():e的指数
+    Math.round():四舍五入
+    Math.random():随机数返回0到1之间的一个伪随机数,可能等于0，一定小于1
+        function getRandomInt(min, max) {   // 任意范围的随机整数的生成函数
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        function getRandomArbitrary(min, max) { // 任意范围的随机数生成函数
+            return Math.random() * (max - min) + min;
+        }
+        function random_str(length) { // 返回随机字符
+            var ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            ALPHABET += 'abcdefghijklmnopqrstuvwxyz';
+            ALPHABET += '0123456789-_';
+            var str = '';
+            for (var i = 0; i < length; ++i) {
+                var rand = Math.floor(Math.random() * ALPHABET.length);
+                str += ALPHABET.substring(rand, rand + 1);
+            }
+            return str;
+        }
+    Math.sin(): 正弦(参数为弧度值)
+    Math.cos(): 余弦(参数为弧度值)
+    Math.tan(): 正切(参数为弧度值)
+    Math.asin(): 反正弦(返回值为弧度值)
+    Math.acos(): 反余弦(返回值为弧度值)
+    Math.atan(): 反正切(返回值为弧度值)
+
+_Date对象_
+    Date对象是JavaScript原生的时间库,以国际标准时间UTC(1970.1.1.00:00:00)
+    Date(): 返回当前时间的字符串
+    new Date(): 构造函数参数为负数代表1970年元旦之前的时间;参数年、月、日多个整数，年和月不能省略，其他参数可以省略。
+        年: 使用四位数年份,如果是负数，表示公元前
+        月: 0表示一月
+        日: 1到31
+        小时: 0到23
+        分钟: 0到59
+        秒: 0到59 
+        毫秒: 0到999 
+    Date实例转为数值，等于对应的毫秒数、转为字符串字符串;两个实例对象进行减法运算，返回的是他们间隔的毫秒数,如果进行加法运算，返回的是两个字符串连接而成的新字符串
+    Date.now(): 返回当前时间距离时间零点(1970年1月1日 00:00:00UTC)的毫秒数
+    Date.parse(): 解析日期字符串,返回距离时间零点的毫秒数;当前时区
+    Date.UTC(): 会被解释为UTC时区
+    Date.prototype.valueOf(): 返回实例对象距离时间零点的毫秒数;等同于getTime()方法
+    Date.prototype.toString(): 返回一个完整的日期字符串
+    Date.prototype.toUTCString(): 返回对应的UTC时间
+    Date.prototype.toISOString(): 返回对应时间的ISO8601,UTC时区的时间
+    Date.prototype.toJSON(): 返回符合JSON格式的ISO日期字符串;与toISOString()方法返回结果一致
+    Date.prototype.toDateString(): 返回日期字符串(不含小时、分钟、秒)
+    Date.prototype.toTimeString(): 返回时间字符串(不含年月日)
+    下面三个方法都有两个可选的参数:
+    Date.prototype.toLocaleString(): 转为完整的本地时间
+    Date.prototype.toLocaleDateString(): 本地日期(不含小时，分和秒)
+    Date.prototype.toLocaleTimeString(): 本地时间(不含年月日)
+        locales: 所用语言的字符串: 'en-US', 'zh-CN'
+        options: 配置对象: weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    getTime(): 返回实际距离1970.1.1.0 毫秒数; getUTCDate()
+    getDate(): 返回对象每月几号; getUTCFullYear()
+    getDay(): 返回星期几,星期日为0; getUTCDay()
+    getFullYear(): 返回年份; getUTCFullYear()
+    getMonth(): 返回月份(0表示1月); getUTCMonth()
+    getHours(): 返回小时; getUTCHours();
+    getMinutes(): 返回分钟; getUTCMinutes()
+    getMilliseconds: 返回毫秒; getUTCMilliseconds()
+    getSeconds(): 返回秒; getUTCSeconds()
+    getTimezoneOffset(): 返回当前时间的UTC的时区差异，分钟表示，UTC时间减少当前时间
+        
+        function leftDays() { // 计算本年度剩余多少天
+            var today = new Date();
+            var endYar = new Date(today.getFullYear(), 11, 31, 23, 59, 59, 999);
+            var msPerDay = 24 * 60 * 60 * 1000;
+            return Math.round((endYear.getTime() - today.getTime()) / msPerDay);
+        }
+
+    setDate(date): 设置每月几号，返回时间毫秒数
+    setFullYear(year): 设置四位年份
+    setHours(hour): 设置小时
+    setMilliseconds()设置毫秒
+    setMinutes(min)设置分钟
+    setMonth(month): 设置月份
+    setSeconds()设置秒数
+    setTime(miliseconds)设置毫秒时间戳
+
+_RegExp对象_
+    RegExp对象提供正则表达式的功能;JavaScript的正则表达式体系是参照Perl 5建立的
+    新建正则表达式有两种方式
+        1. 使用字面量,以斜杠表示开始和结束; 引擎编译代码时就会新建正则表达式, 效率较高
+        2. RegExp构造函数; 在运行时新建正则表达式
+    RegExp.prototype.ignoreCase: 返回一个布尔值,判断是否设置i修饰符
+    RegExp.prototype.global: 返回一个布尔值，表示是否设置g修饰符 -- 表示全局搜索
+    RegExp.prototype.multiline:返回一个布尔值，表示是否设置m修饰符
+    RegExp.prototype.flags: 返回一个字符串,包含已经设置的修饰符,按字母排序
+    RegExp.prototype.lastIndex: 返回一个整数,表示下一次开始搜索的位置
+    RegExp.prototype.source: 返回正则表达式的字符串形式
+    RegExp.prototype.test(): 返回布尔值，表示当前模式是否能匹配参数字符串
+    RegExp.prototype.exec(): 返回匹配结果
+        正则表达式包含圆括号(组匹配);第一个成员是整个匹配成功的结果,后面的成员就是圆括号对应的匹配成功组
+    String.prototype.match(): 对字符串进行正则匹配，返回匹配结果
+    String.prototype.search(): 返回第一个满足条件的匹配结果在整个字符串中的位置
+    String.prototype.replace(): 替换匹配的值，第一个正则表达式表示搜索模式，第二个替换的内容
+        var str = ' #id div.class ';
+        str.replace(/^\s+|\s+$/g, '')
+        $&: 匹配的子字符串
+        $`:匹配结果前面的文本
+        $':匹配结果后面的文本
+        $n:匹配成功的第n组内容,n是从1开始的自然数
+        $$:代美元符号 $
 
 ```
 

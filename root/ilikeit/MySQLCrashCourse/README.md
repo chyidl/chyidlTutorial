@@ -171,6 +171,68 @@ mysql> quit
 $ FLUSH PRIVILEGES; 刷新权限
 ```
 
+Reset Root Password in MySQL
+----------------------------
+* Reset MySQL Root Password Using - init-file 
+```
+# One of the ways to reset the root password is to create a local file and then start the MySQL service using --init-file option as shown.
+$ vim /home/user/init.file.txt 
+
+# It is important that you make sure that file is readable by the mysql user. Within that file paste the following:
+    ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
+
+# Now make sure that the MySQL service is stopped. 
+$ sudo systemctl stop mysqld.service            # for distros using systemd 
+$ sudo /etc/init.d/mysqld stop                  # for distros using init 
+
+# Then run the following:
+$ sudo mysqld --user=mysql --init-file=/home/user/init-file.txt --console 
+
+# This will start the MySQL service and during the process it will execute the init-file that you have created and thus the password for the root user will be updated. Make sure to delete the file once the password has been reset.
+
+# Make sure to stop the server and start it normally after that.
+$ systemctl stop mysqld.service         # for distros using systemd 
+$ systemctl restart mysqld.service      # for distros using systemd 
+
+$ sudo /etc/init.d/mysqld stop          # for distros using init 
+$ sudo /etc/init.d/mysqld restart       # for distros using init
+
+# You should now be able to connect to the MySQL server as root using the new password 
+$ mysql -u root -p 
+```
+
+* Reset MySQL Root Password Using -skip-grant-tables 
+```
+# The second option to start the MySQL service with the --skip-grant-tables option. This is less secure as while the service is started that way, all users can connect without password.
+
+If the server is started --skip-grant-tables, the option for --skip-networking is automatically activated so remote connections will not be available.
+
+# First make sure that the MySQL service is stopped.
+$ sudo systemctl stop mysqld.service    # for distros using systemd 
+$ sudo /etc/init.d/mysqld stop          # for distros using init 
+
+# Then start service with the following option.
+$ sudo mysqld --skip-grant-tables --user=mysql & 
+
+# Then, you can connect to the mysql server by simply running.
+$ mysql 
+
+# Since account-management is disabled when the service is started with --skip-grant-tables option, we will have to reload the grants. That way will be able to change the password later.
+mysql> FLUSH PRIVILEGES; 
+
+# Now can run the following query to update the password. Make sure to change "new_password" with the actual password you wish to use.
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'new_password';
+
+# Now stop the MySQL server and start it normally
+$ sudo systemctl stop mysqld.service        # for distros using systemd 
+$ sudo systemctl restart mysqld.service     # for distroes using systemd 
+$ sudo /etc/init.d/mysqld stop              # for distros using init 
+$ sudo /etc/inid.d/mysqld restart           # for distros using init
+
+# You should be able to connect with your new password.
+$ mysql -u root -p 
+```
+
 Switching from MySQL's utf8 to utf8mb4
 --------------------------------------
 ```
@@ -1874,3 +1936,60 @@ sql_mode常用值说明:
     NO_ENGINE_SUBSTITUTION:
 ```
 
+Change MySQL Data Directory to New Location
+-------------------------------------------
+```
+Step 1 - Moving the MySQL Data Directory 
+# verify the current location
+$ mysql -u root -p 
+mysql> select @@datadir;
++-----------------+
+| @@datadir       |
++-----------------+
+| /var/lib/mysql/ |
++-----------------+
+1 row in set (0.00 sec)
+
+# to ensure the integrity of the data, should shut down MySQL before actually make change to the data directory
+$ sudo systemctl stop mysqld 
+# verify the mysql had shut down
+$ sudo systemctl status mysqld 
+
+# Now that the server is shut down, we'll copy the existing database directory to the new location with rsync. Using the -a flag preserves the permissions and other directory properties, while -v provides verbose output so you can follow the progress.
+$ sudo rsync -av /var/lib/mysql /mnt/chyi_data
+
+# Once the rsync is complete. renames the current folder with a .bak extension and keep it untile we've confirmed the move was successful. 
+$ sudo mv /var/lib/mysq /var/lib/mysql.bak 
+
+Step 2: Pointing to the New Data Location 
+# MySQL has several ways to override configuration values. By default, the datadir is set to /var/lib/mysql in the /etc/my.cnf file. Edit this file to reflect the new data directory.
+$ sudo vim /etc/my.cnf 
+# need to update it to the new location:
+    [mysqld]
+    datadir=/mnt/chyi_data/mysql 
+    socket=/mnt/chyi_data/mysql/mysql.sock 
+
+# After updating the existing lines, we'll need to add configuration for the mysql client. Insert the following settings at the bottom of the file so it won't split yo directives in the [mysqld] block:
+    [client]
+    port=3306
+    socket=/mnt/chyi_data/mysql/mysql.sock 
+
+Step 3: Restarting MySQL 
+$ sudo systemctl start mysqld 
+$ sudo systemctl status mysqld 
+
+# To make sure that the new data directory is indeed in use, start the MySQL monitor
+$ mysql -u root -p 
+
+# Look at the value for the data directory again
+$ SELECT @@datadir; 
++-----------------------+
+| @@datadir             |
++-----------------------+
+| /mnt/chyi_data/mysql/ |
++-----------------------+
+1 row in set (0.00 sec)
+
+# Now that you've restarted MySQL and confimed that it's using the new location, take the opportunity to ensure that your database is fully functional. Once you've verified the integrity of any existing data, you can remove the backup data directory with 
+$ sudo rm -Rf /var/lib/mysql.bak 
+```
