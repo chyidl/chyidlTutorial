@@ -1020,6 +1020,217 @@ _RegExp对象_
         $':匹配结果后面的文本
         $n:匹配成功的第n组内容,n是从1开始的自然数
         $$:代美元符号 $
+    String.prototype.split(): 按照正则规则分隔字符串，返回一个由分割后的各个部分组成的数组;接收两个参数，第一参数是正则表达式；表示分隔规则；第二参数是返回数组的最大成员数;如果正则表达式带有括号，则括号匹配的部分也会作为数组成员返回
+    “字面量字符”: 字符只表示字面的含义
+    "元字符 meta characters": 字符具有特殊含义，不代表字面的意思
+    ".":点字符匹配回车\r,换行\n,行分割\u2028,段分隔符\u2029以外的所有字符;码点大于0xFFFF字符，点字符不能正确匹配，会认为这是两个字符
+    ^: 表示字符串的开始位置
+    $:表示字符串的结束位置
+    |:或关系
+    \:转义字符；正则表达式需要反斜杠转义: ^,.,[,$,(,),|,*,+,?,{,\; 使用RegExp方法生成正则表达式，转义需要使用\\双斜杠,因为字符串内部会先转义一次
+    \cX: 表示Ctrl-[x], 其中的X是A-Z之中任一个英文字母，用来匹配控制字符
+    [\b]: 匹配退格键U+0008,不要与\b混淆
+    \n:匹配换行键
+    \r:匹配回车键
+    \t:匹配制表符 tab (U+0009)
+    \v:匹配垂直制表符 (U+000B)
+    \f:匹配换页符 (U+000C)
+    \0:匹配null字符(U+0000)
+    \xhh:匹配以两位十六进制数(\x00 - \xFF)表示的字符
+    \uhhhh:匹配一个四位十六进制(\u0000 - \uFFFF)表示的unicode字符 
+    [字符]可供选择的字符放在方括号内
+    [^字符]: 表示除了字符类之中的字符
+    [^]:匹配一切字符，包括换行符, (.) 不匹配换行符
+    [-]:连字号用在方括号之中，表示连续的字符序列
+    \d:匹配0-9之间的任一数字 [0-9]
+    \D:匹配所有0-9之外的字符 [^0-9]
+    \w:匹配任意的字母、数字和下划线 [A-Za-z0-9_]
+    \W:匹配除所有字母、数字和下划线以外的字符[^A-Za-z0-9_]
+    \s:匹配空格(包括换行符、制表符、空格符)相等于[\t\r\n\v\f]
+    \S:匹配非空格字符相当于[^\t\r\n\v\f]
+        [\S\s]只代一切字符 
+    \b:匹配词的边界
+    \B:匹配非词边界
+    正则表达式遇到换行符\n就会停止匹配
+    {}:表示精确的匹配次数
+    贪婪模式: 匹配直到下一个字符不满足匹配规则为止
+    ?:表示某个模式出现0次或1次 {0,1}
+    *:表示某个模式出现0次或多次 {0,}
+    +:表示某个模式出现一次或多次 {1,}
+    贪婪模式改为非贪婪模式(一旦条件满足就不再往下匹配)，可以在量词符(?,*,+)后面加上问号
+    +?:表示某个模式出现一次或多次，匹配时采用非贪婪模式
+    *?:表示某个模式出现0次或多次,匹配时采用非贪婪模式
+    ??:表示某个模式出现0次或1次，匹配时采用非贪婪模式
+    修饰符(modifier):
+        g:全局匹配global;每次都从上次匹配成功处开始向后匹配
+        i:表示忽略大小写ignoreCase
+        m:表示多行模式multiline
+    ():分组匹配，括号中的模式可以用来匹配分组的内容;\n引用括号匹配的内容,n是从1开始的自然数，表示对应顺序的括号
+    (?:x):非捕获组Non-capturing group:表示不返回该组匹配的内容，匹配的结果中不计入这个括号
+    x(?=y):先行断言positive look-ahead. x只有在y前面才匹配，y不会计入返回结果;先行断言中括号里的部分是不会返回的
+    x(?!y):先行否定断言Negative look-ahead, x只有不在y前面才匹配,y不会计入返回结果
+
+_JSON对象_
+    JSON格式JavaScript Object Notation是一种用于数据交换的文本格式，2001年Douglas Crockford提出，目的取代繁琐笨重的XML格式
+        JSON格式书写简单、一目了然、复合JavaScript原生语法，可以由解释引擎直接处理,不同另外添加解释代码
+        1. 复合类型的值只能是数组或对象，不能是函数，正则表达式对象，日期对象
+        2. 原始类型的值只有四种:字符串、数值(十进制)、布尔值、null;不允许NaN, Infinity,-Infinity,undefined 
+        3. 字符串必须使用双引号表示，不能使用单引号
+        4. 对象的键名必须放在双引号里面
+        5. 数组或对象最后一个成员的后面不能加逗号
+        null, 空数组、空对象都是合法的JSON值
+    JSON.stringify():将一个值转为JSON字符串，该字符串复合JSON格式并且可以被JSON.parse()还原
+        对象属性undefiend、函数、XML对象，该属性会被JSON.stringify过滤
+        数组成员是undefined,函数、XML对象，则这些值被转成null
+        正则对象会被转为空对象
+        JSON.stringify()会忽略对象的不可遍历的属性
+        JSON.stringify方法接受一个数组，作为第二参数，指定需要转成字符串的属性;类似白名单最对对象的属性有效，对数组无效;
+        JSON.stringify()方法第二参数还可以是一个函数,用来更改JSON.stringify()的返回值;递归处理所有的键
+        JSON.stringify()方法第三参数，用于增加返回的JSON字符串的可读性;如果是数字表示属性前面增加的空格，如果字符串则该字符串添加在每行前面
+        对象自定义的toJSON()，JSON.stringify会使用这个方法的返回值作为参数,而忽略愿对象其他的属性
+    JSON.parse(): 将JSON字符串转换为对应的值
+        JSON.parse()第二个参数:
+```
+
+面向对象编程
+------------
+```
+_实例对象与new命令_
+    面向对象编程Object Oriented Programming OOP: 面向对象编程具有灵活、代码可复用、高度模块化等特点，容易维护和开发;
+    传统过程式编程procedural programming: 
+    1. 对象是单个实物的抽象
+    2. 对象是一个容器，封装了属性property和方法method 
+    构造函数:
+        类就是对象的模版、对象就是类的实例;JavaScript语言的对象体系不是基于类，而是基于构造函数constructor和原型链prototype. 
+        构造函数名字的首字母大写
+        构造体内部使用this关键字,代表所要生成的对象实例
+        生成对象的时候，必须使用new命令
+        new命令的作用就是执行构造函数，返回一个实例对象
+        new命令本身可以执行构造函数，所以后面的构造函数可以带括号，也可以不带括号；避免不实用new命令，直接调用构造函数.
+        
+        function Fubar(foo, bar) {  // 不管加不加new命令，都会得到同样的结果
+            if (!(this instanceof Fubar)) {
+                return new Fubar(foo, bar);
+            }
+            this._foo = foo;
+            this._bar = bar;
+        }
+        Fubar(1, 2)._foo;
+        (new Fubar(1,2))._foo; 
+
+    new命令的原理:
+        1.创建一个空对象，作为将要返回的对象实例
+        2.将这个空对象的原型，指向构造函数的prototype属性
+        3.将这个空对象赋值给函数内部的this关键字
+        4.开始执行构造函数内部的代码
+    
+    new命令总会返回一个对象，实例对象或return语句指定对象
+
+    new命令简化的内部流程:
+	function _new(/* 构造函数 */ constructor, /* 构造函数参数 */ params) {
+		// 将 arguments 对象转为数组
+		var args = [].slice.call(arguments);
+		// 取出构造函数 
+		var constructor = args.shift();
+		// 创建一个空对象，继承构造函数的prototype属性
+		var context = Object.create(constructor.prototype);
+		// 执行构造函数
+		var result = constructor.apply(context, args);
+		// 如果返回结果是对象，就直接返回，否则返回context对象
+		return (typeof result === 'object' && result != null) ? result : context;
+	}
+	
+	// 实例
+	var actor = _new(Person, '张三', 28);
+    
+    new.target: 函数内部使用new.target属性;如果当前函数是new命令调用,new.target指向当前函数;否则undefined;进而判断函数调用是否使用new命令
+    Object.create()创建实例对象:使用现有对象作为模版，生成新的实例对象
+
+_this关键字_
+    this可以用在构造函数中，表示实例对象;总是代表一个对象
+    JavaScript语言中，一切皆为对象，运行环境也是对象，所以函数都是在某个对象之中运行，this就是函数运行所在对象(环境)
+    this设计的目的就是在函数体内部，指代函数当前的运行环境
+    this使用场合:
+        1. 全局变量this指的是顶层对象window 
+        2. 构造函数this指的是实例对象
+        3. 对象方法：指向方法运行时所在的对象
+    避免多层this结构,因为this的指向是不确定的
+    严格模式下, this一旦指向顶层对象就会报错
+    避免回调函数中的this
+    JavaScript提供call,apply,bind三个方法，切换/固定this的指向
+    Function.prototype.call(): 可以指定函数内部this的指向;call方法参数如果为空、null、undefined则默认传入全局对象;如果参数是原始值，会自动转成对应的包装对象
+    Function.prototype.apply(): 改变this指向，参数接受数组作为函数的参数
+    > var a = [10, 2, 4, 15, 9]  // JavaScript不提供数组最大元素的函数
+    undefined
+    > Math.max.apply(null, a)
+    15
+    > Array.apply(null, ['a', ,'b']) // 利用Array构造函数将数组的空元素变成undefined
+    [ 'a', undefined, 'b' ]
+    Function.prototype.bind(): 将函数体内的this绑定到某个对象，然后返回一个新函数
+
+_对象的继承_
+    大部分面向对象的编程语言，都是通过"类"class实现对象的继承，传统上，JavaScript语言的继承不通过class,而是通过"原型对象prototype"实现
+    JavaScript继承机制的设计思想：原型对象的所有属性和方法，原型对象的作用就是定义所有实例对象的属性和方法，实例对象作为视为从原型对象衍生出来的字对象
+    JavaScript所有对象的原型最终上溯到Object.prototype. Object.prototype的原型是null,null咩有任何属性和方法，也没有自己的原型，因此，原型链的尽头就是null。
+    prototype.constructor: 指向prototype对象所在的构造函数;由于constructor属性定义在prototype对象上面,因此可以被所有实例对象继承 
+    instanceof运算符: 表示对象是否为某个构造函数的实例;任意对象(除了null)都是Object的实例，所以instanceof运算符可以判断一个值是否为null的对象
+    JavaScript不提供多重继承功能，不允许一个对象同时继承多个对象
+        > function M1() {this.hello = 'hello';}
+        undefined
+        > function M2() {this.world = 'world';}
+        undefined
+        > function S() {M1.call(this); M2.call(this);}
+        undefined
+        > S.prototype = Object.create(M1.prototype); // 继承 M1 
+        M1 {}
+        > Object.assign(S.prototype, M2.prototype);  // 继承链加上M2 
+        M1 {}
+        > S.prototype.constructor = S;  // 指定构造函数 
+        [Function: S]
+        > var s = new S(); // 子类S 同时继承父类M1和M2,这种模式称为Mixin(混入)
+        undefined
+        > s.hello
+        'hello'
+        > s.world
+        'world'
+    JavaScript 不是一种模块化编程语言，ES6才开始支持“类”和“模块”
+        模块是实现特定功能的一组属性和方法的封装
+            1. 简单的做法是把模块写成一种对象,所有的模块成员都放到这个对象里面;这样的写法曝露所有模块成员、内部状态可以被外部改写
+            2. 封装私有变量：构造函数的写法:双重作用，用来塑造实例对象、用来保存实例对象的数据，违背构造函数与实例对象在数据上相分离的原则(实例对象的数据、不应该保存在实例对象以外)
+            3. 封装私有变量：立即执行函数的写法
+                立即执行函数Immediately Invoked Function Expression IIFE: 将相关属性和方法封装在一个函数作用域里面，可以达到不曝露私有成员的目的
+_Object对象的相关方法_
+    Object.getPrototypeOf(): 返回参数对象的原型
+    > Object.getPrototypeOf({}) === Object.prototype  // 空对象的原型是Object.prototype 
+    true
+    > Object.getPrototypeOf(Object.prototype) === null;  // Object.prototype 的原型是null 
+    true
+    > function f() {};  // 函数的原型是Function.prototype 
+    undefined
+    > Object.getPrototypeOf(f) === Function.prototype
+    true
+    Object.setPrototypeOf(): 为参数对象设置原型
+    Object.create(): 将一个对象作为参数，然后以它为原型，返回一个实例对象,该实例完全继承原型对象的属性 
+    Object.prototype.isPrototypeOf(): 判断该对象是否为参数对象的原型
+    Object.prototype.__proto__: 返回对象的原型,双线划线表明是一个内部属性，等于构造函数prototype属性 
+    Object.getOwnPropertyNames(): 返回一个数组，成员是参数对象本身的所有属性的键名
+
+_严格模式_
+    严格模式strict mode: 采用严格的JavaScript语法
+    严格模式是从ES5进入标准，主要目的：
+        1.明确禁止一些不合理、不严谨的语法，减少JavaScript语言的一些怪异行为
+        2.增加更多报错的场合，消除代码运行的一些不安全之处，保证代码运行的安全 
+        3.提高编译器效率，增加运行速度 
+        4.为未来新版本的JavaScript
+    严格模式使得JavaScript语法变得严格，更多的操作会显式报错，其中有些操作，在正常模式下只会默默失败，不会报错
+
+    
+
+
+    
+
+
+
 
 ```
 

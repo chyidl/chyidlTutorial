@@ -2,6 +2,13 @@ Git Crash Course
 ================
 > Git is distributed version-control system for tacking changes in source code during software development. It is designed for coordinating work among programmer, but it can be used to track changes in any set of files. it goals include speed, data integrity, and support for distributed, non-linear workflows.
 
+* Git三种文件状态 
+    - Committed:已提交
+    - Modified:修改
+    - Staged:暂存 
+> 在工作区修改一个文件会变成修改状态(Modified);然后通过脚本"git add ${filename}" 把这个文件的状态改为暂存(Staged),被标记为暂存状态的文件才有机会被提交,最后通过"git commit"来提交所有在暂存状态里的文件
+![Git Files Status](/imgs/ilikeit/GitCrashCourse/git_files_status.png?raw=true)
+
 ```
 # Mac Install Git 
 $ brew install git 
