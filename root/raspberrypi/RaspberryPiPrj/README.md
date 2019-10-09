@@ -39,6 +39,7 @@ Raspberry Pi Awesome Project
 - [Nginx Crash Course](/root/raspberrypi/RaspberryPiPrj/NginxCrashCourse/README.md)
 - [Prometheus - From metrics to insight](/root/raspberrypi/RaspberryPiPrj/Prometheus/README.md)
 - [SendMail Server](/root/raspberrypi/RaspberryPiPrj/SendMail/README.md)
+- [OpenVPN Server](/root/raspberrypi/RaspberryPiPrj/OpenVPN/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)
