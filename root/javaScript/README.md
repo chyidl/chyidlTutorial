@@ -1271,3 +1271,67 @@ $ npm set init.version "0.0.1"
     }
     You can take this function and add it to your ~/.zshrc OR ~/.bash_profile. or open a new command line window and run node-project.
 ```
+
+Douglas Crockford: Why I removed comments from JSON 
+---------------------------------------------------
+```
+
+```
+
+Gulp
+----
+```
+# Install the gulp command line utility 
+$ npm install --global gulp-cli 
+
+# Create a project directory and navigate into it 
+$ npx mkdirp my-project 
+$ cd my-project 
+
+# Create a package.json file in your project directory 
+$ npm init 
+
+# Install the gulp package in your devDependencies  
+$ npm install --save-dev gulp 
+
+# Verify your gulp versions 
+$ gulp --version 
+
+# Create a gulpfile.js in your project root with these contents. 
+$ vim gulpfile.js 
+    function defaultTask(cb) {
+        // place code for your default task here 
+        cb();
+    }
+
+    exports.default = defaultTask 
+
+# Test it 
+$ gulp
+
+# Result 
+$ gulp
+[15:29:47] Using gulpfile /Volumes/Time Capsule SD/Downloads/my-project/gulpfile.js                            
+[15:29:47] Starting 'default'...                                                                                
+[15:29:47] Finished 'default' after 67 ms
+```
+
+TypeScript vs JavaScript
+------------------------
+```
+JavaScript: 动态类型语言：一个对象的类型在最终运行的时候才会决定和进行检测
+TypeScript:允许在书写和编译代码时，对代码中对象的类型和使用进行规范和约束，以降低因类型错误而导致的bug;TypeScript最大特点就是静态类型，一般一个TypeScript项目发布时会编译成JavaScript,同时会发布一个d.ts文件，这个文件记录发布的这个JavaScript文件里的对象类型.
+
+VS Code 使用下面几种方式寻找d.ts文件:
+    1. 首先查看npm包本身有没有d.ts文件,使用TypeScript书写项目一般都会有d.ts文件，很多JavaScript框架虽然不是使用TypeScript维护，也提供d.ts文件 
+    2. VS Code查看当前文件夹中是否有d.ts文件，如果使用某种npm包没有d.ts文件，可以自行书写
+    3. 社区书写的d.ts文件，并且发布到npm @types 
+    Auto Type Acquisition: 自动类型采集 
+
+```
+* JSDoc
+> JSDoc:是一个文档规范工具通过在代码中写注释，然后可以生成相应的API文档，同时可以注释里标记对象的JavaScript类型，这样在阅读和使用代码时比较方便.
+根据JSDoc注释提供的类型信息对类型进行检查和建议
+```
+
+```

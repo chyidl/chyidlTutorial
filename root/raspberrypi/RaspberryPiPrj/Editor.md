@@ -124,6 +124,39 @@ Editor VS .
             - task: Run Task 
             - term: Show all open Terminals 
             - view: Open View 
-            
+        * Terminal Settings 
+            - Ctrl + `: 创建打开一个集成终端| 隐藏 (Toggle Integrated Terminal)
+            - Ctrl + Shift + `: 创建新的终端 (Create New Intergrated Terminal)
+            - Focus Next Terminal : 聚焦下一终端 
+            - Focus Previous Terminal: 聚焦上一终端 
+            - Cmd + \: Split Terminal 
+            - Ctrl + A: Home 将光标移动到一行的开头
+            - Ctrl + E: End 将光标移动到一行的结尾 
+            - terminal.integrated.shell.windows: 
+            - terminal.integrated.shell.osx: shell系统路径 
+            - terminal.integrated.env.osx: 设置特殊的环境变量
+            - terminal.integrated.cwd: 控制shell启动时初始目录 
+            - terminal.integrated.rightClickBehavior: 控制鼠标右键行为
+            - terminal.integrated.enableBell:控制脚本出错是否发出响声 
+            - terminal.integrated.scrollback:
+            - Run Selected Text in Active Terminal: 在活动终端中运行所选文本 
+        * Debug Adapter Protocol: 
+            - launch.json:调试配置
+            - program: 指定将要调试的文件 
+            - stopOnEntry: 当调试器启动后是否在第一行代码处暂停代码的执行 
+        * Editor:
+            - Cmd + \ : Split Editor 创建多个编辑器 
+            - Cmd + 1, Cmd + 2: 编辑器组跳转
+            - Cmd + Option + O: 切换垂直/水平编辑器布局 Flip Editor Group Layout 
+            - Cmd + Option + </> 专辑器Tab之间跳转
+            - Cmd + B: 打开或关闭侧边栏
+            - Cmd + J: 打开或关闭面板
+            - Toggle Activity Bar Visibility: 打开或关闭最左侧的活动栏
+            - Toggle Status Bar Visibility: 打开或关闭最小面的状态栏
+            - Toggle Zen Mode: 侧边栏、面板等全部隐藏
+            - Toggle Centered Layout: 将编译器放在VS Code工作区的正中间 
+        * JSON
+            - JSON with Comments 
+    
             
             
