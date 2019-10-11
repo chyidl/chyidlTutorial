@@ -1,23 +1,21 @@
-# macOS 
+macOS 
+=====
+> Mac OS,Mac OS X, or macOS, is the operationg system that resides on Apple's desktop and portable computer lineup. Built upon a Unix core, it is easy to use yet highly advanced, extremely stable, and an excellent OS for productivity and creation. Browse through our articles or use the search feature to look for something specific that is pertinent to the Mac operating system.will bring the latest in cool macOS tips, and everything else related to Apple's awesome macOS operating system!
 
-Mac OS,Mac OS X, or macOS, is the operationg system that resides on Apple's desktop and portable computer lineup. Built upon a Unix core, it is easy to use yet highly advanced, extremely stable, and an excellent OS for productivity and creation. Browse through our articles or use the search feature to look for something specific that is pertinent to the Mac operating system.
-
-will bring the latest in cool macOS tips, and everything else related to Apple's awesome macOS operating system!
-
-## macOS Intro 
-
-macOS is a series of graphical operating systems developed and marketed by Apple Inc.
+macOS Intro 
+-----------
+> macOS is a series of graphical operating systems developed and marketed by Apple Inc.
 
 ![Unix-like operating systems](/imgs/os/macOS/900px-Unix_timeline.en.svg.png?raw=true)
 
 At macOS's core is a POSIX compliant operating system built on top of the XNU kernel, with standard Unix facilities available from the command line interface. Apple has released this family of software as a free and open source operating system named Darwin. On top of Darwin, Apple layered a number of components, including the Aqua interface and Finder, to complete the GUI-based operating system which is macOS.
 
 
-## macOS Tips
+macOS Tips
+----------
 
 **Tutor macOS via Command Line**
-
-The macOS command line interface is home to thousands of programs that the average user doesn't know exists. Leveraging years of hard work by the GNU foundation and others in the open source community,Apple designed a wonderful OS that doesn't need any use of the command line. While using the command line in macOS is not necessary for the every day operation of macOS, if harnessed correctly, it can save you a lot of time, and occasionally give you a laugh. I hope you enjoy these macOS
+> The macOS command line interface is home to thousands of programs that the average user doesn't know exists. Leveraging years of hard work by the GNU foundation and others in the open source community,Apple designed a wonderful OS that doesn't need any use of the command line. While using the command line in macOS is not necessary for the every day operation of macOS, if harnessed correctly, it can save you a lot of time, and occasionally give you a laugh. I hope you enjoy these macOS
 command line utilities!
 
 ![Unix command line](/imgs/os/macOS/retro-terminal-mac-screenshots-2.jpg?raw=true)
@@ -81,8 +79,6 @@ $ sysctl -n machdep.cpu.brand_string
 # format: Chip Brand - Processor Type and Chip Model - CPU Speed 
 Intel(R) Core(TM) i5-5257U CPU @ 2.70GHz
 $ system_profiler | grep Processor
-
-
 ```
 
 **Anytime I find myself doing a repetivive task, it is crucial that I discover small tricks and workarounds to make my daily routine as efficient as possible.**
@@ -166,9 +162,7 @@ done
 ```
 
 4. Create an Image Preview from a Video 
-
 ![Image Preview](/imgs/os/macOS/imagePreview.png?raw=true)
-
 ```
 # use two utilities, ffmpeg and ImageMagick to create preview image 
 # Use ffmpeg to Take Screenshorts at Set Intervals 
@@ -204,7 +198,6 @@ $ open -a /Applications/Firefox.app all.png
 ``` 
 
 5. Get Image Dimensions from Command Line 
-
 ```
 # Using ImageMagick you can find the dimensions of an image from command line 
 
@@ -213,6 +206,23 @@ $ convert photo.jpg -print "Size: %wx%h\n" /dev/null
 # Size: 3840 x 8640 
 
 # You can get the image dimensions of any image type from PNG to JPG to GIF to even PSDs.
+```
+
+6. Extracting RAR Files in Terminal
+```
+$ brew install unrar
+
+# Listing contents inside the RAR file 
+$ unrar l file.rar
+
+# Testing the RAR file 
+$ unrar t file.rar
+
+# Unrar-ing the file 
+$ unrar x file.rar
+
+# extract the contents of the file.rar to a particular directory
+$ unrar e file.rar /pathToExtractTo
 ```
 
 Spoofing a Mac Address in macOS Mojave 
