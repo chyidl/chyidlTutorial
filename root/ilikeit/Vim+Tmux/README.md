@@ -443,3 +443,15 @@ endif
 # Create a vim templates file in your home directory and a vim/bundle directory 
 $ cp -r chyidlTutorial/root/ilikeit/Vim+Tmux/templates ~/.vim/
 ```
+
+Update to Vim8 on Centos7
+-------------------------
+```
+$ sudo yum install -y gcc git ncurses-devel
+$ git clone https://github.com/vim/vim.git 
+$ cd vim/src 
+$ make distclean  # if you built Vim before 
+$ make -j4 
+$ sudo make install 
+$ cp -ru vim/src/vim /usr/bin # overwrites /usr/bin/vim w/o confirmation 
+```

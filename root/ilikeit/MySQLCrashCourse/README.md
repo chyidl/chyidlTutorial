@@ -1959,7 +1959,7 @@ $ sudo systemctl status mysqld
 $ sudo rsync -av /var/lib/mysql /mnt/chyi_data
 
 # Once the rsync is complete. renames the current folder with a .bak extension and keep it untile we've confirmed the move was successful. 
-$ sudo mv /var/lib/mysq /var/lib/mysql.bak 
+$ sudo mv /var/lib/mysql /var/lib/mysql.bak 
 
 Step 2: Pointing to the New Data Location 
 # MySQL has several ways to override configuration values. By default, the datadir is set to /var/lib/mysql in the /etc/my.cnf file. Edit this file to reflect the new data directory.
