@@ -52,3 +52,16 @@ Welcome Message SSH Start
 
 FAQ - Frequently asked questions 
 - [FAQ](/root/raspberrypi/RaspberryPiPrj/FAQ.md)
+
+License
+-------
+```
+    MIT:
+        MIT授权，几乎允许你想做的事情，包括把开发包放在闭源的软件中
+    GPL: GNU通用公共授权
+        GPL是非常流行的开源授权,它为保证软件的自由做了精巧的构思，意味着如果在项目中使用GPL授权的代码，那么你的项目必须也是GPL授权，意味着你的项目不能是闭源
+    Apache2.0: 
+        这个授权像MIT一样，你可以为自己的项目使用不同的授权，包括闭源的授权，然而必须对那些使用Apache2.0授权的组建作出声明 
+    BSD:伯克利软件分发
+        与Apache类似，这个授权允许你为自己的项目使用任何授权，只要你声明使用了BSD授权的组件
+```

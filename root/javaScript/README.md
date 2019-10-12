@@ -1223,24 +1223,171 @@ _严格模式_
         3.提高编译器效率，增加运行速度 
         4.为未来新版本的JavaScript
     严格模式使得JavaScript语法变得严格，更多的操作会显式报错，其中有些操作，在正常模式下只会默默失败，不会报错
+```
 
+异步操作
+--------
+```
+# 单线程模型
+    JavaScript只在线程上运行,同时只能执行一个任务,实际上,JavaScript引擎有多个线程，单个脚本只能在一个线程上运行(称为主线程),其他线程都是在后台配合;JavaScript核心特征：单线程，这种模式实现起来简单，执行环境相对单纯,劣势一个任务耗时太长，后面任务都必须排队等候，会拖累整个程序的执行；JavaScript语言本身并不慢，慢的是读写外部数据，等待Ajax请求返回结果，
+    JavaScript内部采用“事件循环Event Loop”
+
+# 同步任务(synchronous)和异步任务(asynchronous)
+    同步任务:那些没有被引擎挂起，在主线程上排队执行的任务，只有前一个任务执行完毕，才能执行后一个任务
+    异步任务:那些被引擎放在一边，不进入主线程，而进入任务队列的任务，只有引擎认为某个异步任务可以执行，该任务采用回调函数的形式进入主线程执行，排在异步任务后面的代码不用等待异步任务结束马上运行，异步任务不具备“堵塞”效应 
+
+# 任务队列和事件循环
+    JavaScript运行时除了一个正在运行的主线程，引擎还提供一个任务队列(task queue).里面是各种需要当前程序处理的异步任务。
+    异步任务通常是回调函数，一旦异步任务重新进入主线程，就会执行对应的回调函数，如果一个异步任务没有回调函数，就不会进入任务队列.
+    JavaScript引擎只要同步任务执行完，引擎就会去检查那些刮起的异步任务，是不是可以进入主线程；这种循环检查的机制就叫事件循环Event Loop.
+
+# 异步操作的模式
+    1. 回调函数:是异步操作最基本的方法
+        回调函数的优点是简单、容易理解和实现、缺点是不利于代码的阅读和维护，各种部分之间高度耦合coupling使得程序结构混乱、流程难以追踪，每个任务只能指定一个回调函数
+    2. 事件监听:事件驱动模式异步任务的执行不取决于代码的顺序，而取决于某个事件是否发生
+        事件监听优点是比较容易理解，可以绑定多个事件，每个事件可以指定多个回调函数而且可以"去耦合decoupling",有利于事件模块化，缺点是整个程序都要变成事件驱动型，运行流程会变得很不清晰，阅读代码的时候，很难看出主流程 
+    3. 发布public 订阅subscribe(publish-subscribe pattern)发布订阅模式又称为观察者模式 observer pattern 
+        明显优于“事件监听”，因为可以通过查看"消息中心"了解存在多少信号、每个信号有多少订阅者，从而监控程序的运行 
+
+# 异步操作的流程控制
+    串行执行: 
+    并行执行: 流程控制函数可以并行执行，所有异步任务同时执行
+    并行与串行结合：设置一个门槛，每次最多只能并行执行n个异步任务，这样就避免过分占用系统资源
+
+# 定时器
+    JavaScript提供定时执行代码的功能，定时器timer:向任务队列添加定时任务
+        setTimeout(): 多少毫秒后执行,返回一个整数表示定时器的编号，以后可以取消定时器;更多的参数，依次传入回调函数
+        setInterval():每个一段时间就执行一次，也就是无限次的定时执行;常见用途是实现轮询;指定“开始执行”之间的间隔，并不考虑每次执行任务本身所消耗的时间,因此两次执行之间的间隔会小于指定的时间
+    setTimeout和setInterval函数返回一个整数值，表示计数器编号
+        clearTimeout():
+        clearInterval():
+        debounce:防抖动
+
+        setTimeout和setInterval运行机制是将制定的代码移出本轮时间循环，等到下一轮时间循环，在检查是否到指定时间，意味着setTimeout,setInterval指定的回调函数必须等到本轮时间循环的所有同步任务都执行完，才会开始执行，由于前面的任务到底需要多少时间执行完，
+
+# Promise对象
+    Promise对象是JavaScript的异步操作解决方案，为异步操作提供统一接口，起到代理的作用proxy.充当异步操作与回调函数之间的中介，使得异步操作具备同步操作的接口，
+    传统的回调函数写法使得代码混成一团，变得横向发展而不是向下发展.Promise就是解决这个问题，使得异步流程可以写成同步流程.
+    Promise原本只是社区提出的一个构想，一些函数库率先实现这个功能，ECMAScript 6将其写入语言标准，目前JavaScript原生支持Promise对象
     
+    Promise实例三种状态:
+        1. 异步操作未完成   pending 
+        2. 异步操作成功     fulfilled 
+        3. 异步操作失败     rejected 
+        fulfilled和rejected合在一起称为resolved已定型
+    Promise.prototype.then() 添加回调函数 
+    Promise优点在于让回调函数变成规范链式写法，Promise回调函数不是正常的异步任务，而是微任务microtask.正常任务追加到下一轮事件循环，微任务追加到本轮事件循环执行
+```
 
+DOM
+---
+```
+DOM(Document Object Model文档对象模型)是JavaScript操作网页的接口,将网页转为一个JavaScript对象，从而可以使用脚本进行各种操作
+DOM只是一个接口规范，可以使用各种语言实现，所以严格地说,DOM不是JavaScript语法的一部分，但是DOM操作是JavaScript最常见的任务，离开DOM，JavaScript就无法控制网页，
 
-    
+DOM最小组成单位叫做节点(node)
+    Document: 整个文档树的顶层节点
+    DocumentType:doctype标签 
+    Element:网页的各种HTML标签 <body> <a>
+    Attribute:网页元素的属性 class="right"
+    Text:标签之间或标签包含的文本 
+    Comment:注释
+    DocumentFragment:文档的片段 
+        parentNode: 父节点
+        childNode: 子节点
+        sibling: 同级节点
+        firstChild: 第一个子节点 
+        lastChild:最后一个子节点
+        nextSibling:紧邻同级别后节点
+        previousSibling:紧邻同级别前节点
+所有DOM节点对象都继承Node接口，拥有一些共同的属性和方法
+    Node.prototype.nodeType: 返回整数，表示节点类型 
+        Node.DOCUMENT_NODE: 9 
+        Node.ELEMENT_NODE: 1 
+        Node.ATTRIBUTE_NODE: 2 
+        Node.TEXT_NODE: 3 
+        Node.DOCUMENT_FRAGMENT_NODE: 11 
+        Node.DOCUMENT_TYPE_NODE: 10 
+        Node.COMMENT_NODE: 8 
+    Node.prototype.nodeName: 返回节点名称 
+        文档节点document: #document 
+        元素节点element: 大写标签名 
+        属性节点attr: 属性的名称 
+        文本节点text: #text 
+        文档片段节点DocumentFragment: #document-fragment 
+        文档类型节点DocumentType:文档的类型 
+        注释节点Comment: #comment 
+    Node.prototype.nodeValue:返回一个字符串，表示当前节点本身的文本值
+        只有文本节点text,注释节点comment属性节点attr有文本值
+    Node.prototype.textContent:返回当前节点和所有后代节点的文本内容
+    Node.prototype.baseURI:返回一个字符串，表示当前网页的绝对路径
+    Node.prototype.ownerDocument: 返回当前节点所在的顶层文档对象即document对象
+    Node.prototype.nextSibling: 返回紧跟在当前节点后面的第一个同级节点
+    Node.prototype.previousSibling:返回当前节点前面的距离最近的一个同级节点
+    Node.prototype.parentNode:返回当前节点的父节点
+    Node.prototype.parentElement:返回当前节点的父节点
+    Node.prototype.firstChild|lastChild:返回当前节点的第一个子节点｜最后一个子节点
+    Node.prototype.childNodes:返回一个类似数组的对象(NodeList集合)所有子节点
+    Node.prototype.isConnected:返回一个布尔值，表示当前节点是否在文档之中 
 
+    Node.prototype.appendChild(): 接受一个节点对象作为参数，将其作为最后一个子节点
+    Node.prototype.hasChildNodes(): 返回布尔值，表示当前节点是否有子节点 
+    Node.prototype.cloneNode(): 克隆一个节点，接受一个布尔值表示是否同时克隆子节点
+    Node.prototype.insertBefore():将某个节点插入父节点内部的指定位置
+    Node.prototype.removeChild():将当前节点移除该子节点
+    Node.ptototype.replaceChild():将一个新节点替换当前节点的某个子节点
+    Node.prototype.contains():布尔值
+    Node.prototype.compareDocumentPosition():表示参数节点与当前节点的关系 
+    Node.prototype.isEqualNode()|isSameNode():返回布尔值，检查两个节点是否相等
+    Node.prototype.normalize():清理当前节点内部的所有文本节点text,去除空的文本节点，并且将毗邻的文本节点合并成一个，也就是说
+    Node.prototype.getRootNode(): 返回当前节点所在文档的跟节点
 
+# NodeList接口，HTMLCollection接口 
+    NodeList : 可以包含各种类型的节点 
+        NodeList实例是一个类似数组的对象，成员是节点对象
+            Node.childNodes : 动态集合
+            document.querySelectorAll()
+        
+    HTMLCollection : 只能包含HTML元素节点 
+        HTMLCollection是一个节点对象的集合，只能包含元素节点element,不能包含其他类型的节点;HTMLCollection没有forEach方法，只能使用for循环遍历
+        HTMLCollection实例都是动态集合，节点的变化会实时反映在集合中 
 
+# ParentNode接口，ChildNode接口
+    ParentNode接口表示当前节点是一个父节点，提供一些处理子节点的方法
+        children: 返回一个HTMLCollection实例,成员是当前节点的所有元素子节点
+    ChildNode接口表示当前节点是子节点，提供一些相关方法
 
 ```
 
 HOW TO START A NODE.JS PROJECT
 ------------------------------
 ```
-$ node --version                                                                                                 
+$ node --version                                                                                                
 v12.10.0
-$ npm --version                                                                                                  
+$ npm --version             
 6.11.3
+
+# npm: Node开发包管理器,主要职责是安装开发包和管理依赖项
+# nvm: Node Version Manager - POSIX-compliant bash script to manager multiple active node.js versions
+    
+    1.Install nvm via Homebrew 
+        $ brew install nvm 
+    2.Add following line to your profile (.profile or .zshrc or .zprofile)
+        # NVM 
+        export NVM_DIR=~/.nvm 
+        source $(brew --prefix nvm)/nvm.sh
+    3. Reload Profile 
+        $ source ~/.zshrc 
+    4. Verify nvm is installed 
+        $ nvm --version 
+    5. Check all avaliable version by this command 
+        $ nvm ls-remote 
+    6. Install NodeJS(Recommended to install LTS version.)
+        $ nvm instal --lts
+    7. Check installed NodeJS in your machine 
+        $ nvm ls 
+    8. Set Global nodejs version to environment 
+        $ nvm use default 
 
 1. First, use npm to generate initial project
 $ npm init  # builds a package.json file 
@@ -1327,7 +1474,6 @@ VS Code 使用下面几种方式寻找d.ts文件:
     2. VS Code查看当前文件夹中是否有d.ts文件，如果使用某种npm包没有d.ts文件，可以自行书写
     3. 社区书写的d.ts文件，并且发布到npm @types 
     Auto Type Acquisition: 自动类型采集 
-
 ```
 * JSDoc
 > JSDoc:是一个文档规范工具通过在代码中写注释，然后可以生成相应的API文档，同时可以注释里标记对象的JavaScript类型，这样在阅读和使用代码时比较方便.

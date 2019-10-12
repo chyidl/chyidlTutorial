@@ -79,6 +79,7 @@ chyidlTutorial
 - [Cryptography](root/ilikeit/Cryptography/README.md)
 - [Protocol Buffer](root/ilikeit/ProtocolBuffer/README.md)
 - [Dragon Fire](root/ilikeit/DragonFire/README.md)
+- [NetworkProtocol](root/ilickit/NetworkProtocol/README.md)
 
 ### Interview Some EECS Idol
 
