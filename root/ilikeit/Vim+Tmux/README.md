@@ -184,17 +184,15 @@ $ vim +PluginInstall +qall
 
 Oh My Tmux!Pretty & versatile tmux configuration(Fork: https://github.com/gpakosz/.tmux) 
 ----------------------------------------------------------------------------------------
-
+> tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.
+```
 * Installation 
-
 Requirements:
 	1. tmux **`>= 2.1`** running inside Linux, Mac, OpenBSD 
 	2. outside of tmux, `$TERM` must be set to `xterm-256color`
 	3. check tmux Version $ tmux -V
 
 To install, run the following from your terminal: (you may want to backup your existing `~/.tmux.conf` first)
-
-```
 $ cd 
 $ mv .tmux.conf .tmux.conf.old 
 $ wget https://raw.githubusercontent.com/chyidl/chyidlTutorial/master/root/ilikeit/Vim%2BTmux/tmux.conf -O .tmux.conf
