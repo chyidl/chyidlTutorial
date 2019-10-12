@@ -36,7 +36,6 @@ Raspberry Pi Awesome Project
 - [Monitor network bandwidth](/root/raspberrypi/RaspberryPiPrj/MonitorBandwidth/README.md)
 - [Recommended system](/root/raspberrypi/RaspberryPiPrj/RecommendedSystem/README.md)
 - [Linux Performance optimization](/root/raspberrypi/RaspberryPiPrj/Linux101/README.md)
-- [Nginx Crash Course](/root/raspberrypi/RaspberryPiPrj/NginxCrashCourse/README.md)
 - [Prometheus - From metrics to insight](/root/raspberrypi/RaspberryPiPrj/Prometheus/README.md)
 - [SendMail Server](/root/raspberrypi/RaspberryPiPrj/SendMail/README.md)
 - [OpenVPN Server](/root/raspberrypi/RaspberryPiPrj/OpenVPN/README.md)
