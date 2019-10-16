@@ -1936,6 +1936,115 @@ sql_mode常用值说明:
     NO_ENGINE_SUBSTITUTION:
 ```
 
+Drop multiple tables with name pattern
+--------------------------------------
+```
+# 1. Get the list of the Table to Drop 
+We can easily retrieve the table list making a selection in sys.tables using the where condition to filter the result to obtain only the record where name start with Tabx the following code make it.
+mysql> SELECT table_name FROM information_schema.tables WHERE table_schema like 'history%';
++------------------+
+| TABLE_NAME       |
++------------------+
+| history_20190624 |
+| history_20190625 |
+| history_20190626 |
+| history_20190627 |
+| history_20190628 |
+| history_20190701 |
+| history_20190702 |
+| history_20190703 |
+| history_20190704 |
+| history_20190705 |
+| history_20190708 |
+| history_20190709 |
+| history_20190710 |
+| history_20190711 |
+| history_20190712 |
+| history_20190715 |
+| history_20190716 |
+| history_20190717 |
+| history_20190718 |
+| history_20190719 |
+| history_20190720 |
+| history_20190722 |
+| history_20190723 |
+| history_20190724 |
+| history_20190725 |
+| history_20190726 |
+| history_20190729 |
+| history_20190730 |
+| history_20190731 |
+| history_20190801 |
+| history_20190802 |
+| history_20190805 |
+| history_20190806 |
+| history_20190807 |
+| history_20190808 |
+| history_20190809 |
+| history_20190812 |
+| history_20190813 |
+| history_20190814 |
+| history_20190815 |
+| history_20190816 |
+| history_20190819 |
++------------------+
+42 rows in set (0.01 sec)
+
+2. Compose a Drop Command
+For each record of the result of the first step to compose the sql Drop Command.
+mysql> SELECT CONCAT('DROP TABLE ', table_name, ';') AS `DROP Command` FROM information_schema.tables WHERE table_schema like 'history_%';
++------------------------------+
+| Drop Command                 |
++------------------------------+
+| DROP TABLE history_20190624; |
+| DROP TABLE history_20190625; |
+| DROP TABLE history_20190626; |
+| DROP TABLE history_20190627; |
+| DROP TABLE history_20190628; |
+| DROP TABLE history_20190701; |
+| DROP TABLE history_20190702; |
+| DROP TABLE history_20190703; |
+| DROP TABLE history_20190704; |
+| DROP TABLE history_20190705; |
+| DROP TABLE history_20190708; |
+| DROP TABLE history_20190709; |
+| DROP TABLE history_20190710; |
+| DROP TABLE history_20190711; |
+| DROP TABLE history_20190712; |
+| DROP TABLE history_20190715; |
+| DROP TABLE history_20190716; |
+| DROP TABLE history_20190717; |
+| DROP TABLE history_20190718; |
+| DROP TABLE history_20190719; |
+| DROP TABLE history_20190720; |
+| DROP TABLE history_20190722; |
+| DROP TABLE history_20190723; |
+| DROP TABLE history_20190724; |
+| DROP TABLE history_20190725; |
+| DROP TABLE history_20190726; |
+| DROP TABLE history_20190729; |
+| DROP TABLE history_20190730; |
+| DROP TABLE history_20190731; |
+| DROP TABLE history_20190801; |
+| DROP TABLE history_20190802; |
+| DROP TABLE history_20190805; |
+| DROP TABLE history_20190806; |
+| DROP TABLE history_20190807; |
+| DROP TABLE history_20190808; |
+| DROP TABLE history_20190809; |
+| DROP TABLE history_20190812; |
+| DROP TABLE history_20190813; |
+| DROP TABLE history_20190814; |
+| DROP TABLE history_20190815; |
+| DROP TABLE history_20190816; |
+| DROP TABLE history_20190819; |
++------------------------------+
+42 rows in set (0.01 sec)
+
+3. Execute
+For each result of the step 2, to execute the command, 
+```
+
 Change MySQL Data Directory to New Location
 -------------------------------------------
 ```

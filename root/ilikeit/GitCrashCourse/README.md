@@ -34,6 +34,15 @@ $ git status
 # 把文件提交到仓库 -m: 表示本次提交的说明
 $ git commit -m "wrote a readme file"
 
+# 显出版本差异的文件列表
+$ git diff branch1 branch2 --stat 
+
+# 显示指定文件的详细差异
+$ git diff branch1 branch2 filename 
+
+# 显示版本差异的文件的详细差异
+$ git diff branch1 branch2
+
 # 查看difference 文件修改的内容
 $ git diff somefile
 
@@ -256,6 +265,21 @@ $ git check-ignore -v App.class
 Use vimdiff as git mergetool
 ----------------------------
 ```
+Vimdiff is nice diff tool. 
+$ man git-diff: Show changes between commits, commit and working tree, etc
+
+$ git diff -- this  :   shows the changes that are not currently staged for the next commit.
+$ git diff --cached :   show the difference between the index and the last commit 
+$ git diff branch   :   show a diff between the current working directory and the named branch.
+$ git diff --stat   :   see an overview of changes 
+$ git log --pretty=format:"[%h] %ae, %ar: %s" --stat    :   which shows commit history with the files that were changed.
+
+$ vimdiff file1 file2 [file3 [file4]]   :   starts Vim in diff mode 
+
+# Git Settings 
+get Vimdiff working with Git, To Tell Git to always use Vimdiff
+$ git config --global diff.tool vimdiff 
+$ git config --global merge.tool vimdiff
 ```
 
 At what time of day do famous programmers work?
