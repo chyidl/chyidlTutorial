@@ -1481,3 +1481,22 @@ VS Code 使用下面几种方式寻找d.ts文件:
 ```
 
 ```
+
+Node.js Tutorial
+----------------
+> Node.js runs single-threaded, non-blocking, asynchronously programming, whichi is very memory efficient.
+```
+Include Modules: use the require() function with the name of the module;
+    var http = require('http');
+    exports keyword to make properties and methods available outside the module file.
+```
+
+* Built-in HTTP Module
+```
+Node.js has a built-in module called HTTP, which allows Node.js to transfer data over the Hyper Text Transfer Protocol (HTTP).
+```
+
+* Built-in File System Module 
+```
+The Node.js file system module allows you to work with the file system on your computer.
+```

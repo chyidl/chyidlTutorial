@@ -330,3 +330,31 @@ Body            :   1.19 W/kg[8]
 
 Phoenix Jailbreak works 
 ```
+
+Making the Mac: Apple Ads
+-------------------------
+> From the curious introductory price of $666.66 to spreads featuring David Carson, old Apple and Mac ads are fascinating. On the practical side they also chart the swift evolution and perception of personal computers in America, as the conversation shifts from convincing potential users about the worth, utility and operation of the machines to the bolder tone Apple adopts as PCs become ubiquitous.
+
+* One of the first Apple ads. 1976. 4K RAM.
+![](imgs/PersonComputer/AppleDesign/1976apple1.jpg?raw=true)
+
+* 1976 Apple II Introduction Ad (1/2). "Now you're ready for an evening of discovery in the new world of personal computers."
+![](imgs/PersonComputer/AppleDesign/1977IntroAppleII1.jpg?raw=true)
+
+* 1976 Apple II Introduction Ad (2/2)
+![](imgs/PersonComputer/AppleDesign/1977IntroAppleII2.jpg?raw=true)
+
+* Apple II 1979 "How to Buy" Ad. "Suddently everyone is talking about personal computer."
+![](imgs/PersonComputer/AppleDesign/AppleII.jpg?raw=true)
+
+* 1979 Apple II "Adam" Ad. "What in the name of Adam do people do with Apple computers?"
+![](imgs/PersonComputer/AppleDesign/AdamAd.jpg?raw=true)
+
+* 1979 Apple Pascal "Iron-On" Ad. "When you've got it, flaunt it."
+![](imgs/PersonComputer/AppleDesign/1979Pascal_IronOn1.jpg?raw=true)
+
+* 1980 Apple II Ben Franklin Ad. "It's a wise man who owns an Apple."
+![](imgs/PersonComputer/AppleDesign/franklin1.jpg)
+
+* 1981 Apple III "Will Someone Please?" Ad. 
+

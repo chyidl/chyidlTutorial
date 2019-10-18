@@ -2102,3 +2102,59 @@ $ SELECT @@datadir;
 # Now that you've restarted MySQL and confimed that it's using the new location, take the opportunity to ensure that your database is fully functional. Once you've verified the integrity of any existing data, you can remove the backup data directory with 
 $ sudo rm -Rf /var/lib/mysql.bak 
 ```
+
+MySQL 关闭/定期自动清理/手动清理binlog日志文件 
+----------------------------------------------
+* 关闭mysql binlog日志 
+```
+# 查看当前日志情况
+mysql> show master logs;
++----------------------------+-----------+
+| Log_name                   | File_size |
++----------------------------+-----------+
+| WIN-UHA4VHLFV5N-bin.000001 |       154 |
++----------------------------+-----------+
+1 row in set (0.01 sec)
+
+# 删除10天前的MySQL binlog日志,可以根据需求修改时间 
+mysql> PURGE MASTER LOGS BEFORE DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY);
+
+# 删除清空日志 
+mysql> reset master;
+Query OK, 0 rows affected (0.19 sec)
+
+# 修改mysql配置文件 
+mysql> show variables like 'log_bin';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| log_bin       | ON    |
++---------------+-------+
+1 row in set, 1 warning (0.01 sec)
+
+mysql> show variables like 'binlog_format';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| binlog_format | ROW   |
++---------------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+$ vim /etc/my.cnf
+    # log-bin=mysql-bin
+    # binlog_format=mixed 
+
+# 自动清理binlog - 修改配置文件/etc/my.cnf,设置expire_logs_days
+    $ vim /etc/my.cnf   // 修改expire_logs_days,表示自动删除的天数 
+        expire_logs_days=7  // 日志自动删除的天数,默认值为0,表示"没有自动删除"
+
+mysql> show variables  like 'expire_logs_days';
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| expire_logs_days | 7     |
++------------------+-------+
+1 row in set, 1 warning (0.00 sec)
+
+$ systemctl restart mysql 
+```

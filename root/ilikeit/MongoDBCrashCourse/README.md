@@ -114,6 +114,30 @@ By default, MongoDB runs using the mongod user account and uses the following de
         create users、grant or revoke roles from users、and create or modify customs roles.
 
 2. Procedure 
-    
+   The following procedure first adds a user administrator to a MongoDB instance running without access control and then enables access control. 
+    1. Start MongoDB without access control. 
+        $ mongod --port 27017 --dbpath /mnt/chyi_data/mongodb 
+    2. Connect to the instance.
+        $ mongo --host --port 27017 
+    3. Create the user administrator 
+        > use admin 
+        > db.createUser(
+            {
+                user: "root",
+                pwd: passwordPrompt(), // or cleartext password 
+                roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
+            }
+        )
+
+        The databae admin: is the user's authentication database.
+    4. Connect and authenticate as the user administrator. 
+        4.1: Connect with authentication by passing in user credentials 
+            $ mongo --port 27017 --authenticationDatabase "admin" -u "root" -p 
+            Enter your password when prompted. 
+        4.2: Connect first without authentication, and then issue the db.auth() method to authenticate 
+            $ mongo --port 27017 
+            > use admin
+            > db.auth("root", passwordPrompt()) // or cleartext password
+
 ```
 
