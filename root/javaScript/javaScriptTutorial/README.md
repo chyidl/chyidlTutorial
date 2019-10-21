@@ -1359,6 +1359,79 @@ DOM最小组成单位叫做节点(node)
 
 ```
 
+JavaScript: The Keyword "This" for Beginners
+--------------------------------------------
+```
+#1 Global Object: 
+(mac: Cmd + Option + J) 
+in the global scope, this refers to the global object.
+
+
+#2 Declared Object 
+When the keyword this is used inside of a declared object, the value of this is set to the closest parent object the method is called on. 
+
+#3 The New Keyword
+When the new keyword is used (a constructor), this is bound to the new object being created.
+
+#4 Call, Bind, Apply 
+we can actually set the value of this explicitly with call(), bind(), and apply(). 
+Call takes any number of paramters: this, followed by the additional arguments 
+Apply takes only two parameters: this, followed by an array of the additional arguments 
+
+#Conclusion
+    1. The value of this is usually determined by a function execution context. 
+    2. In the global scope, this refers to the global object (the window object).
+    3. When the new keyboard is used (a constructor), this is bound to the new object being created.
+    4. We can set the value of this explicitly with call(), bind(), and apply() 
+    5. Arrow Functions don't bind this -- instead this is bound lexically (i.e. based on the original context)
+```
+
+JavaScript: Arrow Functions for Beginners
+-----------------------------------------
+```
+arrow function: 
+
+#Benefit #1: Shorter Syntax 
+    
+regular function:
+    function funcName(params) {
+        return params + 2; 
+    }
+
+    funcName(2); 
+    // 4
+
+arrow function 
+    var funcName = (params) => params + 2 
+    funcName(2);
+    // 4
+
+# syntax of arrow functions 
+(parameters) => { statements }
+
+# If have no parameters, express an array function like this:
+() => { statements }
+
+# If have one parameter, the opening parenthesis are optional:
+parameters => { statements }
+
+# if returning an expression, you remove the brackets 
+parameters => expression 
+
+// is equivalent to:
+
+function (parameters) {
+    return expressions;
+}
+
+#Benefit#2: No binding of this 
+Unlike a regualr function, an arrow function does not bind this. Instead, this is bound lexically(i.e. this keeps its meaning from its original context)
+
+#Conclusion 
+    1. Shorter Syntax 
+    2. No binding of this
+```
+
 HOW TO START A NODE.JS PROJECT
 ------------------------------
 ```
