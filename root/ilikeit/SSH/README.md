@@ -171,7 +171,7 @@ User=pi
 Type=simple
 # How long ssh must be up before we consider it a successful connection. Default is 30 seconds. If set to 0, this behaviour is disabled. and as well, autossh will retry even on failure of first attempt to run ssh
 Environment="AUTOSSH_GATETIME=0"
-ExecStart=/usr/bin/autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR '*:xxxx:localhost:xx' user@           remote_ip -p xx
+ExecStart=/usr/bin/autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR '*:xxxx:localhost:xx' user@remote_ip -p xx
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
