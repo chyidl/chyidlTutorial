@@ -186,6 +186,20 @@ Oh My Tmux!Pretty & versatile tmux configuration(Fork: https://github.com/gpakos
 ----------------------------------------------------------------------------------------
 > tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.
 ```
+# 会话与进程
+命令行的典型使用方式是，打开一个终端窗口(terminal window),输入命令，用户与计算机这种临时的交互，称为一次“会话”session.
+
+会话的一个重要特点是，窗口与其中启动的进程是连在一起的，打开窗口，会话开始，关闭窗口，会话结束，会话内部的进程也会随之终止，不管有没有运行完.
+
+为了解决这个问题,会话与窗口可以“解绑”：窗口关闭时，会话并不终止，而是继续运行，等到以后需要的时候，再让会话“绑定”其他窗口.
+
+Tmux的作用就是会话与窗口的“解绑”工具:
+    1. 允许在单个窗口中，同时访问多个会话，对于同时运行多个命令行程序很有用
+    2. 可以让新窗口“接入”已经存在的会话
+    3. 允许每个会话有多个连接窗口，因此可以多人实时共享会话
+    4. 支持窗口的垂直和水平拆分
+类似的终端复用器还有 GNU Screen. 
+
 * Installation 
 Requirements:
 	1. tmux **`>= 2.1`** running inside Linux, Mac, OpenBSD 
@@ -334,9 +348,7 @@ Chris johnsen created the [`reattach-to-user-namespace` utility](https://github.
 To install `reattach-to-user-namespace`, use either [MacPorts][] or [Homebrew][]:
     
     $ port install tmux-pasteboard
-
 or 
-
     $ brew install reattach-to-user-namespace 
 
 Once installed, `reattach-to-usernamespace` will be automatically detected.
@@ -345,20 +357,21 @@ Once installed, `reattach-to-usernamespace` will be automatically detected.
 [Homebrew]: http://brew.sh/
 
 ### tmux shortcuts & cheatsheet 
-
 ```
 $ tmux					# start new  
 $ tmux new -s name		# start new with session name 
-$ tmux a				# attch 
-$ tmux a -t myname		# attach to named 
+$ tmux a				# attch  -- 用于重新接入某个已存在的会话
+$ tmux a -t myname		# attach to 会话名称
 $ tmux ls				# list sessions 
 $ tmux kill-session -t myname # kill session 
 $ tmux ls | grep : | cut -d. -f1 | awk '{print substr($1, 0, length($1)-1)}' | xargs kill  # kill all the tmux sessions 
+$ tmux switch -t 0      # 使用会话编号
+$ tmux switch -t <session-name> # 使用会话名称 
 
 Sessions 
 :new <CR> new session 
 <prefix> s	# list sessions 
-<prefix> $ name session 
+<prefix> $ name session     # 重命名当前会话
 
 Windows (Tabs)
 <prefix> c	# create window 
@@ -411,9 +424,7 @@ set -g status-justify centre
 unbind Up bind Up new-window -d -n tmp \; swap-pane -s tmp.1 \; select-window -t tmp 
 unbind Down 
 bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
-
 ```
-
 - [.tmux.conf](/root/ilikeit/Vim%2BTmux/tmux.conf)
 - [.tmux.conf.local](/root/ilikeit/Vim%2BTmux/tmux.conf.local)
 

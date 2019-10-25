@@ -17,8 +17,8 @@ $ sudo apt-get update
 $ sudo apt-get install build-essential tcl make gcc 
 ```
 
-Download, Compile, and Install Redis 
-------------------------------------
+Download, Compile, and Install Redis From Source
+------------------------------------------------
 ```
 # Docker:
 
@@ -53,9 +53,22 @@ $ make test
 # Once complete, install the binaries onto the system by typing:
 $ sudo make install
 
+# make below directories, redis will create directories by default but this is my perferred way of installing redis. By creating separate directories will life easier.
+$ mkdir -p /mnt/chyi_data/redis/db 
+$ mkdir -p /mnt/chyi_data/redis/conf 
+$ mkdir -p /mnt/chyi_data/redis/
+
 # Install init Script 
 # need init configuration so that redis-server should start itself on boot and no manual commands are needed by the user 
 $ cd /path/redis-stable/utils && sudo ./install_server.sh 
+
+# When you run "install_server.sh" scripts you will asked questions to configure redis. please provide below details as necessary.
+Port           : 6379
+Config file    : /mnt/chyi_data/redis/conf/redis_6379.conf
+Log file       : /mnt/chyi_data/redis/log/redis_6379.log
+Data dir       : /mnt/chyi_data/redis/db
+Executable     : /usr/local/bin/redis-server
+Cli Executable : /usr/local/bin/redis-cli
 
 # Configure Redis 
 # Now that Redis is installed, we can begin to configure it.
@@ -171,6 +184,91 @@ Ok
 # By default **redis-cli** connects to the server at 127.0.0.1 port 6379. As you can guess, you can easily change this using command line options. To specify a different host name or an IP address, use -h. In order to sent a different port, user -p 
 
 $ redis-cli -h pi -p 6379 
+```
+
+INSTALL REDIS 5.0 FROM SOURCE IN CENTOS 7
+-----------------------------------------
+```
+# make the start up script executable and make it start at boot.
+$ cd /etc/init.d/
+$ chmod 777 redis_6379
+$ chkconfig --add redis_6379 
+
+# start redis server.
+$ /etc/init.d/redis_6379 start | stop | restart 
+
+# That's it ! you all set!
+$ vim /etc/init.d/redis_6379
+
+#!/bin/sh
+#Configurations injected by install_server below....
+
+EXEC=/usr/local/bin/redis-server
+CLIEXEC="/usr/local/bin/redis-cli -a <password>"
+PIDFILE=/var/run/redis_6379.pid
+CONF="/mnt/chyi_data/redis/conf/redis_6379.conf"
+REDISHOST="118.31.50.10"
+REDISPORT="6379"
+###############
+# SysV Init Information
+# chkconfig: - 58 74
+# description: redis_6379 is the redis daemon.
+### BEGIN INIT INFO
+# Provides: redis_6379
+# Required-Start: $network $local_fs $remote_fs
+# Required-Stop: $network $local_fs $remote_fs
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Should-Start: $syslog $named
+# Should-Stop: $syslog $named
+# Short-Description: start and stop redis_6379
+# Description: Redis daemon
+### END INIT INFO
+
+
+case "$1" in
+    start)
+        if [ -f $PIDFILE ]
+        then
+            echo "$PIDFILE exists, process is already running or crashed"
+        else
+            echo "Starting Redis server..."
+            $EXEC $CONF
+        fi
+        ;;
+    stop)
+        if [ ! -f $PIDFILE ]
+        then
+            echo "$PIDFILE does not exist, process is not running"
+        else
+            PID=$(cat $PIDFILE)
+            echo "Stopping ..."
+            $CLIEXEC -h $REDISHOST -p $REDISPORT shutdown
+            while [ -x /proc/${PID} ]
+            do
+                echo "Waiting for Redis to shutdown ..."
+                sleep 1
+            done
+            echo "Redis stopped"
+        fi
+        ;;
+    status)
+        PID=$(cat $PIDFILE)
+        if [ ! -x /proc/${PID} ]
+        then
+            echo 'Redis is not running'
+        else
+            echo "Redis is running ($PID)"
+        fi
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Please use start, stop, restart or status as first argument"
+        ;;
+esac
 ```
 
 How fast is Redis?

@@ -18,6 +18,7 @@ Raspberry Pi Awesome Project
 - [Measure Performance in Linux](/root/raspberrypi/RaspberryPiPrj/MeasurePerformance/README.md)
 - [Build your own Private GitLab](/root/raspberrypi/RaspberryPiPrj/PrivateGitRepository/README.md)
 - [Build Ghost Blog on Raspberry](/root/raspberrypi/RaspberryPiPrj/GhostPi/README.md)
+- [Build GitLab Server on Raspberry](/root/raspberrypi/RaspberryPiPrj/GitlabPi/README.md)
 - [Kindle + Raspberry = Anything](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/README.md)
 - [YahooWeatherAPI](/root/raspberrypi/RaspberryPiPrj/YahooWeatherAPI/README.md)
 - [Homebridge HomeKit Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/README.md)

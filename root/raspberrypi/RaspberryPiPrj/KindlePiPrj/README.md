@@ -286,3 +286,31 @@ You can connect to VNC servers by two means:
 The launchpad config will kill a running VNC viewer with the key chain "V Q"
 ("Shift V Q" is the complete key chain you must press).
 ```
+
+Using Kindle as an External Monitor 
+-----------------------------------
+> You can share a terminal session using your Kindle, which means you can use it as an external monitor for text-only applications. You won't be able to do much web browsing or design work beside ASCII art, but if you're a coder or a sysadmin, I'm sure this is not really to get this to bother you.
+```
+# Here's a brief list of steps required to get the hack working.
+    1. Jailbreak your Kindle 
+    2. Install a Terminal application on it so that you can open a ssh/telnet session (Used KindleTermPV).
+    3. Disable the screensaver on the Kindle 
+    4. Make sure your host computer has ssh/telnet properly setup (and your firewall also)
+    5. Configure your Kindle Terminal application to connect automatically to your host computer and spawn a screen session at startup. For KindleTermPV, I create a kindleterm.properties file and placed it /mnt/us/developer/KindleTermPV/work with the following content:
+        host 192.168.1.251
+        port 22 
+        orientation landscape 
+        login user_name
+        password <pass here>
+        cmd screen -m -S shared 
+        # Hmm, yeah don't do this over WiFi. USB only!
+    6. Open your Kindle Terminal application from your Kindle, which will spawn a screen session. The From your host machine using the same user(user_name), run a "screen -x shared" 
+
+# Now the two sessions are shared and whatever you type on your computer will appear on the Kindle! You could potentially attach multiple Kindle devices and share multiple shell sessions
+
+# Notable Problems:
+    1. Console only, no graphics
+    2. Artifacts appearing for certain characters, probably due to the terminal encoding.
+    Half a second delay between typeing and seeing the screen update (not a problem if you are used to dial-up speeds and use ssh).
+    3. Sometimes the Kindle invalidates certain area of the scrren and you can't see some parts of the text (a "clear" comamnd fixes it or a full refresh of the page does it also).
+```

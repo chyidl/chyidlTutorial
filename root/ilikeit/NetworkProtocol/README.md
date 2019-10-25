@@ -43,7 +43,6 @@ RPC:
 P2P:
 GTP:
 
-
 HTTP Header: POST, URL, HTTP 1.1, Body: JSON 
 ```
 
@@ -105,8 +104,6 @@ lo: loopback 环回接口
 MAC 地址的通信范围比较小，局限在一个子网里面
 IP地址有定位的功能，MAC是身份标示，无定位功能 
 
-
-
 OSPF:
 BGP: 
 IPSec: 
@@ -134,7 +131,7 @@ RARP: 已知MAC地址，获取IP地址
 交换机:
     转发表
 VLAN:
-STP:Spanning Tree Protocol
+The Spanning Tree Protocol (STP):生成树协议
     Root Bridge: 根交换机
     Designated Bridge: 指定交换机
     Bridge Protocol Data Units (BPDU): 网桥协议数据单元 
@@ -144,9 +141,24 @@ STP:Spanning Tree Protocol
         Bridge ID:
         Port ID:
     
-
 拓扑结构: 
-    环路问题: 
+    环路问题: -- 怎么破除环路?
+    解决广播问题和安全问题?
+        1. 物理隔离
+        2. 虚拟隔离 
+            VLAN-虚拟局域网: 在二层头部加上一个TAG(VLAN ID 12位 - 可以划分位4096个VLAN)
+            Trunk 口:可以转发属于任何VLAN口，交换机之间可以通过这种口相互连接 
+         
+ICMP (Internet Control Message Protocol) 互联网控制报文协议
+    ping是基于ICMP协议工作
+    ICMP报文封装在IP包内
+        [IP 头][ICMP报文]
+                  |
+                [类型 8位][代码 8位][校验和 16位][...]
+                                                |
+                                                1. 请求与响应 [标识符 16位][序号 16位][数据]
+                                                2. 差错报文   [unused 16位][unused 16位][IP 头][8 Byte正文]
+    
 
     
 ```
@@ -223,3 +235,87 @@ iptoute2, which is another family of network configuration tools, emerged to rep
 
 the user interface of iproute2 is more intuitive than that of net-tools.
 ```
+
+TCP/IP Protocol backlog
+-----------------------
+```
+# backlog其实是一个连接队列:
+-- Linux Kernel lower than 2.2
+    半连接状态队列: 服务器处于Listen状态时收到客户端SYN报文时放入半连接队列中，SYN queue (服务器端口为: SYN_RCVD)
+    + 
+    全连接状态队列: TCP的连接状态从服务器(SYN+ACK)响应客户端后，到客户端的ACK报文到达服务器之前处于半连接状态，当服务器接收到客户端的ACK报文后，该条目将从半连接队列转移到全连接队列的尾部，accept queue (服务器端口状态为: ESTABLISHED)
+-- Linux Kernel higher than 2.2
+    半连接状态队列 SYN_RCVD状态     : 
+    全连接状态队列 ESTABLISHED状态  : 
+                  SYN queue 队列  : /proc/sys/net/ipv4/tcp_max_syn_backlog 指定，默认为2048 
+               Accept queue 队列  : /proc/sys/net/core/somaxconn 和使用listen函数时传入的参数二者取最小的值，默认是128; 可以修改/etc/sysctl.conf中配置 net.core.somaxconn = 1024 
+
+$ ss -l 
+Netid    State    Recv-Q    Send-Q    Local Address:Port    Peer Address:Port
+tcp      LISTEN   0         128       *:mysql               *:*
+tcp      LISTEN   0         128       [::]:6379             [::]:*
+
+LISTEN状态中，Send-Q即为Accept queue的最大值, Recv-Q则表示Accept Queue中等待被服务器accept() 
+TCP三次🤝过程中，客户端connect()返回不代表TCP连接建立成功，有可能accept queue已满，系统回直接丢弃后续ACK请求，客户端误以为连接已建立，开始调用等待至超时;服务器则等待ACK超时，会重新传递SYN+ACK给客户端，重传次数受限net.ipv4.tcp_synack_retries,默认为5.表示重发5次，每次等待30～40秒，即半连接默认时间大约为180秒
+
+查看SYN queue 溢出
+$ netstat -s | grep LISTEN 
+
+查看Accept queue 溢出 
+$ netstat -s | grep TCPBacklogDrop
+
+
+(Linux)
+$ netstat -pant | grep LISTEN
+    -p: show the program name/PID owning the socket 
+    -a: show all connections 
+    -n: show numerical addresses 
+    -t: show only TCP connections 
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 127.0.0.1:587           0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:6379            0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      -
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      -
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      -
+tcp6       0      0 :::3306                 :::*                    LISTEN      -
+tcp6       0      0 :::6379                 :::*                    LISTEN      -
+tcp6       0      0 :::22                   :::*                    LISTEN      -
+
+(macOS: List listening ports and programs using netstat)
+$ netstat -an -ptcp | grep LISTEN
+tcp4       0      0  *.7005                 *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.63342        *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.6942         *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.4301         *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.4300         *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.17603        *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.17600        *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.1086         *.*                    LISTEN     
+tcp4       0      0  127.0.0.1.1087         *.*                    LISTEN     
+tcp46      0      0  *.1089                 *.*                    LISTEN     
+tcp4       0      0  *.1089                 *.*                    LISTEN     
+tcp6       0      0  *.49160                *.*                    LISTEN     
+tcp4       0      0  *.49160                *.*                    LISTEN     
+tcp4       0      0  *.22                   *.*                    LISTEN     
+tcp6       0      0  *.22                   *.*                    LISTEN
+
+There seems to be no way to get the same kind of info using netstat on macOS. But everything is not lost. A tcp socket is just another type of file descriptor in Unix derivatives so we can lsof to get the same info on macOS:
+$ lsof -i -P | grep -i "LISTEN"
+rapportd    329 chyiyaqing    4u  IPv4 0x1dab9459a9e6d77f      0t0  TCP *:49160 (LISTEN)
+rapportd    329 chyiyaqing    5u  IPv6 0x1dab9459a9e61087      0t0  TCP *:49160 (LISTEN)
+QQ          413 chyiyaqing   37u  IPv4 0x1dab9459b085d3ff      0t0  TCP localhost:4300 (LISTEN)
+QQ          413 chyiyaqing   38u  IPv4 0x1dab9459b525ac3f      0t0  TCP localhost:4301 (LISTEN)
+Dropbox    1319 chyiyaqing  163u  IPv4 0x1dab9459b81c8cff      0t0  TCP localhost:17600 (LISTEN)
+Dropbox    1319 chyiyaqing  170u  IPv4 0x1dab9459b81c797f      0t0  TCP localhost:17603 (LISTEN)
+Shadowsoc  1397 chyiyaqing    5u  IPv4 0x1dab9459b085b6bf      0t0  TCP *:1089 (LISTEN)
+Shadowsoc  1397 chyiyaqing    6u  IPv6 0x1dab9459a9e5fe87      0t0  TCP *:1089 (LISTEN)
+privoxy    1428 chyiyaqing    3u  IPv4 0x1dab9459b3fefc3f      0t0  TCP localhost:1087 (LISTEN)
+ss-local   1439 chyiyaqing    8u  IPv4 0x1dab9459b54c4fbf      0t0  TCP localhost:1086 (LISTEN)
+pycharm   86095 chyiyaqing  192u  IPv4 0x1dab9459b0857c3f      0t0  TCP localhost:6942 (LISTEN)
+pycharm   86095 chyiyaqing  418u  IPv4 0x1dab9459b77f277f      0t0  TCP localhost:63342 (LISTEN)
+pycharm   86095 chyiyaqing  448u  IPv4 0x1dab9459b0072c3f      0t0  TCP *:7005 (LISTEN)
+```
+![TCP/IP backlog](/imgs/ilikeit/NetworkProtocol/tcp-backlog.png?raw=true)
+

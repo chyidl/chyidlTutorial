@@ -66,6 +66,7 @@ chyidlTutorial
 - [Design Patterns](/root/ilikeit/DesignPatterns/README.md)
 - [SSH - Secure Shell](/root/ilikeit/SSH/README.md)
 - [Vim Tips](root/ilikeit/vim/README.md)
+- [Vscode Tips](root/ilikeit/VSCODE/README.md)
 - [Mastering Emacs](root/ilikeit/Emacs/README.md)
 - [Vim+Tmux OMG!](/root/ilikeit/Vim+Tmux/README.md)
 - [Bash Script](root/ilikeit/Scripts/README.md)
