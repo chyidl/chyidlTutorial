@@ -2158,3 +2158,42 @@ mysql> show variables  like 'expire_logs_days';
 
 $ systemctl restart mysql 
 ```
+
+How to Open A Port In CentOS/REHL 7 
+-----------------------------------
+> A TCP/IP network connection may be either blocked, dropped, open, or filtered. These actions are generally controlled by the IPtables firewall the system uses and is independent of ant process or program that may be listening on a network port. This port will outline the steps to open a port required by application.
+```
+# Server details are as below:
+$ uname -a 
+Linux local-machine199 3.10.0-957.el7.x86_64 #1 SMP Thu Nov 8 23:39:32 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+$ cat /etc/redhat-release 
+CentOS Linux release 7.7.1908 (Core)
+
+1. Check Port Status 
+$ netstat -an | grep 3306 
+tcp6       0      0 :::3306                 :::*                    LISTEN     
+tcp6       0      0 :::33060                :::*                    LISTEN  
+
+2. Check Port Status in iptables 
+$ iptables-save | grep 3306 
+-A INPUT -p tcp -m tcp --dport 3306 -j DROP
+
+3. Add the port 
+# Add the test port in /etc/services file and allow the port to accept packets. Test port can be added by editing /etc/services file in below format:
+$ vim /etc/services 
+# service-name  port/protocol  [aliases ...]   [# comment]
+mysql           3306/tcp                        # MySQL
+mysql           3306/udp                        # MySQL
+
+4. Open firewall ports 
+# Add Firewall rule to allow the port to accept packets 
+$ iptables -A INPUT -p tcp -m tcp --dport 3306 -j ACCEPT
+$ iptables -F   # --flush the selected chain (all the chains in the table if none is given). This is equivalent to deleting all the rules one by one.
+
+5. Check newly added port status 
+$ netstat -an | grep 3306 
+tcp6       0      0 :::3306                 :::*                    LISTEN      127783/mysqld       
+tcp6       0      0 :::33060                :::*                    LISTEN      127783/mysqld       
+tcp6       0      0 192.168.1.199:3306      192.168.1.251:50908     ESTABLISHED 127783/mysqld 
+```

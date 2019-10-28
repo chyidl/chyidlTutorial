@@ -466,3 +466,38 @@ $ make -j4
 $ sudo make install 
 $ cp -ru vim/src/vim /usr/bin # overwrites /usr/bin/vim w/o confirmation 
 ```
+
+Screen Vs. Tmux 
+---------------
+```
+# Introduction
+Screen or GNU Screen is a terminal multiplexer. In other words, it means that you can start a screen session and then open any number of windows (virtual terminals) inside that session. Processes running in Screen will continue to run when their window is not visible event if you get disconnected.
+
+# Install Linux GNU Scrren 
+$ screen --version 
+Screen version 4.06.02 (GNU) 23-Oct-17
+
+# Starting Named Session (Named sessions are useful when you run multiple screen sessions.)
+$ screen -S session_name 
+
+# Working with Linux Screen Windows 
+$ screen -S session_name 
+
+# Working With Linux Screen Windows
+    Ctrl+a  c   : Create a new window (with shell)
+    Ctrl+a "    : List all window 
+    Ctrl+a 0    : Switch to window 0 (by number)
+    Ctrl+a A    : Rename the current window 
+    Ctrl+a S    : Split current region horizontally into two regions 
+    Ctrl+a |    : Split current region vertically into two regions 
+    Ctrl+a tab  : Switch the input focus to the next regions
+    Ctrl+a Ctrl+a: Toggle between the current and previous region 
+    Ctrl+a Q    : Close all regions but the current one 
+    Ctrl+q X    : Close the current region 
+
+# Detach from Linux Screen Session 
+$ Ctrl+a d  # detach from the screen session at any time typing 
+
+# Reattach to a Linux Screen 
+
+```

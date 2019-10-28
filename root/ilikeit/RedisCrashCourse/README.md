@@ -189,6 +189,26 @@ $ redis-cli -h pi -p 6379
 INSTALL REDIS 5.0 FROM SOURCE IN CENTOS 7
 -----------------------------------------
 ```
+# Create a directory and go inside that directory and download the source.
+$ mkdir -p /opt/software/redis 
+$ cd !$
+$ wget http://download.redis.io/redis-stable.tar.gz
+
+# Extract the source and go inside downloaded redis directory.
+$ tar -xvzf redis-stable.tar.gz 
+$ cd redis-stable 
+
+# Next run these command to compile and install.
+$ make -j4 
+$ yum install tcl wget 
+$ make test 
+$ make install 
+
+# make below directories, redis will create directories by default but this is my preferred way of installing redis. By creating separate directories will life easier. 
+$ mkdir -p /mnt/chyi_data/redis/db 
+$ mkdir -p /mnt/chyi_data/redis/conf 
+$ mkdir -p /mnt/chyi_data/redis/ 
+
 # make the start up script executable and make it start at boot.
 $ cd /etc/init.d/
 $ chmod 777 redis_6379

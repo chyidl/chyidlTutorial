@@ -319,3 +319,127 @@ pycharm   86095 chyiyaqing  448u  IPv4 0x1dab9459b0072c3f      0t0  TCP *:7005 (
 ```
 ![TCP/IP backlog](/imgs/ilikeit/NetworkProtocol/tcp-backlog.png?raw=true)
 
+HTTP/3 - HTTP over QUIC is the next generation 
+----------------------------------------------
+```
+HTTP/1  (in ASCII over TCP)    -- 1996 
+HTTP/1.1    -- Shipped January 1997 
+    Many parallel TCP connections 
+    Better but ineffective TCP use.
+    HTTP head-of-line-blocking 
+    Numberous work-arounds
+
+HTTP/2 (Binary multiplexed over TCP)-- 2015 
+    Uses single connection per host
+    Many parallel streams
+    TCP head-of-line-blocking 
+
+Ossification
+    Internet is full of boxes 
+    Routes, geteways, firewalls, load balancers, NATs.
+    Boxes run software to handle network data.
+    Middle-boxes work on existing protocols.
+    Upgrade much slower than edges.
+
+HTTP/3 (binary over multiplexed QUIC)
+
+    Under the hood 
+    --------------
+$ curl -v https://apple.com.cn 
+
+> GET / HTTP/1.1
+> Host: apple.com.cn
+> User-Agent: curl/7.64.1
+> Accept: */*
+
+< HTTP/1.1 301 Moved Permanently
+< Server: Apache
+< Date: Tue Jun  1 12:48:03 PDT 1999 PDT
+< Referer: http://apple.com/
+< Location: https://www.apple.com/cn/
+< Content-type: text/html
+< Content-length: 266
+
+HTTP started done over TCP.
+TCP (publish in 1981): works over IP; 
+    Establishes a "Connection"; 
+    3-way handshake; 
+    Resends lost packages;
+    Delivers a byte stream;
+    Clear text;
+
+HTTPS means TCP + TLS + HTTP.
+    TLS(Transport Layer Security) is done over TCP for HTTP/1 or 2;
+        Additional handshake: another ping pong on top of the TCP 
+        Privacy and security
+
+Classic HTTP/1 and HTTP/2 Network Stack:
+    IP -> TCP -> TLS 1.2+ -> HTTP/1/2
+Classic HTTP/3 Network Stack:
+    IP -> UDP -> TLS1.3 (QUIC) -> HTTP/3
+
+QUIC : A new transport protocol
+    Built on experiences by Google QUIC
+        Google deployed "http2 frames over UDP" - QUIC in 2013 
+        Widely used client.
+        Widely used web services 
+        Proven to work at web scale 
+        Taken to the IETF in 2015.
+        QUIC working group started 2016.
+        IEFT QUIC is now every different than Google QUIC was
+            transport protocol: 
+            application protocol: 
+    Improvements:
+        TCP head of line blocking -- when we lose a packet 
+        Faster handshakes 
+        Earlier data 
+        Connection-ID 
+    Build on top of UDP:
+    UDP isn't reliable, 
+        Connection less 
+        No resends 
+        No flow control
+    QUIC is:
+        Uses UDP like TCP uses IP 
+        Adds connections, resends and flow control on top 
+Stream:
+    QUIC provides streams
+    Many logical flows within a single connection
+    Similar to HTTP/2 but in transport layer 
+    Independent streams
+
+Application protocols over QUIC:
+    Streams for free
+    Could be "any protocol"
+    HTTP worked on as the first 
+
+HTTP - sample but different 
+    > Request
+        - method + path 
+        - headers 
+        - body 
+    < Response
+        - response code 
+        - headers
+        - body
+
+HTTP/3 is faster
+    Faster handshakes
+    Early data that works 
+    The independent streams 
+    By how much remains to be measured.
+    CPU intensive 
+    Unoptimized UDP stacks 
+    All QUIC stacks are user-land 
+
+Implementations:
+    Over a dozen QUIC implementations, almost as many HTTP/3 implementations 
+        Google, Mozila, Apple, Facebook, Microsoft, Akamai, Fastly, Cloudflare, F5, LiteSpeed
+    
+
+HTTPS is TCP?
+    HTTPS://URLs are everywhere 
+    TCP (and TLS) on TCP port 443 
+    
+```
+![HTTP/3 vs HTTP/2](imgs/ilikeit/../../../../../imgs/ilikeit/NetworkProtocol/HTTP-3.png?raw=true)
