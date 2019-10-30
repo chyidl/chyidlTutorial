@@ -264,7 +264,59 @@ $ git check-ignore -v App.class
 
 Use vimdiff as git mergetool
 ----------------------------
+* Step 1: Git Config 
+> This will set vimdiff as the default merge tool.
 ```
+$ git config --global merge.tool vimdiff 
+$ git config --global merge.conflictstyle diff3 
+$ git config --global mergetool.prompt false 
+```
+* Step 2: Creating merge conflict 
+```
+$ mkdir zoo 
+$ cd zoo 
+$ git init 
+$ vim animals.txt 
+
+# Let's add some animals 
+    cat
+    dog
+    octopus 
+    octocat
+
+# Save the file.
+$ git add animals.txt 
+$ git commit -m "Initial commit"
+$ git branch octodog
+$ git checkout octodog 
+$ vim animals.txt   # let's change octopus to octodog 
+$ git add animals.txt 
+$ git commit -m "Replace octopus with an octodog"
+$ git checkout master 
+$ vim animals.txt   # let's change octopus to octoman 
+$ git add animals.txt 
+$ git commit -m "Replace octopus with an octoman"
+$ git merge octodog     # merge octodog into master
+# That's where we get a merge error:
+    Auto-merging animals.txt
+    CONFLICT (content): Merge conflict in animals.txt
+    Automatic merge failed; fix conflicts and then commit the result.
+$ git mergetool 
+```
+![vimdiff as git mergetool](/imgs/ilikeit/GitCrashCourse/vimdiff_mergetool.png?raw=true)
+* Resolving merge conflict with vimdiff 
+```
+Let's assume that wen want to keep the "octodog" change (from REMOTE). For that, move to the MERGED file(Ctrl + w, j), move your cursor to a merge conflict area and then:
+
+:diffg  RE  " get from REMOTE 
+:diffg  BA  " get from BASE 
+:diffg  LO  " get from LOCAL
+
+$ git clean -f 
+
+Save the file and quit (a fast way to write and quit multiple files is :wqa)
+$ git commit -m "message"
+
 Vimdiff is nice diff tool. 
 $ man git-diff: Show changes between commits, commit and working tree, etc
 
@@ -275,11 +327,21 @@ $ git diff --stat   :   see an overview of changes
 $ git log --pretty=format:"[%h] %ae, %ar: %s" --stat    :   which shows commit history with the files that were changed.
 
 $ vimdiff file1 file2 [file3 [file4]]   :   starts Vim in diff mode 
+```
 
-# Git Settings 
-get Vimdiff working with Git, To Tell Git to always use Vimdiff
-$ git config --global diff.tool vimdiff 
-$ git config --global merge.tool vimdiff
+How to remove local untracked files from the current Git branch
+---------------------------------------------------------------
+```
+# If you want to see which files will be deleted you can use the -n option before you run the actual command:
+$ git clean -n 
+
+# Then when you are comfortable (because it will delete the files for real!)
+$ git clean -f 
+
+# Here are some more options for you to delete directories, files, ignored and non-ignored files 
+$ git clean -fd     # To remove directories 
+$ git clean -fX     # To remove ignored files 
+$ git clean -fx     # To remove ignored and non-ignored files 
 ```
 
 At what time of day do famous programmers work?

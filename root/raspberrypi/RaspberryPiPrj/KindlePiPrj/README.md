@@ -314,3 +314,22 @@ Using Kindle as an External Monitor
     Half a second delay between typeing and seeing the screen update (not a problem if you are used to dial-up speeds and use ssh).
     3. Sometimes the Kindle invalidates certain area of the scrren and you can't see some parts of the text (a "clear" comamnd fixes it or a full refresh of the page does it also).
 ```
+
+Kindle using VNC
+----------------
+```
+# 1. Jailbreak Kindle 
+# 2. Activate SSHD over WIFI/USBnet
+https://www.youtube.com/redirect?redir_token=qklmnK-Sx6lYkvbzU1p7aSi-8wJ8MTU3MjQ0NjEwOEAxNTcyMzU5NzA4&q=http%3A%2F%2Fblog.joschika.tk%2F2012%2F03%2F01%2Fkindle-4nt-ssh-over-wifi%2F&v=THuLv2IFLW0&event=video_description 
+# 3. Install kindlevnc viewer 
+https://www.youtube.com/redirect?redir_token=qklmnK-Sx6lYkvbzU1p7aSi-8wJ8MTU3MjQ0NjEwOEAxNTcyMzU5NzA4&q=http%3A%2F%2Fwww.mobileread.com%2Fforums%2Fshowthread.php%3Ft%3D150434&v=THuLv2IFLW0&event=video_description
+# 4. Install kite (to launch kindlevnc)
+https://www.youtube.com/redirect?redir_token=qklmnK-Sx6lYkvbzU1p7aSi-8wJ8MTU3MjQ0NjEwOEAxNTcyMzU5NzA4&q=http%3A%2F%2Fwww.mobileread.com%2Fforums%2Fshowthread.php%3Ft%3D168270&v=THuLv2IFLW0&event=video_description
+# 5. Launch VNC server 
+    $ vim .vncserver.sh 
+        vncserver :1 -geometry 600x800 -depth 16 -dpi 160 -alwayshared -lazytight 
+    $ ./vncserver.sh && sleep 1 && vncserver localhost:1
+
+# 6. ??
+# 7. Profit
+```

@@ -43,6 +43,8 @@ Raspberry Pi Awesome Project
 - [DNS Server](/root/raspberrypi/RaspberryPiPrj/DNSServer/README.md)
 - [Use Fail2ban to Secure Your Server](/root/raspberrypi/RaspberryPiPrj/Fail2ban/README.md)
 - [Getting Started and Securing Your Server](/root/raspberrypi/RaspberryPiPrj/GettingStartedServer/README.md)
+- [SHANGHAI FUTURES EXCHANGE - CTP C++](/root/raspberrypi/RaspberryPiPrj/CTP_DEMO/README.md)
+- [Twisted - Event-driven netorking engine written in Python](/root/raspberrypi/RaspberryPiPrj/TwistedSrc/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)
