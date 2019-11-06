@@ -112,6 +112,182 @@ DirectMap4k:       57188 kB
 DirectMap2M:     2039808 kB
 DirectMap1G:           0 kB
 
+[chyi@zong ~]$ cat /proc/swaps
+Filename                                Type            Size    Used    Priority
+/swapfile                               file            2097148 143872  -2
+
+[chyi@zong ~]$ cat /proc/version
+Linux version 3.10.0-1062.4.1.el7.x86_64 (mockbuild@kbuilder.bsys.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-39) (GCC) ) #1 SMP Fri Oct 18 17:15:30 UTC 2019
+
+[chyi@zong ~]$ cat /proc/net/dev
+Inter-|   Receive                                                |  Transmit
+ face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+  eth0: 8041505018 2967528    0    0    0     0          0         0 1123975564 2562359    0    0    0     0       0          0
+    lo: 29685667   46948    0    0    0     0          0         0 29685667   46948    0    0    0     0       0          0
+
+4. free - Display amount of free and used memory in the system
+    -s, --seconds seconds: Continuously display the result delay seconds apart. You may actually specify any floating point number for delay,
+[chyi@zong ~]$ free -s 1
+              total        used        free      shared  buff/cache   available
+Mem:        2046924     1433392       72232        2896      541300      457896
+Swap:       2097148      143872     1953276
+
+              total        used        free      shared  buff/cache   available
+Mem:        2046924     1433408       72236        2896      541280      457944
+Swap:       2097148      143872     1953276
+
+5. lsof - list open files 
+   -i: 3306 
+[chyi@zong ~]$ sudo lsof -i:3306
+COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+mysqld  1416 mysql   17u  IPv6  55843      0t0  TCP *:mysql (LISTEN)
+
+6. netstat - Print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships
+    -t, -tcp: 
+    -u, -udp: 
+    --numberic, -n: Show numerical addresses instead of trying to determine symbolic host, port or user names.
+    --listening, -l: Show only listening sockets, (These are omitted by default.)
+    --program, -p: Show the PID and name of the program to which each socket belongs.
+
+[chyi@zong ~]$ sudo netstat -tunlp | grep 3306
+[sudo] password for chyi: 
+tcp6       0      0 :::3306                 :::*                    LISTEN      1416/mysqld         
+
+7. nohup (no hangup) - run a command immune to hangups, with output to a non-tty 
+> nohup is 'no hangup'. Normally, when we log out from the system then all the running programs or processes are hangup or terminated.
+
+[chyi@zong ~]$ nohup --version
+nohup (GNU coreutils) 8.22
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jim Meyering.
+    - Using nohup command without '&' then it returns to shell command prompt immediately after running that particular command in the background.
+[chyi@zong ~]$ vim ./sleep.sh 
+    #!/usr/bin/env bash
+    echo "sleep 5 seconds"
+    sleep 5
+    echo "What's going on everybody!"
+
+[chyi@zong ~]$ nohup bash ./sleep.sh 
+nohup: ignoring input and appending output to ‘nohup.out’
+[chyi@zong ~]$ cat nohup.out 
+sleep 5 seconds
+What's going on everybody!
+
+    - Using nohup command with '&' then it doesn't return to shell command prompt after running the command in the background.
+[chyi@zong ~]$ nohup bash sleep.sh &
+[1] 9598
+[chyi@zong ~]$ nohup: ignoring input and appending output to ‘nohup.out’
+
+[chyi@zong ~]$ fg
+nohup bash sleep.sh
+[chyi@zong ~]$ fg
+-bash: fg: current: no such job
+
+8. ls - list directory contents 
+
+9. mkdir - make directories 
+    -p, --parents: no error if existing, make parent directories as needed.
+
+10. cp - copy files and directories 
+    -R, -r, --recursive: copy directories recursively
+
+11. rm - remove files or directories 
+    -R, -r, --recursive: remove directories and their contents recursively 
+    -f, --force: ignore nonexistent files and arguments, never prompt 
+
+12. touch - change file timestamps 
+    -t STAMP: use [[CC]YY]MMDDhhmm[.ss] instead of current time 
+
+13. mv - move (rename) files 
+    mv SOURCE DIRECTORY
+
+14. stat - display file or file system status 
+
+[chyi@zong ~]$ stat sleep.sh 
+  File: ‘sleep.sh’
+  Size: 85              Blocks: 8          IO Block: 4096   regular file
+Device: fd01h/64769d    Inode: 394856      Links: 1
+Access: (0775/-rwxrwxr-x)  Uid: ( 1000/    chyi)   Gid: ( 1000/    chyi)
+Access: 2019-11-06 13:45:40.136590367 +0800
+Modify: 2019-11-06 13:45:29.864600806 +0800
+Change: 2019-11-06 13:45:29.867600802 +0800
+ Birth: -
+
+15. chmod - change file mode bits 
+    -R, --recursive: change files and directories recursively 
+    read(r): 4, write(w): 2, execute(x): 1
+
+16. ps - report a snapshot of the current processes.
+    -A : Select all processes. Identical to -e 
+    -a : Select all processes except both session leaders and processes not associated with a terminal.
+    -u userlist: Select by effective user ID (EUID) or name. 
+    -w : wide output. Use this option twice for unlimited width.
+    -f : Do full-format listing. This option can be combined with many other UNIX-style options to add additional columns.
+
+[chyi@zong ~]$ ps -aux --sort -pmem | head -n 10        # 前10个内存使用最多的进程
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root      8230  0.0 47.1 1100596 965608 pts/2  T    10:52   0:01 mysql -u root -p
+mysql     1416  1.0 11.6 1150312 238952 ?      Sl   Nov05  14:51 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid
+root      4922  0.4  1.4 903848 29668 ?        Sl   Nov05   4:45 /opt/hosteye/bin/hosteye --is_child_mode=true --is_console_mode=false --start_mode=0
+root      1195  0.0  0.3 284776  8048 ?        SNl  Nov05   0:55 ./bcm-si -N 78431e27-b82c-4112-aa6f-5561f2f9c7ae -v 3
+root      9012  0.0  0.2 156796  5572 ?        Ss   13:08   0:00 sshd: chyi [priv]
+root      1134  0.0  0.2 219596  4876 ?        SNl  Nov05   0:16 ./bcm-agent
+chyi      9015  0.0  0.1 116636  3412 pts/3    Ss   13:08   0:00 -bash
+root       381  0.0  0.1  39080  3360 ?        Ss   Nov05   0:00 /usr/lib/systemd/systemd-journald
+root      1092  0.0  0.1 222760  3168 ?        Ssl  Nov05   0:05 /usr/sbin/rsyslogd -n
+
+[chyi@zong ~]$ ps -aux --sort +pmem | head -n 10        # 前10个内存使用最少的进程
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         2  0.0  0.0      0     0 ?        S    Nov05   0:00 [kthreadd]
+root         4  0.0  0.0      0     0 ?        S<   Nov05   0:00 [kworker/0:0H]
+root         6  0.0  0.0      0     0 ?        S    Nov05   0:04 [ksoftirqd/0]
+root         7  0.0  0.0      0     0 ?        S    Nov05   0:00 [migration/0]
+root         8  0.0  0.0      0     0 ?        S    Nov05   0:00 [rcu_bh]
+root         9  0.0  0.0      0     0 ?        R    Nov05   0:02 [rcu_sched]
+root        10  0.0  0.0      0     0 ?        S<   Nov05   0:00 [lru-add-drain]
+root        11  0.0  0.0      0     0 ?        S    Nov05   0:00 [watchdog/0]
+root        13  0.0  0.0      0     0 ?        S    Nov05   0:00 [kdevtmpfs]
+
+17. kill - send a signal to a process or a group of processes. 
+   Here is the list of standard signals:
+        1 - SIGHUP - ?, controlling terminal closed, 
+        2 - SIGINT - interupt process stream, ctrl-C 
+        3 - SIGQUIT - like ctrl-C but with a core dump, interuption by error in code, ctl-/ 
+        4 - SIGILL 
+        5 - SIGTRAP 
+        6 - SIGABRT 
+        7 - SIGBUS 
+        8 - SIGFPE 
+        9 - SIGKILL - terminate immediately/hard kill, use when 15 doesn't work or when something disasterous might happen if process is allowed to cont., kill -9 
+        10 - SIGUSR1 
+        11 - SIGEGV 
+        12 - SIGUSR2
+        13 - SIGPIPE 
+        14 - SIGALRM
+        15 - SIGTERM - terminate whenever/soft kill, typically sends SIGHUP as well? 
+        16 - SIGSTKFLT 
+        17 - SIGCHLD 
+        18 - SIGCONT - Resume process, ctrl-Z (2nd)
+        19 - SIGSTOP - Pause the process / free command line, ctrl-Z (1st)
+        20 - SIGTSTP 
+        21 - SIGTTIN 
+        22 - SIGTTOU
+        23 - SIGURG
+        24 - SIGXCPU
+        25 - SIGXFSZ
+        26 - SIGVTALRM
+        27 - SIGPROF
+        28 - SIGWINCH
+        29 - SIGIO 
+        29 - SIGPOLL 
+        30 - SIGPWR - shutdown, typically from unusual hardware failure 
+        31 - SIGSYS 
+
+
 
 ```
 
@@ -663,3 +839,54 @@ Percentage of the requests served within a certain time (ms)
             -p 指定php-fpm进程号21027
 
 ```
+
+Signal numbering for standard signals
+-------------------------------------
+* signal - overview of signals
+```
+DESCRIPTION:
+    Linux supports both POSIX reliable signals (hereinafer "standard signals") and POSIX real-time signals.
+```
+
+> The numberic value for each signal is given in the table below. As show in the table, many signals have different numberic values on different architectures. The first numberic value in each table row shows the signal number on x86, ARM, and most other architectures; the second value is for Alpha and SPARC; the third is for MIPS; and the last is for PARISC. A dash (-) doniotes that a signal is absent on the corresponding architecture.
+
+| Signal    | x86/ARM | Alpha/SPARC | MIPS  | PARISC | Notes                                                                   |
+| --------- | :-----: | :---------: | :---: | :----: | :---------------------------------------------------------------------- |
+| SIGHUP    |    1    |      1      |   1   |   1    | Hangup detected on controlling terminal or death of controlling process |
+| SIGINT    |    2    |      2      |   2   |   2    | Interrupt from keyboard                                                 |
+| SIGQUIT   |    3    |      3      |   3   |   3    | Quit from keyboard                                                      |
+| SIGILL    |    4    |      4      |   4   |   4    | Illegal Instruction                                                     |
+| SIGTRAP   |    5    |      5      |   5   |   5    | Trace/breakpoint trap                                                   |
+| SIGABRT   |    6    |      6      |   6   |   6    | Abort signal from abort(3)                                              |
+| SIGIOT    |    6    |      6      |   6   |   6    | IOT trap. A synonym for SIGABRT                                         |
+| SIGBUS    |    7    |     10      |  10   |   10   | Bus error (bad memory access)                                           |
+| SIGEMT    |    -    |      7      |   7   |   -    | Emulator trap                                                           |
+| SIGFPE    |    8    |      8      |   8   |   8    | Floating-point exception                                                |
+| SIGKILL   |    9    |      9      |   9   |   9    | Kill signal                                                             |
+| SIGUSR1   |   10    |     30      |  16   |   16   | User-defined signal 1                                                   |
+| SIGSEGV   |   11    |     11      |  11   |   11   | Invalid memory reference                                                |
+| SIGUSR2   |   12    |     31      |  17   |   17   | User-defined signal 2                                                   |
+| SIGPIPE   |   13    |     13      |  13   |   13   | Broken pipe: write to pipe with no readers; see pipe(7)                 |
+| SIGALRM   |   14    |     14      |  14   |   14   | Timer signal from alarm(2)                                              |
+| SIGTERM   |   15    |     15      |  15   |   15   | Termination signal                                                      |
+| SIGSTKFLT |   16    |      -      |   -   |   7    | Stack fault on coprocessor (unused)                                     |
+| SIGCHLD   |   17    |     20      |  18   |   18   | Child stopped or terminated                                             |
+| SIGCLD    |    -    |      -      |  18   |   -    | A synonym for SIGCHLD                                                   |
+| SIGCONT   |   18    |     19      |  25   |   26   | Continue if stopped                                                     |
+| SIGSTOP   |   19    |     17      |  23   |   24   | Stop process                                                            |
+| SIGTSTP   |   20    |     18      |  24   |   25   | Stop typed at terminal                                                  |
+| SIGTTIN   |   21    |     21      |  26   |   27   | Terminal input for background process                                   |
+| SIGTTOU   |   22    |     22      |  27   |   28   | Terminal output for background process                                  |
+| SIGURG    |   23    |     16      |  21   |   29   | Urgent condition on socket (4.2BSD)                                     |
+| SIGXCPU   |   24    |     24      |  30   |   12   | CPU time limit exceeded (4.2BSD); see setrlimit(2)                      |
+| SIGXFSZ   |   25    |     25      |  31   |   30   | File size limit exceeded (4.2BSD); see setrlimit(2)                     |
+| SIGVTALRM |   26    |     26      |  28   |   20   | Virtual alarm clock (4.2BSD)                                            |
+| SIGPROF   |   27    |     27      |  29   |   21   | Profiling timer expired                                                 |
+| SIGWINCH  |   28    |     28      |  20   |   23   | Window resize signal (4.3BSD, Sun)                                      |
+| SIGIO     |   29    |     23      |  22   |   22   | I/O now possible (4.2BSD)                                               |
+| SIGPOLL   |         |             |       |        | Pollable event (Sys V). Synonym for SIGIO                               |
+| SIGPWR    |   30    |    29/-     |  19   |   19   | Power failure (System V)                                                |
+| SIGINFO   |    -    |    29/-     |   -   |   -    | A synonym for SIGPWR                                                    |
+| SIGLOST   |    -    |    -/29     |   -   |   -    | File lock lost (unused)                                                 |
+| SIGSYS    |   31    |     12      |  12   |   31   | Bad system call (SVr4); see also seccomp(2)                             |
+| SIGUNUSED |   31    |      -      |   -   |   31   | Synonymous with SIGSYS                                                  |
