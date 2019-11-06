@@ -253,42 +253,95 @@ root        11  0.0  0.0      0     0 ?        S    Nov05   0:00 [watchdog/0]
 root        13  0.0  0.0      0     0 ?        S    Nov05   0:00 [kdevtmpfs]
 
 17. kill - send a signal to a process or a group of processes. 
-   Here is the list of standard signals:
-        1 - SIGHUP - ?, controlling terminal closed, 
-        2 - SIGINT - interupt process stream, ctrl-C 
-        3 - SIGQUIT - like ctrl-C but with a core dump, interuption by error in code, ctl-/ 
-        4 - SIGILL 
-        5 - SIGTRAP 
-        6 - SIGABRT 
-        7 - SIGBUS 
-        8 - SIGFPE 
-        9 - SIGKILL - terminate immediately/hard kill, use when 15 doesn't work or when something disasterous might happen if process is allowed to cont., kill -9 
-        10 - SIGUSR1 
-        11 - SIGEGV 
-        12 - SIGUSR2
-        13 - SIGPIPE 
-        14 - SIGALRM
-        15 - SIGTERM - terminate whenever/soft kill, typically sends SIGHUP as well? 
-        16 - SIGSTKFLT 
-        17 - SIGCHLD 
-        18 - SIGCONT - Resume process, ctrl-Z (2nd)
-        19 - SIGSTOP - Pause the process / free command line, ctrl-Z (1st)
-        20 - SIGTSTP 
-        21 - SIGTTIN 
-        22 - SIGTTOU
-        23 - SIGURG
-        24 - SIGXCPU
-        25 - SIGXFSZ
-        26 - SIGVTALRM
-        27 - SIGPROF
-        28 - SIGWINCH
-        29 - SIGIO 
-        29 - SIGPOLL 
-        30 - SIGPWR - shutdown, typically from unusual hardware failure 
-        31 - SIGSYS 
+   -9, -SIGKILL: Kill signal
 
+18. killall - kill processes by name 
+    -9, -SIGKILL: kill signal
 
+19. tar - manipulate tape archives
+    -c, --create : create a new archive containing the specified items.
+    -v, --verbose: Produce verbose output.
+    -f file, --file file: Read the archive from or write the archive to the specified file.
+    -x, --extract, --get: extract files from an archive
+    -z, --gzip: filter the archive through gzip
+    -j, --bzip2: filter the archive through bzip2  
+    -Z, --compress, --uncompress: filter the archive through compress
+           Note: You might need to install external program (lzip/ncompress/lzma...) to use some of these compression options
+    -tvf archive.tar: List all files in archive.tar verbosely.
 
+[chyi@zong ~]$ tar -cvf nohup.tar *.out         # tar -xvf nohup.tar 
+nohup.out
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar  sleep.sh
+
+[chyi@zong ~]$ tar -czf nohup.tar.gz *.out      # tar -xzf nohup.tar.gz 
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar.gz  sleep.sh
+
+[chyi@zong ~]$ tar -cjf nohup.tar.bz2 *.out     # tar -xjf nohup.tar.bz2 
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar.bz2  sleep.sh
+
+[chyi@zong ~]$ tar -cZf nohup.tar.Z *.out       # tar -xZf nohup.tar.Z 
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar.Z  sleep.sh
+
+20. zip - package and compress (archive) files 
+
+21. cron - daemon to execute scheduled commands
+
+22. at, batch, atq, atrm - queue, examine or delete jobs for later execution.
+
+23. crontab - maintains crontab files for individual users 
+    -e : Edits the current crontab using the editor specified by the VISUAL or EDITOR environment variables.
+    -r : Removes the current crontab.
+    -u : Appends the name of the user whose crontab is to be modified.
+    -l : Displays the current crontab on standard output.
+
+24. ssh - OpenSSH SSH client (remote login program)
+
+25. scp - secure copy (remote file copy program)
+
+26. wget - The non-interactive network downloader.
+    -b, --background: Go to background immediately after startup. If no output file is specified via the -o, output is redirected to wget-log.
+    -O , --output-document=file : The documents will not be written to the appropriate files, but all willbe concatenated together and written to file.
+    -c, --continue : Continue getting a partially-downloaded file. This is useful when you want to finished up a download started by a previous instance of Wget, or by another program. 
+
+27. ip - show / mainpulate routing, devices, policy routing and tunnels
+    ip addr : Shows addresses assigned to all network interfaces. 
+
+28. netstat - Print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships 
+    -t, --tcp: 
+    -u, --udp:
+    -n, --numeric: Show numerical addresses instead of trying to determine symbolic host, port or user names.
+
+[chyi@zong ~]$ netstat -tn | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n      # 查看服务器IP连接数
+      1 100.67.8.32
+      1 100.67.8.33
+      1 101.88.222.63
+      1 Address
+      1 servers)
+      2 100.67.8.25
+      2 127.0.0.1
+      2 58.247.91.82
+
+29. awk, gawk - pattern scanning and processing language.
+    
+30. cut - remove sections from each line of files.
+    -d, --delimiter=DELIM: use DELIM instead of TAB for field delimiter 
+    -f, --fields=LIST: select only these fields; also print ant line that contains no delimiter character, unless the -s option is specified.    
+
+31. sort - sort lines of text files
+    -n, --numeric-sort: compare according to string numerical value 
+    -r, --reverse: reverse the result of comparisons 
+
+32. uniq - report or omit repeated lines 
+    -c, --count: prefix lines by the number of occurrences.
+
+33. tail - output the last part of files 
+    -f, --follow: output appended data as the file grows
+    -c, --bytes=K: output the last K bytes; or use -c +K to output bytes starting with the Kth of each file.
+    -n, --lines=K: output the last K lines, instead of the last 10; or use -n +K to output starting with the Kth.
 ```
 
 ![Linux Performance Tools](/imgs/raspberrypi/Linux101/linux_perf_tools_full.png?raw=true)
