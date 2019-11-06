@@ -194,3 +194,9 @@ Jenkins Abnormal Problem
 ------------------------
 * Stop Jenkins log from becoming huge
     - /var/log/jenkins.log has started getting very large, very quickly, full of exceptions about DNS resolution. 
+
+```
+携程持续交付与构建平台时间
+https://www.infoq.cn/article/69WK_YDzC97hLYopEisa
+
+```

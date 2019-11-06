@@ -291,3 +291,21 @@ Install OpenJDK Versions 7, 11
 $ brew tap AdoptOpenjdk/openjdk
 $ brew search /adoptopenjdk/ 
 ```
+
+How to compress folders on a mac without DS_Store files
+-------------------------------------------------------
+```
+DS_Store: files are created by Finder to keep track of custom attributes of a folder. These custom attributes can be the position of icons, choice of a background image, etc. So when you compress a folder, mac does not exclude these hidden files by default.
+
+1. Open terminal.
+2. Move to the parent folder of the folder you need to compress.
+3. Now in order to zip the folder use the below command:
+    $ zip -r my-folder.zip my-folder -x "*.DS_Store"
+
+# Code Explanation 
+           zip : is a compression and packaging file utility for Unix 
+            -r : is for recursively including all folder underneath the target folder 
+ my-folder.zip : is the name of the compressed file we want to create 
+ my-folder     : is the name of our target folder. 
+ -x ".DS_Store": is to exclude all files whose path ends with the string ".DS_Store".
+```

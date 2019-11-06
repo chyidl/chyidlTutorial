@@ -1,6 +1,120 @@
 Linux 101
 =========
 
+Linux Common Commands
+---------------------
+```
+1. df - report file system disk space usage 
+    -B, --block-size=SIZE: scale sizes by SIZE before printing them; e.g., 
+        '-BM' prints sizes in units of 1,048,576 bytes
+        '-BK' prints sizes in units of 1024 bytes 
+[chyi@zong /]$ df -BM 
+Filesystem     1M-blocks  Used Available Use% Mounted on
+devtmpfs            990M    0M      990M   0% /dev
+tmpfs              1000M    0M     1000M   0% /dev/shm
+tmpfs              1000M    9M      991M   1% /run
+tmpfs              1000M    0M     1000M   0% /sys/fs/cgroup
+/dev/vda1         40189M 3844M    34486M  11% /
+tmpfs               200M    0M      200M   0% /run/user/1000
+tmpfs               200M    0M      200M   0% /run/user/0
+
+    -T, --print-type: print file system type 
+[chyi@zong /]$ df -BM -T
+Filesystem     Type     1M-blocks  Used Available Use% Mounted on
+devtmpfs       devtmpfs      990M    0M      990M   0% /dev
+tmpfs          tmpfs        1000M    0M     1000M   0% /dev/shm
+tmpfs          tmpfs        1000M    9M      991M   1% /run
+tmpfs          tmpfs        1000M    0M     1000M   0% /sys/fs/cgroup
+/dev/vda1      ext4        40189M 3844M    34486M  11% /
+tmpfs          tmpfs         200M    0M      200M   0% /run/user/1000
+tmpfs          tmpfs         200M    0M      200M   0% /run/user/0
+
+2. du - estimate file space usage 
+   -a, --all: write counts for all files, not just directories 
+   -c, --total: produce a grand total 
+   -b, --bytes: equivalent to '--apparent-size --block-size=1'
+   -k like --block-size=1K 
+   -m like --block-size=1M 
+
+3. cat - concatenate files and print on the standard output
+[chyi@zong /]$ cat /proc/cpuinfo    
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 63
+model name      : Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz
+stepping        : 2
+microcode       : 0x1
+cpu MHz         : 2394.454
+cache size      : 15360 KB
+physical id     : 0
+siblings        : 1
+core id         : 0
+cpu cores       : 1
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology eagerfpu pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm invpcid_single ibrs ibpb fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt arat spec_ctrl
+bogomips        : 4788.90
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 40 bits physical, 48 bits virtual
+power management:
+
+[chyi@zong /]$ cat /proc/meminfo
+MemTotal:        2046924 kB
+MemFree:          163352 kB
+MemAvailable:    1546112 kB
+Buffers:           54124 kB
+Cached:          1426220 kB
+SwapCached:            0 kB
+Active:           675832 kB
+Inactive:        1072532 kB
+Active(anon):     268576 kB
+Inactive(anon):     8400 kB
+Active(file):     407256 kB
+Inactive(file):  1064132 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:                24 kB
+Writeback:             0 kB
+AnonPages:        268040 kB
+Mapped:            46632 kB
+Shmem:              8956 kB
+Slab:              99644 kB
+SReclaimable:      86356 kB
+SUnreclaim:        13288 kB
+KernelStack:        2848 kB
+PageTables:         7128 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     1023460 kB
+Committed_AS:    1115292 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      271376 kB
+VmallocChunk:   34358947836 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:    192512 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       57188 kB
+DirectMap2M:     2039808 kB
+DirectMap1G:           0 kB
+
+
+```
+
 ![Linux Performance Tools](/imgs/raspberrypi/Linux101/linux_perf_tools_full.png?raw=true)
 ```
 在Linux不同子系统出现性能问题后，应该用什么样的工具来观测和分析.

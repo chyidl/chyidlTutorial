@@ -55,6 +55,8 @@ chyidlTutorial
 
 - [Unix intro](root/os/UnixTutorial/README.md)
 - [Data Structures and Algorithms](root/os/DSAA/README.md)
+- [LeetCode](root/os/LeetCode/README.md)
+- [Design Pattern](root/os/DesignPattern/README.md)
 - [macOS Intro](root/os/macOS/README.md)
 - [Xv6, a simple Unix-like teaching operating system](root/os/Xv6/README.md)
 - [linux, a successful Unix-like operating system](root/os/UnixLinux/README.md)

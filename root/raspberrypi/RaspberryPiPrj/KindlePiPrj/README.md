@@ -333,3 +333,14 @@ https://www.youtube.com/redirect?redir_token=qklmnK-Sx6lYkvbzU1p7aSi-8wJ8MTU3MjQ
 # 6. ??
 # 7. Profit
 ```
+
+Kindle 3 Keyboard Shortcuts 
+-----------------------------
+> https://blog.diannegorman.net/2010/09/kindle-3-keyboard-shortcuts-et-al/
+```
+
+# Hardware of Kindle 3 keyboard
+two slot on the left side of the kindle 3, one near the top and one near the bottom, they are used to attach covers. The bootom slot also supplies the power for the lighted cover.
+
+The bottom hole can be used to attach serial line to Kindle using very simple connector made from a little bit of PCB.
+```

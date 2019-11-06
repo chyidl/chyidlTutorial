@@ -4,7 +4,6 @@ Network Protocol
 * 编译原理
 ```
 源代码 -> 词法分析 -> 语法分析 -> 语义分析 -> 代码生成 -> 目标文件
-
 ```
 
 * 应用层协议
@@ -58,7 +57,6 @@ TCP Header: client:9527, server:9528
 
 * 网络层协议
 ```
-ICMP:
 IP协议:(源IP地址,目标IP地址)
     IP地址的分类
         A类     0 + [网络号(7位)] + [主机号(24位)]
@@ -110,6 +108,51 @@ IPSec:
 GRE:
 
 IP Header: client IP addr: 192.168.1.1, server IP addr: 192.168.1.2 
+
+路由器：是一个三层转发的设备
+    静态路由:
+        - 就是在路由上配置一条条规则
+        - MAC地址是一个局域网内才有效的地址，因此，MAC地址只要过网关，就必定改变
+        - IP地址是否改变：
+            不改变IP地址的网关 - 转发网关
+            改变IP地址的网关   - NAT网关
+
+路由表:
+    $ route:
+    $ ip route:
+    $ ip rule add from 192.168.1.0/24 table 10  # 从192.168.1.0/24 网段需要使用table10的路由表
+    $ ip rule add from 192.168.2.0/24 table 20  # 从192.168.2.0/24 网段需要使用table20的路由表
+    $ ip route add default scope global nethop via 100.100.100.1 weight 1 nexthop via 200.200.200.1 weight 2 
+    
+    # 查看路由器配置
+    $ ip route list table main 
+        60.190.27.189/30 dev eth3  proto kernel  scope link  src 60.190.27.190      # 运营商二 - eth3 
+           183.134.188.1 dev eth2  proto kernel  scope link  src 183.134.189.34     # 运营商一 - eth2 
+          192.168.1.0/24 dev eth1  proto kernel  scope link  src 192.168.1.1        # 内网 
+         127.0.0.0/8 dev lo  scope link
+        default via 183.134.188.1 dev eth2                                          # 默认运营商一
+    
+    动态路由:
+        使用动态路由器，可以根据路由协议算法生成动态路由表，随网络运行状况的变化而变化
+        最短路径问题
+            1. Bellman-Ford算法 - The Bellman-Ford algorithm is an algorithm that computes shortest paths from a single source vertex to all of the other vertices in a weighted digraph. It is slower than Dijkstra's algorithm for the same problem.                        
+
+            2. Dijkstra算法
+
+            3. 距离矢量路由算法(distance vector routing) 基于Bellman-Ford算法
+                每个路由器都保存一个路由表，包含多行，每行对应网络中的一个路由表，每一行包含两部分信息，一个是目标路由器,另一个是目标路由器距离
+                劣势：
+                    1.1.1: 好消息传得快，坏消息传得慢
+                    1.1.2: 每次发送需要发送整个全局路由表
+            
+            4. 链路状态路由算法(link state routing) 基于Dijkstra算法 
+                算法基本思路是:当一个路由器启动的时候，首先是发现自己的邻居，向邻居say Hello, 邻居都回复，然后计算和邻居的距离，发送一个echo，要求马上返回，除以二就是距离，然后将自己和邻居之间的链路状态包广播出去，发送到整个网络的每个路由器，这样每个路由器都能够收到他和邻居之间的关系的信息，因而，每个路由器都能在自己本地构建一个完整的图，然后针对这个图使用Dijkstra算法，找到两点之间的最短路径.
+                不像距离矢量路由协议那样，更新时发送整个路由表，链路状态路由协议只广播更新的或改变的网络拓扑，这使得更新信息更小，节省带宽和CPU利用率，而且一旦一个路由器挂了，他的邻居都会广播这个消息，可以使得坏消息迅速收敛
+            
+            5. 开放式最短路径优先(Open Shortest Path First OSPF)基于链路状态路由协议，广泛应用在数据中心中，用于路由决策，因而称为内部网关协议(Interior gateway Protocol IGP) 
+                内部网关协议
+            
+                
 ```
 
 * 数据链路层协议
@@ -124,7 +167,7 @@ ARP: 已知IP地址，获取MAC地址的协议
     缓存IP-MAC映射表
 RARP: 已知MAC地址，获取IP地址
 网络包格式:
-    [目标MAC(6 byte)][源MAC(6 byte)][类型(2 byte)][数据 (46 - 1500 byte)][CRC (4 byte)]
+    [目标MAC(6 byte)][源MAC(6 byte)][协议类型(2 byte)][数据 (46 - 1500 byte)][CRC (4 byte)]
                                         |
                                         |_ 类型0800: IP数据包; 0806: ARP请求,应答
 
@@ -152,15 +195,33 @@ The Spanning Tree Protocol (STP):生成树协议
 ICMP (Internet Control Message Protocol) 互联网控制报文协议
     ping是基于ICMP协议工作
     ICMP报文封装在IP包内
+        IP Header:
+            [版本 4bit][首部长度 4bit][服务类型TOS 8bit][总长度 16bit][标识 16bit][标志 3bit][片偏移 13bit][TTL 8bit][协议 8bit][首部校验和 16bit][源IP地址 32bit][目标IP地址 32bit][选项]
+                ｜—— IPv4、IPv6             |
+                                           |—— Type of Service
+
         [IP 头][ICMP报文]
                   |
                 [类型 8位][代码 8位][校验和 16位][...]
                                                 |
-                                                1. 请求与响应 [标识符 16位][序号 16位][数据]
+                                                1. 请求/响应 [标识符 16位][序号 16位][数据]
+                                                        主动请求-8 
+                                                        主动应答-0 
                                                 2. 差错报文   [unused 16位][unused 16位][IP 头][8 Byte正文]
+                                                        终点不可达-3 [0:网络不可达,1:主机不可达,2:协议不可达,3:端口不可达,4:]需要进行分片但设置了不分片位代码
+                                                        源站抑制-4 []
+                                                        时间超时-11 []
+                                                        路由重定向-5 []
+    $ tcpdump -i eth0 icmp  # 查看包有没有到达某个点
+        tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+        listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+        10:12:42.874648 IP localhost > localhost: ICMP echo request, id 32803, seq 0, length 64
+        10:12:42.874847 IP localhost > localhost: ICMP echo reply, id 32803, seq 0, length 64
+        10:12:43.874771 IP localhost > localhost: ICMP echo request, id 32803, seq 1, length 64
+        10:12:43.874915 IP localhost > localhost: ICMP echo reply, id 32803, seq 1, length 64
+    $ traceroute: 
     
-
-    
+Gateway: 网关 
 ```
 
 * 物理层协议
@@ -440,6 +501,5 @@ Implementations:
 HTTPS is TCP?
     HTTPS://URLs are everywhere 
     TCP (and TLS) on TCP port 443 
-    
 ```
 ![HTTP/3 vs HTTP/2](imgs/ilikeit/../../../../../imgs/ilikeit/NetworkProtocol/HTTP-3.png?raw=true)
