@@ -41,3 +41,29 @@ On a default installation the cron jobs get logged to
 You can see just cron jobs in that logfile by running 
 $ grep CRON /var/log/syslog
 ```
+
+* Assembling Example Cron Schedules 
+```
+# Run the script every minute of every hour of every day of every month (every minute, 24/7)
+* * * * * python3 /home/pi/test.py      
+
+# Run the script at minute 0 and hour 0 of every day of every month (midnight, daily)
+0 0 * * * python3 /home/pi/test.py
+
+# Run the script at 15 and 45 minutes past the hour, every hour between 7am and 6pm, on every day of week from Mondy to Fridy.
+15,45 7-18 * * 1-5 python3 /home/pi/test.py
+
+# Run the script 8pm every odd day from May to Sepetember.
+0 20 1-31/2 5-9 * python3 /home/pi/test.py
+```
+
+* Running On Boot 
+```
+With the Pi, a non-standard command can be used to run a program as soon as the Pi boots up. 
+# Run the script only when the Pi Boots.
+@reboot python /home/pi/test.py
+
+However, If this is a continuously running program and not a simple script, this will block the Pi from fully booting. To run your command in the background while the Pi boots up and runs normally, add "&" to the end of the command.
+@reboot python /home/pi/test.py &
+
+```

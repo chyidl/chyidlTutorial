@@ -1,7 +1,13 @@
-MySQL Crash Course(Everything before the word "but" is horse shit)
+MySQL Crash Course
 ==================
 > The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
 > MySQL is written in C and C++. Its SQL parser is written in yacc, but it uses a home-brewed lexical analyzer.
+```
+(MacOSX)
+$ brew install mysql-client 
+$ vim ~/.zshrc
+add /usr/local/opt/mysql-client/bin/mysql to path 
+```
 
 Install MySQL 5.7 on CentOS
 ---------------------------
