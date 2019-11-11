@@ -72,6 +72,7 @@ Nginx版本发布情况mainline:
         src -- 源代码
         objs -- ./configure 中间生成文件
             ngx_modules.c -- 指定编译时那些模块
+
 2. 编译 
     $ ./configure --help 
     $ ./configure --prefix=/usr/local/openresty --with-http_ssl_module --add-module=../tengine-2.3.2/modules/ngx_slab_stat/
@@ -84,22 +85,26 @@ Nginx版本发布情况mainline:
     # Then it means nginx or some other process is already using port 80. 
     # you can kill it using:
     $ sudo fuser -k 80/tcp 
+
 3. NGINX systemd service file 
-    # Save this file as /lib/systemd/system/nginx.service 
+# Save this file as /lib/systemd/system/nginx.service 
+$ sudo vim /etc/systemd/system/nginx.service 
+
 Description=The NGINX HTTP and reverse proxy server
 After=syslog.target network.target remote-fs.target nss-lookup.target
 
 [Service]
 Type=forking
 PIDFile=/run/nginx.pid
-ExecStartPre=/usr/sbin/nginx -t
+ExecStartPre=/usr/local/nginx/sbin/nginx -t
 ExecStart=/usr/sbin/nginx
-ExecReload=/usr/sbin/nginx -s reload
+ExecReload=/usr/local/nginx/sbin/nginx -s reload
 ExecStop=/bin/kill -s QUIT $MAINPID
 PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target
+
 4. Nginx配置语法
     配置文件由指令与指令快构成
     每条指令以;分号结尾，指令与参数间以空格符号分隔

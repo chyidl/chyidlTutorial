@@ -216,12 +216,19 @@ $ sudo systemctl start|stop|restart|status aria2
 Nov 10 23:15:00 RPi3B systemd[1]: Starting Aria2c Download Manager...
 Nov 10 23:15:00 RPi3B systemd[1]: Started Aria2c Download Manager.
 
+# Step 6 - Aria2 at startup 
 $ sudo systemctl enable aria2
 Created symlink /etc/systemd/system/multi-user.target.wants/aria2.service → /etc/systemd/system/aria2.service.
-```
 
+# Step 7 starting Nginx 
+$ sudo systemctl enable nginx 
+
+# Step 8 - Getting aria2 Web UI 
+$ cd /usr/local/nginx/html/   # Go to the folder which nginx servers the web pages 
+$ sudo git clone https://github.com/ziahamza/webui-aria2.git 
+
+Now Access your aria2 service through a Web-UI from any device in your LAN.You need to enter your token Which you genrated in Step 03-07 into Setting -> Connection Setting -> Enter the secret token.
+```
 * webui-aria2 
 > The aim for webui-aria2 is to create the worlds best and hottest interface to interact with aria2. Very simple to use, just donwload and open index.html in any web browser.
-```
-
-```
+![Aria2 WebUI](/imgs/raspberrypi/Aria2WebUI.png?raw=true)
