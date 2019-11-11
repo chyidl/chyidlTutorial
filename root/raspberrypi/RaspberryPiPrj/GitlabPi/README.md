@@ -1,5 +1,6 @@
-GITLAB ON RASPBERRY PI
-======================
+Install and Configure GitLab ON RASPBERRY PI
+============================================
+> GitLab CE, or Community Edition, is an open-source application primarily used to host Git repositories, with additional development-related features like issue tracking. It is designed to be hosted using your own infrastructure, and provides flexibility in deploying as an internal repository store for your development team, a public way to interface with users, or a means for contributors to host their own projects.
 
 GitLab Installation
 -------------------

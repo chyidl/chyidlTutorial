@@ -21,6 +21,11 @@ mysql> SHOW VARIABLES LIKE 'max_error_count';
 | max_error_count | 64    |
 +-----------------+-------+
 1 row in set (0.01 sec)
+```
 
-
+Important Notice
+----------------
+* % vs localhost
+```
+The % character does not include the localhost, as the localhost means a connection over a UNIX socket instead of a standard TCP/IP.
 ```

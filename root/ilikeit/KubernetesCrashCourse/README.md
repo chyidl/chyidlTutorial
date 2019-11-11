@@ -1,23 +1,19 @@
-容器技术
-========
-
+Kubernetes
+==========
 > 从过去以物理机和虚拟机为主体的开发运维环境，向以容器为核心的基础设施的转变过程涵盖了对网络、存储、调度、操作系统、分布式原理等各个方面的容器化理解和改造。
-
-> Linux 进程模型对于容器本身具有重要意义，控制器模式对于整个Kubernetes项目具有提纲作用
-
-> 一个人的命运，要靠自我的奋斗，也要考虑历史的行程.
+> Linux 进程模型对于容器本身具有重要意义，控制器模式对于整个Kubernetes项目具有提纲挈领作用
 ```
 PaaS项目:提供一种名叫"应用托管"的能力.
     
-    1.最原始的方式，在当时，虚拟机和云计算已经是比较普遍的技术和服务，那时主流用户的普遍用法，就是租一批AWS或者OpenStack的虚拟机，然后想管理物理服务器那样，用脚本或者手工的方式在这些机器上部署。【部署过程难免会碰到云端虚拟机和本地环境不一致的问题，所以当时的云计算服务，比的就是谁能更好的模拟本地服务器环境,带来更好的“上云”体验.】
+    1.最原始的方式，在当时，虚拟机和云计算已经是比较普遍的技术和服务，那时主流用户的普遍用法，就是租一批AWS或者OpenStack的虚拟机，然后像管理物理服务器那样，用脚本或者手工的方式在这些机器上部署。【部署过程难免会碰到云端虚拟机和本地环境不一致的问题，所以当时的云计算服务，比的就是谁能更好的模拟本地服务器环境,带来更好的“上云”体验.】
     2. PaaS项目最核心的组件就是一套应用的打包和分发机制，Cloud Foundry为每种主流编程语言都定义一种打包格式，基本上等同于用户把应用的可执行文件和启动脚本打包进入一个压缩包，上传到云上Cloud Foundry的存储，接着，Cloud Foundry 会通过调度器选择一个可以运行这个应用的虚拟机，然后通知这个机器上的Agent把应用压缩包下载下来启动.Cloud
        Foundry会调用操作系统的Cgroups和Namespace机制为每一个应用单独创建一个称作"沙盒"的隔离环境，然后在"沙盒“中启动应用程序
 
-Docker 镜像由一个完整的操作系统所有文件和目录构成，同时包含一个应用运行所需要的所有依赖.
+Docker 镜像由一个完整的操作系统所有文件和目录构成，同时包含一个应用运行所需要的所有依赖.[保证本地环境和云端环境的高度一致]
 $ docker build "images" # 制作镜像
-$ docker run "镜像" # 运行镜像, 使用Cgroups和Namespace机制创建隔离环境。 
+$ docker run "镜像" # Docker创建“沙盒”解压运行镜像, 使用Cgroups和Namespace机制创建隔离环境。 
 
-Docker原生容器集群管理项目Swarm：完全使用Docker项目原本的容器管理API来完成集群管理.
+2014 DockerCon, Docker原生容器集群管理项目Swarm：完全使用Docker项目原本的容器管理API来完成集群管理.
 Mesos: 擅长大规模集群的调度与管理
 Kubernetes: 容器编排与管理的生态,从API到容器运行时的每一层，Kubernetes项目都为开发者提供可以扩展的插件机制，鼓励用户通过代码的方式介入Kubernetes项目的每一个阶段.
 $ docker run " 单机Docker项目"
@@ -36,7 +32,6 @@ DC/OS: 数据中心操作系统,旨在使用户能够管理一台机器那样管
 ```
 
 > 容器技术的兴起源于PaaS技术的普及; Docker公司发布的Docker项目具有里程碑式的意义；Docker项目通过容器镜像解决应用打包这个根本性难题.
-
 > “ 容器本身没有价值，有价值的事容器编排”
 
 ```
@@ -346,4 +341,50 @@ $ docker run -it --net=host
 # Docker项目支持两种Volume声明方式,可以将宿主目录挂在进入容器中
 $ docker run -v /test ... 
 $ docker run -v /home:/test ... 
+```
+
+Docker 容器与容器云
+------------------
+```
+"The NIST Definition of Cloud Computing" - 定义云计算三层服务模型
+    云计算是一种资源的服务模型，该模式可以实现随时随地、便捷按需从可配置计算机资源共享池中获取所需的资源(如 网络、服务器、存储、应用及服务)，资源能够快速供应并释放、大大减少了资源管理工作开销。
+
+IaaS(Infrastructure as a Service, 基础设施即服务) - 虚拟机、存储、负载均衡、网络
+    - 为基础设施运维人员服务，提供计算、存储、网络及其他基础资源、云平台使用者可以在上面部署和运行包括操作系统和应用程序在内的任意软件.
+PaaS(Platform as a Service, 平台及服务) - 运行时环境、数据库、Web服务器、开发工具
+    - 为应用开发人员服务，提供支撑应用运行所需要的软件运行时环境，相关工具与服务，数据库服务、日志服务、监控服务 
+SaaS(Software as a Service, 软件及服务) - 
+    - 为一般用户服务，提供一套完整可用的软件系统，让一般用户无需关注技术细节，只需通过浏览器、应用客户端等方式就能使用部署上云
+
+"Application Lifecycle Management, ALM" - 云时代应用生命周期管理机制
+"The Twelve-Factor App" - http://12factor.net/ - 十二要素应用规范
+
+Docker: 是以Docker容器为资源分割和调度的基本单位，封装整个软件运行时环境，为开发者和系统管理员设计的，用于构建、发布和运行分布式应用的平台，它是一个跨平台、可移植并且简单易用的容器解决方案。
+Docker可在容器内部快速自动化部署应用，并通过操作系统内核技术(namespace, cgroups)为容器提供资源隔离与安全保障.
+```
+
+| 容器技术生态系统   |                                技术选型                                |
+| :----------------- | :--------------------------------------------------------------------: |
+| 安全               |                 Notary、Clair、Intel Clear Containers                  |
+| 镜像库             |              Docker Hub、Docker registry、Quay.io、Harbor              |
+| 托管服务           |         Tutum、SoftLayer、Google Container Engine、AWS、Azure          |
+| 容器化应用支撑平台 |          Deis、Fig、Flynn、Lattice、Cloud Foundry、OpenShift           |
+| 服务发现           |                        etcd、Consul、ZooKeeper                         |
+| 配置管理工具       |                      Puppet、Chef、Salt、Ansible                       |
+| 监控               |                    cAdvisor+Heapster、Prometheus｜                     |
+| 存储               |                             Flocker、Torus                             |
+| 网络               | Docker Networking、Weave、Flannel、CNI、Calico、Pipework、Open vSwitch |
+| 标准化组织         |                               OCI、CNCF                                |
+| 容器运行时         |                          runC、rkt、warden｜                           |
+| 容器操作系统       |        CoreOS、Project Atomic、Canonical Snappy、VMWare Photon         |
+| 编排/调度          |       Kubernetes、Compose+Swarm+Machine、Mesos+Marathon+chronous       |
+
+```
+容器云时以容器为资源分割和调度的基本单位.
+
+```
+
+```
+Meetup: 聚会 
+OCI(open Container Initiative) 实现容器标准化
 ```

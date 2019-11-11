@@ -2203,3 +2203,33 @@ tcp6       0      0 :::3306                 :::*                    LISTEN      
 tcp6       0      0 :::33060                :::*                    LISTEN      127783/mysqld       
 tcp6       0      0 192.168.1.199:3306      192.168.1.251:50908     ESTABLISHED 127783/mysqld 
 ```
+
+Show Users, Privileges and Passwords
+------------------------------------
+
+| Tables | SqlString                                               | Notes                                                                                                                 |
+| ------ | :------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------- |
+| mysql> | SELECT user FROM mysql.user;                            | Show all MySQL users                                                                                                  |
+| mysql> | SELECT DISTINCT user FROM mysql.user;                   | List only unique user names                                                                                           |
+| mysql> | SELECT user, host FROM mysql.user;                      | Show MySQL users and hosts they are allowed to connect from                                                           |
+| mysql> | SELECT user,host,authentication_string FROM mysql.user; | Show MySQL users, their passwords and hosts                                                                           |
+| mysql> | SHOW GRANTS;                                            | Show privileges granted to the current MySQL user.                                                                    |
+| mysql> | SHOW GRANTS FOR 'user_name';                            | Show privileges granted to the MySQL user(if you dontt specify a host for the user name, MySQL assumes % as the host) |
+| mysql> | SHOW GRANTS FOR 'user_name'@'host';                     | Show privileges granted to a particular MySQL user account from a given host;                                         |
+
+Auto-Restart MySQL When It Crashes During a Brute Force Attack
+--------------------------------------------------------------
+```
+# Using a simple cronjob to check and restart MySQL if it is down
+# Load the crontab editor in the terminal 
+$ crontab -e 
+
+* * * * * systemctl status mysql > /dev/null || systemctl restart mysql 
+
+This checks If MySQL is running every minute and redirects stdout to null. Starting the service will not output anything unless something goes wrong, so there is no need to add the null redirect on the last command. 
+The double pipe || means OR and will execute the second command only if the first command fails. 
+
+In other words: If MySQL's status returns an exit code greater than zero(first command), start MySQL(second command).
+
+*/5 * * * * systemctl status mysql > /dev/null || systemctl restart mysql 
+```

@@ -11,15 +11,15 @@ Raspberry Pi
 > To connect the LCD to a Raspberry Pi, the Pi's hardware SPI pins and two GPIO pins should be wired to the LCD as follows:
 ```
 
-| Raspberry Pi  | Nokia 5110/3310 LCD|
-|:-------------:|:-------------:| 
-| Pin 17 (3v3 Power)| LCD VCC | 
-| Pin 14 (Ground)|   LCD GND    | 
-| Pin 16 (GPIO) |  LCD D/C     | 
-| Pin 18 (GPIO) | LCD RST |
-| Pin 19 (SPI0 - MOSI) | LCD DIN | 
-| Pin 23 (SPI0 - SCLK) | LCD CLK | 
-| Pin 24 (SPI0 - CEO) | LCD CE | 
+| Raspberry Pi         | Nokia 5110/3310 LCD |
+| :------------------- | ------------------: |
+| Pin 17 (3v3 Power)   |             LCD VCC |
+| Pin 14 (Ground)      |             LCD GND |
+| Pin 16 (GPIO)        |             LCD D/C |
+| Pin 18 (GPIO)        |             LCD RST |
+| Pin 19 (SPI0 - MOSI) |             LCD DIN |
+| Pin 23 (SPI0 - SCLK) |             LCD CLK |
+| Pin 24 (SPI0 - CEO)  |              LCD CE |
 
 ```
 The above wiring will support talking to the LCD over the /dev/spidev0.0 interface.

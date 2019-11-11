@@ -121,3 +121,20 @@ Chyidl Utils -- chutils
 -----------------------
 A series of convenience functions to make programming easier with python3
 - [chutils](/root/os/DSAA/DataStructuresAndAlgorithms/python/chutils)
+
+Scheduling Algorithm
+--------------------
+
+* Round-robin scheduling 
+```
+Round-robin (RR) is one of the algorithms employed by process and network schedulers in computing. Round-robin scheduling is simple, easy to implement, and starvation-free.Round-robin scheduling can also be applied to other scheduling problems, such as data packet scheduling in computer networks. It is an operating system concept.
+
+Round Robin is a CPU scheduling algorithm where each process is assigned a fixed time slot in a cyclic way. 
+
+    1. It is simple, easy to implement, and starvation-free as all processes get fair share of CPU. 
+    2. One of the most commonly used technique in CPU scheduling as a core. 
+    3. It is preemptive as processes are assigned CPU only for a fixed slice of time at most.
+    4. The disadvantage of it is more overhead of context switching.
+
+AWT(average waiting time): 
+```

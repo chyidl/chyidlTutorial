@@ -344,3 +344,6 @@ two slot on the left side of the kindle 3, one near the top and one near the bot
 
 The bottom hole can be used to attach serial line to Kindle using very simple connector made from a little bit of PCB.
 ```
+
+Literary Clock Made From Kindle
+-------------------------------
