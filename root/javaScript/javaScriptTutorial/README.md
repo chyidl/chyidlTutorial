@@ -1769,5 +1769,10 @@ if (require.main === module) {
 }
 
 # All modules will be cached. 
+```
+
+```
+Node's ES2015 support can be found at http://node.green 
+
 
 ```

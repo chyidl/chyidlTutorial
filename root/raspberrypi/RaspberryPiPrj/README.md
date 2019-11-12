@@ -45,12 +45,13 @@ Raspberry Pi Awesome Project
 - [Getting Started and Securing Your Server](/root/raspberrypi/RaspberryPiPrj/GettingStartedServer/README.md)
 - [SHANGHAI FUTURES EXCHANGE - CTP C++](/root/raspberrypi/RaspberryPiPrj/CTP_DEMO/README.md)
 - [Twisted - Event-driven netorking engine written in Python](/root/raspberrypi/RaspberryPiPrj/TwistedSrc/README.md)
-- [Aria2 Downloader Pi](/root/raspberrypi/RaspberryPiPrj/aria2Pi/README.md)
+- [Aria2 Downloader Pi](/root/raspberrypi/RaspberryPiPrj/Aria2Pi/README.md)
 - [YApi - local deployment](/root/raspberrypi/RaspberryPiPrj/YApiPi/README.md)
 - [gRPC - A high performace, open-source universal RPC framework](/root/raspberrypi/RaspberryPiPrj/gRPC/README.md)
 - [Swap on Linux](/root/raspberrypi/RaspberryPiPrj/SwapLinux/README.md)
 - [FONA 808 Cellular + GPS Breakout + Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/FONA808Pi/README.md)
 - [Generate Random Password](/root/raspberrypi/RaspberryPiPrj/RandPassword/README.md)
+= [GeekTime-DL Convert GeekTime article to Kindle](/root/raspberrypi/RaspberryPiPrj/GeekTime-DL/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)

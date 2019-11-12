@@ -13,6 +13,9 @@ Kindle + Raspberry Pi == Anything
  ：ROOTING  YOUR KINDLE (My Kindle Keyboard)
 The first thing we need to do to get control of the device is "jailbreak"(越狱) it. which really just adds a "hacked" key to the keyring used to verify the package signature.
 
+Jailbreak the Kindle
+--------------------
+> jailbreak the Kindle(don't worry, it's not illegal if it's your property)
 ```
 Check your Settings page, find what FW your Kindle is running.
 
@@ -35,13 +38,64 @@ Kindle Screen Saver Hack (the custom ScrrenSavers)
 
 To remove the screen saver hack, just copy the appropriate "uninstall" bin file to the root of your Kindle and update. Note that, since the v0.6.N, you shouldn't have to deactivate/uninstall it in order to be able to install official Amazon updates!
 ```
-
 - [Update_ss_0.47.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_install.bin)
 - [Update_ss_0.47.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-ss-0.47.N/Update_ss_0.47.N_k3w_uninstall.bin)
 
+USBNetwork Hacks for Kindle
+---------------------------
+> USBNetwork will grant you remote shell access to your Kindle, either over USB or WiFi.
+```
+> install [UsbNetwork]
+> What's usbnet? The Kindle 2 has a hidden USB network mode, probably left over from development. When activated, the Kindle would behave as a USB network device rather than a USB mass storage device. This allowed you to do neat things such as tethering the device to your laptop. Kindle keyboard version seems to have removed this feature, but the usbnet hack reactivates it and installs busybox (a
+> micro shell environment), dropbear (a micro SSH server) and a few other utilities to you to SSH into your device and explore its insides.
+ - Install the usbnetwork [kindle-usbnetwork-0.57.N-k3](https://www.mobileread.com/forums/attachment.php?attachmentid=141340&d=1440341473). To install it you transfer over the bin that's right for your version of the kindle (I.e.,Update_usbnetwork_0.57.N_k3w_install.bin = Kindle Keyboard 3 Wifi).
+- After installation, usbnet creates a usbnet directory in your kindle root which contains its configuration files:
+
+> Configure usbNetWork
+    - $ cd usbnet/
+    - $ mv DISABLED_auto auto
+    - $ cd etc && vim config
+        K3_WIFI="true"
+        K3_WIFI_SSHD_ONLY="true"
+
+> Create password key 
+    - (macOS)
+    - $ ssh-keygen -t rsa 
+    - $ cat ~/.ssh/id_rsa.pub | pbcopy 
+    - (Kindle 3)
+    - $ vim usbnet/etc/authorized_keys
+        <paste>将👆产生的公钥粘贴并保存文件
+    - umount Kine and [Home] -> [Menu] -> Settings -> [MENU] -> Restart
+
+> Check Kindle IP address 
+    - [Home] -> [Menu] -> Settings (From Kindle 3 Keyboard) Input alt+u, alt+q, alt+q 
+    - Input 711 page
+
+> $ scp something root@192.168.31.158:/mnt/us/documents 
+
+> Kindle documemt Refresh Probelm
+
+NOTE: /mnt/us = USB连接时K3的根目录
+```
+![Kindle 711 page](/imgs/raspberrypi/KindlePiPrj/711.png?raw=true)
+![Kindle usbNetwork](/imgs/raspberrypi/KindlePiPrj/usbNetwork_Kindle.png?raw=true)
+
+
+Launchpad Hacks for Kindle 
+--------------------------
+>launchpad -- another hotkey manager for Kindle 
+```
+launchpad for Kindle is a small program supporting extended input capabilities.The main purpose of it is providing the ability to run any 3rd-party programs from within the original unmodified Kindle Framework software. It can be also used to organize custom keyboard shortcut operations and to simplify input of special symbols.
+
+- Install:
+    - unpack the attached Ipad-pkg-xxx.zip archive somewhere.
+    - select the Kindle update package for your device model[update_launchpad_0.0.1d_k3w_install.bin] and copy it to your device under user root directory [/mnt/us]
+    - apply the standard Amazon Kindle update procedure.
+
+```
+
 Kindle 3 tricks & hacks 
 -----------------------
-
 * Disable my screensaver 
 ```
 holding a page is probably less energy consuming than loading the screensaver! In a few keystrokers, you can disable it and leave the Kindle screen at the latest page that you're reading. 
@@ -76,7 +130,6 @@ There are other hacks from the ;debugOn list, you can list them with the ~help o
 ![screen shot game](/imgs/raspberrypi/KindlePiPrj/screen_shot_game.gif?raw=true)
 
 * Hot keys at any time 
-
     - shift + alt + G = screenshot (plug your kindle in via the USB and navigate to the folder 'documents' screenshots are GIF and named something like "screen_short.***.gif")
     - alt + G = screen refresh 
     - alt + home = Kindle Store 
@@ -127,10 +180,9 @@ Lets get started
 
 Hacking the Kindle 
 ------------------
-
 **DISCLAIMER - you can brick (render unusable) your Kindle doing so, these are just pointers and I take no responsibility whatever you do with your kindle, or your like...**
 
-The first part, connecting the Kindle to the Raspberry Pi is simple enough. 
+>The first part, connecting the Kindle to the Raspberry Pi is simple enough. 
 > [Jail break the Kindle](http://wiki.mobileread.com/wiki/Kindle_Hacks_Information#Jail_break_JB)
 
 > Launchpad -- yet another hotkey manager for Kindle, to get the Launchpad software which is required to run the terminal emulator later. Download the file: [lpad-pkg-001d](https://www.mobileread.com/forums/attachment.php?attachmentid=141887&d=1441954643) and unzip. Find the correct install binary for your device. I used: update_launchpad_0.0.1d_k3w_install.bin
@@ -147,12 +199,6 @@ The first part, connecting the Kindle to the Raspberry Pi is simple enough.
         [Shift] T Y = !/mnt/us/myts/myts.sh 2
         [Shift] T U = !/mnt/us/myts/myts.sh 3
         You can hit the left back arrow (the Kindle's page turning buttons) to exit temporarily.
-
-> install [UsbNetwork](http://www.mobileread.com/forums/showthread.php?t=88004).
-> What's usbnet? The Kindle 2 has a hidden USB network mode, probably left over from development. When activated, the Kindle would behave as a USB network device rather than a USB mass storage device. This allowed you to do neat things such as tethering the device to your laptop. Kindle keyboard version seems to have removed this feature, but the usbnet hack reactivates it and installs busybox (a
-> micro shell environment), dropbear (a micro SSH server) and a few other utilities to you to SSH into your device and explore its insides.
-    - Install the usbnetwork [kindle-usbnetwork-0.57.N-k3](https://www.mobileread.com/forums/attachment.php?attachmentid=141340&d=1440341473). To install it you transfer over the bin that's right for your version of the kindle (I.e.,Update_usbnetwork_0.57.N_k3w_install.bin = Kindle Keyboard 3 Wifi).
-    - After installation, usbnet creates a usbnet directory in your kindle root which contains its configuration files:
 ```
 $ tree usbnet -d
 usbnet

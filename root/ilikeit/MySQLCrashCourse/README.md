@@ -352,10 +352,12 @@ MySQL Architecture and Components
             - Innodb log buffer 
             - Innodb General/undo/temp_tablespace.
 ```
+客户端 --> 连接器 --> 分析器 --> 优化器 --> 执行器
+            |             |
+            |-> 查询缓存 <-|
 Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor --> Storage Engine.
 
 **Connector连接器**
-
     * $ mysql -h$host -P$port -u$user -p 
     * After the user successfully establishes the connection, the modification of the user rights will not affect the existing connection, and only the newly established connection will use the new permission setting.
     * mysql> SHOW PROCESSLIST; show which threads are running 
@@ -2154,6 +2156,13 @@ $ vim /etc/my.cnf
     $ vim /etc/my.cnf   // 修改expire_logs_days,表示自动删除的天数 
         expire_logs_days=7  // 日志自动删除的天数,默认值为0,表示"没有自动删除"
 
+# Disable MySQL binary logging with log_bin variable 
+    $ vim /etc/my.cnf   // 
+        [mysqld]
+        skip-log-bin    // You can add skip- as a prefix to other opitios to disable them in this way too.
+    (mysql8)
+        disable_log_bin // 
+
 mysql> show variables  like 'expire_logs_days';
 +------------------+-------+
 | Variable_name    | Value |
@@ -2233,3 +2242,47 @@ In other words: If MySQL's status returns an exit code greater than zero(first c
 
 */5 * * * * systemctl status mysql > /dev/null || systemctl restart mysql 
 ```
+
+Recovering From Corrupted InnDB tables
+--------------------------------------
+```
+Step 1 - Bring up your database in recovery mode 
+    - should bring down database (kill the process)
+    - In order to bring back database will need to start it in recovery mode, with innodb_force_recovery. You should know this recovery mode makes your database read only. 
+    - $ vim /etc/my.cnf
+        [mysqld]
+        # force the InnoDB storage engine to start up while preventing background operations from running, 
+        # start InnoDB and dump your tables.
+        # values of 4 or greater can permanently corrupt data files.
+        # 0 - by default(normal startup without forced recovery)
+        # 1 (SRV_FORCE_IGNORE_CORRUPT) - Let's the server run even if it detects a corrupt page. Tries to make SELECT * FROM tb1_name jump over corrupt index records and pages, which helps in dumping tables. 
+        # 2 (SRV_FORCE_NO_BACKGROUND) - Prevents the master thread and any purge threads from running, If a crash would occur during the purge operation, this recovery value prevents it.
+        # 3 (SRV_FORCE_NO_TRX_UNDO) -  Does not run transaction rollbacks after crash recovery.
+        # 4 (SRV_FORCE_NO_IBUF_MERGE) - Prevents insert buffer merge operations, if they would cause a crash, does not do them. Does not calculate table statistics. This calue can permanently corrupt data files. After using this value, be prepared to drop and recreate all secondary indexes.
+        # 5 (SRV_FORCE_NO_UNDO_LOG_SCAN) - Does not look at undo logs when starting the database: InnoDB treats even incomplete transactions as committed. This value can permanently corrupt data files.
+        # 6 (SRV_FORCE_NO_LOG_REDO) - Does not do the redo log roll-forward in connection with recovery. This value can permanently corrupt data files. Leaves database pages in an obsolete state, which in turn may introduce more corruption into B-Trees and other database structures.
+        innodb_force_recovery = 1
+        innodb_purge_threads=0
+
+Step 2 - Check which tables are corrupted and make a list 
+    # find out which tables got corrupted. 
+    $ mysqlcheck -h hostname -uroot -p<> -Pxx --all-databases 
+    Check for lines where it says table is Corrupted. Write down all tables / databases that got you an error. You will need to mysqldump them in recovery mode and reimport them after you boot back into normal MySQL mode. 
+
+Step 3 - Backup and drop corrupted tables 
+    # Once you got the list of corrupted tables, you should mysqldump them to their own.sql files. that way you will have backup for reimport.
+    $ mysqldump my_database table > database.table.sql 
+    # After you have the backup, drop your corrupted tables by executing 
+    $ drop table database.table;
+    # Now, you have now cleaned up your MySQL database so it's time to boot it up back without recovery mode.
+
+Step 4 - Restart MySQL in normal mode.
+    # When we don't have any corrupted tables left in our database, we should remove the my.cnf settings that we added in Step 1. Don't remove the port setting yet, because your database is still missing tables you backed up and need to be reimported. Restart your MySQL.
+
+Step 5 - Import backup.sql 
+    $ mysql database < database.table.sql 
+
+Step 6 - Change port
+    Once your finished importing your tables, you are free to change port setting in your my.cnf.
+    Of course reboot MySQL afterwards. It should come back and start working just as before the crash.
+``` 

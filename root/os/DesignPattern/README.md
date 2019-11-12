@@ -43,6 +43,20 @@ Software Design Pattern
     单一职责、DRY、基于接口而非实现、里式替换原则 - 可复用、灵活、可读性好、易扩展、易维护
 
 面向对象设计思想 - 
+    OOP(Object Oriented Programming): 面向对象编程
+        - 面向对象编程是一种编程范式或编程风格，以类和对象作为组织代码的基本单元，并将封装、抽象、继承、多台四个特征作为代码设计和实现的基石。
+        Class(类)
+        Object(对象)
+    OOPL(Object Oriented Programming Language): 面向对象编程语言
+        - 面向对象编程语言是支持类或对象的语法机制，并有现成的语法机制，能方便地实现面向对象编程四大特征(封装、抽象、继承、多态)的编程语言
+    面向对象的四大特征: 
+        封装
+        抽象
+        继承
+        多态
+    OOA(Object Oriented Analysis)面向对象分析:
+    OOD(Object Oriented Design)面向对象设计
+    UML(Unified Model Language)统一建模语言:
     主流的编程范式分别是面向过程、面向对象、函数式编程
     面向对象编程因为具有丰富的特征(封装、抽象、继承、多态)可以实现很多复杂的设计思路，是很多设计原则、设计模式编码实现的基础。
         1. 面向对象的四大特征: 封装、抽象、继承、多态
@@ -73,6 +87,7 @@ reusability(可复用性):
     面向对象特征: 继承、多态是为了提高代码的可复用性
 
 testability(可测试性):
+
 
 ```
 
