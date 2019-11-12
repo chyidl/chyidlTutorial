@@ -51,7 +51,7 @@ Raspberry Pi Awesome Project
 - [Swap on Linux](/root/raspberrypi/RaspberryPiPrj/SwapLinux/README.md)
 - [FONA 808 Cellular + GPS Breakout + Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/FONA808Pi/README.md)
 - [Generate Random Password](/root/raspberrypi/RaspberryPiPrj/RandPassword/README.md)
-= [GeekTime-DL Convert GeekTime article to Kindle](/root/raspberrypi/RaspberryPiPrj/GeekTime-DL/README.md)
+- [GeekTime-DL Convert GeekTime article to Kindle](/root/raspberrypi/RaspberryPiPrj/GeekTime-DL/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)
