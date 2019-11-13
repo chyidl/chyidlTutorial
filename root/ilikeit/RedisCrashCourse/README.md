@@ -938,5 +938,62 @@ Lua Programming Language
 ------------------------
 > Lua is a language which has been around since 1993. Its origins in engineering made for a compact language which could be embedded in other applications.
 ```
+```
+
+Redis Best Practices
+====================
+
+Indexing Patterns
+-----------------
+> Conceptually, Redis is based on the key/value database paradigm. Every piece of data is associated with a key, either directly or indirectly. If you want to retrieve data based on anything besides the key, you'll need to implement an index that leverages one of the many data types available in Redis.
+
+* Sorted Sets as indexes
+> Sorted Sets (ZSETs) are a native Redis data type that can be thought of a set of unique memebers (repeats are not stored) with each member being attached to a number (termed score) that acts as a natural sorting mechanism.
+> While members cannot be repeated, any number of members can share the same score. 
+> With relatively low time complexity to add, remove and retrieve ranges (by rank or score), this lends itself naturally to being an index.
+```
+ZADD key [NX|XX] [CH] [INCR] score member [score member ...]
+#   Time complexity: O(log(N)) for each item added, where N is the number of elements in the sorted set.
+# Adds all the specified members with the specified scores to the sorted set stored at key.
+# The score values be the string representation of a double precision floating point number. +inf and -inf values are valid values as well.
+#   XX: Only update elements that already exist. Never add elements 
+#   NX: Don't update already existing elements. Always add new elements.
+#   CH: Modify the return value from the number of new elements added, to the total number of elements changed(CH is an abbreviation of changed).
+#       Note: normally the return value of ZADD only counts the number of new elements added
+#   INCR: When this option is specified ZADD acts like ZINCRBY. Only one score-element pair can be specified in this mode. 
+# Redis sorted sets use a double 64-bit floating point number to represent the score. IEEE 754 floating point number: (-2^53 ~ 2^53)
+
+```
+
+Communication Patterns 
+----------------------
+> 
+
+Data Storage Patterns
+---------------------
+
+Time Series Patterns
+--------------------
+
+Basic Rate Limiting Pattern
+---------------------------
+
+Bloom Filter Pattern
+--------------------
+
+Counting
+--------
+
+Lua Helpers
+-----------
+```
+
+```
+
+Appendix
+--------
+* IEEE 754 
+> The IEEE Standard for Floating-Point Arithmetic is a technical standard for floating-point arithmetic established in 1985 by the Institute of Electrical and Electronics Engineers(IEEE).
+```
 
 ```

@@ -74,12 +74,18 @@ USBNetwork Hacks for Kindle
 > $ scp something root@192.168.31.158:/mnt/us/documents 
 
 > Kindle documemt Refresh Probelm
+    Because copy to (kindle) /mnt/us/documents folder files will not automatically detect, so you need a refresh mechanism, otherwise you will need to restart after each transfer file.
+    $ cd /mnt/us/usbnet/
+    $ vi refresh_kindle3
+        dbus-send --system /default com.lab126.powerd.resuming int32:1
+    $ chmod +x refresh_kindl3
 
 NOTE: /mnt/us = USB连接时K3的根目录
 ```
+- [Update_usbnetwork_0.57.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-usbnetwork-0.57.N-k3/Update_usbnetwork_0.57.N_k3w_install.bin)
+- [Update_usbnetwork_0.57.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-usbnetwork-0.57.N-k3/Update_usbnetwork_0.57.N_k3w_uninstall.bin)
 ![Kindle 711 page](/imgs/raspberrypi/KindlePiPrj/711.png?raw=true)
 ![Kindle usbNetwork](/imgs/raspberrypi/KindlePiPrj/usbNetwork_Kindle.png?raw=true)
-
 
 Launchpad Hacks for Kindle 
 --------------------------
@@ -92,7 +98,108 @@ launchpad for Kindle is a small program supporting extended input capabilities.T
     - select the Kindle update package for your device model[update_launchpad_0.0.1d_k3w_install.bin] and copy it to your device under user root directory [/mnt/us]
     - apply the standard Amazon Kindle update procedure.
 
+- Create launchpad refresh_kindle3 
+    - $ cd /mnt/us/launchpad
+    - $ cat launchpad.ini 
+;;; 
+;;; when started, the kindle launchpad just transparently scans keypad and 
+;;; fiveway keystrokes until the user presses and releases the hot sequence 
+;;; Introducer key. Then the launchpad enters the hotkey mode: it captures 
+;;; all system input, engages the interval timer to trigger after specified 
+;;; HotInterval milliseconds and starts collecting further keystrokes in an internal 
+;;; hotkey sequence buffer. 
+;;; When the hotkey interval timer triggers or the Trailer key is pressed, the system
+;;; input capture gets released, and an attempt to execute collected hotkey action
+;;; is made. Available hotkey actions are controlled by contents of the [Action]
+;;; section below   
+
+; Kindle input key symbolic names are used to specify the hotkey sequence introducer
+; and trailer keys. See keydefs.ini for details
+[Settings]
+Introducer = Shift
+Trailer = Enter
+HotInterval = 700
+ScriptDirectory = ./scripts
+KeyboardInput = /dev/input/event0
+FivewayInput = /dev/input/event1
+InterKeyDelay = 300
+
+;;; hotkey actions are defined below as <key_sequence> = <action_command>
+;;; one action definition per text line.
+;;; 
+;;; <key_sequence> is a blank separated list of key symbolic names. See keydefs.ini for details.
+;;; <action_command> describes the action to execute on a particular hotkey sequence.
+;;; Currently three type of action supported depending on the first character of the 
+;;; command string:
+;;;  '!' -- shell command. The <action_command> string excluding the leading '!' is sent to the
+;;;         system shell, exactly as it was typed from the console.  
+;;;  '@' -- Kindle Framework script. The <action_command> string excluding the leading '@' is interpreted
+;;;         as a name of a special script containing command information obeying format of
+;;;         the known hotkeys package. The main purpose of these scripts is to simplify
+;;;         entering special symbols into kindle Framework search box
+;;;  '#' -- Kindle Framework key sequence. Similar to the above, but doesn't require 
+;;;         external script.
+;;;   all other command strings are interpreted as a sequence of a send_key commands. The contents of these 
+;;;   commands gets interpreted and sent as a sequence of simulated keystrokes to the input subsystem.
+;;;   Such commands consist of the space-separated tokens, which can be symbolic key names and/or
+;;;   ascii strings enclosed in quotes (")
+;;;
+;;;   Note: to correctly accept  kindle key sequence starting with a special
+;;;         symbol, the Framework search box should be brought up, if not already.
+;;;         Press the 'Del' key on Kindle in order to bring the search box up
+;;;
+ 
+[Actions]
+;
+; hotkey sequence definitions below are provided for reference only.
+; uncomment corresponding line(s) and restart the Program in order to enable
+; these definitions
+;
+
+;Dot = @SHIFT-DOT.sh
+;Slash = @SHIFT-SLASH.sh
+;;0 = @SHIFT-0.sh
+;;1 = @SHIFT-1.sh
+;;2 = @SHIFT-2.sh
+;;3 = @SHIFT-3.sh
+;;4 = @SHIFT-4.sh
+;;5 = @SHIFT-5.sh
+;;6 = @SHIFT-6.sh
+;;7 = @SHIFT-7.sh
+;;8 = @SHIFT-8.sh
+;;9 = @SHIFT-9.sh
+;
+;;P = #')'
+;;O = #'('
+;;I = #'*'
+;;U = #'&'
+;;Y = #'^'
+;;T = #'%'
+;;R = #'$'
+;;E = #'#'
+;;W = #'@'
+;;Q = #'!'
+;;Dot = #','
+;;Slash = #'?'
+;
+;;D = #';' "debugOn"
+;;N = #"`usbNetwork"
+;;X = "just a string"
+    - $ echo "R F = !/mnt/us/usbnet/refresh_kindle3" >> launchpad.ini 
+    (Kindle 3) Shift + R + F to refresh kindle documents
 ```
+- [update_launchpad_0.0.1d_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/lpad-pkg-001d/update_launchpad_0.0.1d_k3w_install.bin)
+- [update_launchpad_0.0.1d_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/lpad-pkg-001d/update_launchpad_0.0.1d_k3w_uninstall.bin)
+
+Install Python on the Kindle 
+----------------------------
+```
+Copy the appropriate Update_python_0.14.N_k3w_install bin file (for me(Kindle3): Update_python_0.14.N_k3w_install.bin) to the root(/mnt/us) of your Kindle
+Safely eject & unplug your Kindle from your computer. To apply the update, on your Kindle Home screen, click Menu > Settings > Menu > Update Your Kindle. 
+```
+- [Update_python_0.14.N_k3w_install.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-python-0.14.N-k3w/Update_python_0.14.N_k3w_install.bin)
+- [Update_python_0.14.N_k3w_uninstall.bin](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/kindle-python-0.14.N-k3w/Update_python_0.14.N_k3w_uninstall.bin)
+
 
 Kindle 3 tricks & hacks 
 -----------------------
@@ -393,3 +500,10 @@ The bottom hole can be used to attach serial line to Kindle using very simple co
 
 Literary Clock Made From Kindle
 -------------------------------
+
+* Step 1: Tools and Materials 
+    - Kindle 3 WiFi(nicknamed K3, or K3W)
+    - computer (any operating system), with SSH client
+
+* Step 2: Jailbreaking the Kindle 
+> In order to change the Kindle into a clock, need to get into the system files. In order to do that, need to open it up through a process called 'jailbreaking' (don;t worry, it's not illegal if it's your property).

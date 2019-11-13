@@ -1194,7 +1194,7 @@ MySQL 数据库优化
         net_write_timeout=180
         wait_timeout=86400
         interactive_timeout = 86400
-        max_allowed_packet = 128M 
+        max_allowed_packet = 128M     
         
         max_connections = 151 -- 同时处理最大连接数，推荐设置最大连接数是上限连接数的80%左右
         sort_buffer_size = 2M -- 查询排序时缓冲区大小，只对ORDER BY 和 GROUP BY起作用，可增大此值为16M 
@@ -2243,7 +2243,7 @@ In other words: If MySQL's status returns an exit code greater than zero(first c
 */5 * * * * systemctl status mysql > /dev/null || systemctl restart mysql 
 ```
 
-Recovering From Corrupted InnDB tables
+Recovering From Corrupted InnoDB tables
 --------------------------------------
 ```
 Step 1 - Bring up your database in recovery mode 

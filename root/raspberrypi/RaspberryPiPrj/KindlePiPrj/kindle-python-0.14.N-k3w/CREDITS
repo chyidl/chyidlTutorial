@@ -1,0 +1,41 @@
+CREDITS
+
+  xzdec: XZ Utils,
+    Released under the public domain.
+    (http://tukaani.org/xz/)
+
+  python2.7: Python, Copyright (C) 2001-2012 Python Software Foundation,
+licensed under the PSF license agreement for Python 2.7.3 (http://docs.python.org/2/license.html)
+(http://www.python.org)
+
+    `->   bzip2, Copyright (C) 1996-2010 Julian R Seward.
+        Licensed under the BZIP2 license (a BSD-style license) (http://www.opensource.apple.com/source/bzip2/bzip2-29/bzip2/LICENSE?txt).
+        (http://www.bzip.org)
+
+  libexpat.so*: Expat, Copyright (c) 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper, Copyright (c) 2001, 2002, 2003, 2004, 2005, 2006 Expat maintainers,
+    Licensed under the MIT License (http://www.opensource.org/licenses/mit-license.php).
+    (http://expat.sourceforge.net/)
+
+  libffi.so*: libffi, Copyright (c) 1996-2012  Anthony Green, Red Hat, Inc and others.,
+    Licensed under an MIT license (https://github.com/atgreen/libffi/blob/master/LICENSE)
+    (http://sourceware.org/libffi/)
+
+  libcrypto.so*, libssl.so*: OpenSSL, Copyright (C) 1998-2011 The OpenSSL Project. SSLeay, Copyright (C) 1995-1998 Eric Young,
+    Licensed under an Apache-style licence (http://openssl.org/source/license.html).
+    (http://openssl.org/)
+
+  libncurses*.so*, libpanel*.so*: ncurses, Copyright (c) 1998-2011 Free Software Foundation, Inc.,
+    distributed under a MIT-style license (http://opensource.org/licenses/MIT).
+    (https://www.gnu.org/software/ncurses/)
+
+  libreadline.so*: readline, Copyright (C) 1987-2013 Free Software Foundation, Inc.,
+    Licensed under the GNU General Public License version 3+ (http://www.gnu.org/licenses/gpl.html).
+    (http://cnswww.cns.cwru.edu/php/chet/readline/rltop.html)
+
+  libsqlite3.so*: SQLite,
+    Released under the public domain.
+    (http://sqlite.org/)
+
+  libz.so*: zlib, Copyright (C) 1995-2013 Jean-loup Gailly and Mark Adler,
+    Licensed under the zlib license (http://zlib.net/zlib_license.html)
+    (http://zlib.net/)
