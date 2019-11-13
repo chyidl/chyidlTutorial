@@ -45,7 +45,7 @@ Raspberry Pi Awesome Project
 - [Getting Started and Securing Your Server](/root/raspberrypi/RaspberryPiPrj/GettingStartedServer/README.md)
 - [SHANGHAI FUTURES EXCHANGE - CTP C++](/root/raspberrypi/RaspberryPiPrj/CTP_DEMO/README.md)
 - [Twisted - Event-driven netorking engine written in Python](/root/raspberrypi/RaspberryPiPrj/TwistedSrc/README.md)
-- [Aria2 Downloader Pi](/root/raspberrypi/RaspberryPiPrj/Aria2Pi/README.md)
+- [Aria2 Downloader Pi](/root/raspberrypi/RaspberryPiPrj/Aria2PiPrj/README.md)
 - [YApi - local deployment](/root/raspberrypi/RaspberryPiPrj/YApiPi/README.md)
 - [gRPC - A high performace, open-source universal RPC framework](/root/raspberrypi/RaspberryPiPrj/gRPC/README.md)
 - [Swap on Linux](/root/raspberrypi/RaspberryPiPrj/SwapLinux/README.md)
