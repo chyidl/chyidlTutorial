@@ -61,6 +61,7 @@ chyidlTutorial
 - [Xv6, a simple Unix-like teaching operating system](root/os/Xv6/README.md)
 - [linux, a successful Unix-like operating system](root/os/UnixLinux/README.md)
 - [Bill Gates Advance Tips](root/os/Windows/README.md)
+- [HappyTime](/root/os/HappyTime/README.md)
 
 ### ![Don't Repeat Yourself](/imgs/dontRepeatYourself.png?raw=true) I Like It
 

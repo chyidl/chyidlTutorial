@@ -507,3 +507,75 @@ Literary Clock Made From Kindle
 
 * Step 2: Jailbreaking the Kindle 
 > In order to change the Kindle into a clock, need to get into the system files. In order to do that, need to open it up through a process called 'jailbreaking' (don;t worry, it's not illegal if it's your property).
+    - Jailbreaking 
+    - Install usbnetwork (grant you remote shell access to your Kindle, either over USB or WiFi)
+    - Install Launchpad 
+    - Install Python 
+
+* Step 3: Making an Image for Every Single Minute of the Day 
+```
+There are 1,440 minutes in a day. Compiling a list with quotes for each and every one of them from different literary works is a massiv undertaking. Big relief: other already did that for us. 
+
+In 2011. newspaper The Guardian asked its readers to submit quotes from books which mention times. Unfortunately the list does not cover all minutes of the day. I worked around this by using some quotes more than once, for instance if it can be used both in the AM and PM.
+
+Even with this pleasant list, two things took me an unreasonable amount of time. I needed to turn every single quotation from the list into an image. I wanted to make them fit nicely to the screen, so the font would be large as possible for each quotation. 
+```
+- [Kindle clock quotes image.zip](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/images.zip)
+
+* Step 4: Starting and Stopping the Clock 
+```
+I wanted to be able to start my literary clock by pressing the shortcut Shift + C on the small keyboard of the e-reader. Pressing it again stops the clock and turns the clock into a normal e-reader again.
+
+# First, create this folder:
+$ ssh root@192.168.31.158
+
+
+Welcome to Kindle!
+
+#################################################
+#  N O T I C E  *  N O T I C E  *  N O T I C E  # 
+#################################################
+Rootfs is mounted read-only. Invoke mntroot rw to
+switch back to a writable rootfs.
+#################################################
+[root@kindle root]# cd /mnt/us
+[root@kindle us]# ls 
+DK_BookStore  DK_Download   DK_Sync       documents     launchpad     music         system
+DK_Documents  DK_News       audible       extensions    linkjail      python        usbnet
+[root@kindle us]# mkdir timelit     # create this folder 
+[root@kindle us]# ls && cd timelit
+DK_BookStore  DK_Download   DK_Sync       documents     launchpad     music         system        usbnet
+DK_Documents  DK_News       audible       extensions    linkjail      python        timelit
+[root@kindle timelit]# scp -r chyiyaqing@192.168.31.209:~/Downloads/timelit/* .
+Password:
+clockisticking                                                                                     100%   42     0.0KB/s   00:00    
+showMetadata.sh                                                                                    100%  531     0.5KB/s   00:00    
+startstopClock.sh                                                                                  100%  833     0.8KB/s   00:00    
+timelit.sh                                                                                         100%  892     0.9KB/s   00:00    
+[root@kindle timelit]# 
+[root@kindle timelit]# scp -r chyiyaqing@192.168.31.209:~/Downloads/images .   # Copy images 
+[root@kindle timelit]# ls
+clockisticking     images             showMetadata.sh    startstopClock.sh  timelit.sh
+[root@kindle launchpad]# cd /mnt/us/launchpad && vi startClock.ini  # put this text in there 
+    [Actions]
+    C = !sh /mnt/us/timelit/startstopClock.sh &
+
+That creates the shortcut Shift + C.(Note, one key for one key input) If we press that, the bash-script startstopClock.sh starts. It stops the Kindle framework (the normal user interface), prevents the Kindle from going into power save mode and creates a small file(/mnt/us/timelit/clocksticking) to indicate the clock has started.
+
+If the user presses Shift+C again and the clockisticking file is already there, startstopClock.sh will remove it and restart the Kindle. 
+
+startstopClock.sh also executes another script, showMetadata.sh, to enable the keystrokes that will show the metadata (using the command /usr/bin/waitforkey). If the user pushes the "next page" button on the sides of the Kindle. it will check if the clock is ticking and if it is. will show the same image as currencly is shown (which file that is, is saved in the clockisticking file) but then with title and author at the bottom.
+
+Changing the time on the display every minute is done by adding this line to /etc/crontab/root
+# If you see like this Error root: Read-only file system
+$ mntroot rw 
+$ vi /etc/crontab/root 
+    * * * * * sh /mnt/us/timelit/timelit.sh 
+# restart crontab
+$ /etc/init.d/cron restart 
+
+Every time it is run, timelit.sh checks if the 'clocksticking' file is created. If it is. timelit.sh proceeds to show the image for the current minute. 
+
+Note: You'll probably want to change the timezone in timelit.sh 'TZ='
+```
+- [Kindle clock quotes timelit.zip](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/timelit.zip)

@@ -125,6 +125,26 @@ A series of convenience functions to make programming easier with python3
 Scheduling Algorithm
 --------------------
 
+* Bloom Filter - 布隆过滤器
+> 布隆过滤器是1970年由布隆提出，它实际上是一个很长的二进制向量和一系列随机映射函数.布隆过滤器可以用于检索一个元素是否在一个集合中。优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难.
+```
+判断一个元素是不是在一个集合中，一般思路是将集合中所有元素保存起来，然后比较确定
+    链表结构: 时间复杂度O(n)
+    树结构: 时间复杂度O(log n)
+    散列表结构: 时间复杂度O(1)
+
+布隆过滤器的原理是当一个元素被加入集合中，通过K个散列函数将这个元素映射成一个数组中的K个点，把他们置为1.检索时，只要查看这些点是不是都是1就(大约)知道集合中有没有它，如果这些点有任何一个0，则被检元素一定不在。如果都是1，怎被检元素很可能在.
+
+优点:
+    相比其他数据结构，布隆过滤器在空间和时间方面都有巨大的优势，布隆过滤器存储空间和插入/查询时间都是常数(O(K)). 另外，散列函数相互之间没有关系，方便由硬件并行实现。布隆过滤器不需要存储元素本身，在某些对保密要求非常严格的场合有优势.
+    布隆过滤器可以表示全集，其他任何数据结构都不能
+    k和m相同,使用同一组散列函数的两个布隆过滤器的交并运算可以使用位操作进行.
+
+缺点:
+    但是布隆过滤器的缺点和优点一样明显，误算率是其中之一，随着存入的元素数量的增加，误算率随之增加，但是如果元素数量太少，则使用散列表足以
+    一般情况下不能从布隆过滤器中删除元素，很容易想到把位数组变成整数数组,每插入一个元素响应的计算器加一，这样删除元素时将计数器减掉就可以，然而要保证安全地删除元素并非如此简单，首先我们必须保证删除的元素的确在布隆过滤器里面，这一点单凭这个过滤器时无法保证的，另外计数器回绕也会造成问题
+```
+
 * Round-robin scheduling 
 ```
 Round-robin (RR) is one of the algorithms employed by process and network schedulers in computing. Round-robin scheduling is simple, easy to implement, and starvation-free.Round-robin scheduling can also be applied to other scheduling problems, such as data packet scheduling in computer networks. It is an operating system concept.

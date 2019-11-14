@@ -1774,5 +1774,15 @@ if (require.main === module) {
 ```
 Node's ES2015 support can be found at http://node.green 
 
-
 ```
+
+Comparing bunyun vs. log4js vs. morgan vs. pino vs. winston
+-----------------------------------------------------------
+
+| .       | Description                                  | Install          | Licenses   | Links                                        |
+| :------ | :------------------------------------------- | :--------------- | :--------- | :------------------------------------------- |
+| Bunyan  | a JSON logging libarary for node.js services | npm i -S bunyan  | MIT        | https://github.com/trentm/node-bunyan#readme |
+| Log4js  | Port of Log4js to work with node             | npm i -S log4js  | Apache-2.0 | https://log4js-node.github.io/log4js-node/   |
+| Morgan  | HTTP request logger middleware for node.js   | npm i -S morgan  | MIT        | https://github.com/expressjs/morgan#readme   |
+| Pino    | super fast, all natural json logger          | npm i -S pino    | MIT        | http://getpino.io/                           |
+| Winston | A logger for just about everything           | npm i -S winston | MIT        | https://github.com/winstonjs/winston#readme  |

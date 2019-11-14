@@ -327,3 +327,18 @@ $ sudo vim /etc/ssh/sshd_config
 PrintMotd no
 $ sudo systemctl restart sshd 
 ```
+
+Deleting older log files 
+------------------------
+```
+# delete older logs based on date.
+$ man find - walk a file hierarchy (遍历文件层次结构)
+     -mindepth n : Always true; do not apply any tests or actions at levels less than n. 
+     -mtime n[smhdw]: If no units are specified, this primary evaluates to true if the difference between the file last modification time and the time find was started 
+     -mtime 0: means at least 24 hourse 
+
+$ find /mylog/path -mindepth 1 -mtime +6 -delete 
+     -mindepth 1 means process all files except the command line arguments 
+     -mtime +6 will check for the files modified 7 days ago
+     -delete will delete.
+```

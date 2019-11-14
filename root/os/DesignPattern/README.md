@@ -50,7 +50,7 @@ Software Design Pattern
     OOPL(Object Oriented Programming Language): 面向对象编程语言
         - 面向对象编程语言是支持类或对象的语法机制，并有现成的语法机制，能方便地实现面向对象编程四大特征(封装、抽象、继承、多态)的编程语言
     面向对象的四大特征: 
-        封装
+        封装(Encapsulation): 封装也叫做信息隐藏或者数据访问保护。
         抽象
         继承
         多态
