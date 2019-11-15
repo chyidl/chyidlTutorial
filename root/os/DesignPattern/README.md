@@ -51,9 +51,20 @@ Software Design Pattern
         - 面向对象编程语言是支持类或对象的语法机制，并有现成的语法机制，能方便地实现面向对象编程四大特征(封装、抽象、继承、多态)的编程语言
     面向对象的四大特征: 
         封装(Encapsulation): 封装也叫做信息隐藏或者数据访问保护。
-        抽象
-        继承
-        多态
+            Java: public, private 访问权限控制语句
+        抽象(Abstraction): 隐藏方法的具体实现，调用者只需要关心方法提供那些功能，并不需要知道这些功能是如何实现
+            Java: interface(接口类), abstract(抽象类)
+        继承(Inheritance): 继承是用来表示类之间的is-a关系. “多用组合少用继承”
+            单继承(一个子类只继承一个父类)、多继承(一个子类可以继承多个父类)
+            Java: extends 实现继承 - 支持单继承
+            C++: Class B: Public A - 支持多继承
+            Python: paraentheses()  - 支持多继承
+        多态(Polymorphism): 子类可以替换父类
+            多态需要三种语法机制实现:
+                1. 编程语言支持父类对象可以引用子类对象
+                2. 编程语言要支持继承
+                3. 编程语言要支持子类可以重写(override)父类中的方法
+            多态特性的实现方式除了利用"继承加方法重写"这种实现方式之外，还可以利用接口类语言和duck-typing语法(Python, JavaScript)
     OOA(Object Oriented Analysis)面向对象分析:
     OOD(Object Oriented Design)面向对象设计
     UML(Unified Model Language)统一建模语言:

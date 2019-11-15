@@ -375,8 +375,8 @@ GET: 1162790.62 requests per second
     6. Being based on epoll/kqueue, the Redis event loop is quite scalable. Redis has already been benchmarked at more than 60000 connections, and was still able to sustain 50000 q/s in these conditions. 
 ```
 
-Redis (data structures server)
-------------------------------
+Redis (Remote Dictionary Service)
+---------------------------------
 > Redis 本质上是一个数据结构服务器(data structures server)以高效的方式实现多种数据结构
 ```
 - String字符串
@@ -866,60 +866,6 @@ HyperLogLog提供两个指令pfadd, pfcount
 - [hyperloglog.py](root/ilikeit/RedisCrashCourse/script/py/hyperloglog.py)
 
 
-面试问题
---------
-```
-1. Redis能用来做什么?
-    缓存：是Redis使用最多的领域，相比Memcache更加容易理解、使用和控制
-    分布式锁：
-    Redis业务应用范围非常广泛：
-        点赞数、评论数、点击数 hash
-        ID列表(排序) zset
-        标题、摘要、作者和封面信息用于列表展示 hash 
-        缓存近期热帖，减少数据库压力 hash 
-        实际情况下需求可能没有太多，因为请求压力不大的情况下，很多数据都可以直接从数据库中查询，但请求压力大，以前通过数据库直接存取的数据则必须要挪到缓存里
-
-2. Redis有哪些数据结构?
-    字符串String, 字典Hash, 列表List, 集合Set, 有序集合Sort Set 
-    HyperLogLog, Geo, Pub/Sub,
-    Bloom Filter, Redis Search, Redis-ML 
-
-3. Redis分布式锁？
-    setnx争抢锁，抢到之后，expire给锁加上一个过期时间，防止忘记释放锁 
-    如果在setnx之后，expire之前进程意外Crash或者重启维护，会怎样？
-        同时把setnx和expire合成一条指令使用 
-
-4. 假如Redis里面有1亿个key,其中有10w个key是以某种固定的前缀开头，如何将他们全部找出来?
-    使用keys指令扫描指定模式的key列表,由于Redis是单线程，keys指令会导致线程阻塞一段时间，线上服务会停顿，知道指令执行完毕，服务才回复，这个时候可以使用scan指令，scan指令可以无阻塞的提取出指定模式的可以列表，但是会有一定的重复概率，在客户端做一次去重操作，整体花费会比keys指令时间长
-
-5. 如果使用redis做异步队列？
-    一般使用list结构作为队列，rpush生产消息，lpop消费消息，当lpop没有消息的时候，适当sleep重试
-    list指令中还有一个blpop,在没有消息可消费的情况下会阻塞直到消息到来
-    如何生产一次消费多次？可以使用pub/sub主题订阅模式，可以实现1:N的消息队列
-    pub/sub有什么缺点？在消费者下线的情况下，生产的消息会丢失，可以使用专门的消息队列RabbitMQ
-    redis如何实现延迟队列？可以使用sort set,使用时间戳作为score.消息内容作为key调用zadd来生产消息，消费者使用zrangebyscore指令获取N秒之前的数据轮询进程处理
-
-6. 如果大量的Key需要设置同一时间过期，需要注意什么?
-    如果大量的Key过期时间设置的过于集中，到过期时间，redis可能出现短暂的卡顿现象，一般需要在时间上加上一个随机值，使得过期时间分散一些
-
-7. Redis如何做持久化?
-    bgsave做镜像全量持久化, aof做增量持久化，因为bgsave会耗费较长时间，在停机时候会导致大量丢失数据，所以需要aof配合使用。在redis实例重启时，优先使用aof来恢复内存的状态，如果没有aof日志，就会使用rdb文件来恢复.
-    Redis会定期做aof重写，压缩aof文件日志大小，Redis4.0之后有混合持久化的功能，将bgsave的全量和aof的增量做了融合处理，这样即保证恢复的效率又兼顾数据的安全
-     取决于aof日志sync 属性的配置，如果不要求性能，在每次写指令时都sync一下磁盘，就不会丢失数据，但是高性能的要求下每次都sync是不现实的，一般都是定时sync,比如1s1次，这时候最多会丢失1s数据.
-     bgsave原理是什么： fork, cow,fork是指redis通过创建子线程来进行bgsave操作, cow指copy on write，子进程创建后，父子进程共享数据段，父进程继续提供读写服务，写脏的页面数据会逐渐和子进程分离开来
-
-8. Pipeline的优势？
-    可以将多次I/O往返的时间缩减为一次，前提是pipeline执行的指令之间没有因果相关性，使用redis-benchmark进行压力测试的时候可以发现影响热地说QPS峰值的一个重要因素是pipeline批次指令的数目.
-
-9. Redis同步机制了解么?
-    Redis可以使用主从同步，从从同步，第一次同步时，主节点做一次bgsave,并同时将后续修改操作记录到内存buffer,待完成后将rdb文件全量同步复制到节点，复制节点接受完成后将rdb镜像加载到内存，加载完成后，在通知主节点将期间修改的操作记录同步到复制节点进行重放就完成同步过程.
-
-10. 是否使用过Redis集群，集群的原理是什么?
-    Redis Sentinal高可用，在master宕机时会自动将slave提升为master,继续提供服务
-    Redis Cluster 扩展性，单个redis内存不足时，使用cluster进行分片存储.
-
-Redis内置Lua脚本引擎
-```
 
 <antirez> blog
 ---------------
@@ -987,7 +933,90 @@ Counting
 Lua Helpers
 -----------
 ```
+```
 
+Redis 面试问题
+-------------
+```
+1. Redis能用来做什么?
+    缓存：是Redis使用最多的领域，相比Memcache更加容易理解、使用和控制
+    分布式锁：
+    Redis业务应用范围非常广泛：
+        点赞数、评论数、点击数 hash
+        ID列表(排序) zset
+        标题、摘要、作者和封面信息用于列表展示 hash 
+        缓存近期热帖，减少数据库压力 hash 
+        实际情况下需求可能没有太多，因为请求压力不大的情况下，很多数据都可以直接从数据库中查询，但请求压力大，以前通过数据库直接存取的数据则必须要挪到缓存里
+
+2. Redis有哪些数据结构?
+    字符串String, 字典Hash, 列表List, 集合Set, 有序集合Sort Set 
+    HyperLogLog, Geo, Pub/Sub,
+    Bloom Filter, Redis Search, Redis-ML 
+
+3. Redis分布式锁？
+    setnx争抢锁，抢到之后，expire给锁加上一个过期时间，防止忘记释放锁 
+    如果在setnx之后，expire之前进程意外Crash或者重启维护，会怎样？
+        同时把setnx和expire合成一条指令使用 
+
+4. 假如Redis里面有1亿个key,其中有10w个key是以某种固定的前缀开头，如何将他们全部找出来?
+    使用keys指令扫描指定模式的key列表,由于Redis是单线程，keys指令会导致线程阻塞一段时间，线上服务会停顿，知道指令执行完毕，服务才回复，这个时候可以使用scan指令，scan指令可以无阻塞的提取出指定模式的可以列表，但是会有一定的重复概率，在客户端做一次去重操作，整体花费会比keys指令时间长
+
+5. 如果使用redis做异步队列？
+    一般使用list结构作为队列，rpush生产消息，lpop消费消息，当lpop没有消息的时候，适当sleep重试
+    list指令中还有一个blpop,在没有消息可消费的情况下会阻塞直到消息到来
+    如何生产一次消费多次？可以使用pub/sub主题订阅模式，可以实现1:N的消息队列
+    pub/sub有什么缺点？在消费者下线的情况下，生产的消息会丢失，可以使用专门的消息队列RabbitMQ
+    redis如何实现延迟队列？可以使用sort set,使用时间戳作为score.消息内容作为key调用zadd来生产消息，消费者使用zrangebyscore指令获取N秒之前的数据轮询进程处理
+
+6. 如果大量的Key需要设置同一时间过期，需要注意什么?
+    如果大量的Key过期时间设置的过于集中，到过期时间，redis可能出现短暂的卡顿现象，一般需要在时间上加上一个随机值，使得过期时间分散一些
+
+7. Redis如何做持久化?
+    bgsave做镜像全量持久化, aof做增量持久化，因为bgsave会耗费较长时间，在停机时候会导致大量丢失数据，所以需要aof配合使用。在redis实例重启时，优先使用aof来恢复内存的状态，如果没有aof日志，就会使用rdb文件来恢复.
+    Redis会定期做aof重写，压缩aof文件日志大小，Redis4.0之后有混合持久化的功能，将bgsave的全量和aof的增量做了融合处理，这样即保证恢复的效率又兼顾数据的安全
+     取决于aof日志sync 属性的配置，如果不要求性能，在每次写指令时都sync一下磁盘，就不会丢失数据，但是高性能的要求下每次都sync是不现实的，一般都是定时sync,比如1s1次，这时候最多会丢失1s数据.
+     bgsave原理是什么： fork, cow,fork是指redis通过创建子线程来进行bgsave操作, cow指copy on write，子进程创建后，父子进程共享数据段，父进程继续提供读写服务，写脏的页面数据会逐渐和子进程分离开来
+
+8. Pipeline的优势？
+    可以将多次I/O往返的时间缩减为一次，前提是pipeline执行的指令之间没有因果相关性，使用redis-benchmark进行压力测试的时候可以发现影响热地说QPS峰值的一个重要因素是pipeline批次指令的数目.
+
+9. Redis同步机制了解么?
+    Redis可以使用主从同步，从从同步，第一次同步时，主节点做一次bgsave,并同时将后续修改操作记录到内存buffer,待完成后将rdb文件全量同步复制到节点，复制节点接受完成后将rdb镜像加载到内存，加载完成后，在通知主节点将期间修改的操作记录同步到复制节点进行重放就完成同步过程.
+
+10. 是否使用过Redis集群，集群的原理是什么?
+    Redis Sentinal高可用，在master宕机时会自动将slave提升为master,继续提供服务
+    Redis Cluster 扩展性，单个redis内存不足时，使用cluster进行分片存储.
+
+11. 缓存穿透，缓存击穿，缓存雪崩?
+    设计缓存系统，需要考虑缓存穿透、缓存击穿、缓存失效雪崩
+    
+    - 缓存穿透是指查询一个一定不存在的数据，由于缓存是不命中时被动写，并且出于容错考虑，如果从存储层查不到数据则不写入缓存。这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义，在流量大时，可能DB就挂掉，要是有人利用不存在的Key频繁攻击应用，这就是漏洞
+        > 有很多的方法有效的解决缓存穿透的问题，最常见的则是采用布隆过滤器，将所有的可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据就会被bitmap拦截掉，从而避免对底层存储系统的查询压力.
+        > 另一种简单粗暴的方法,如果一个查询返回的数据为空(不管是数据不存在还是系统故障)，仍然把这个空结果进行缓存，但他的过期时间会很短，最长不超过五分钟
+    
+    - 缓存雪崩:是指我们设置缓存时采用相同的过期时间，倒置缓存在某一个时刻同时失效，请求全部转发到DB，DB瞬时压力过重雪崩.
+        > 缓存失效时的雪崩效应对底层系统的冲击非常可怕，大多数系统设计者考虑用加锁或者队列的方式保证缓存单线程(进程)写，从而避免失效时大量的并发请求落到底层存储系统上，
+        >在原有的失效时间基础上增加一个随机值，比如1-5分钟随机值，这样每个缓存的过期时间的重复率就会降低，就很难引起集体失效的事件
+    
+    - 缓存击穿: 对于设置过期时间的key, 如果这些key可能会在某些时间点被超高并发地访问，是一种非常热点的数据，这时候，需要考虑一个问题，缓存被击穿的问题，这个和导致雪崩的区别在于这里针对某一个Key缓存，前者则是很多key。缓存在某个时间点过期的时候，恰好在这个时间点对这个Key有大量的并发请求过来，这些请求发现缓存过期一般都会从后端加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮.
+        > 使用互斥锁(mutex key):业界比较常用的做法是使用mutex,就是在缓存失效的时候(判断拿出的值为空)，不是立即去load db.而是先使用缓存工具的某些带成功操作返回值的操作(Redis的SETNX或者Memcache的ADD)去SET一个mutex key.当操作返回成功时，在进行load db的操作并会设缓存，否则，就重试整个get缓存的方法。
+        > SETNX是(SET IF NOT EXISTS)就是只有不存在的时候才设置，可以利用它实现锁的效果，
+public String get(key) {
+    String value = redis.get(key);
+    if (value == null) { // 代表缓存值过期
+        // 设置3min的超时时间，防止del操作失败的时候，下次缓存过期一直不能load db 
+        if (redis.setnx(key_mutex, 1, 3 * 60) == 1) { // 代表设置成功
+            value = db.get(key);
+            redis.set(key, value, expire_secs);
+            redis.del(key_mutex);
+        } else {    // 这时候代表其他线程已经load
+            sleep(50);
+            get(key);   // 重试
+        }
+    }
+}
+
+对于缓存系统常用的缓存满了，和数据丢失问题，需要根据具体业务分析，通常采用LRU策略处理溢出，Redis的RDB和AOF持久化策略来保证一定情况下的数据安全.
 ```
 
 Appendix
