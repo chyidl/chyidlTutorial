@@ -3,6 +3,15 @@ Software Design Pattern
 > In software engineering, a software design pattern is a general, reusable solution to a commonly occurring problem within a given context in software design. Design patterns are formalized best practices that the programmer can use to solve common problems when designing an application or system.
 
 ```
+面向过程编程: 是一种编程范式或编程风格，它以过程(可以为理解方法、函数、操作)作为组织代码的基本单元，以数据(可以理解为成员变量、属性)与方法相分离为最主要的特点，面向过程风格是一种流程化的编程风格，通过拼接一组顺序执行的方法来操作数据完成一项功能.
+面向过程编程语言:是一种编程语言,不支持类和对象两种语法概念，不支持丰富的面向对象编程特性(继承、多态、封装),仅支持面向过程编程
+
+面向过程 vs. 面向对象 
+    面向过程风格的代码被组织成一组方法集合及其数据结构(struct User)，方法和数据结构的定义是分开的.
+    面向对象风格的代码被组织成一组类，方法和数据结构被绑定一起，定义在类中
+        1. 面向对象编程能够应对大规模复杂程序的开发
+        2. 面向对象风格的代码更易复用、易扩展、易维护
+
 数据结构和算法 - 写出高效率代码 
 设计模式 - 
     大部分设计模式要解决的都是代码的可扩展性问题
@@ -51,7 +60,7 @@ Software Design Pattern
         - 面向对象编程语言是支持类或对象的语法机制，并有现成的语法机制，能方便地实现面向对象编程四大特征(封装、抽象、继承、多态)的编程语言
     面向对象的四大特征: 
         封装(Encapsulation): 封装也叫做信息隐藏或者数据访问保护。
-            Java: public, private 访问权限控制语句
+            Java: public, private, protected 访问权限控制语句
         抽象(Abstraction): 隐藏方法的具体实现，调用者只需要关心方法提供那些功能，并不需要知道这些功能是如何实现
             Java: interface(接口类), abstract(抽象类)
         继承(Inheritance): 继承是用来表示类之间的is-a关系. “多用组合少用继承”
@@ -64,7 +73,9 @@ Software Design Pattern
                 1. 编程语言支持父类对象可以引用子类对象
                 2. 编程语言要支持继承
                 3. 编程语言要支持子类可以重写(override)父类中的方法
-            多态特性的实现方式除了利用"继承加方法重写"这种实现方式之外，还可以利用接口类语言和duck-typing语法(Python, JavaScript)
+            多态特性的实现方式除了利用"继承加方法重写"这种实现方式之外，
+            还可以利用接口类语言 - 类必须实现对应的接口
+            和duck-typing语法(Python, JavaScript) - 两个类具有相同的方法，就可以实现多态，并不要求两个类之间有任何关系
     OOA(Object Oriented Analysis)面向对象分析:
     OOD(Object Oriented Design)面向对象设计
     UML(Unified Model Language)统一建模语言:
@@ -138,4 +149,11 @@ DRY(Don't Repeat Yourself)
     flexibility(灵活性)、extensibility(可扩展性)、maintainability(可维护性)、readability(可读性)、understandability(可理解性)、changeability(易修改性)、reusability(可复用性)、testability(可测试性)
     modularity(模块化)、high cohesion loose coupliing(高内聚低耦合)、high efficiency(高效性)、high performance(高性能)、security(安全性)、compatibility(兼容性)、usability(易用性)、clean(整洁)、clarity(清晰)、simple(简单)、straightforward(直接)、less code is more(少即是多)、well-documented(文档详尽)、well-layered(分层清晰)、correctness, bug free(正确性)、robustness(健壮性)、
     robustness(鲁棒性)、reliability(可用性)、scalability(可伸缩性)、stability(稳定性)、elegant(优雅)、good(好)、bad(坏)
+```
+
+FQA
+---
+```
+1. 编程语言是否支持多继承? 
+
 ```

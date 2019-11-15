@@ -144,8 +144,19 @@ Java语言支持的变量类型:
     局部变量: 类的方法中的变量，访问修饰符不能用于局部变量，局部变量只在声明他的方法、构造方法或者语句块中可见，局部变量是在栈上分配的，局部变量没有默认值，所以局部变量被声明后，必需经过初始化，才可以使用.
 ```
 
-Java 修饰符
------------
+Controlling Access to Members of a Class
+----------------------------------------
+> Access level modifiers determine whether other classes can use a particular fields or invoke a particular method. There are two levels of access control:
+> At the top level - public, or package-private (no explicit modifier)
+> At the member level - public, private, protected, or package-private (no explicit modifier)
+
+| modifier    | Class | Package | Subclass | World |
+| :---------- | :---- | :------ | :------- | :---- |
+| public      | Y     | Y       | Y        | Y     |
+| protected   | Y     | Y       | Y        | N     |
+| no modifier | Y     | Y       | N        | N     |
+| private     | Y     | N       | N        | N     |
+
 ```
 访问修饰符
     default: 在同一个包内可见，不使用任何修饰符，使用对象：类，接口。变量，方法
