@@ -338,14 +338,148 @@ Java是一种面向对象的语言
         Error是程序正常情况下不大可能出现的情况，绝大部分的Error都会导致程序(JVM本身)处于非正常、不可恢复状态。比如OutOfMemoryError
         Object -> Throwable -> Error  [OutOfMemoryError,StackOverflowError,VirtualMachineError,NoClassDefFoundError,ExceptionInInitializerError]
                             -> Exception [IOException, RuntimeException, NullPointerException,ClassCastException,SecurityException]
-    NoClassDefFoundError和ClassNotFoundException区别?
-        ...
+
     try-catch-finally, throw, throws
     try-with-resources, multiple catch. 
         try (BufferedReader br = new BufferedReader(...); BufferedWriter writer = new BufferedWriter())
 ```             
+    - ClassNotFoundException vs. NoClassDefFoundError?
+```
+    > ClassNotFoundException, It is an exception. It is of type java.lang.Exception. It occurs when an application tries to load a class at run time which is not updated in the classpath. It is thrown by the application itself. It is thrown by the methods like Class.forName(), loadClass() and findSystemClass(). It occurs when classpath is not updated with required JAR files.
 
-* 2. Java进阶
+    > NoClassDefFoundError: It is an error. It is of type java.lang.Error. It occurs when Java runtime system doesn't find a class definition, which is present at compile time, but missing at run time. It is thrown by the Java Runtime System. It occurs when required class definition is missing at runtime.
+```
+    - final、finally、finalize?
+```
+    1. final可以用来修饰类、方法、变量:
+        final修饰class代表不可以继承扩展
+        final修饰方法不可以重写(override)
+        final修饰变量不可以修改
+
+    2.finally是Java保证代码一定被执行的一种机制
+        try-finally 或 try-catch-finally进行类似关闭JDBC连接、保证unblock锁
+    
+    3. finalize是基础java.lang.Object的方法，目的是保证对象在被垃圾收集前完成特定资源的回收。finalize机制已不推荐使用，并在JDK9开始被标记deprecated.
+        Java平台目前逐步使用java.lang.ref.Cleaner来替代原有的finalize实现. Cleaner的实现利用了幻想引用(PhantomReference).
+资源用完即显式释放、或者利用资源池来尽量重用
+```
+    - 强引用、软引用、弱引用、幻想引用?
+```
+不同的引用类型，主要体现的是对象不同的可达性reachable状态和对垃圾收集的影响
+    Strong Reference: 强引用: 最常见的普通对象引用，只要还有强引用指向一个对象，就能表明对象“还活着”，垃圾收集不会回收次对象。
+
+    Soft Reference: 软引用,是一种相对于强引用弱化一些的引用，可以让对象豁免一些垃圾回收，只有当JVM认为内存不足，才会试图回收软引用指向的对象。JVM会确保抛出OutOfMemoryError之前，清理软引用指向的对象。软引用通常用来实现内存敏感的缓存，
+
+    Weak Reference:弱引用,不能使对象豁免垃圾收集，仅仅能提供一种访问在弱引用状态下对象的途径。维护一种非强制的映射关系
+
+    幻想引用，不能通过它访问对象，幻想引用仅仅是提供了一种确保对象被finalize以后，做某些事情的机制。
+
+    Java定义的不同可达性级别(reachability level):
+        Strong Reachable 强可达： 就是当一个对象可以有一个或多个线程可以不通过各种引用访问到的情况
+        Softly Reachable:软可达,只能通过软引用才能访问到对象的状态 
+        Weakly Reachable:弱可达: 只能通过弱引用访问的状态
+        Phantom Reachable: 幻想可达，
+        unreachable:不可达: 意味着对象可以被清除
+    
+    对于软引用、弱引用、垃圾收集可能会存在二次确认的问题，保证处于弱引用状态的对象，没有改变为强引用
+
+    Reference Queue:引用队列:
+```
+    - String, StringBuffer, StringBuilder?
+```
+String：典型Immutable类的实现，被声明成为final class.所有属性也都是final.
+
+StringBuffer:可以用append或者add方法，把字符串添加到已有序列的末尾或者指定位置。StringBuffer本质是一个线程安全的可修改字符序列，(线程安全是通过把各种修改数据的方法都加上synchronized关键字实现的) 保证了线程安全。随之带来额外的性能开销，除非有线程安全的需要，不然还是推荐使用后继者，StringBuild.
+
+StringBuilder: 能力上和StringBuffer没有本质区别，唯一缺少线程安全。
+
+“过早优化是万恶之源”，考虑可靠性、正确性和代码可读性才是大多数引用开发最重要的因素
+StringBuffer 和 StringBuild底层都是利用可修改的char数组(JDK 9以后是byte数组)，二者都继承AbstractStringBuilder. 里面包含基本操作，区别仅在于最终的方法是否加上symchronized.
+
+数组扩容会产生多重开销，因为要抛弃原有数组，查创建新的数组，还要进行array copy.
+
+$ javac # JAVA编译
+$ javap -v # JAVA反编译
+JDK8中，字符串拼接操作会自动被javac转换为StringBuilder操作.
+JDK9里面因为Java9为更加统一字符串操作优化，提供StringConcatFactory. 作为一个统一的入口
+
+String在Java 6以后提供intern()方法，目的是提示JVM将响应字符串缓存起来，以备重复使用,JVM会将所有类似“abc”这样的文本字符串、或者字符串常量之类缓存起来
+
+Java历史字符串是使用char数组来存储数据，Java中的char是两个bytes大小; Java9中引入Compact Strings设计，对字符串数组存储方式从char数组，改变为一个byte数组加上一个标识编码的所谓coder.
+```
+    - Java反射机制、动态代理的原理?
+```
+编程语言中的
+    动态类型和静态类型就是区分语言类型信息是在运行时检查还是编译时检查.
+    强类型和弱类型就是不同类型变量赋值时，是否需要显式地(强制)进行类型转换
+
+Java语言属于静态强类型语言，但是因为提供类似反射机制，具备了部分动态类型语言的能力
+
+反射机制时Java语言提供的一种基础功能,赋予程序在运行时自省(introspect)的能力，通过反射可以直接操作类或者对象
+
+动态代理是一种方便运行时动态构建代理，动态处理代理方法调用的机制，
+```
+    - int vs. Integer?
+```
+Java 语言原始数据类型和包装类
+    Java 8个原始数据类型(Primitive Types):
+        boolean, byte, short, char, int, float, double, long 
+        Boolean, Bytes, Short， Character, Integer, Float, Double, Long, (BigInteger, BigDecimal没有响应的基本类型，主要用于高精度运算)
+    
+    Integer包装类型中静态工厂方法valueOf会利用缓存机制, 缓存-128-127之间
+    自动装箱boxing, Integer.valueOf() 放生在编译阶段，生成的字节码是一致的
+    自动拆箱unboxing, Integer.intValue()
+
+    AtomicInteger, AtomicLong 线程安全类
+```
+    - Vector, ArrayList, LinkedList?
+```
+Vector, ArrayList, LinkedList都是实现集合框架中的list(有序集合)接口.    
+    Vector是Java早期提供的线程安全的动态数组, Vector内部是使用对象数组来保存数据，当数组已满时会创建新的数组，并拷贝原有数组数据 Vector扩容会提高一倍
+    ArrayList是应用更加广泛的动态数组实现，线程不安全，ArrayList扩容则增加50%
+    LinkedList是Java提供的双向链表,线程不安全
+
+    Vector和ArrayList作为动态数组适合，内部元素以数组形式顺序存储，适合随机访问
+    LinkedList，插入+删除比较高效，但是随机访问性能则比动态数组慢 
+
+Collection接口: 
+    List有序集合:
+        AbstratcList:几种各种List操作的通用部分
+    Set不允许重复元素
+        TreeSet是利用TreeMap实现
+        HashSet是利用HashMap实现
+        TreeSet支持自然顺序访问，添加、删除、包含操作比较低效log(n) 
+        HashSet利用哈希算法，可以提供常数时间的添加、删除、包含操作，不保证有序
+        LinkedHashSet:内部构建一个记录插入顺序的双向链表，提供按照插入顺序便利的能力，
+    Queue/Deque: 队列接口 FIFO(First In First Out); LIFO(Last In First Out)
+
+    Java提供的默认排序算法:
+        Arrays.sort() 
+        Collections.sort() 
+        对于原始数据类型，目前使用的是所谓双轴快速排序(Dual-Pivot QuickSort) --改进版快速排序 
+        对于对象数据类型，目前使用TimSort() 归并和二分插入排序,
+
+    Java8 之后，Java平台支持Lambda和Stream, 
+
+    java.util.concurrent: 线程安全容器
+```
+    - Hashtable, HashMap, TreeMap?
+```
+Hashtable, HashMap, TreeMap常见的一些Map实现，是以键值对的形式存储和操作数据的容器类型
+    Hashtable线程安全，不支持null键
+    HashMap不是同步的，支持null键和值，HashMap进行put和get操作时间复杂度O(1)
+    TreeMap基于红黑树的一种提供顺序访问的Map, get,put,remove操作时间复杂度O(log(n))
+
+    HashMap的性能表现依赖于哈希码的有效性，hashCode和equals的基本约束
+        equals相等，hashCode一定相等
+        重写hashCode也要重写equals
+        hashCode需要保持一致性，状态改变返回的哈希值仍然要一致
+        equals的对称、反射、传递等特性
+    LinkedHashmap提供遍历顺序符合插入顺序，
+```
+
+
+* 2. Java进阶   q
 ```
 ```
 
@@ -358,5 +492,14 @@ Java是一种面向对象的语言
 ```
 
 * 5. Java性能基础
+```
+```
+
+
+Java Reflection Tutorial
+------------------------
+> Java Reflection makes it possible to inspect classes, interfaces, fields and methods at runtime, without knowing the names of the classes, methods etc. at compile time. it is also possible to instantiate new objects, invoke methods and get/set field values using reflection.
+
+
 ```
 ```
