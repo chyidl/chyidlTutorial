@@ -309,3 +309,78 @@ DS_Store: files are created by Finder to keep track of custom attributes of a fo
  my-folder     : is the name of our target folder. 
  -x ".DS_Store": is to exclude all files whose path ends with the string ".DS_Store".
 ```
+
+Terminal and Vim with Dark Mode
+-------------------------------
+```
+Enabling Dark Mode will not default change the Terminal profile
+# You can uses the defaults command to get the current macOS Dark Theme mode:
+$ defaults read -g AppleInterfaceStyle
+Dark
+
+# Can use AppleScript to set Dark Mode and update the Terminal profile 
+    # Set Dark Mode 
+    tell application "System Events"
+        tell appearance preferences
+            set dark mode to true   # Can be one of: true, false not dark 
+        end tell
+    end tell
+
+    # Update default settings (for new windows|tabs)
+    tell application "Terminal"
+        set default settings to settings set "Rasta"
+    end tell 
+
+    # Update settings for existing windows/tabs 
+    tell application "Terminal"
+        set current settings of tabs of windows to settings set "Rasta"     # Theme name 
+    end tell 
+
+# Python Script 
+# toggle-macos-dark-mode.py 
+import subprocess 
+
+OSASCRIPT = """
+tell application "System Events"
+    tell appearance preferences
+        set dark mode to {mode}   # Can be one of: true, false not dark 
+    end tell
+end tell
+
+tell application "Terminal"
+    set default settings to settings set "{theme}"
+end tell 
+
+tell application "Terminal"
+    set current settings of tabs of windows to settings set "{theme}"
+end tell 
+"""
+
+TERMINAL_THEMES = {
+    False: 'Rasta light',
+    True: 'Fasta',
+}
+
+def is_dark_mode() -> bool:
+    """Return the current Dark Mode status."""
+    result = subprocess.run(
+        ['defaults', 'read', '-g', 'AppleInterfaceStyle'],
+        text=True,
+        capture_output=True,
+    )
+    return result.returncode == 0 and result.stdout.strip() == 'Dark'
+
+def set_interface_style(dark: bool):
+    """Enable/disable dark mode."""
+    mode = 'true' if dark else 'false'  # mode can be {true, false, not dark}
+    script = OSASCRIPT.format(mode=mode, theme=TERMINAL_THEMES[dark])
+    result = subprocess.run(
+        ['osascript', '-e', script],
+        text=True,
+        capture_output=True,
+    )
+    assert result.returncode == 0, result 
+
+if __name__ == '__main__':
+    set_interface_style(not is_dark_mode())
+```

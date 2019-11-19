@@ -476,11 +476,153 @@ Hashtable, HashMap, TreeMap常见的一些Map实现，是以键值对的形式�
         hashCode需要保持一致性，状态改变返回的哈希值仍然要一致
         equals的对称、反射、传递等特性
     LinkedHashmap提供遍历顺序符合插入顺序，
+    TreeMap顺序是由键的顺序关系决定,通过Comparator或Comparable自然顺序决定
+
+    HashMap源码分析：
+        capcity容量 
+        load factor:负载系数 
+        树化
+        HashMap内部结构可以看作数组(Node[] table)和链表结合组合的复合结构,数组被分为一个个桶bucket.哈希值相同的键值对则以链表形式存储，如果链表大小如果超过阀值(TREEIFY_THRESHOLD, 8).链表会被改造为树形结构
+
+        负载因子 * 容量 > 元素数据
+```
+    - 集合线程安全、ConcurrentHashMap如何实现高效线程安全?
+```
+Java语言的并发包java.util.concurrent，提供线程安全容器类
+    并发容器 ： ConcurrentHashMap, CopyOnWriteArrayList
+    线程安全队列(Queue/Deque): ArrayBlockingQueue, SynchronousQueue.
+    各种有序容器的线程安全版本
+
+Synchronized Wrapper同步包装器
+保证线程安全:synchronize方式、分离锁实现的ConcurrentHashMap,
+
+ConcurrentHashMap vs. Hashmap:
+    Hashtable比较低效，实现基本将put,get,size方法加上"synchronized",导致并发操作都要竞争同一把锁，一个线程在进行同步操作，其他线程只能等待，大大降低并发操作的效率. Hashtable和同步包装版本只适合非高度并发的场景下
+
+    ConcurrentHashMap:
+        早期ConcurrentHashMap实现:
+            分离锁,就是将内部进行分段Segment, 里面则是HashEntry的数组，和HashMap类似，哈希相同的条目也是链表形式存放 
+            HashEntry内部使用volatile的value字段来保证可见性,也利用不可变对象的机制以改进利用Unsafe提供的底层能力.
+            Segment的数量由concurrentcyLevel决定,默认是16.
+        Java 8 版本ConcurrentHashMap操作
+            数据存储利用volatile保证可见性 
+            使用CAS操作，在特定场景进行无锁并发操作 
+            使用Unsafe, LongAdder底层手段进行极端情况的优化
+
+    synchronized比ReentrantLock使用更少的内存消耗
+```
+    - IO, NIO?
+```
+    java.io包基于流模型实现，提供一些IO功能: 
+        File抽象、输入输出流;交互方式是同步、阻塞的方式
+    java.net提供的部分网络API，Socket、ServerSocket、HttpURLConnection也是同步阻塞IO类，因为网络通信同样是IO行为
+    java.nio包提供Channel、Selector、Buffer新的抽象，可以构建多路复用、同步非阻塞IO程序；Java7引入AIO(Asynchronous IO)异步非阻塞IO方式,异步IO操作基于事件和回调机制
+
+区分同步/异步(synchronous/asynchronous)：同步是一种可靠的有序运行机制、异步通过事件、回调机制实现任务次序关系
+区分阻塞/非阻塞(blocking/non-blocking),进行阻塞操作时，当前线程回处于阻塞状态,非阻塞是不管IO操作是否结束，直接返回，响应操作在后台继续处理
+    IO操作包括文件操作和Socket通信
+    输入流/输出流(InputStream/OutputStream)用于读取或写入字节，操作图片文件 
+    Reader/Writer用于操作字符，增加字符编码等功能
+    BufferedOutputStream带有缓冲区的实现，可以避免频繁的磁盘读写，提高IO处理效率，flush 
+
+Java NIO:
+    Buffer, 高效的数据容器，除了布尔类型，所有原始数据类型都有相应的Buffer实现
+    Channel,类似Linux之类操作系统上看到的文件描述符，是NIO中被用来支持批量式IO操作的一种抽象
+        File,Socket比较高层次的抽象，Channel比较系统底层的一种抽象。
+    Selector, 是NIO实现多路复用的基础，提供一种高效的机制，可以检测到注册在Selector上的多个Channel是有有Channel处于就绪状态，进而实现单线程对多个Channel的高效管理
+    Charset,提供Unicode字符串定义，NIO也提供相应的编解码器
+
+Java语言目前的线程实现比较重量级，启动或者销毁一个线程有明显开销.每个线程都有单独的线程栈等结构，需要占用非常明显的内存;这是同步阻塞方式地扩展性劣势
+```
+    - Java文件拷贝方式 
+```
+1. 利用java.io类库,直接为源文件构建一个FileInputStream读取，目标文件构建一个FileOutputStream.
+2. 利用java.nio类库,提供transferTo或transferFrom方式实现 
+
+拷贝实现机制分析:
+    用户态空间User Space和内核态空间Kernel Space；使用输入输出流进行读写时，实际上时进行多次上下文切换，比如应用读取数据时，现在内核态将数据从磁盘读取到内核缓存，在切换到用户态将数据从内核缓存读取到用户缓存.
+    基于NIO transferTo的实现，会使用零拷贝技术，数据传输不需要用户态参与，省去上下文切换的开销和不必要的内存拷贝
+    java.nio.file.Files.copy: 
+
+如何提高拷贝IO操作的性能?
+    1. 使用缓存机制，减少IO次数 
+    2. 使用transferTo机制，减少上下文切换和额外IO操作 
+    3. 减少不必要的转换过程，编码解码，对象序列化反序列化，
+
+Buffer：[ByteBuffer, CharBuffer, DoubleBuffer, FloatBuffer, IntBuffer, LongBuffer, ShortBuffer]
+    capcity: Buffer，数组的长度 
+    position: 要操作的数据起始位置
+    limit:操作的限额 
+    mark:上一次postion的位置
+
+Direct Buffer: 创建和销毁过程中，都会比一般的堆内Buffer增加部分开销，所以通常都建议用于长期使用、数据较大的场景
+MappedByteBuffer: 
+垃圾收集过程中，不会主动收集Direct Buffer，显式调用System.gc()强制触发;
+JVM堆外内存不仅仅只有Direct Buffer
+JDK 8之后，使用Native Memory Tacking(NMT)进行诊断Direct Buffer;
+```
+    - 接口和抽象类?
+```
+接口和抽象类时Java面向对象设计的两个基本机制.
+    接口是对行为的抽象,是抽象方法的集合,利用接口可以达到API定义和实现分离的目的。接口不能实例化，不能包含任何非常量成员，任何field都是隐含着public static final的意义。只能有抽象方法和静态方法。
+    抽象类是不能实例化的类，
+
+Java类实现interface使用implements关键字，继承abstract class则是使用extends关键词.
+Java不支持多继承，Java8增加函数式编程的支持,
+面向对象编程: SOLID
+    单一职责(Single Responsibility): 
+throw 抛出异常，throws声明函数抛出异常  
+```
+    - 设计模式?
+```
+设计模式是人们为软件开发中相同表征的问题，抽象出的可重复利用的解决方案，在某种程度上，设计模式代表了特定情况的最佳实践.
+    1. 创建型模式:是对对象创建过程的各种问题和解决方案的总结
+        工厂模式(Factory, Abstract Factory)
+        单例模式(Singlton)
+        构建器模式(Builder)
+        原型模式(protoType)
+    2. 结构型模式:对软件设计结构的总结，关注类、对象继承、组合方式的实践经验
+        桥接模式(Bridge)
+        适配器模式(Adaptor)
+        装饰者模式(Decorator)
+        代理模式(Proxy)
+        组合模式(Composite)
+        外观模式(Facade)
+        享元模式(Flyweight)
+    3. 行为型模式:是对类或对象之间的交互
+        策略模式(Strategy)
+        解释器模式(Interpreter)
+        命令模式(Command)
+        观察者模式(Observer)
+        迭代器模式(Iterator)
+        模版方法模式(Template Method)
+        访问者模式(Visitor)
+
+Spring 框架?
+    BeanFactory和ApplicationContext应用了工厂模式 
+    在Bean的创建中，Spring也为不同scope定义的对象，提供单例和原型等模式实现
+    AOP领域是使用了代理模式、装饰器模式、适配器模式
+    事件监听，使用观察者模式
+    JdbcTemplate应用了模版模式 
 ```
 
-
-* 2. Java进阶   q
+* 2. Java进阶 
+    - synchronized vs. ReentrantLock?
 ```
+synchronized是Java内建的同步机制，Intrinsic Locking.固有锁,提供互斥的语义和可见性.当一个线程已经获取当前锁时，其他试图获取的线程只能等待或阻塞
+ReentrantLock是重复锁，再入锁通过代码直接调用lock()方法获取，调用unlock释放
+
+线程安全的定义? <Java Concurrency in Practice>
+    线程安全是一个多线程环境下正确性的概念，保证多线程环境下共享的、可修改的状态的正确性
+    保证线程安全的两种方法: 
+        1. 封装: 通过封装可以将对象内部状态隐藏、保护起来 
+        2. 不可变:final, immutable
+    线程安全需要保证：
+        1. 原子性: 相关操作不会中途被其他线程干扰，可以通过同步机制实现
+        2. 可见性: 一个线程修改某个共享变量、其状态能够立即被其他线程知晓，将线程本地状态反映到主内存上，volatile负责保证可见性
+        3. 有序性: 保证线程内串行语义，避免指令重排
+    
+
 ```
 
 * 3. Java应用开发扩展
@@ -495,11 +637,8 @@ Hashtable, HashMap, TreeMap常见的一些Map实现，是以键值对的形式�
 ```
 ```
 
-
-Java Reflection Tutorial
-------------------------
-> Java Reflection makes it possible to inspect classes, interfaces, fields and methods at runtime, without knowing the names of the classes, methods etc. at compile time. it is also possible to instantiate new objects, invoke methods and get/set field values using reflection.
-
-
 ```
+CAS: Compare and swap:比较并交换
+
+
 ```

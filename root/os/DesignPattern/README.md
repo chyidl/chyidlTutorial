@@ -40,11 +40,11 @@ Software Design Pattern
     3. 两种不同规模的重构: 大重构(大规模高层次)和小重构(小规模低层次)
 
 设计原则 - 
-    SOLID 原则 - SRP 单一职责原则 
-    SOLID 原则 - OCP 开闭原则 
-    SOLID 原则 - LSP 里式替换原则 
-    SOLID 原则 - ISP 接口隔离原则 
-    SOLID 原则 - DIP 依赖倒置原则 
+    SOLID 原则 - (Single Responsibility - SR) 单一职责原则:类或者对象最好只有单一职责，在程序设计中如果发现某个类承担着多种义务，可以考虑进行拆分 
+    SOLID 原则 - (Open-Close, Open for extension, close for modification - OCP) 开关原则: 设计要对扩展开放，对修改关闭 
+    SOLID 原则 - (Liskov Substitution - LS) 里式替换: 进行继承关系抽象时，凡是可以用父类或者基类的地方，都可以用子类替换 
+    SOLID 原则 - (Interface Segregation - IS) 接口分离: 拆分成功能单一的多接口、将行为进行接耦.
+    SOLID 原则 - (Dependency Inversion - DI) 依赖反转: 实体应该依赖于抽象而不是实现，也就说高层次模块,高层次模块应该基于抽象
     DRY 原则 
     KISS 原则 
     YAGNI 原则 
@@ -110,7 +110,23 @@ reusability(可复用性):
 
 testability(可测试性):
 
+静态方法将方法和数据分离，破坏了封装特性，是典型的面向过程风格
+Java语言中Collections.unmodifiableList()方法不可修改的集合
 
+传统的MVC (Model层， Controller层， View层)
+前后端分离之后，三层结构在后端开发中分为Controller层,Service层,Repository层;每一层中会定义响应的VO(View Object)、BO(Business Object)、Entity
+    Controller层负责暴露接口给前端调用
+    Service层负责核心业务逻辑 
+    Repository层负责数据读写 
+
+违反面向对象编程风格的典型代码设计:
+    1. 滥用getter、setter方法 :在设计实现类的时候，除非真的需要，否则尽量不要给属性定义setter方法，防止集合内部数据被修改
+    2. Constants类，Utils类的设计问题
+
+标准的Java开发库:
+    JDK 
+    Apache Commons 
+    Google Guava 
 ```
 
 
