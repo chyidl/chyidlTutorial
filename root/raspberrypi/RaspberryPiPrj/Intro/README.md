@@ -79,6 +79,16 @@ This will take a few minutes, depending on the image file size. You can check th
 $ sudo diskutil eject /dev/disk4
 ```
 
+SSH (Secure Shell)
+------------------
+> can access the command line of a Raspberry Pi remotely from another computer or device on the same network using SSH.
+* Enable SSH on a headless Raspberry Pi (add file to SD card on another machine)
+```
+For headless setup, SSH can be enabled by placing a file named ssh, without any extension, onto the boot partition of the SD card from another computer. When the Pi boot, it looks for the ssh file. If it is found, SSH is enabled and the file is deleted. The content of the file does not matter; it could contain text, or nothing at all.
+
+If you have loaded Raspbian onto a blank SD card, you will have two partitions. The first one, which is the smaller one, is the boot partition. Place the file into this one.
+```
+
 Backup up SD Card on macOS 
 --------------------------
 ```

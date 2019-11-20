@@ -621,8 +621,140 @@ ReentrantLock是重复锁，再入锁通过代码直接调用lock()方法获取�
         1. 原子性: 相关操作不会中途被其他线程干扰，可以通过同步机制实现
         2. 可见性: 一个线程修改某个共享变量、其状态能够立即被其他线程知晓，将线程本地状态反映到主内存上，volatile负责保证可见性
         3. 有序性: 保证线程内串行语义，避免指令重排
-    
+synchronized: 无法进行公平性的选择，synchronized代码是由一对monitorrenter/monitorexit指令实现，Minitor对象是同步的基本实现单元
+    所谓的synchronzied锁的升级、降级就是JVM优化synchronized运行的机制，当JVM检测到不同的竞争状况，会自动切换到适合的锁实现，这种切换就是锁的升级、降级
+    JVM提供三种不同的Monitor实现:
+        1. 偏斜锁Biased Locking : 没有竞争出现，默认使用偏斜锁,JVM利用CAS(Compare and Swap)在对象头上Mark word部分设置线程ID。表示对象偏向于当前线程
+        2. 轻量级锁 : 当另外线程试图锁定某个已经被偏斜过的对象,JVM需要撤销revoke偏斜锁,切换到轻量级锁实现,轻量级锁依赖CAS操作Mark Word试图获取锁，如果成功就使用普通轻量级锁，否则进入重量级锁
+        3. 重量级锁: 
+    锁的降级当JVM进入安全点(SafePoint)时候，会检查是否有闲置的Monitor，然后试图进行降级 
+    synchronized是JVM内部的Intrinsic Lock,偏斜锁、轻量级锁、重量级锁的实现不再核心类库，而是在JVM代码中
+    ReentrantReadWriteLock: 读写锁实现
+    StampedLock:提供读写锁的同时还支持优化读模式。优化读基于假设，大多数情况下操作并不会和写操作冲突，其逻辑是先试着修改，然后通过validate方法确认是否进入写模式，如果没有进入，就成功避免开销，如果进入，则尝试获取读锁
 
+ReentrantLock: 再入锁：表示当一个线程试图获取一个他已经获取的锁时，这个获取动作就自动成功，这是对锁获取粒度的一个概念，就是锁的持有是以线程为单位而不是基于调用次数。
+    ReentrantLock fairlock = new ReentrantLock(true);   // 再入锁设置公平性 fairness 
+    公平性是指在竞争场景中，当公平性为真时，会倾向于将锁赋予等待时间最久的线程，公平性时减少线程“饥饿”.
+自旋锁(spin-wait, busy-waiting):
+```
+    - 线程的声明周期和状态切换
+```
+Java线程不允许启动两次，第二次start()调用会抛出java.lang.IllegalThreadStateException,运行时异常，多次调用被认为是编译错误.
+java.lang.Thread.State: 枚举类型
+    NEW: 新建表示线程被创建出来还没有真正启动的状态,可以认为是Java内部状态 
+    RUNNABLE:就绪，表示线程已经在JVM中执行，在就绪队列中排队等待分配计算资源 
+    RUNNING:
+    BLOCKED:阻塞，阻塞表示线程在等待Monitor lock
+    WAITING：等待,表示正在等待其他线程采取操作，Thread.join()会让线程进入等待状态
+    TIMED_WAIT:计时等待 public final native void wait(long timeout) throws InterruptedException; 
+    TERMINATED:终止，
+
+线程是操作系统调度的最小单元,一个进程可以包含多个线程，作为任务的真正运作者，有自己的栈Stack,寄存器Register,本地存储Thread Local.会和进程内其他线程共享文件描述符、虚拟地址空间
+线程分为内核线程、用户线程: Java 1.2之后JDK已经抛弃所谓的Green Thread(用户调度的线程) 现在的模型是一对一映射到操作系统内核线程
+线程中的yield是告诉调度器，主动让出CPU.
+基类Object提供一些基础wait/notify/notifyAll方法，
+并发类库中，CountDownLatch.await()会让当前线程进入等待状态，知道latch被基数为0，可以看作线程间通信的Signal.
+ThreadLocal:Java提供的一种保存线程私有信息的机制，在整个线程声明周期内有效。
+```
+    - 死锁
+```
+死锁是一种特定的程序状态,指两个或多个线程之间，由于相互持有对方需要的锁，而永久处于阻塞的状态
+定位死锁常使用jstack工具获取线程栈,然后定义相互之间的依赖关系。JConsole可以在通行界面进行有限的死锁检测
+线程调度依赖于操作系统调度器，可以通过优先级进行影响但是具体是不确定
+
+首先使用jps或ps确定进程ID (jps - Monitoring Tools)
+然后调用jstack获取线程栈 $ jstack your_pid
+FindBugs: 静态代码分析
+```
+    - Java并发包工具类 
+```
+java.util.concurrent包 
+    1.提供比synchronized更加高级的各种同步结构, 
+        CountDownLatch(倒计时锁存器): 不可重置，无法重用，countDown/await; CountDownLatch操作的是事件
+        CyclicBarrier(循环屏障):可以重用， await, 当所有都调用await，才会继续进行任务，并自动进行重置
+        Semaphore(信号量): 通过控制一定数量的允许(permit)的方式，来达到限制通用资源访问的目的
+    2.各种线程安全的容器: 
+        ConcurrentHashMap: 侧重放入或者获取速度，不在乎顺序
+        ConcurrentSkipListMap: 大量数据非常频繁的修改，(O(nlogn))
+        CopyOnWriteArrayList:  
+        CopyOnWriteArraySet:是通过包装CopyOnWriteArrayList实现的
+        CopyOnWrite: 任何修改操作(add, set, remove)都会拷贝原数据，修改后替换原来的数据 - 这种数据结构适合读多写少的操作
+    3.各种并发队列实现: ArrayBlockingQueue, SynchronousQueue, PriorityBlockingQueue 
+    4.Executor框架,可以创建各种不同类型的线程池，调度任务运行
+```
+    - ConcurrentLinkedQueue vs. LinkedBlockingQueue 
+```
+Concurrent类型基于lock-free,在常见的多线程访问场景，一般可以提供较高吞吐量
+LinkedBlockingQueue内部则基于锁，并提供BlockingQueue等待性方法
+java.util.concurrent包提供的容器(Queue, List, Set)、Map从名称区分为
+    Concurrent: 没有类似CopyOnWrite容器相对较重的修改开销;提供较低的遍历一致性
+    CopyOnWrite: 
+    Blocking
+Deque: 支持对队列头尾进行插入和删除
+    尾部插入: addLast(e), offerLast(e)
+    尾部删除: removeLast(), pollLast()
+    ConcurrentLinkedDeque:基于CAS无锁技术，不需要在每次操作时候使用锁，所以扩展性表现更优异
+    LinkedBlockingDeque
+ArrayBlockingQueue:是最典型的有界队列,内部final数组保存数据，数组的大小决定队列的边界,
+LinkedBlockingQueue:容易被误解为无边界，其实行为和内部代码都是基于有界的逻辑实现，只不过我们没有在创建队列时指定容量，那么容量限制自动被设置为Integer.MAX_VALUE.成为无界队列
+SynchronousQueue:每个删除操作都要等待插入操作，每个插入操作都要等待删除操作，内部容量是0, 是Executors.newCachedThreadPool()的默认队列
+PriorityBlockingQueue:无边界的优先队列，
+DelayedQueue和LinkedTransferQueue:无边界队列，put操作不会出现BlockingQueu那种等待情况
+
+Queue被广泛使用在生产者-消费者场景
+ArrayBlockingQueue要比LinkedBlockingQueue空间利用率要紧凑，不需要创建所谓节点，初始化分配阶段需要一段连续的空间，所以初始化内存需求比较大
+LinkedBlockingQueue吞吐量优于ArrayBlockingQueue,因为实现更加细粒度的锁操作 
+ArrayBlockingQueue实现比较简单，性能更好预测，表现稳定
+```
+    - Java并发类库中线程池有哪些?
+```
+线程是不能够重复启用，创建和销毁线程存在一定的开销，可以利用线程池技术来提高系统资源利用率，并简化线程管理
+Executors目前提供5种不同的线程池创建配置
+    newCachedThreadPool(): 用于处理大量短时间工作任务的线程池，会试图缓存线程并重用，当无缓存线程可用时，就会创建新的工作线程,如果线程闲置的时间超过60秒，则被终止并移出缓存，长时间闲置时，这种线程池不会消耗资源，内部使用SynchronousQueue作为工作队列.
+    newFixedThreadPool(int nThreads): 重用指定数目nThreads的线程，使用的无界的工作队列，任何时候最多有nThreads工作线程是活跃的，使用LinkedBlockingQueue.
+    newSingleThreadExecutor(): 工作线程数目限制为1，操作一个无界的工作队列，保证所有任务都是被顺序执行，最多会有一个任务处于活动状态，并且不允许使用者更改线程池实例
+    newSingleThreadScheduledExecutor() vs. newScheduledThreadPool(int corePoolSize): 创建一个ScheduledExecutorService,可以进行定时或周期行的工作调度，区别在于单一工作线程还是多个工作线程.
+    newWorkStealingPool(int parallelism): Java8加入，内部构建ForkJoinPool,利用Work-Stealing算法，并行处理任务，不保证处理顺序
+
+ThreadPoolExecutor: 
+ScheduledThreadPoolExecutor: 是ThreadPoolExecutor的扩展，主要增加了调度逻辑
+ForkJoinPool: 是为ForkJoinTask定制的线程池，
+
+应用于线程池交互和线程池内部工作过程
+    应用 --> [提交新任务 execute()/submit()] --> 工作队列 --> [WorkerThread...] 工作线程管理(ThreadFactory) 
+线程池需要在运行过程中管理线程创建、销毁
+    corePoolSize: 核心线程数
+    maximumPoolSize: 线程不够时能够创建的最大线程数
+    keepAliveTime TimeUnit: 指定额外的线程能够闲置多久
+    workQueue: 工作队列，必须是BlockingQueue.
+
+线程池容易出现的问题:
+    1. 避免任务堆积: newFixedThreadPool是创建指定数目的线程，但是工作队列是无界，如果工作线程数目太少，导致处理更不上入队的速度，很有可能占用大量的系统内存，甚至出现OOM，诊断可以使用jmap工具，查看是否有大量的任务对象入队
+    2. 避免过度扩展线程: jstack工具检查当前线程，避免死锁。尽量避免使用线程池时操作ThreadLocal
+如果线程任务主要进行CPU密集型计算,通常建议按照CPU核数目N或者N+1
+如果较多的IO操作较多，可以参考Brain Goetz推荐
+    线程数 = CPU核心数 * （1 + 平均等待时间/平均工作时间）
+```
+    - AtomicInteger CAS
+```
+AtomicInteger是对int类型的封装,提供原子性的访问和更新操作，其原子性的实现是基于CAS(compare-and-swap)技术
+CAS(Compare and swap): 利用CAS指令进行更新，如果当前数值未变，代表没有其他线程进行并发修改，则成功更新，否则可能进行重试或者返回失败结果
+CAS是Java并发中所谓lock-free机制的基础
+atomic包提供最常用的原子性数据类型，甚至是引用、数组等相关原子类型和更新操作工具,是很多线程安全程序的首选
+AQS(AbstractQueuedSynchronized) : 
+```
+    - 类加载过程 
+```
+Java通过引入字节码和JVM机制，提供强大的跨平台能力
+Java类加载过程:
+    1. 加载(loading)阶段:是Java将字节码数据从不同的数据源(jar文件、class文件、网络数据源)读取到JVM中，并映射为JVM认可的数据结构(Class 对象);如果输入的数据不是ClassFile的结构，则会抛出ClassFormatError 
+    2. 链接(Linking)阶段: 
+        2.1: 验证(Verification): JVM需要验证字节信息符合Java虚拟机规范;防止恶意信息或者不合规的信息危害JVM运行,验证阶段可能触发更多class的加载
+        2.2: 准备(Preparation): 创建类或接口中的静态变量，并初始化静态变量的初始值。分配所需要的内存空间，不去执行更进一步的JVM指令
+        2.3: 解析(Resolution): 将常量池中的符号引用symbolic reference替换为直接引用.
+    3. 初始化(Initialization)阶段: 直接执行类初始化的代码逻辑，包括静态字段赋值动作,以及执行类定义中的静态初始化内的逻辑，
+
+双亲委派模型:当类加载器(Class-Loader)试图加载某个类型的时候，除非父加载器找不到响应类型，否则尽量将这个任务代理给当前加载器的父加载器去做，使用委派模型的目的是避免重复加载Java类型
 ```
 
 * 3. Java应用开发扩展
