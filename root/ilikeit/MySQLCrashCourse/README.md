@@ -356,6 +356,14 @@ MySQL Architecture and Components
             |             |
             |-> 查询缓存 <-|
 Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor --> Storage Engine.
+MySQL可以分为Server层和存储引擎层:
+    1. Server层:连接器、查询缓存、分析器、优化器、执行器、(内置函数日期、时间、数学、加密函数),所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图
+        内置函数:
+
+    2. 存储引擎层:负责数据的存储和提取
+        InnoDB: It provides transaction-safe(ACID compliant) tables, supports FOREIGN KEY referential-integrity constraints. It supports commit, rollback, and crash-recovery ccapabilities to protect data. It also support row-level locking. It's "consistent nonlocking reads" increases performance when used in a multiuser environment. It stores data in clustered indexes which reduces I/O for queries based on primary keys.
+        MyISAM:
+        Memory:
 
 **Connector连接器**
     * $ mysql -h$host -P$port -u$user -p 
@@ -2286,3 +2294,25 @@ Step 6 - Change port
     Once your finished importing your tables, you are free to change port setting in your my.cnf.
     Of course reboot MySQL afterwards. It should come back and start working just as before the crash.
 ``` 
+
+Enable MySQL slow query log and analyze 
+---------------------------------------
+* Enable the MySQL slow query log in the MySQL configuration file my.cnf 
+```
+$ sudo vim /etc/my.cnf 
+    # Add the records below under the [mysqld] section 
+    slow_query_log = 1
+    slow_query_log_file = /var/log/mysql-slow.log 
+    # long_query_time - time taken by an SQL query to be executed in seconds. If a query takes longer than the value specified, this query will be recorded in the slow query log file.
+    long_query_time = 10  
+
+Create the slow query logfile /var/log/mysql-slow.log and adjust ownership on it:
+    $ touch /var/log/mysql-slow.log
+    $ chown mysql:mysql /var/log/mysql-slow.log
+
+Restart MySQL. 
+    $ sudo systemctl restart mysqld 
+
+Start monitoring the slow query logfile. Use the command mysqldumpslow to analyze it and print summary of the slow query logfile.
+    $ mysqldumpslow -a /var/log/mysql-slow.log 
+```

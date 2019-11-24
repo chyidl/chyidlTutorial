@@ -748,6 +748,7 @@ AQS(AbstractQueuedSynchronized) :
 Java通过引入字节码和JVM机制，提供强大的跨平台能力
 Java类加载过程:
     1. 加载(loading)阶段:是Java将字节码数据从不同的数据源(jar文件、class文件、网络数据源)读取到JVM中，并映射为JVM认可的数据结构(Class 对象);如果输入的数据不是ClassFile的结构，则会抛出ClassFormatError 
+        加载阶段(Loading)是用户参与的阶段，可以自定义类加载器，实现自己的类加载过程
     2. 链接(Linking)阶段: 
         2.1: 验证(Verification): JVM需要验证字节信息符合Java虚拟机规范;防止恶意信息或者不合规的信息危害JVM运行,验证阶段可能触发更多class的加载
         2.2: 准备(Preparation): 创建类或接口中的静态变量，并初始化静态变量的初始值。分配所需要的内存空间，不去执行更进一步的JVM指令
@@ -755,22 +756,382 @@ Java类加载过程:
     3. 初始化(Initialization)阶段: 直接执行类初始化的代码逻辑，包括静态字段赋值动作,以及执行类定义中的静态初始化内的逻辑，
 
 双亲委派模型:当类加载器(Class-Loader)试图加载某个类型的时候，除非父加载器找不到响应类型，否则尽量将这个任务代理给当前加载器的父加载器去做，使用委派模型的目的是避免重复加载Java类型
+
+Oracle JDK 内建的类加载器
+    Bootstrap(启动类加载器): 加载jre/lib下面的jar文件
+    Extension or Ext Class-Loader(扩展类加载器): 负责加载放在jre/lib/ext/目录下面的jar包，这就是所谓的extension机制
+    Application or App Class-Loader(应用类加载器):就是加载classpath的内容，
+
+类加载器三个基本特征:
+    双亲委派模型: 上下文加载器 
+    可见性: 子类加载器可以访问父加载器加载的类型，反过来是不允许
+    单一性: 由于父加载器的类型对于子加载器是可见的，所以父加载器中加载过的类型，不会在子加载器中重复加载。
+
+Java平台模块化系统(JPMS):Java SE的源代码被划分为一系列模块
+
+自定义加载器过程:
+    通过指定名称，找到二进制实现;然后创建Class对象，并完成类加载过程(二进制信息到Class对象的转换通常依赖defineClass) 
+```
+    - 运行时动态生成Java类
+```
+通常的开发过程是，开发者编写Java代码，调用javac编译成class文件，然后通过类加载再入JVM，就称为应用运行时可以使用的Java类。
+    ProcessBuilder启动javac进程
+    Java Compiler API是JDK提供的标准API，提供与javac对等的编译器功能
+```
+    - JVM内存区域划分 
+```
+    JVM内存区域:
+        1. 程序计数器(PC, Program Counter Register): JVM中每个线程都有自己的程序计数器，并且任何时间一个线程都只有一个方法在执行，程序计数器会存储当前线程正在执行的Java方法的JVM指令地址。如果是在执行本地方法，则是未指定值undefined
+        2. Java虚拟机栈(Java Virtual Machine Stack): JVM中每个线程创建都会创建一个虚拟机栈，其内部保存一个个的栈帧(Stack Frame),对应一次次Java方法调用.JVM直接对Java栈的操作只有两个，栈帧的入栈和出栈。 
+        3. 堆(Heap): Java内存管理的核心区域,存放Java对象实例,堆被所有线程共享，虚拟机启动指定的"Xmx"之类参数就是指定最大堆空间指标
+            堆是垃圾收集器终点照顾的区域，堆内空间被不同垃圾收集器进一步细分，最有名的就是新生代、来年代的划分 
+        4. 方法区(Method Area):JVM所有线程共享的内存区域,存储元(Meta)数据,例如类结构信息、运行时的常量池、字段、方法代码；又称为永久代(Permanent Generation) JDK 8移除永久代，增加元数据区(Metaspace)
+        5. 运行时常量池(Run-Time Constant Pool): Java常量池可以存放各种常量信息，不管是编译期生成的各种字面量,还是需要在运行时决定的符号引用。
+        6. 本地方法栈(Native Method Stack): 每个线程都创建一个
+    
+    直接内存(Direct Memory)区域: Direct Buffer直接分配的内存
+    Code Cache: JIT Compiler在运行时对热点方法进行编译
+
+OOM (OutOfMemoryError):没有空闲内存，并且垃圾收集器也无法提供更多内存
+除了程序计数器，其他区域都有可能会因为空间不足发生OutOfMemoryError
+    堆内存不足是最常见的OOM原因: java.lang.OutOfMemoryError:Java heap space. 
+    Java虚拟机栈和本地方法栈:如果无限递归调用，JVM会抛出StackOverFlowError，如果JVM试图扩展占空间的时候失败，会抛出OutOfMemoryError.
+    java.lang.OutOfMemoryError: PermGen space 
+    java.lang.OutOfMemoryError: Metaspace 
+
+监控和诊断JVM堆内和堆外内存使用?
+    综合图形化工具JConsole、VisualVM(Oracle JDK 9开始，VisualVM不包含在JDK安装包中)
+    jstat和jmap工具提供命令行运行时检查
+    Tomcat(Java EE 服务器) 内存管理相关功能
+    GC日志
+    NMT(Native Memory Tracking)：堆外内存中的直接内存
+    JMC(Java Mission Control):
+
+Java堆划分:
+    1. 新生代(Young Generation): 是大部分对象创建和销毁的区域，
+        Eden: Hotspot JVM有一个概念叫做Thread Local Allocation Buffer (TLAB):JVM为每一个线程分配一个私有缓存区域
+        S0:
+        S1:
+        Vitual: 
+    2. 老年代(Old Generation): 放置长生命周期的对象，都是从Survivor区域拷贝过来的对象
+    3. 永久代(Permanent Generation): 早期Hotspot JVM的方法区实现方式,存储Java类元数据、常量池、Intern字符串缓存
+JVM参数：
+    -Xmx value : 最大堆体积 
+    -Xms value : 初始的最小堆体积 
+    -XX:NewRatio=value  : 老年代和新生代的比例 default = 3,意味着老年代是新生代的3倍大，换句话说，新生代是堆大小的1/4 
+    -XX:NewSize=value: 设定新生代大小 
+    -XX:SurvivorRatio=value: Eden和Survivor的大小是按照比例设置，如果SurvivorRatio是8，那么Survivor区域是Eden的1/8，也就是新生代的1/10. YoungGen = Eden + 2 * Survivor
+Virtual区域代表就是暂时不可用uncommitted的空间
+    -XX:MaxMetaspaceSize=value  # 调整Class内存占用(Java类元数据所占用的空间)
+    -XX:InitialBootClassLoaderMetaspaceSize=value   # 调整启动类加载器元数据区
+    -XX:NativeMemoryTracking=summary    # 开启NMT
+    -XX:+UnlockDIagnosticVMOptions -XX:PrintNMTStatistics   # 应用退出时打印NMT统计信息
+    -XX:InitialCodeCacheSize=value  # 限制初始值的大小
+    -XX:ReservedCodeCacheSize=value # 
+    -XX:MaxTenuringThreshold=<N>    # 阀值设定
+➜  learn-java java -XX:NativeMemoryTracking=summary -XX:+UnlockDiagnosticVMOptions -XX:+PrintNMTStatistics HelloWorld
+Hello World!
+
+Native Memory Tracking:
+
+Total: reserved=268766KB, committed=20174KB
+-                 Java Heap (reserved=225280KB, committed=14336KB)          # Java堆
+                            (mmap: reserved=225280KB, committed=14336KB)
+
+-                     Class (reserved=4455KB, committed=2511KB)             # Java类元数据占用的空间
+                            (classes #497)
+                            (  instance classes #433, array classes #64)
+                            (malloc=55KB #530)
+                            (mmap: reserved=4400KB, committed=2456KB)
+                            (  Metadata:   )
+                            (    reserved=4400KB, committed=2456KB)
+                            (    used=2370KB)
+                            (    free=86KB)
+                            (    waste=0KB =0.00%)
+
+-                    Thread (reserved=3809KB, committed=261KB)  # Java线程(包括程序主线程、Cleaner线程)
+                            (thread #10)
+                            (stack: reserved=3776KB, committed=228KB)
+                            (malloc=20KB #62)
+                            (arena=12KB #19)
+
+-                      Code (reserved=33032KB, committed=1556KB)    # JIT cimpiler存储编译热点
+                            (malloc=8KB #161)
+                            (mmap: reserved=33024KB, committed=1548KB)
+
+-                        GC (reserved=754KB, committed=74KB)
+                            (malloc=14KB #137)
+                            (mmap: reserved=740KB, committed=60KB)
+
+-                  Compiler (reserved=99KB, committed=99KB)     # JIT开销
+                            (malloc=1KB #22)
+                            (arena=98KB #3)
+
+-                  Internal (reserved=185KB, committed=185KB)
+                            (malloc=153KB #811)
+                            (mmap: reserved=32KB, committed=32KB)
+
+-                    Symbol (reserved=835KB, committed=835KB)
+                            (malloc=315KB #2271)
+                            (arena=520KB #1)
+
+-    Native Memory Tracking (reserved=47KB, committed=47KB)
+                            (malloc=1KB #38)
+                            (tracking overhead=46KB)
+
+-               Arena Chunk (reserved=204KB, committed=204KB)
+                            (malloc=204KB)
+
+-                   Logging (reserved=2KB, committed=2KB)
+                            (malloc=2KB #178)
+
+-                 Arguments (reserved=9KB, committed=9KB)
+                            (malloc=9KB #452)
+
+-                    Module (reserved=40KB, committed=40KB)
+                            (malloc=40KB #1027)
+
+-              Synchronizer (reserved=11KB, committed=11KB)
+                            (malloc=11KB #123)
+
+-                 Safepoint (reserved=4KB, committed=4KB)
+                            (mmap: reserved=4KB, committed=4KB)
+```
+    - Java常见垃圾收集器
+```
+Oracle JDK:
+    垃圾收集器(GC, Garbage Collector): 
+        Serial GC: "Serial"体现在收集器工作是单线程，并且在垃圾收集过程中会进入"Stop-The-World"状态, Client模式下JVM的默认选择.
+            老年代实现 Serial Old: 标记-整理(mark-Compact)算法 
+            -XX:+UseSerialGC    # Serial GC对应的JVM参数 
+        ParNew GC: 实际是Serial GC多线程版本，配合老年代CMS GC工作
+            -XX:+UserConcMarkSweepGC -XX:+UseParNewGC 
+        CMS(Concurrent Mark Sweep) GC: 基于标记-消除(Mark-Sweep)算法,设计目标是尽量减少停顿时间，存在内存碎片化问题，所以难以避免在长时间运行情况下发生full GC，导致停顿。并发(Concurrent)，CMS占用更多CPU资源，和用户线程争抢。
+        Parrallel GC: 早期JDK8版本中，是server模式JVM的默认GC选择,称作吞吐量优先的GC，特点是新生代和老生代GC并行进行
+            -XX:+UseParallelGC # 开启Parrallel GC 
+            -XX:MaxGCPauseMillis=value  # 设定暂停时间 
+            -XX:GCTimeRatio=N   # GC时间和用户时间比例 = 1/(N+1)
+        G1 GC: Oracle JDK 9以后默认GC选项
+    
+自动垃圾收集:
+    1. 对象实例收集,主要是两种基本算法,应用计数和可达性分析
+        引用计数算法: Java中没有选择引用计数，是因为其存在一个基本的难题，很难处理循环引用关系
+        可达性分析: JVM会把虚拟机栈和本地方法栈中正在引用的对象、静态属性引用的对象和常量,作为GC Roots.
+
+常见的垃圾收集算法:
+    复制Copying算法: 将活着的对象复制到to区域，拷贝过程中将对象顺序放置，可以避免内存碎片化
+    标记-清除(Mark-Sweep)算法: 首先进行标记工作，标识出要回收的对象，然后进行清除。
+    标记-整理(Mark-Compact)算法: 类似于标记-清除,但为避免内存碎片化,会在清理过程中将对象移动，确保移动后的对象占用连续的内存空间.
+老年代GC又叫做Major GC.
+对整个堆进行清理叫做Full GC.
+Epsilon GC: 这是个不做垃圾收集的GC
+ZGC: 
+Zing: 低延迟GC 
+Shanandoah:
+```
+    - GC调优
+```
+内存占用(footprint): 
+延时(latency):
+吞吐量(throughput):
+jstat查看GC相关状态,开启GC日志，
+
+G1 GC内部结构和主要机制:
+    Eden:
+    Survivor:
+    Old:
+    Humongous: 超过region 50% 大小的对象归类为Humongous对象
+G1 GC选择是复合算法:
+    新生代: G1采用是并行的复制算法，会发生Stop-The-World暂停 
+    老年代: 大部分情况下都是并发标记，而整理Compact则是和新生代GC时捎带进行，并且不是整体性的整理，而是增量进行
+        老年代回收则依靠Mixed GC,
+新生代GC(Young GC)叫做Minor GC 
+老年代GC(Old GC)叫做Major GC
+
+G1 GC很多开销都是来源与Remembered Set.
+```
+    - Java内存模型 
+```
+Java Memory Model, JMM (Java内存模型): 
+    Happen-before是Java内存模型中保证多线程操作可见性的机制
+    线程中执行的每个操作，都保证happen-before后面的操作，保证基本的程序顺序规则
+    对于volatile变量的写操作，保证happen-before在随后该变量的读取操作
+    对于一个锁的解锁操作，保证happen-before加锁操作
+    对象构建完成，保证happen-before于finalizer的开始动作 
+```
+    - Java 运行在Docker容器环境 
+```
+Docker的内存和CPU资源限制是通过CGroup(Control Group)实现
+    基于namespace,Docker为每个容器提供单独的命名空间,对网络、PID、用户、IPC通信、文件系统挂载点实现隔离 
+    基于CGroup，Docker管理CPU、内存、磁盘IO等计算机资源
+Ergonomics机制
+    JVM会根据检测到的内存大小，设置最初启动时堆大小为系统内存的1/64， 并将堆最大值设置为系统内存的1/4 
+    JVM检测到系统CPU核心数，直接影响到Parallel GC的并行线程数据和JIT compiler线程数目
+```
+    - Java应用开发的注入攻击
+```
+Inject(注入式): 基本特征是程序允许攻击者将不可信的动态内容注入到程序中，并将其执行，
+原则上提供给动态执行能力的语言特征需要提防发生注入攻击
+    SQL注入攻击:
+    操作系统命令注入:
+    XML注入攻击: 
+运行时安全机制: 
+    类加载过程中，进行字节码验证，以防止不合规的代码影响JVM运行或载入其他恶意代码
+Java提供的安全框架API:
+    加密、解密API
+    授权、鉴权API
+JDK继承安全工具:
+    keytool: 可以管理安全场景中不可或缺的秘钥、证书 
+    jarsigner: 对jar文件签名和验证
+哈希碰撞发起拒绝服务攻击(DOS, Denial-Of-Service attack)
+
 ```
 
 * 3. Java应用开发扩展
 ```
+
 ```
 
 * 4. Java安全基础 
 ```
+DOS(拒绝服务)攻击
+    DoS是一种常见的网络攻击，最常见的表现是利用大量机器发送请求，将目标网站的带宽或者其他资源耗尽，导致其无法响应正常用户的调用.
+    哈希碰撞攻击: 耗尽有限CPU和线程资源
+    类似加密、解密、徒刑处理等计算密集型任务、都需要防范被恶意滥用，以免攻击者利用直接调用或者间接调用接触方式，耗尽系统资源
+    利用Java构建类似上传文件或者接受输入的服务，需要对消耗系统内存或存储的上限控制
+    Java程序中明确��放资源:(文件描述符、数据库连接、再入锁)
+序列化仍然是个安全问题频发的场景
+    敏感信息不要序列化, transient关键字将其保护起来
+
+1. 早期设计阶段， 就由安全专家组对新特性进行风险评估 
+2. 开发过程中，code review阶段，引用OpenJDK自身定制的代码规范 
+3. 利用多种静态分析工具FindBugs, Parfait，帮助早期发现潜在的安全风险，并对响应问题采取零容忍态度
+
+JFR(Java Flight Recorder): 监控应用是否大量出现某种类型的异常 
+监控Java服务自身，GC日志中是否观察到Full GC等恶劣情况出现
+jstat:工具获取内存使用统计信息
+jstack:检查是否出现死锁
+尽量少暴露信息
 ```
 
 * 5. Java性能基础
 ```
+性能分析方法论:
+    1. 自上而下: 从应用的顶层、逐步深入到具体的不同模块，或者更近一步的技术细节单元
+    2. 自下而上：从类似CPU这种硬件底层判断类似Cache-Miss之类的问题和调优机会,出发点是指令级别优化
+系统性能分析:
+    CPU: 使用top命令查看负载状况
+        top -H  # -H代表thread模式
+        vmstat: 查看上下文切换的数量
+        iostat: 查看磁盘状况
+    JVM内存性能分析  
+        利用JMC，JConsole工具进行运行时监控
+        GC日志、诊断Full GC, Minor GC 或者引用堆积
+    应用Profiling:利用侵入式手段，收集程序运行时的细节，定位性能问题瓶颈
+        生产环境使用JFR+JMC做Profiling
+        $ jcmd <pid> JFR.start duration=120s filename=myrecording.jfr 
+        使用JMC打开.jfr文件进行分析
+
+lambda: 不算语法糖，是一种新的工作机制，首次调用时，JVM需要为其构建CallSite实例，
+
+基准测试的目的和特征 
+    基准测试可以定义性能对比的明确条件、具体的指标、进而保证得到定量的、可重复的对比数据
+    微基准测试(Micro-Benchmark): 
+        大多数是API级别的验证
+构建微基准测试:
+    JMH:是Hotspot JVM团队开发,除了支持完整的基准测试过程、包括预热、运行、统计和报考
+
+JVM优化Java代码?
+    运行时(runtime)优化:解释执行和动态编译通用的一些机制
+    即时编译(JIT)优化:热点代码以方法为单位转换成机器码，直接运行在底层硬件之上
+
+JVM回根据统计信息，动态决定什么方法被编译、什么方法解释执行
+即时编译器(JIT)对Java编译的整个单元是整个方法，通过对方法调用的技术统计，甄别出热点方法，编译为本地代码
+JIT可以看作是基于两个计数器实现，方法计数器和回边计数器提供给JVM统计数据。用以定位热点代码
+
+-XX:+PrintCompilation   # 打印编译发生的细节
+-XX:UnlockDiagnosticVMOptions -XX:+LogCompilation -XX:LogFile=<your_file_path>  # 输出更多编译的细节
+-XX:+PrintInlining  # 打印内联的发生
+-XX:CompileThreashold=N     # 调整JIT默认门限
+-XX:-UseCounterDecay    # 关闭计数器衰减
+JIT编译的代码是存储在Code Cache中，Code Cache 是存在大小限制，而且不会动态调整  
+-XX:ReservedCodeCacheSize=<SIZE>
+-XX:InitialCodeCacheSize=<SIZE> # 调整Code Cache初始值
+
+JVM的编译器线程数目与我们选择的模式有关，选择client模式默认是只有一个编译线程；server模式则默认是两个；分层编译模式会根据CPU内核数据计算C1 和 C2的数值
+-XX:CICompilerCount=N 
+-XX:UseBiasedLocking    # 关闭偏斜锁
+```
+```
+Isolation Level(隔离级别):
+    MySQL InnoDB引擎基于MVCC(Multi-Versioning Concurreny Control)和锁的复合实现
+    读未提交(Read uncommited): 事务可以看到其他尚未提交的修改，允许脏读出现
+    读已提交(Read commited): 事务能够看到其他事务已经提交的修改,保证不会看到任何中间性状态，不保证再次读取时能够获取同样的数据，允许不可重复读和幻想读出现
+    可重复读(Repeatable reads): 保证同一事务中多次读取的数据是一致的，这是MySQL InnoDB引擎的默认隔离级别
+    串行化(Serializable):并发事务之间是串行化，读取获取共享读锁，更新需要获取排他写锁，SQL使用WHERE语句需要获取区间锁(MySQL以GAP锁形式实现),可重复读级别默认也会使用
+
+悲观锁和乐观锁?
+    "悲观锁":操作共享数据时，认为数据出现冲突的可能性更大
+        SELECT ... FOR UPDATE 
+    “乐观锁”:操作共享数据时，大部分情况下不会出现冲突，进而决定是否采取排他措施
+        利用CAS机制，并不会对数据加锁，而是通过对比数据的时间戳或者版本号，实现乐观锁需要的版本判断
+
+高并发场景中的数据库解决方案:
+    读写分离、分库分表、适应缓存
+
+Hibernate: O/R Mapping 框架 
+    数据库到Java对象的映射，提供强大的持久化功能，大量使用Lazy-load等技术，为了屏蔽数据库差异和降低维护开销，Hibernate提供了类SQL和HQL，可以自动生成某种数据库特定的SQL语句
+
+MyBaties: 更加以SQL为中心，侧重SQL和存储过程
+
+Spring JDBC Template: 更加接近SQL层面
+
+Spring Bean的生命周期和作用域?
+    Spring Bean的生命周期比较复杂，可以分为创建和销毁两个过程
+        创建Bean
+            1. 实例化Bean对象 
+            2. 设置Bean属性 
+            3. 通过Aware接口声明依赖关系，会注入Bean对容器基础设施层面的依赖，具体包括BeanNameAware,BeanFactoryAware,ApplicationContextAware,分别注入Bean ID,Bean Factory,Applicaion Context.
+            4. 调用BeanPostProcessor的前置初始化方法postProcessBeforeInitialization. 
+            5. 如果实现了InitializingBean接口，则会调用afterPropertiesSet方法
+            6. 调用Bean自身定义的init方法
+            7. 调用BeanPostProcessor的后置初始化方法postProcessAfterInitialization. 
+        销毁：Spring Bean销毁过程会依次调用DisposableBean的destroy方法和Bean自身定制的destroy方法。 
+
+Spring Bean五个作用域:
+    Singleton: 这是Spring默认作用域，为每个IOC容器创建唯一一个Bean实例(适合无状态的情况)
+    Prototype: 针对每一个getBean请求，容器都会单独创建一个Bean实例(适合有状态的Bean)
+    (Web容器-支持另外三种作用域)
+    Request: 为每个HTTP请求创建单独的Bean实例 
+    Session:
+    GlobalSession:用于Portlet容器
+
+Spring基本机制
+    控制反转(Inversion of Control)或依赖注入(Dependency Injection): 
+    AOP(切面编程机制):切面编程为了更好地模块化，通过AOP机制可以将横跨多个不同模块的代码抽离出来
+        Aspect: 方面:是跨不同Java类层面的横切性逻辑，可以是XML文件中配置的普通类，也可以是类代码中用"@Aspect"注解去声明，在运行时，Spring框架会创建Advisor指代它，其内部会包括切入时机Pointcut和切入的动作Advice.
+        Join Point: 是Aspec可以切入的特定点，在Spring里面只有方法可以作为Join Point.
+        
+Spring是Spring Framework，内部包含依赖注入、事件机制核心模块，事务、 O/R Mapping等功能组成是的数据访问模块，以及Spring MVC等Web框架
+
+Spring Boot: 提供典型应用领域的快速开发基础，是以应用为中心的一个框架集合 
+Spring Cloud: 提供构建分布式系统的通用模块，包含服务发现和服务注册，分布式配置管理、负载均衡、分布式诊断、可以简化微服务的构建
+
+Java标准NIO类库
+    Netty在基础的NIO类库之上进行很多改进
+        1. 更加优雅Reactor模式实现、灵活的线程模型、利用EventLoop创新性的机制
+        2. 充分利用Java的Zero-copy机制，
+    
+Netty > java.nio + java.net!
+    网络协议：Netty除了支持传输层的UDP、TCP、SCTP协议，也支持HTTPs、WebSocket等多种应用层协议
+    应用中:需要将数据从Java对象转换成为各种应用协议的数据格式，或者进行反向的转换，Netty为此提供一系列的编码加码框架
+    扩展了Java NIO Buffer,提供自己的ByteBuf实现，并且深度支持Direct Buffer技术
 ```
 
+
+Using JConsole
+--------------
+> The JConsole graphical user interface is a monitoring tool that compiles to the Java Management Extensions(JMX) specification. 
 ```
-CAS: Compare and swap:比较并交换
-
-
+https://github.com/aalansehaiyang/technology-talk
 ```

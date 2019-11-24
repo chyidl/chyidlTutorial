@@ -2,7 +2,6 @@ Raspberry Pi Awesome Project
 ============================
 
 - [Raspberry Pi Intro](/root/raspberrypi/RaspberryPiPrj/Intro/README.md)
-- [TensorFlow Object Detection on the RaspberryPi](/root/raspberrypi/RaspberryPiPrj/TensorflowObjectDetection/Tensorflow_Object_Detection_on_the_RaspberryPi.md)
 - [AM2302 Temperature & Humidity](/root/raspberrypi/RaspberryPiPrj/AM2302/README.md)
 - [MLX90614 IR Sensor](/root/raspberrypi/RaspberryPiPrj/MLX90614/README.md)
 - [BMP180 Air Pressure Sensor](/root/raspberrypi/RaspberryPiPrj/BMP180/README.md)
@@ -53,6 +52,7 @@ Raspberry Pi Awesome Project
 - [Generate Random Password](/root/raspberrypi/RaspberryPiPrj/RandPassword/README.md)
 - [GeekTime-DL Convert GeekTime article to Kindle](/root/raspberrypi/RaspberryPiPrj/GeekTime-DL/README.md)
 - [gost HTTPS Server](/root/raspberrypi/RaspberryPiPrj/gostHttpss/README.md)
+- [Portable Computer Vision: TensorFlow 2.0 on a RaspberryPi](/root/raspberrypi/RaspberryPiPrj/TensorFlowPi/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)

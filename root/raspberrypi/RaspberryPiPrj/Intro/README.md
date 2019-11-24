@@ -89,6 +89,27 @@ For headless setup, SSH can be enabled by placing a file named ssh, without any 
 If you have loaded Raspbian onto a blank SD card, you will have two partitions. The first one, which is the smaller one, is the boot partition. Place the file into this one.
 ```
 
+How to display your Raspberry Pi's Desktop on a Mac 
+---------------------------------------------------
+> VNC(Virtual Network Computing) is a standard, widely supported way of securely presenting a GUI remotely over a network connection.
+```
+The Raspberry Pi Foundation recommends a specific VNC server, tightvncserver, written by TightVNC Software. 
+$ sudo apt-get install tightvncserver 
+$ tightvncserver    # set up an remote access control password. 
+
+TightVNC doesn't supply a client for Mac OS X, though it does offer a client for Windows and a cross-platform client that runs under Java. 
+
+Apple has long provided Apple Remote Desktop (ARD), a tool for remotely accessing Mac desktops. Over the years, it has gained support for a variety of remote access technologies, including VNC. 
+
+ARD doesn't live in the Applications folder - it's actually buried deep in the System folder - but it can be launched via finder: just hit Command-K to invoke the standard Mac's Connect to Server' dialog. 
+    vnc://pi.local:5901 
+
+All going well, you'll now see your Pi's X desktop appear in a window provided by an ARD app called Screen Sharing. Depending on your Pi (the faster the better) and the quality of your network connection (ditto), the desktop is quite useable. You might not want to do all your pi work this way, but it's acceptable for occasional use.
+
+By default tightvncserver establishes an 800x400 desktop, but you can change that using the -geometry switch. you can set the colour depth using the -depth switch too. 
+    $ tightvncserver -geometry 1920x1080 -depth 24 
+```
+
 Backup up SD Card on macOS 
 --------------------------
 ```

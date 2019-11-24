@@ -41,6 +41,9 @@ $ echo $SHELL
 
 # Handling Upgrades 
 $ sudo chown -R $(whoami):admin /usr/local 
+
+(Linux)
+$ chsh -s $(which zsh)
 ```
 
 Oh-My-Zsh + Bullet Train Theme 
@@ -499,5 +502,63 @@ $ screen -S session_name
 $ Ctrl+a d  # detach from the screen session at any time typing 
 
 # Reattach to a Linux Screen 
+```
 
+vim+tmux - OMG!Code
+-------------------
+* Why vim?
+    - highly customizable 
+    - runs everywhere 
+    - works with many programming languages
+    - scriptable
+* Features 
+    - Model editing 
+```
+Model editing 
+    change the meaning of the keys in each mode of operation 
+    -> Normal Mode - navigate the structure of the file
+        1. Don't use arrow keys 
+        2. Don't use the mouse 
+        You're a programmer Strive to be lazy 
+        h j k l - left up down right
+        -> ^E - scroll the window down 
+        -> ^Y - scroll the window up 
+        -> ^F - scroll down one page 
+        -> ^B - scroll up one page 
+        -> H  - move cursor to the top of the window 
+        -> M  - move cursor to the middle of the window 
+        -> L  - move cursor to the bottom of the window 
+        -> gg - go to top of file
+        -> G  - go to bottom of file 
+        The secret sauce 
+            -> text objects and motions 
+                Think of a file as more than individual characters 
+                text objects 
+                    -> w - words
+                    -> e - end of word
+                    -> s - sentences 
+                    -> p - paragraphs 
+                    -> t - tags 
+                Motions 
+                    -> a - all 
+                    -> i - in 
+                    -> t - 'til
+                    -> f - find forward 
+                    -> F - find backward
+                Combine with commands 
+                Commands
+                    -> d - delete(also cut)
+                    -> c - change(delete, then place in insert mode)
+                    -> y - yank (copy)
+                    -> v - visually select
+                {command}{text object or motion}    
+                    -> diw - delete in word 
+                    -> caw - change all word
+                    -> yi) - yank all text inside parentheses 
+                        
+            -> the DOT command 
+            -> macros 
+    -> Insert Mode - eidting the file 
+    -> Visual Mode - highlight portions of the file to manipulate at once 
+    -> Ex Mode - Command mode 
 ```
