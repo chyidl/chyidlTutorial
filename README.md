@@ -88,6 +88,8 @@ chyidlTutorial
 - [Protocol Buffer](root/ilikeit/ProtocolBuffer/README.md)
 - [Dragon Fire](root/ilikeit/DragonFire/README.md)
 - [NetworkProtocol](root/ilickit/NetworkProtocol/README.md)
+- [Software architecture](root/ilickit/SoftwareArchitecture/README.md)
+- [Bash Scripting](root/ilickit/BashScript/README.md)
 
 ### Interview Some EECS Idol
 

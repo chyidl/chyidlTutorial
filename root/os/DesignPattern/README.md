@@ -162,6 +162,39 @@ Java语言中Collections.unmodifiableList()方法不可修改的集合
         is-a  关系 - 抽象类 : 是一种自下而上的设计思路，现有子类的代码复用，然后在抽象成上层的父类
         has-a 关系 - 接口 : 是一种自上而下的设计思路，
 
+组合 vs. 继承 
+    "组合优于继承、多用组合少用继承"
+    "最小知识原则 (Least Knowledge Principle) - 迪米特法则"
+    继承最大的问题就在于: 继承层次过深，继承关系过于复杂会影响到代码的可读性和可维护性
+        继承主要的三个作用: 
+            is-a关系 -- 可以使用组合和接口的has-a关系代替
+            支持多态 -- 可以使用接口实现
+            代码复用 -- 可以通过组合和委托实现
+        模版模式(template pattern) - 使用继承 
+    组合(composition)、接口、委托(delegation)三种技术解决继承存在的问题?
+        装饰器模式(decorator pattern)、策略模式(strategy pattern)、组合模式(composite pattern) - 使用组合关系
+
+贫血模型 vs. 充血模型
+    贫血模型(Anemic Domain Model): 数据和业务逻辑被分割到不同的类中    -- 面向过程编程风格
+    充血模型(Rich Domain Model): 数据和对象的业务逻辑被封装到同一个类中 -- 面向对象编程风格
+
+Web MVC三层架构：M 表示(Model), V 表示(View), C 表示(Controller)
+    项目分为三层: 展示层、逻辑层、数据层
+Web 前后端分离架构: 后端暴露接口，前端调用
+    后端项目分为 Repository层、Service层、Controller层
+        Repository层负责数据访问
+        Service负责业务逻辑
+            基于贫血模型的传统开发模式: Service层包含Service类(业务逻辑)和BO类(只包含数据，不包含具体的业务逻辑)
+            基于充血模型的DDD开发模式：Service层包含Service类和Domain类(既包含数据也包含业务逻辑)
+        Controller层负责暴露接口
+    违背面向对象编程风格，是一种面向过程的编程风格，被称为反模式(anti-pattern) 
+
+领域驱动设计(Domain Driven Design, DDD): 指导如何解耦业务系统、划分业务模块、定义业务领域模型及其交互。
+微服务(Micro Service): 监控、调用链追踪、API网关，针对业务合理地做微服务拆分，而领域设计恰好就是用来指导划分服务，微服务加速领域驱动设计的盛行。
+SQL-Driven(SQL驱动开发): 
+领域模型相当于可复用的业务中间层,新功能需求的开发都是基于定义好的这些领域模型完成
+        
+
 软件开发中唯一不变的就是变化
 
 标准的Java开发库:
@@ -206,6 +239,63 @@ DRY(Don't Repeat Yourself)
     flexibility(灵活性)、extensibility(可扩展性)、maintainability(可维护性)、readability(可读性)、understandability(可理解性)、changeability(易修改性)、reusability(可复用性)、testability(可测试性)
     modularity(模块化)、high cohesion loose coupliing(高内聚低耦合)、high efficiency(高效性)、high performance(高性能)、security(安全性)、compatibility(兼容性)、usability(易用性)、clean(整洁)、clarity(清晰)、simple(简单)、straightforward(直接)、less code is more(少即是多)、well-documented(文档详尽)、well-layered(分层清晰)、correctness, bug free(正确性)、robustness(健壮性)、
     robustness(鲁棒性)、reliability(可用性)、scalability(可伸缩性)、stability(稳定性)、elegant(优雅)、good(好)、bad(坏)
+```
+
+Appendix 
+--------
+```
+# 后端业务系统框架 
+// Controller+VO(View Object) --- 接口层 //
+public class UserController {
+    // 通过构造函数或者IOC框架注入 
+    private UserService userService;
+
+    public UserVo getUserById(Long userId) {
+        UserBo userBo = userService.getUser(userId);
+        UserVo userVo = [...convert userBo to userVo...];
+        return userVo;
+    }    
+}
+
+public class UserVo {
+    // 省略其他属性，get/set/construct方法 
+    private Long id;
+    private String name;
+    private String cellphone;
+}
+
+// Service+BO(Business Object) --- 业务逻辑层// 
+public class UserService {
+    // 通过构造函数或者IOC框架注入
+    private UserRepository userRepository;  
+
+    public UserBo getUserById(Long userId) {
+        UserEntity userEntity = userRepository.getUserById(userId);
+        UserBo userBo = [///convert userEntity to userBO...];
+        return userBo;
+    }
+}
+
+public class UserBo {   // 只包含数据、不包含业务逻辑的类称为贫血模型(Anemic Domain Model)
+    // 省略其他属性、get/set/construct方法
+    private Long id;
+    private String name;
+    private String cellphone;
+}
+
+// Repository+Entity -- 数据访问层 // 
+public class UserRepository {
+    public UserEntity getUserById(Long userId) {
+        
+    }
+}
+
+public class UserEntity {
+    // 省略其他属性、get/set/construct方法 
+    private Long id;
+    private String name;
+    private String cellphone;
+}
 ```
 
 FQA
