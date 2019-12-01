@@ -312,3 +312,54 @@ Resolution:
 
 The OOM Killer is a function of the linux kernel that kill rogue processes that are requesting more memory that the OS can allocate so that the system can survive. The function applies some heuristics(it gives each process a score) to decide which process to kill when the system is in such state. The process 
 ```
+
+Install OpenJDK 11 on Mac using brew 
+------------------------------------
+> have to pay for Oracle JDK, so it's better to use OpenJDK 
+```
+OpenJDK(Open Java Developerment Kit) is a free and open-source implementation of the Java Platform, Standard Edition(Java SE.) It is the result fo an effort Sun Microsystem begain in 2006. The implementation is licensed under the GNU General Public License(GNU GPL) version 2 with a linking exception. Where it not for the GPL linking exception, components that linked to the Java class library would be subject to the terms of the GPL license.
+```
+```
+1. Brew tap 
+# First of all, we need to tap a brew repo. Execute the following command:
+$ brew tap AdoptOpenJDK/openjdk
+
+2. Install OpenJDK 11 Mac 
+$ brew cask install adoptopenjdk11 
+
+3. Check JDK Version 
+# Now we can check the JDK version 
+$ java -version 
+openjdk version "11.0.5" 2019-10-15
+OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.5+10)
+OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.5+10, mixed mode)
+
+4. Java Location 
+# Now let's check the java path 
+$ which java 
+/usr/bin/java
+```
+
+Install Maven on Mac Using brew 
+-------------------------------
+```
+Run following command to Terminal 
+$ brew update 
+$ brew install maven 
+
+Check the version using mvn 
+$ mvn -v 
+Apache Maven 3.6.3 (cecedd343002696d0abb50b32b541b8a6ba2883f)
+Maven home: /usr/local/Cellar/maven/3.6.3/libexec
+Java version: 11.0.5, vendor: AdoptOpenJDK, runtime: /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
+Default locale: en_CN, platform encoding: UTF-8
+OS name: "mac os x", version: "10.15.1", arch: "x86_64", family: "mac"
+
+Check location of mvn 
+$ which mvn 
+
+Configure .zshrc 
+export M2_HOME=/usr/local/Cellar/maven/3.6.3/libexec
+export M2=${M2_HOME}/bin
+export PATH=${PATH}:${M2_HOME}/bin
+```

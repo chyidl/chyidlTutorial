@@ -53,6 +53,7 @@ Raspberry Pi Awesome Project
 - [GeekTime-DL Convert GeekTime article to Kindle](/root/raspberrypi/RaspberryPiPrj/GeekTime-DL/README.md)
 - [gost HTTPS Server](/root/raspberrypi/RaspberryPiPrj/gostHttpss/README.md)
 - [Portable Computer Vision: TensorFlow 2.0 on a RaspberryPi](/root/raspberrypi/RaspberryPiPrj/TensorFlowPi/README.md)
+- [Install Go Lang on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/GoLangPi/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)

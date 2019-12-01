@@ -298,9 +298,38 @@ public class UserEntity {
 }
 ```
 
+Spring Framework
+----------------
+```
+名次解析:
+Spring Boot DevTools: 自动应用代码更改到最新的App上面，原理是发现代码有更改之后，重新启动应用
+    原理是使用两个ClassLoader, 一个ClassLoader加载那些不会改变的类(第三方包),另外一个ClassLoader加载会更改的类，成为restart ClassLoader.
+
+Lombok: Project Lombok is a java library that automatically plugs into your editor and build tools. spicing up your java. Never write another getter and equals method again, with one annotation your class has a fully featured builder, Automate your logging variables, and much more.
+    @Data 
+    @Getter 
+    @Setter
+    @Cleanup
+
+
+
+$ javac -cp lombok.jar Main.java
+$ javap Main 
+
+```
+
 FQA
 ---
 ```
 1. 编程语言是否支持多继承? 
+```
 
+IDEA ShortCut
+-------------
+```
+1. two ^Space: A special variant of the Code Completion feature invoked
+2. Option+Enter: inject SQL into a string
+3. Option+Shift+Command+U: open a UML class diagram
+4. Option+Command+U: open a UML class diagram
+5. Option+Shift+Command+D: analyze changes using diagrams.
 ```

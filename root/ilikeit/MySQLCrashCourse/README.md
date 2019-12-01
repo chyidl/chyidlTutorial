@@ -1009,10 +1009,35 @@ MySQL做排序时成本比较高的操作，
 覆盖索引是指，索引上的信息足够满足查询请求，不需要再回到主键索引上取数据.
 ```
 
+SQL - DDL, DQL, DCL and TCL Commands 
+------------------------------------
 ```
-SQL语言分为DDL, DML, DCL三大类。
-https://blog.csdn.net/chenlycly/article/details/21302073
-
+SQL(Structured Query Language) commands are mainly categorized into four categories as:
+    1. DDL(Data Definition Language): can be used to define the database schema.
+        CREATE - is used to create the database or its objects (like table, index, function, views, store procedure and triggers)
+        ALTER - is used to alter the structure of the database.
+        DROP - is used to delete objects from the database.
+        RENAME - is used to rename an object existing in the database.
+        TRUNCATE - is used to remove all records from a table, including all spaces allocated for the records are removed.  
+        COMMENT - is used to add comments to the data dictionary. 
+    2. DQI(Data Query Language) - is to get some schema relation based on the query passed to it.
+        SELECT - is used to retrieve data from the a database.
+    3. DML(Data Manipulation Language): 
+        INSERT - is used to insert data into a table 
+        UPDATE - is used to update existing data within a table
+        DELETE - is used to delete records from a database table
+        MERGE, 
+        CALL, 
+        EXPLAIN PLAIN, 
+        LOCK TABLE 
+    4. DCL(Data Control Language) - mainly deals with the rights, permissions and other controls of the database system.
+        GRANT - gives user's access privileges to database.
+        REVOKE - withdraw user's access privileges given by using the GRANT command.
+    5. TCL(Transaction Control Language): deals with the transaction within the database
+        COMMIT - commits a Transaction 
+        ROLLBACK - rollbacks a transaction in case of any error occurs. 
+        SAVEPOINT - sets a savepoint within a transaction
+        SET TRANSACTION - specify characteristics for the transaction. 
 ```
 
 MySQL 查看表结构
@@ -2315,4 +2340,57 @@ Restart MySQL.
 
 Start monitoring the slow query logfile. Use the command mysqldumpslow to analyze it and print summary of the slow query logfile.
     $ mysqldumpslow -a /var/log/mysql-slow.log 
+```
+
+MySQL binlog
+------------
+```
+binlog 就是 binary log, 二进制日志文件，这个文件记录了MySQL所有的DML操作，通过binlog日志可以做数据恢复、主从复制
+
+$ sudo vim /etc/my.cnf 
+    [mysqld]
+    # 打开binlog日志 
+    log_bin=ON 
+    # binlog日志的基本文件名,后面追加标识表示每一个文件
+    log_bin_basename=/var/lib/mysql/mysql-bin
+    # binlog文件的索引文件，管理所有的binlog文件的目录
+    log_bin_index=/var/lib/mysql/mysql-bin.index 
+
+    # binlog记录SQL语句的原文
+    binlog_format=statement
+
+    # mysql version 5.7+ 
+    server-id="SOME CHARACTER"
+
+# 重启mysql 
+$ sudo systemctl restart mysqld 
+
+mysql> show variables like '%log_bin%';
++---------------------------------+--------------------------------+
+| Variable_name                   | Value                          |
++---------------------------------+--------------------------------+
+| log_bin                         | ON                             |
+| log_bin_basename                | /var/lib/mysql/mysql-bin       |
+| log_bin_index                   | /var/lib/mysql/mysql-bin.index |
+| log_bin_trust_function_creators | OFF                            |
+| log_bin_use_v1_row_events       | OFF                            |
+| sql_log_bin                     | ON                             |
++---------------------------------+--------------------------------+
+6 rows in set (0.30 sec)
+
+mysql()> show binlog events in 'mysql-bin.000002';
+| mysql-bin.000002 | 2017 | Anonymous_Gtid |         0 |        2082 | SET @@SESSION.GTID_NEXT= 'ANONYMOUS'         |
+| mysql-bin.000002 | 2082 | Query          |         0 |        2169 | BEGIN                                        |
+| mysql-bin.000002 | 2169 | Query          |         0 |        2328 | use `chyi`; delete from t /* comment */ where a >= 4 and t_modified<='2018-11-10' limit 1                                                                         |
+| mysql-bin.000002 | 2328 | Xid            |         0 |        2359 | COMMIT /* xid=23 */                          |
+
+mysql()> show binlog events in 'mysql-bin.000001';
+| mysql-bin.000001 | 425 | Anonymous_Gtid |         0 |         490 | SET @@SESSION.GTID_NEXT= 'ANONYMOUS'  |
+| mysql-bin.000001 | 490 | Query          |         0 |         570 | BEGIN                                 |
+| mysql-bin.000001 | 570 | Table_map      |         0 |         617 | table_id: 105 (chyi.t)                |
+| mysql-bin.000001 | 617 | Delete_rows    |         0 |         665 | table_id: 105 flags: STMT_END_F       |
+| mysql-bin.000001 | 665 | Xid            |         0 |         696 | COMMIT /* xid=12 */                   |
++------------------+-----+----------------+-----------+-------------+---------------------------------------+
+12 rows in set (0.04 sec)
+
 ```
