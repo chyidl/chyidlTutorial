@@ -58,3 +58,5 @@ class Swicther(object):
 The official answer says, "You can do this enough with a sequence of if... elif... elif... else". And that you can use dictionary mapping for functions and dispatch methods for classes.
 "Python doesn't need a case statement"
 ```
+http://blog.soliloquize.org/2017/04/09/%E6%94%B9%E5%96%84Python%E4%BB%A3%E7%A0%81%E7%9A%84%E5%87%A0%E4%B8%AA%E5%BB%BA%E8%AE%AE/
+

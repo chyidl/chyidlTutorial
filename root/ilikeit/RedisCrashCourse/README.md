@@ -17,8 +17,8 @@ $ sudo apt-get update
 $ sudo apt-get install build-essential tcl make gcc 
 ```
 
-Download, Compile, and Install Redis 
-------------------------------------
+Download, Compile, and Install Redis From Source
+------------------------------------------------
 ```
 # Docker:
 
@@ -53,9 +53,22 @@ $ make test
 # Once complete, install the binaries onto the system by typing:
 $ sudo make install
 
+# make below directories, redis will create directories by default but this is my perferred way of installing redis. By creating separate directories will life easier.
+$ mkdir -p /mnt/chyi_data/redis/db 
+$ mkdir -p /mnt/chyi_data/redis/conf 
+$ mkdir -p /mnt/chyi_data/redis/
+
 # Install init Script 
 # need init configuration so that redis-server should start itself on boot and no manual commands are needed by the user 
 $ cd /path/redis-stable/utils && sudo ./install_server.sh 
+
+# When you run "install_server.sh" scripts you will asked questions to configure redis. please provide below details as necessary.
+Port           : 6379
+Config file    : /mnt/chyi_data/redis/conf/redis_6379.conf
+Log file       : /mnt/chyi_data/redis/log/redis_6379.log
+Data dir       : /mnt/chyi_data/redis/db
+Executable     : /usr/local/bin/redis-server
+Cli Executable : /usr/local/bin/redis-cli
 
 # Configure Redis 
 # Now that Redis is installed, we can begin to configure it.
@@ -173,6 +186,111 @@ Ok
 $ redis-cli -h pi -p 6379 
 ```
 
+INSTALL REDIS 5.0 FROM SOURCE IN CENTOS 7
+-----------------------------------------
+```
+# Create a directory and go inside that directory and download the source.
+$ mkdir -p /opt/software/redis 
+$ cd !$
+$ wget http://download.redis.io/redis-stable.tar.gz
+
+# Extract the source and go inside downloaded redis directory.
+$ tar -xvzf redis-stable.tar.gz 
+$ cd redis-stable 
+
+# Next run these command to compile and install.
+$ make -j4 
+$ yum install tcl wget 
+$ make test 
+$ make install 
+
+# make below directories, redis will create directories by default but this is my preferred way of installing redis. By creating separate directories will life easier. 
+$ mkdir -p /mnt/chyi_data/redis/db 
+$ mkdir -p /mnt/chyi_data/redis/conf 
+$ mkdir -p /mnt/chyi_data/redis/ 
+
+# make the start up script executable and make it start at boot.
+$ cd /etc/init.d/
+$ chmod 777 redis_6379
+$ chkconfig --add redis_6379 
+
+# start redis server.
+$ /etc/init.d/redis_6379 start | stop | restart 
+
+# That's it ! you all set!
+$ vim /etc/init.d/redis_6379
+
+#!/bin/sh
+#Configurations injected by install_server below....
+
+EXEC=/usr/local/bin/redis-server
+CLIEXEC="/usr/local/bin/redis-cli -a <password>"
+PIDFILE=/var/run/redis_6379.pid
+CONF="/mnt/chyi_data/redis/conf/redis_6379.conf"
+REDISHOST="118.31.50.10"
+REDISPORT="6379"
+###############
+# SysV Init Information
+# chkconfig: - 58 74
+# description: redis_6379 is the redis daemon.
+### BEGIN INIT INFO
+# Provides: redis_6379
+# Required-Start: $network $local_fs $remote_fs
+# Required-Stop: $network $local_fs $remote_fs
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Should-Start: $syslog $named
+# Should-Stop: $syslog $named
+# Short-Description: start and stop redis_6379
+# Description: Redis daemon
+### END INIT INFO
+
+
+case "$1" in
+    start)
+        if [ -f $PIDFILE ]
+        then
+            echo "$PIDFILE exists, process is already running or crashed"
+        else
+            echo "Starting Redis server..."
+            $EXEC $CONF
+        fi
+        ;;
+    stop)
+        if [ ! -f $PIDFILE ]
+        then
+            echo "$PIDFILE does not exist, process is not running"
+        else
+            PID=$(cat $PIDFILE)
+            echo "Stopping ..."
+            $CLIEXEC -h $REDISHOST -p $REDISPORT shutdown
+            while [ -x /proc/${PID} ]
+            do
+                echo "Waiting for Redis to shutdown ..."
+                sleep 1
+            done
+            echo "Redis stopped"
+        fi
+        ;;
+    status)
+        PID=$(cat $PIDFILE)
+        if [ ! -x /proc/${PID} ]
+        then
+            echo 'Redis is not running'
+        else
+            echo "Redis is running ($PID)"
+        fi
+        ;;
+    restart)
+        $0 stop
+        $0 start
+        ;;
+    *)
+        echo "Please use start, stop, restart or status as first argument"
+        ;;
+esac
+```
+
 How fast is Redis?
 ------------------
 
@@ -257,8 +375,8 @@ GET: 1162790.62 requests per second
     6. Being based on epoll/kqueue, the Redis event loop is quite scalable. Redis has already been benchmarked at more than 60000 connections, and was still able to sustain 50000 q/s in these conditions. 
 ```
 
-Redis (data structures server)
-------------------------------
+Redis (Remote Dictionary Service)
+---------------------------------
 > Redis 本质上是一个数据结构服务器(data structures server)以高效的方式实现多种数据结构
 ```
 - String字符串
@@ -748,8 +866,77 @@ HyperLogLog提供两个指令pfadd, pfcount
 - [hyperloglog.py](root/ilikeit/RedisCrashCourse/script/py/hyperloglog.py)
 
 
-面试问题
+
+<antirez> blog
+---------------
+
+* English has been my pain for 15 years
+-------------------------------------
+```
+```
+
+Redis Review Source Code
+------------------------
+```
+```
+
+Lua Programming Language
+------------------------
+> Lua is a language which has been around since 1993. Its origins in engineering made for a compact language which could be embedded in other applications.
+```
+```
+
+Redis Best Practices
+====================
+
+Indexing Patterns
+-----------------
+> Conceptually, Redis is based on the key/value database paradigm. Every piece of data is associated with a key, either directly or indirectly. If you want to retrieve data based on anything besides the key, you'll need to implement an index that leverages one of the many data types available in Redis.
+
+* Sorted Sets as indexes
+> Sorted Sets (ZSETs) are a native Redis data type that can be thought of a set of unique memebers (repeats are not stored) with each member being attached to a number (termed score) that acts as a natural sorting mechanism.
+> While members cannot be repeated, any number of members can share the same score. 
+> With relatively low time complexity to add, remove and retrieve ranges (by rank or score), this lends itself naturally to being an index.
+```
+ZADD key [NX|XX] [CH] [INCR] score member [score member ...]
+#   Time complexity: O(log(N)) for each item added, where N is the number of elements in the sorted set.
+# Adds all the specified members with the specified scores to the sorted set stored at key.
+# The score values be the string representation of a double precision floating point number. +inf and -inf values are valid values as well.
+#   XX: Only update elements that already exist. Never add elements 
+#   NX: Don't update already existing elements. Always add new elements.
+#   CH: Modify the return value from the number of new elements added, to the total number of elements changed(CH is an abbreviation of changed).
+#       Note: normally the return value of ZADD only counts the number of new elements added
+#   INCR: When this option is specified ZADD acts like ZINCRBY. Only one score-element pair can be specified in this mode. 
+# Redis sorted sets use a double 64-bit floating point number to represent the score. IEEE 754 floating point number: (-2^53 ~ 2^53)
+
+```
+
+Communication Patterns 
+----------------------
+> 
+
+Data Storage Patterns
+---------------------
+
+Time Series Patterns
+--------------------
+
+Basic Rate Limiting Pattern
+---------------------------
+
+Bloom Filter Pattern
+--------------------
+
+Counting
 --------
+
+Lua Helpers
+-----------
+```
+```
+
+Redis 面试问题
+-------------
 ```
 1. Redis能用来做什么?
     缓存：是Redis使用最多的领域，相比Memcache更加容易理解、使用和控制
@@ -800,25 +987,42 @@ HyperLogLog提供两个指令pfadd, pfcount
     Redis Sentinal高可用，在master宕机时会自动将slave提升为master,继续提供服务
     Redis Cluster 扩展性，单个redis内存不足时，使用cluster进行分片存储.
 
-Redis内置Lua脚本引擎
+11. 缓存穿透，缓存击穿，缓存雪崩?
+    设计缓存系统，需要考虑缓存穿透、缓存击穿、缓存失效雪崩
+    
+    - 缓存穿透是指查询一个一定不存在的数据，由于缓存是不命中时被动写，并且出于容错考虑，如果从存储层查不到数据则不写入缓存。这将导致这个不存在的数据每次请求都要到存储层去查询，失去了缓存的意义，在流量大时，可能DB就挂掉，要是有人利用不存在的Key频繁攻击应用，这就是漏洞
+        > 有很多的方法有效的解决缓存穿透的问题，最常见的则是采用布隆过滤器，将所有的可能存在的数据哈希到一个足够大的bitmap中，一个一定不存在的数据就会被bitmap拦截掉，从而避免对底层存储系统的查询压力.
+        > 另一种简单粗暴的方法,如果一个查询返回的数据为空(不管是数据不存在还是系统故障)，仍然把这个空结果进行缓存，但他的过期时间会很短，最长不超过五分钟
+    
+    - 缓存雪崩:是指我们设置缓存时采用相同的过期时间，倒置缓存在某一个时刻同时失效，请求全部转发到DB，DB瞬时压力过重雪崩.
+        > 缓存失效时的雪崩效应对底层系统的冲击非常可怕，大多数系统设计者考虑用加锁或者队列的方式保证缓存单线程(进程)写，从而避免失效时大量的并发请求落到底层存储系统上，
+        >在原有的失效时间基础上增加一个随机值，比如1-5分钟随机值，这样每个缓存的过期时间的重复率就会降低，就很难引起集体失效的事件
+    
+    - 缓存击穿: 对于设置过期时间的key, 如果这些key可能会在某些时间点被超高并发地访问，是一种非常热点的数据，这时候，需要考虑一个问题，缓存被击穿的问题，这个和导致雪崩的区别在于这里针对某一个Key缓存，前者则是很多key。缓存在某个时间点过期的时候，恰好在这个时间点对这个Key有大量的并发请求过来，这些请求发现缓存过期一般都会从后端加载数据并回设到缓存，这个时候大并发的请求可能会瞬间把后端DB压垮.
+        > 使用互斥锁(mutex key):业界比较常用的做法是使用mutex,就是在缓存失效的时候(判断拿出的值为空)，不是立即去load db.而是先使用缓存工具的某些带成功操作返回值的操作(Redis的SETNX或者Memcache的ADD)去SET一个mutex key.当操作返回成功时，在进行load db的操作并会设缓存，否则，就重试整个get缓存的方法。
+        > SETNX是(SET IF NOT EXISTS)就是只有不存在的时候才设置，可以利用它实现锁的效果，
+public String get(key) {
+    String value = redis.get(key);
+    if (value == null) { // 代表缓存值过期
+        // 设置3min的超时时间，防止del操作失败的时候，下次缓存过期一直不能load db 
+        if (redis.setnx(key_mutex, 1, 3 * 60) == 1) { // 代表设置成功
+            value = db.get(key);
+            redis.set(key, value, expire_secs);
+            redis.del(key_mutex);
+        } else {    // 这时候代表其他线程已经load
+            sleep(50);
+            get(key);   // 重试
+        }
+    }
+}
+
+对于缓存系统常用的缓存满了，和数据丢失问题，需要根据具体业务分析，通常采用LRU策略处理溢出，Redis的RDB和AOF持久化策略来保证一定情况下的数据安全.
 ```
 
-<antirez> blog
----------------
-
-* English has been my pain for 15 years
--------------------------------------
-```
-```
-
-Redis Review Source Code
-------------------------
-```
-```
-
-Lua Programming Language
-------------------------
-> Lua is a language which has been around since 1993. Its origins in engineering made for a compact language which could be embedded in other applications.
+Appendix
+--------
+* IEEE 754 
+> The IEEE Standard for Floating-Point Arithmetic is a technical standard for floating-point arithmetic established in 1985 by the Institute of Electrical and Electronics Engineers(IEEE).
 ```
 
 ```

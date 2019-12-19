@@ -4,7 +4,6 @@ VPS - Virtual Private Server
 1. How to Create a Sudo User on VPS
 -----------------------------------
 > The **sudo** command provides a mechanism for granting administrator privileges, ordinarily only available to the root user, to normal users.
-
 ```
 # Step to Create a New Sudo User 
 1. Log in server as the root user.
@@ -33,7 +32,6 @@ $ sudo ls -la /root
 2. How To Add Swap Space on Ubuntu 18.04
 --------------------------------------------
 > One of the easiest way of increasing the responsiveness of your server and guarding against out-of-memory errors in applications is to add some swap space.Although swap is generally recommended for systems utilizing traditional spinning hard drives, using swap with SSDs can cause issues with hardware degradation over time.
-
 * What is Swap?
     - Swap is an area on a hard drive that has been designated as a place where the operating system can temporarily store data that it can no longer hold in RAM.
     - The infromation written to disk will be significantly slower than information kept in RAM, but the operating system will prefer to keep running application data in memory and use Swap for the older data.
@@ -114,7 +112,6 @@ UUID=9b9407e6-ff9b-48cc-a19b-b1008ad90fb3 /boot           ext3    defaults      
 
 3. Setup the Date and Timezone
 ----------------------------------
-
 Setting the correct date, time, time zone and synchronization are the first basic steps that you should perform when previsioning your Ubuntu 18.04 server for the first time.
 * Step 1: Checking your local Ubuntu time settings 
     - $ timedatectl # check Ubuntu local time, time zone and synchronization status                                             
@@ -129,3 +126,26 @@ Setting the correct date, time, time zone and synchronization are the first basi
     - Ubuntu the time synced daemon which connects to a pool of Network Time Protocol servers to get constant and accurate time updates.
     - $ timedatectl # check **systemd-timesyncd.service active** status is already set to "yes". 
     - $ sudo timedatectl set-ntp on/off # can turn on/off timesynced daemon by typing the command below.
+
+Kill Zombie Process 
+-------------------
+> A zombie or a defunct process in Linux is a process that has been complted, but its entry still remains in the process table due to lack of correspondence between the parent and child processes.Usually, a parent process keeps a check on the status of its child processes through the wait() function. When the child process has finished, the wait function signals the parent to completely exit the process from the memory. However, if the parent fails to call the wait function for any of its chidlren, the child process remains alive in the system as a dead or zombie process. These zombie processes might accumulate, in large numbers, on your system and affect its performance. In that case, you might have to kill these zombies manually through the ways and commands described in this tutorial.
+```
+# Viewing Zombie Processes 
+$ top 
+top - 09:41:23 up 17 days, 19:47, 19 users,  load average: 0.24, 0.21, 0.17
+Tasks: 206 total,   2 running, 154 sleeping,   0 stopped,   2 zombie
+
+# further details about the zombie process, use the following command:
+$ ps axo stat,ppid,pid,comm | grep -w defunct   # 
+
+# Killing z Zombie-Process 
+> How zombie processes are a threat to our system's performance. It is important to learn that zombies are dead and mostly completed processes that do not take memory or CPU resources. However, each of these processes has a unique process ID assigned to them which comes from a limited pool of PIDs reserved for your processor. If a large number of zombies gather they will eat up most part of the PID pool and the new processes will not be able to launch due to lack of a process ID.
+
+> A small number of defunct programs occupying your system is not a big threat but that means that their parent programs have not been able to call them off due to a bug or a missing wait() function.
+
+> When a parent process has not been able to call the wait() function automatically, we need to manually signal the parent processes to run the wait function on all its chidlren so the ones with a complete state can be called back. We can do this by running the SIGCHLD command. When that doesn't work, we can manually kill the parent process so that all its zombie chidlren are also killed, freeing the processes IDs for the new processes.
+
+$ sudo kill -s SIGCHLD PID    # signals the zombie's parent process to kill the command 
+$ sudo kill -9 PID
+```

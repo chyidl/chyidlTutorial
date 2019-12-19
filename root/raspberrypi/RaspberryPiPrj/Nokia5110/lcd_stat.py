@@ -26,7 +26,7 @@ RST = 24
 SPI_PORT = 0
 SPI_DEVICE = 0
 # Raspberry Pi Wiring DHT22
-DHT_PIN = 17
+DHT_PIN = 4
 DHT_SENSOR = Adafruit_DHT.AM2302
 
 # Title|Artist|Album Name

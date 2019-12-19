@@ -55,10 +55,13 @@ chyidlTutorial
 
 - [Unix intro](root/os/UnixTutorial/README.md)
 - [Data Structures and Algorithms](root/os/DSAA/README.md)
+- [LeetCode](root/os/LeetCode/README.md)
+- [Design Pattern](root/os/DesignPattern/README.md)
 - [macOS Intro](root/os/macOS/README.md)
 - [Xv6, a simple Unix-like teaching operating system](root/os/Xv6/README.md)
 - [linux, a successful Unix-like operating system](root/os/UnixLinux/README.md)
 - [Bill Gates Advance Tips](root/os/Windows/README.md)
+- [HappyTime](/root/os/HappyTime/README.md)
 
 ### ![Don't Repeat Yourself](/imgs/dontRepeatYourself.png?raw=true) I Like It
 
@@ -66,6 +69,7 @@ chyidlTutorial
 - [Design Patterns](/root/ilikeit/DesignPatterns/README.md)
 - [SSH - Secure Shell](/root/ilikeit/SSH/README.md)
 - [Vim Tips](root/ilikeit/vim/README.md)
+- [Vscode Tips](root/ilikeit/VSCODE/README.md)
 - [Mastering Emacs](root/ilikeit/Emacs/README.md)
 - [Vim+Tmux OMG!](/root/ilikeit/Vim+Tmux/README.md)
 - [Bash Script](root/ilikeit/Scripts/README.md)
@@ -84,6 +88,8 @@ chyidlTutorial
 - [Protocol Buffer](root/ilikeit/ProtocolBuffer/README.md)
 - [Dragon Fire](root/ilikeit/DragonFire/README.md)
 - [NetworkProtocol](root/ilickit/NetworkProtocol/README.md)
+- [Software architecture](root/ilickit/SoftwareArchitecture/README.md)
+- [Bash Scripting](root/ilickit/BashScript/README.md)
 
 ### Interview Some EECS Idol
 

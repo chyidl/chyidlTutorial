@@ -1,0 +1,1300 @@
+2015-08-23 14:41  NiLuJe
+
+	* [r12287] src/install.sh:
+	  
+	  Kindle Hacks:
+	  * Make sure xzdec is executable before trying to launch it in install
+	  scripts....
+	  Oooops. Fixes installation on a number of setups.
+
+2015-08-20 16:50  NiLuJe
+
+	* [r12267] src/python.tar.xz:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-08-18 21:44  NiLuJe
+
+	* [r12249] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Fonts:
+	  * Tag v5.16.N
+	  * Python:
+	  * Tag v0.14.N
+	  * ScreenSavers:
+	  * Tag v0.47.N
+	  * USBNetwork:
+	  * Tag v0.57.N
+
+2015-08-18 16:19  NiLuJe
+
+	* [r12244] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Wow. That was another amazing typo. >_<"
+
+2015-08-18 15:56  NiLuJe
+
+	* [r12242] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Don't clutter the src packages with an arm zxdec binary
+
+2015-08-18 15:41  NiLuJe
+
+	* [r12241] CREDITS:
+	  
+	  Kindle Hacks:
+	  * Update credits for xzdec :).
+
+2015-08-18 15:30  NiLuJe
+
+	* [r12239] src/python.tar.bz2[DEL], src/python.tar.xz[ADD]:
+	  
+	  Kindle Hacks:
+	  * Move to xz archives for Python
+
+2015-08-18 15:25  NiLuJe
+
+	* [r12237] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Oops, forgot the K4 xzdec binary ;).
+
+2015-08-18 15:21  NiLuJe
+
+	* [r12236] build/build-updates.sh, src/install.sh:
+	  
+	  Kindle Hacks:
+	  * Switch from bzip2 archives to xz archives. Smaller, faster, better.
+	  :).
+
+2015-08-16 10:33  NiLuJe
+
+	* [r12203] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (TC update)
+
+2015-08-15 13:31  NiLuJe
+
+	* [r12176] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-08-15 09:46  NiLuJe
+
+	* [r12172] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-08-14 09:39  NiLuJe
+
+	* [r12137] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-08-13 18:12  NiLuJe
+
+	* [r12132] CREDITS:
+	  
+	  Kindle Hacks:
+	  * We'll be shipping ncurses 6 in the next snapshots... Fix build
+	  scripts & credits.
+
+2015-07-30 06:39  NiLuJe
+
+	* [r12103] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-07-27 03:04  NiLuJe
+
+	* [r12097] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-07-25 18:30  NiLuJe
+
+	* [r12084] src/python.tar.bz2:
+	  
+	  Fix some more nonsensical keywords on binary files...
+
+2015-07-25 17:45  NiLuJe
+
+	* [r12080] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-06-17 01:45  NiLuJe
+
+	* [r12038] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (update IM to fix a ScreenSavers regression)
+
+2015-06-13 14:57  NiLuJe
+
+	* [r12025] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-06-05 22:17  NiLuJe
+
+	* [r12019] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  • Refresh binaries
+
+2015-05-31 01:14  NiLuJe
+
+	* [r12014] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-05-25 18:33  NiLuJe
+
+	* [r12003] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-05-08 15:42  NiLuJe
+
+	* [r11977] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Fonts:
+	  * Tag v5.15.N
+	  * Python:
+	  * Tag v0.13.N
+	  * ScreenSavers:
+	  * Tag v0.46.N
+	  * USBNet:
+	  * Tag v0.56.N
+
+2015-05-07 22:32  NiLuJe
+
+	* [r11963] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update binaries (updated TC)
+
+2015-05-01 02:02  NiLuJe
+
+	* [r11924] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update binaries
+
+2015-04-28 19:31  NiLuJe
+
+	* [r11910] build/build-updates.sh:
+	  
+	  The great shebang enfixening!
+
+2015-03-11 00:58  NiLuJe
+
+	* [r11729] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-03-07 16:23  NiLuJe
+
+	* [r11725] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-03-07 01:28  NiLuJe
+
+	* [r11720] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-02-26 19:01  NiLuJe
+
+	* [r11698] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (fix fc-scan)
+
+2015-02-26 13:36  NiLuJe
+
+	* [r11688] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (fix Python)
+
+2015-02-26 02:23  NiLuJe
+
+	* [r11684] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh bianries...
+	  (LTO, AKA, The Breakening!)
+
+2015-02-25 15:00  NiLuJe
+
+	* [r11663] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  • Resync binaries
+
+2015-02-23 21:03  NiLuJe
+
+	* [r11616] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-02-23 02:18  NiLuJe
+
+	* [r11604] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * refresh binaries (fix readline)
+
+2015-02-22 20:47  NiLuJe
+
+	* [r11589] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update binaries (misc zsh support)
+
+2015-02-22 14:25  NiLuJe
+
+	* [r11576] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-02-20 06:30  NiLuJe
+
+	* [r11558] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (fix strace)
+
+2015-02-19 23:37  NiLuJe
+
+	* [r11554] CREDITS, src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (strace w/ libunwind, Python & SQLite3 w/ readline)
+
+2015-02-18 22:12  NiLuJe
+
+	* [r11545] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Oops. Unified uninstall packages means they ought to be able to run
+	  on all the unified devices ;D.
+
+2015-02-18 22:09  NiLuJe
+
+	* [r11544] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Unify uninstall packages when building MRPI-only packages
+
+2015-02-18 21:56  NiLuJe
+
+	* [r11543] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Default to building OTAv2 packages, even for legacy hacks.
+	  The downside is they'll only be installable through MRPI.
+	  The upside is the packages are seventy billion times smaller,
+	  and the mess of seventy billion different update files to
+	  choose from is gone.
+
+2015-02-18 21:19  NiLuJe
+
+	* [r11541] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update binaries (widec ncurses)
+
+2015-02-17 23:35  NiLuJe
+
+	* [r11537] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Linaro 4.9 2015.02)
+
+2015-02-14 00:24  NiLuJe
+
+	* [r11514] build/build-updates.sh:
+	  
+	  Kindle Touch Hacks:
+	  * Python:
+	  * Tag v0.12.N
+	  * Fonts:
+	  * Tag v0.11.N
+	  * ScreenSavers:
+	  * Tag v0.22.N
+	  * USBNetwork:
+	  * Tag v0.19.N
+
+2015-02-12 18:23  NiLuJe
+
+	* [r11499] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update binaries
+
+2015-01-31 19:58  NiLuJe
+
+	* [r11464] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-01-17 20:34  NiLuJe
+
+	* [r11432] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2015-01-05 23:16  NiLuJe
+
+	* [r11332] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-12-18 13:05  NiLuJe
+
+	* [r11252] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaires (updated TC)
+
+2014-11-28 20:46  NiLuJe
+
+	* [r11172] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-11-25 21:29  NiLuJe
+
+	* [r11168] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-11-22 18:45  NiLuJe
+
+	* [r11135] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-11-15 21:03  NiLuJe
+
+	* [r11085] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-11-14 18:47  NiLuJe
+
+	* [r11072] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-11-08 15:52  NiLuJe
+
+	* [r11054] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-11-07 19:57  NiLuJe
+
+	* [r11046] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-11-05 18:09  NiLuJe
+
+	* [r11032] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-10-31 17:49  NiLuJe
+
+	* [r11017] src/install.sh:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Don't generate bytecode for the tests on Legacy devices, it takes
+	  forever, and worse, might swap forever or oom.
+
+2014-10-25 15:20  NiLuJe
+
+	* [r11007] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-10-25 00:45  NiLuJe
+
+	* [r10999] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  • JailBreak:
+	  • Tag v0.13.N
+	  • Python:
+	  • Tag v0.11.N
+	  • ScreenSavers;
+	  • Tag v0.45.N
+	  • Fonts:
+	  • Tag v5.14.N
+	  • USBNetwork:
+	  • Tag v0.55.N
+
+2014-10-25 00:05  NiLuJe
+
+	* [r10996] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-10-18 02:31  NiLuJe
+
+	* [r10971] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-10-08 23:05  NiLuJe
+
+	* [r10963] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-10-08 20:07  NiLuJe
+
+	* [r10961] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (introduce strace & friends)
+
+2014-10-06 17:00  NiLuJe
+
+	* [r10950] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-09-27 15:33  NiLuJe
+
+	* [r10933] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-09-05 19:38  NiLuJe
+
+	* [r10916] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-09-02 01:25  NiLuJe
+
+	* [r10893] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-08-30 17:16  NiLuJe
+
+	* [r10880] src/install.sh:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Installer: abort early if we don't have enough space left.
+
+2014-08-26 20:45  NiLuJe
+
+	* [r10864] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh K3 binaries
+
+2014-08-26 20:00  NiLuJe
+
+	* [r10861] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh bianries (Fix Python SQLite)
+
+2014-08-26 13:17  NiLuJe
+
+	* [r10855] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (fix Python sqlite3 & 3rd-party modules)
+
+2014-08-26 03:51  NiLuJe
+
+	* [r10853] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Python w/ SQLite3, DropBear KeepAlive + PuTTy fix)
+
+2014-08-25 23:31  NiLuJe
+
+	* [r10849] src/install.sh:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Update install script for the upcoming changes (shipping with a few
+	  third-party modules)
+
+2014-08-22 21:00  NiLuJe
+
+	* [r10841] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (updated TC)
+
+2014-08-13 18:50  NiLuJe
+
+	* [r10829] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-08-12 03:49  NiLuJe
+
+	* [r10827] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-07-30 04:32  NiLuJe
+
+	* [r10783] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Updated TC, first GCC 4.9 builds)
+
+2014-07-28 18:08  NiLuJe
+
+	* [r10778] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-07-28 01:52  NiLuJe
+
+	* [r10774] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-07-27 20:24  NiLuJe
+
+	* [r10766] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries ;).
+
+2014-07-26 21:30  NiLuJe
+
+	* [r10751] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-07-24 18:31  NiLuJe
+
+	* [r10726] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-07-12 22:55  NiLuJe
+
+	* [r10711] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-07-05 15:12  NiLuJe
+
+	* [r10693] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-06-30 23:59  NiLuJe
+
+	* [r10685] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-06-27 01:27  NiLuJe
+
+	* [r10681] build/build-updates.sh, src/install.sh, src/uninstall.sh:
+	  
+	  Kindle Hacks:
+	  * Move everyone to LibOTAUtils
+
+2014-06-24 22:21  NiLuJe
+
+	* [r10658] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  • Detect GNU tar properly on OS X.
+	  The individual build scripts should now run on OS X, but the release
+	  scripts probably still don't (svn2cl [trivial], and some sed usage,
+	  mostly).
+
+2014-06-22 04:06  NiLuJe
+
+	* [r10650] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-06-18 22:18  NiLuJe
+
+	* [r10617] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-06-06 17:30  NiLuJe
+
+	* [r10585] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-05-18 01:10  NiLuJe
+
+	* [r10554] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-05-10 04:32  NiLuJe
+
+	* [r10531] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-04-26 21:15  NiLuJe
+
+	* [r10498] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (minor updates, and the whole FT w/ HB thing)
+
+2014-04-11 13:08  NiLuJe
+
+	* [r10460] build/build-updates.sh:
+	  
+	  KUAL Extensions:
+	  * gawk:
+	  * Tag v1.3.N
+	  Kindle Touch Hacks:
+	  * JailBreak:
+	  * Tag v1.10.N
+	  * USBNetwork:
+	  * Tag v0.16.N
+	  * ScreenSavers:
+	  * Tag v0.17.N
+	  * Python:
+	  * Tag v0.10.N
+	  * Fonts:
+	  * Tag v0.8.N
+	  Kindle Hacks:
+	  * JailBreak:
+	  * Tag v0.12.N
+	  * ScreenSavers:
+	  * Tag v0.43.N
+	  * Fonts:
+	  * Tag v5.13.N
+	  * USBNetwork:
+	  * Tag v0.54.N
+	  * Python:
+	  * Tag v0.10.N
+
+2014-04-11 12:12  NiLuJe
+
+	* [r10459] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Linaro 2014.04)
+
+2014-03-25 06:25  NiLuJe
+
+	* [r10435] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2014-03-15 23:23  NiLuJe
+
+	* [r10420] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Updated TC)
+
+2014-03-06 22:40  NiLuJe
+
+	* [r10402] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (bump FT, FC, IM, KindleTool; dropbear)
+
+2014-02-14 17:27  NiLuJe
+
+	* [r10328] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Use Update_*.bin package filenames instead of update_*.bin,
+	  to avoid triggering the recovery updater on boot. (thanks, dsmid ;))
+
+2014-02-14 16:58  NiLuJe
+
+	* [r10327] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Update TC)
+
+2014-01-24 23:51  NiLuJe
+
+	* [r10320] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  • Refresh binaries (updated TC)
+
+2014-01-09 22:55  NiLuJe
+
+	* [r10300] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update binaries (updated TC)
+
+2013-12-23 14:32  NiLuJe
+
+	* [r10248] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-12-10 19:05  NiLuJe
+
+	* [r10218] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-12-08 02:49  NiLuJe
+
+	* [r10213] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-12-06 19:53  NiLuJe
+
+	* [r10207] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Tag v0.9.N
+
+2013-12-03 19:47  NiLuJe
+
+	* [r10194] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Update FT, FC, DB, LA, Python)
+
+2013-11-30 18:26  NiLuJe
+
+	* [r10186] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-11-28 19:49  NiLuJe
+
+	* [r10182] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (update FT, FC, silence an OpenSSH warning on the
+	  PW2)
+
+2013-11-23 16:47  NiLuJe
+
+	* [r10158] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Add PW2 binaries)
+
+2013-11-20 15:20  NiLuJe
+
+	* [r10120] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (fix KindleTool)
+
+2013-11-19 23:48  NiLuJe
+
+	* [r10119] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Hopefully, fix OpenSSH on FW >= 5.3.9)
+
+2013-11-18 19:39  NiLuJe
+
+	* [r10115] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (TC update)
+
+2013-11-16 17:16  NiLuJe
+
+	* [r10097] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-11-12 17:59  NiLuJe
+
+	* [r10067] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (again, mostly for KindleTool)
+
+2013-11-11 15:18  NiLuJe
+
+	* [r10064] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (mostly for KindleTool)
+
+2013-11-11 00:40  NiLuJe
+
+	* [r10058] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries...
+
+2013-11-01 00:56  NiLuJe
+
+	* [r10015] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-10-17 18:44  NiLuJe
+
+	* [r9974] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * ScreenSavers:
+	  * Tag v0.42.N
+	  * Fonts:
+	  * Tag v5.12.N
+	  * USBNetwork:
+	  * Tag v0.53.N
+	  * Python:
+	  * Tag v0.8.N
+
+2013-10-17 18:34  NiLuJe
+
+	* [r9971] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (TC update)
+
+2013-10-11 22:19  NiLuJe
+
+	* [r9945] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-09-25 16:03  NiLuJe
+
+	* [r9888] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-09-25 02:06  NiLuJe
+
+	* [r9877] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * USBNet:
+	  * Bundle OpenSSL. (OpenSSH's ssh segfaults during the hostkey exchange
+	  on FW 2.x otherwise)
+
+2013-09-24 21:49  NiLuJe
+
+	* [r9865] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Fonts:
+	  * Update FT & FC binaries (update ft & fc)
+	  * USBNet:
+	  * Bundle the full OpenSSH suite (client & co)
+	  * Bundle sshfs (thanks to twobob for the push ;p)
+
+2013-09-20 13:56  NiLuJe
+
+	* [r9843] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries, mainyl for an FT update that fix glyph cropping
+	  for emboldened font
+
+2013-09-18 13:27  NiLuJe
+
+	* [r9816] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * USBNetwork:
+	  * Tag v0.51.N
+	  * Fonts:
+	  * Tag v5.11.N
+	  * Python:
+	  * Tag v0.7.N
+	  * ScreenSavers:
+	  * Tag v0.40.N
+
+2013-09-18 12:54  NiLuJe
+
+	* [r9811] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Linaro 4.8 2013.09)
+
+2013-08-16 23:42  NiLuJe
+
+	* [r9735] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Screen Savers:
+	  * Tag v0.39.N
+	  * Fonts:
+	  * Tag v5.10.N
+	  * USBNet:
+	  * Tag v0.50.N
+	  * Python:
+	  * Tag v0.6.N
+
+2013-08-16 23:34  NiLuJe
+
+	* [r9734] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Linaro 2013.08)
+
+2013-08-12 05:26  NiLuJe
+
+	* [r9707] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Commit slightly saner binaries
+
+2013-08-12 04:09  NiLuJe
+
+	* [r9704] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Binary refreshes, without the crazy FT patch.
+
+2013-08-02 21:02  NiLuJe
+
+	* [r9646] build/build-updates.sh, src/install.sh, src/uninstall.sh[ADD]:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Install proper symlinks
+	  * Add an uninstaller
+
+2013-08-02 21:00  NiLuJe
+
+	* [r9645] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaires (cleaner PYTHONHOME patch)
+
+2013-08-02 19:57  NiLuJe
+
+	* [r9642] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (fix Python ssl & pyexpat modules)
+
+2013-07-31 15:16  NiLuJe
+
+	* [r9621] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Linaro 4.8-2013.07-1)
+
+2013-07-29 23:23  NiLuJe
+
+	* [r9570] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries, fix fc-scan
+
+2013-07-18 17:09  NiLuJe
+
+	* [r9529] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-07-18 15:49  NiLuJe
+
+	* [r9525] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries
+
+2013-07-14 16:15  NiLuJe
+
+	* [r9505] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries. (Go back to ARM instruction set on the K5,
+	  Tweak IM to be less memory hungry (q8, CacheShift 3)).
+
+2013-07-13 19:40  NiLuJe
+
+	* [r9487] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * X-TC:
+	  * Tag v2013.07.N
+	  * ScreenSavers:
+	  * Tag v0.38.N
+	  * Fonts:
+	  * Tag v5.9.N
+	  * Python:
+	  * Tag v0.5.N
+	  * USBNetwork:
+	  * Tag v0.49.N
+	  Kindle Touch Hacks:
+	  * Python:
+	  * Tag v0.5.N
+	  * ScreenSavers:
+	  * Tag v0.11.N
+	  * USBNetwork:
+	  * Tag v0.9.N
+
+2013-07-13 18:21  NiLuJe
+
+	* [r9486] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (Bump to TC Linaro 2013.07)
+
+2013-07-04 22:24  NiLuJe
+
+	* [r9428] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries (update FC snapshot)
+
+2013-07-02 17:24  NiLuJe
+
+	* [r9409] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * refresh binaries (update ft, fc & libarchive)
+
+2013-07-02 03:39  NiLuJe
+
+	* [r9401] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh binaries. Link ImageMagick (libpng) & Python against a
+	  static zlib to avoid symbol versioning issues.
+	  (it broke opening PNG files for IM, which in turn broke the pinfo
+	  support in the ScreenSavers hack).
+
+2013-07-01 22:04  NiLuJe
+
+	* [r9390] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * USBNetwork:
+	  * Tag v0.48.N
+	  * Python:
+	  * Tag v0.4.N
+	  * ScreenSavers:
+	  * Tag v0.35.N
+	  * Fonts:
+	  * Tag v5.8.N
+
+2013-06-25 01:25  NiLuJe
+
+	* [r9334] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Refresh K3 binaries
+
+2013-06-24 23:18  NiLuJe
+
+	* [r9330] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Fonts:
+	  * Get rid of the bci_new ft lib, now that it's redundant
+	  (FT dropped support for OLD_INTERNALS, and I can't
+	  reproduce any of the issues that led me to using it in the first
+	  place)
+
+2013-06-24 20:15  NiLuJe
+
+	* [r9325] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Make all build scripts automatically bomb out on non 0 return codes,
+	  so I can safely catch
+	  snafus during my full rebuilds...
+
+2013-06-24 20:09  NiLuJe
+
+	* [r9324] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update OpenSSH
+
+2013-06-23 21:58  NiLuJe
+
+	* [r9314] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update ALL THE THINGS!
+
+2013-01-19 21:10  NiLuJe
+
+	* [r9036] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * USBNetwork:
+	  * Tag v0.47.N
+	  * Fonts:
+	  * Tag v5.7.N
+	  * ScreenSavers:
+	  * Tav v0.34.N
+
+2013-01-19 20:58  NiLuJe
+
+	* [r9035] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * Update binaries (updated TC)
+
+2012-11-15 23:23  NiLuJe
+
+	* [r8953] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * ScreenSavers:
+	  * Tag v0.32.N
+	  * Fonts:
+	  * Tag v5.6.N
+	  * USBNetwork:
+	  * Tag v0.46.N
+	  * Python:
+	  * Tag v0.2.N
+
+2012-11-15 22:58  NiLuJe
+
+	* [r8952] src/python.tar.bz2:
+	  
+	  Kindle Hacks:
+	  * TC update. (Bump FT, FC, KT, coreutils, mosh, htop)
+
+2012-11-13 21:14  NiLuJe
+
+	* [r8936] src/install.sh:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Make the install script slightly more robust & verbose
+
+2012-11-07 16:52  NiLuJe
+
+	* [r8867] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Really fix build script...
+
+2012-11-07 16:51  NiLuJe
+
+	* [r8866] build/build-updates.sh:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Fix build script
+
+2012-11-07 16:36  NiLuJe
+
+	* [r8864] build/build-updates.sh[ADD], src/install.sh[ADD]:
+	  
+	  Kindle Hacks:
+	  * Python:
+	  * Package it
+
+2012-11-07 14:16  NiLuJe
+
+	* [r8857] src/python.tar.bz2[ADD]:
+	  
+	  Kindle Hacks:
+	  * ScreenSavers:
+	  * Build binaries for the cover-mode on legacy devices...
+
+2012-11-06 23:10  NiLuJe
+
+	* [r8853] CREDITS[ADD]:
+	  
+	  Kindle Hacks:
+	  * Missed some stuff in the Python credits, oops.
+
+2012-11-06 20:46  NiLuJe
+
+	* [r8850] .[ADD], build[ADD], src[ADD]:
+	  
+	  Kindle Touch Hacks:
+	  * Bump developer keystore to 20121106
+

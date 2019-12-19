@@ -39,7 +39,7 @@ if __name__ == '__main__':
         pin = sys.argv[2]
     else:
         sensor = Adafruit_DHT.AM2302
-        pin = 23
+        pin = 4
 
     with open("shanghai_houses_DHTAM2302.csv", "a", buffering=1, encoding='utf-8') as log:
         while True:

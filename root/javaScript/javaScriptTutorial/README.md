@@ -1573,3 +1573,216 @@ Node.js has a built-in module called HTTP, which allows Node.js to transfer data
 ```
 The Node.js file system module allows you to work with the file system on your computer.
 ```
+
+* Node.js - module.exports vs exports 
+```
+# Let's first take a look at what the module object is all about
+$ vim run.js 
+    exports.a = 'A';
+    exports.b = 'B';
+    console.log(module);
+    console.log(exportss === module.exports);
+    console.log(module.exports);
+$ node run.js 
+Module {
+  id: '.',
+  exports: { a: 'A', b: 'B' },      // exports is a reference to module.exports.
+  parent: null,
+  filename:
+   '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node/run.js',
+  loaded: false,
+  children: [],
+  paths:
+   [ '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node/node_modules',
+     '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/node_modules',
+     '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/node_modules',
+     '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/node_modules',
+     '/Users/chyiyaqing/Dropbox/chyidlTutorial/node_modules',
+     '/Users/chyiyaqing/Dropbox/node_modules',
+     '/Users/chyiyaqing/node_modules',
+     '/Users/node_modules',
+     '/node_modules' ] }
+
+So, now exports is shortcut fro referencing module.exports, if your module is to export an object. It is a pretty much usless object if you module exports any other or you have assigned anything to module.exports.
+
+// -- exports hello.js 
+exports.anything = function() {
+    console.log('I'm anything.');
+};
+
+// -- module.exports hello.js 
+module.exports.anything = function() {
+    console.log('I'm anything.');
+};
+
+// -- hello-runner.js 
+const hello = require('./hello');
+
+// let's see what's there in hello veriable 
+console.log(hello); // {anything: Function}
+
+hello.anything();   // I am anything.
+
+Exports is just module.exports little helper, If there's something attached to module.exports already, everything on exports is ignored.
+```
+
+* Requireing modules in Node.js 
+> Node uses two core modules for managing module dependencies
+```
+> const config = require('/path/to/file');
+# When Node invokes that require() function with a local file path as the function's only argument. Node goes through the following sequence of steps:
+    1. Resolving: To find the absolute path of the file 
+    2. Loading: To determine the type of the file content.
+    3. Wrapping: To give the file its private scope. This is what makes both the require and module objects local to every file we require.
+    4. Evaluating: This is what the VM eventually does with the loaded code. 
+    5. Caching: So that when we require this file again, we don't go over all the steps anthoer time. 
+
+# Resolving a local path 
+$ node 
+> module 
+Module {
+  id: '<repl>',
+  exports: {},
+  parent: undefined,
+  filename: null,
+  loaded: false,
+  children: [],
+  paths:
+   [  ] }
+> module.paths 
+
+# Requiring a folder
+Modules don't have to be files, we can create a find-me folder under node_modules and place an index.js file in there. The same require('find-me') line will use that folder's index.js file 
+
+An index.js file will be used by default When we require a folder.but we can control what file name to start with under the folder using the main property in package.json.
+$ echo "console.log('I rule');" > node_modules/find-me/start.js 
+$ echo '{"name": "find-me-folder", "main": "start.js"}' > node_modules/find-me/package.json 
+$ node 
+> require('find-me');
+
+# require.resolve 
+If you want to only resolve the module and not execute it, you can use the require.resolve function. it will not load the file, still throw an error if the file does not exist and it will return the full path to the file when found.
+$ node 
+> require.resolve('find-me')
+'/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node/node_modules/find-me.js'
+
+# Relative and absolute paths 
+relative paths(./ and ../)
+absolute paths starting with /.
+
+# Parent-child relation between files 
+$ mkdir lib 
+$ echo "console.log('In util', module);" > lib/util.js 
+
+# exports, module.exports, and synchronous loading of modules 
+In any module, exports is a special object.
+the exports variable inside each module is just a reference to module.exports which manages the exported properties.
+
+The module.exports object in every module is what the require function returns when we require that module.
+
+The exports object becomes complete when Node finishes loading the module. The whole process of requireing/loading a module is synchronous.
+
+# Circular module dependency - 
+
+# JSON and C/C++ addons 
+    .js > .json > .node(binary file). 
+    However, to remove ambiguity, you should probably specify a file extension when requiring anything other than .js files.
+$ node 
+> require.extensions 
+[Object: null prototype] { '.js': [Function], '.json': [Function], '.node': [Function] }
+> require.extensions['.js'].toString()
+'function(module, filename) {\n  var content = fs.readFileSync(filename, \'utf8\');\n  module._compile(stripBOM(content), filename);\n}'
+> require.extensions['.json'].toString()
+'function(module, filename) {\n  var content = fs.readFileSync(filename, \'utf8\');\n  try {\n    module.exports = JSON.parse(stripBOM(content));\n  } catch (err) {\n    err.message = filename + \': \' + err.message;\n 
+   throw err;\n  }\n}'
+> require.extensions['.node'].toString()
+'function(module, filename) {\n  return process.dlopen(module, path.toNamespacedPath(filename));\n}'
+
+# All code you write in Node will be wrapped in functions 
+$ node 
+>> require('module').wrapper
+Proxy [ [ '(function (exports, require, module, __filename, __dirname) { ',
+    '\n});' ],
+  { set: [Function: set],
+    defineProperty: [Function: defineProperty] } ]
+// exports is defined as a reference to module.exports 
+// require and module are both specifc to the function to be executed 
+// __filename/__dirname variables will contain the wrapped module's absolute filename and directory path. 
+$ echo "console.log(arguments)" > index.js 
+$ node index.js 
+[Arguments] {
+  '0': {},  // exports 
+  '1':      // require 
+   { [Function: require]
+     resolve: { [Function: resolve] paths: [Function: paths] },
+     main:
+      Module {
+        id: '.',
+        exports: {},
+        parent: null,
+        filename:
+         '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node/index.js',
+        loaded: false,
+        children: [],
+        paths: [Array] },
+     extensions:
+      [Object: null prototype] { '.js': [Function], '.json': [Function], '.node': [Function] },
+     cache:
+      [Object: null prototype] {
+        '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node/index.js': [Module] } },
+  '2':      // module 
+   Module {
+     id: '.',
+     exports: {},
+     parent: null,
+     filename:
+      '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node/index.js',
+     loaded: false,
+     children: [],
+     paths:
+      [ ' ] },
+  '3':      // file path 
+   '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node/index.js',
+  '4':      // directory path 
+   '/Users/chyiyaqing/Dropbox/chyidlTutorial/root/javaScript/javaScriptTutorial/learn-node' }
+
+The wrapping function return value is module.exports. Inside the wrapped function, we can use the exports object to change the properties of module.exports, but we can't reassign exports itself because it's just a reference. 
+    function (require, module, __filename, __dirname) {
+        let exports = module.exports;
+        // Your Code... 
+        return module.exports
+    }
+
+# The require object 
+$ vim print-in-frame.js 
+const printInFrame = (size, header) => {
+    console.log('*'.repeat(size));
+    console.log(header);
+    console.log('*'.repeat(size));
+};
+
+if (require.main === module) {
+    // The file is being executed directly (not with require)
+    printInFrame(process.argv[2], process.argv[3]);
+} else {
+    module.exports = printInFrame;
+}
+
+# All modules will be cached. 
+```
+
+```
+Node's ES2015 support can be found at http://node.green 
+
+```
+
+Comparing bunyun vs. log4js vs. morgan vs. pino vs. winston
+-----------------------------------------------------------
+
+| .       | Description                                  | Install          | Licenses   | Links                                        |
+| :------ | :------------------------------------------- | :--------------- | :--------- | :------------------------------------------- |
+| Bunyan  | a JSON logging libarary for node.js services | npm i -S bunyan  | MIT        | https://github.com/trentm/node-bunyan#readme |
+| Log4js  | Port of Log4js to work with node             | npm i -S log4js  | Apache-2.0 | https://log4js-node.github.io/log4js-node/   |
+| Morgan  | HTTP request logger middleware for node.js   | npm i -S morgan  | MIT        | https://github.com/expressjs/morgan#readme   |
+| Pino    | super fast, all natural json logger          | npm i -S pino    | MIT        | http://getpino.io/                           |
+| Winston | A logger for just about everything           | npm i -S winston | MIT        | https://github.com/winstonjs/winston#readme  |

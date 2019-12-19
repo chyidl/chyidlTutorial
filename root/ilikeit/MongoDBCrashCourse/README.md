@@ -106,9 +106,14 @@ By default, MongoDB runs using the mongod user account and uses the following de
     $ mongo  (mongo shell default localhost port 27017)
 ```
 
-* Enable Access Control
-> Enabling access control on a MongoDB deployment enforces authentication, requiring users to identify themseleves.
+* Enable Authentication on MongoDB
+> Never run a production server without authentication on.
 ```
+# Connect to the server using the mongo shell 
+$ mongo mongodb://<host>:<port>
+
+# Create the user administrator 
+> use admin
 1. User Administrator 
     With access control enabled, ensure you have a user with userAdmin or userAdminAnyDatabase role in the admin database. This user can administrate user and roles such as:
         create users、grant or revoke roles from users、and create or modify customs roles.
@@ -128,8 +133,15 @@ By default, MongoDB runs using the mongod user account and uses the following de
                 roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ]
             }
         )
-
         The databae admin: is the user's authentication database.
+
+# Enable authentication in mongod configuration file 
+$ vim /etc/mongod.conf 
+    security:
+        authorization: "enabled"
+
+From now on, all clients connecting to this server must authenticate themselves as a valid users, and they will be only able to perform actions as determined by their assigned roles.
+
     4. Connect and authenticate as the user administrator. 
         4.1: Connect with authentication by passing in user credentials 
             $ mongo --port 27017 --authenticationDatabase "admin" -u "root" -p 
@@ -138,6 +150,17 @@ By default, MongoDB runs using the mongod user account and uses the following de
             $ mongo --port 27017 
             > use admin
             > db.auth("root", passwordPrompt()) // or cleartext password
-
+        4.3: connect and authenticate in one single step
+            $ mongo mongodb://root:password@<host>:<port>  
+            this option isn't advised because it will leave your credentials visible in your terminal history, which any program on your computer can actuall read.
+    
+    5. Finally, create additional users as needed. 
+        The following operation adds a user tester to the test database who has readWrite role in the test database:
+            > use test
+            > db.createUser({
+                user: "test",
+                pwd: "text123",
+                roles: [{ role: "readWrite", db: "test"}]
+            })
 ```
 

@@ -1,6 +1,349 @@
 Linux 101
 =========
 
+Linux Common Commands
+---------------------
+```
+1. df - report file system disk space usage 
+    -B, --block-size=SIZE: scale sizes by SIZE before printing them; e.g., 
+        '-BM' prints sizes in units of 1,048,576 bytes
+        '-BK' prints sizes in units of 1024 bytes 
+[chyi@zong /]$ df -BM 
+Filesystem     1M-blocks  Used Available Use% Mounted on
+devtmpfs            990M    0M      990M   0% /dev
+tmpfs              1000M    0M     1000M   0% /dev/shm
+tmpfs              1000M    9M      991M   1% /run
+tmpfs              1000M    0M     1000M   0% /sys/fs/cgroup
+/dev/vda1         40189M 3844M    34486M  11% /
+tmpfs               200M    0M      200M   0% /run/user/1000
+tmpfs               200M    0M      200M   0% /run/user/0
+
+    -T, --print-type: print file system type 
+[chyi@zong /]$ df -BM -T
+Filesystem     Type     1M-blocks  Used Available Use% Mounted on
+devtmpfs       devtmpfs      990M    0M      990M   0% /dev
+tmpfs          tmpfs        1000M    0M     1000M   0% /dev/shm
+tmpfs          tmpfs        1000M    9M      991M   1% /run
+tmpfs          tmpfs        1000M    0M     1000M   0% /sys/fs/cgroup
+/dev/vda1      ext4        40189M 3844M    34486M  11% /
+tmpfs          tmpfs         200M    0M      200M   0% /run/user/1000
+tmpfs          tmpfs         200M    0M      200M   0% /run/user/0
+
+2. du - estimate file space usage 
+   -a, --all: write counts for all files, not just directories 
+   -c, --total: produce a grand total 
+   -b, --bytes: equivalent to '--apparent-size --block-size=1'
+   -k like --block-size=1K 
+   -m like --block-size=1M 
+
+3. cat - concatenate files and print on the standard output
+[chyi@zong /]$ cat /proc/cpuinfo    
+processor       : 0
+vendor_id       : GenuineIntel
+cpu family      : 6
+model           : 63
+model name      : Intel(R) Xeon(R) CPU E5-2620 v3 @ 2.40GHz
+stepping        : 2
+microcode       : 0x1
+cpu MHz         : 2394.454
+cache size      : 15360 KB
+physical id     : 0
+siblings        : 1
+core id         : 0
+cpu cores       : 1
+apicid          : 0
+initial apicid  : 0
+fpu             : yes
+fpu_exception   : yes
+cpuid level     : 13
+wp              : yes
+flags           : fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon rep_good nopl xtopology eagerfpu pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm invpcid_single ibrs ibpb fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt arat spec_ctrl
+bogomips        : 4788.90
+clflush size    : 64
+cache_alignment : 64
+address sizes   : 40 bits physical, 48 bits virtual
+power management:
+
+[chyi@zong /]$ cat /proc/meminfo
+MemTotal:        2046924 kB
+MemFree:          163352 kB
+MemAvailable:    1546112 kB
+Buffers:           54124 kB
+Cached:          1426220 kB
+SwapCached:            0 kB
+Active:           675832 kB
+Inactive:        1072532 kB
+Active(anon):     268576 kB
+Inactive(anon):     8400 kB
+Active(file):     407256 kB
+Inactive(file):  1064132 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:                24 kB
+Writeback:             0 kB
+AnonPages:        268040 kB
+Mapped:            46632 kB
+Shmem:              8956 kB
+Slab:              99644 kB
+SReclaimable:      86356 kB
+SUnreclaim:        13288 kB
+KernelStack:        2848 kB
+PageTables:         7128 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     1023460 kB
+Committed_AS:    1115292 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      271376 kB
+VmallocChunk:   34358947836 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:    192512 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       57188 kB
+DirectMap2M:     2039808 kB
+DirectMap1G:           0 kB
+
+[chyi@zong ~]$ cat /proc/swaps
+Filename                                Type            Size    Used    Priority
+/swapfile                               file            2097148 143872  -2
+
+[chyi@zong ~]$ cat /proc/version
+Linux version 3.10.0-1062.4.1.el7.x86_64 (mockbuild@kbuilder.bsys.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-39) (GCC) ) #1 SMP Fri Oct 18 17:15:30 UTC 2019
+
+[chyi@zong ~]$ cat /proc/net/dev
+Inter-|   Receive                                                |  Transmit
+ face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+  eth0: 8041505018 2967528    0    0    0     0          0         0 1123975564 2562359    0    0    0     0       0          0
+    lo: 29685667   46948    0    0    0     0          0         0 29685667   46948    0    0    0     0       0          0
+
+4. free - Display amount of free and used memory in the system
+    -s, --seconds seconds: Continuously display the result delay seconds apart. You may actually specify any floating point number for delay,
+[chyi@zong ~]$ free -s 1
+              total        used        free      shared  buff/cache   available
+Mem:        2046924     1433392       72232        2896      541300      457896
+Swap:       2097148      143872     1953276
+
+              total        used        free      shared  buff/cache   available
+Mem:        2046924     1433408       72236        2896      541280      457944
+Swap:       2097148      143872     1953276
+
+5. lsof - list open files 
+   -i: 3306 
+[chyi@zong ~]$ sudo lsof -i:3306
+COMMAND  PID  USER   FD   TYPE DEVICE SIZE/OFF NODE NAME
+mysqld  1416 mysql   17u  IPv6  55843      0t0  TCP *:mysql (LISTEN)
+
+6. netstat - Print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships
+    -t, -tcp: 
+    -u, -udp: 
+    --numberic, -n: Show numerical addresses instead of trying to determine symbolic host, port or user names.
+    --listening, -l: Show only listening sockets, (These are omitted by default.)
+    --program, -p: Show the PID and name of the program to which each socket belongs.
+
+[chyi@zong ~]$ sudo netstat -tunlp | grep 3306
+[sudo] password for chyi: 
+tcp6       0      0 :::3306                 :::*                    LISTEN      1416/mysqld         
+
+7. nohup (no hangup) - run a command immune to hangups, with output to a non-tty 
+> nohup is 'no hangup'. Normally, when we log out from the system then all the running programs or processes are hangup or terminated.
+
+[chyi@zong ~]$ nohup --version
+nohup (GNU coreutils) 8.22
+Copyright (C) 2013 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Jim Meyering.
+    - Using nohup command without '&' then it returns to shell command prompt immediately after running that particular command in the background.
+[chyi@zong ~]$ vim ./sleep.sh 
+    #!/usr/bin/env bash
+    echo "sleep 5 seconds"
+    sleep 5
+    echo "What's going on everybody!"
+
+[chyi@zong ~]$ nohup bash ./sleep.sh 
+nohup: ignoring input and appending output to ‘nohup.out’
+[chyi@zong ~]$ cat nohup.out 
+sleep 5 seconds
+What's going on everybody!
+
+    - Using nohup command with '&' then it doesn't return to shell command prompt after running the command in the background.
+[chyi@zong ~]$ nohup bash sleep.sh &
+[1] 9598
+[chyi@zong ~]$ nohup: ignoring input and appending output to ‘nohup.out’
+
+[chyi@zong ~]$ fg
+nohup bash sleep.sh
+[chyi@zong ~]$ fg
+-bash: fg: current: no such job
+
+8. ls - list directory contents 
+
+9. mkdir - make directories 
+    -p, --parents: no error if existing, make parent directories as needed.
+
+10. cp - copy files and directories 
+    -R, -r, --recursive: copy directories recursively
+
+11. rm - remove files or directories 
+    -R, -r, --recursive: remove directories and their contents recursively 
+    -f, --force: ignore nonexistent files and arguments, never prompt 
+
+12. touch - change file timestamps 
+    -t STAMP: use [[CC]YY]MMDDhhmm[.ss] instead of current time 
+
+13. mv - move (rename) files 
+    mv SOURCE DIRECTORY
+
+14. stat - display file or file system status 
+
+[chyi@zong ~]$ stat sleep.sh 
+  File: ‘sleep.sh’
+  Size: 85              Blocks: 8          IO Block: 4096   regular file
+Device: fd01h/64769d    Inode: 394856      Links: 1
+Access: (0775/-rwxrwxr-x)  Uid: ( 1000/    chyi)   Gid: ( 1000/    chyi)
+Access: 2019-11-06 13:45:40.136590367 +0800
+Modify: 2019-11-06 13:45:29.864600806 +0800
+Change: 2019-11-06 13:45:29.867600802 +0800
+ Birth: -
+
+15. chmod - change file mode bits 
+    -R, --recursive: change files and directories recursively 
+    read(r): 4, write(w): 2, execute(x): 1
+
+16. ps - report a snapshot of the current processes.
+    -A : Select all processes. Identical to -e 
+    -a : Select all processes except both session leaders and processes not associated with a terminal.
+    -u userlist: Select by effective user ID (EUID) or name. 
+    -w : wide output. Use this option twice for unlimited width.
+    -f : Do full-format listing. This option can be combined with many other UNIX-style options to add additional columns.
+
+[chyi@zong ~]$ ps -aux --sort -pmem | head -n 10        # 前10个内存使用最多的进程
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root      8230  0.0 47.1 1100596 965608 pts/2  T    10:52   0:01 mysql -u root -p
+mysql     1416  1.0 11.6 1150312 238952 ?      Sl   Nov05  14:51 /usr/sbin/mysqld --daemonize --pid-file=/var/run/mysqld/mysqld.pid
+root      4922  0.4  1.4 903848 29668 ?        Sl   Nov05   4:45 /opt/hosteye/bin/hosteye --is_child_mode=true --is_console_mode=false --start_mode=0
+root      1195  0.0  0.3 284776  8048 ?        SNl  Nov05   0:55 ./bcm-si -N 78431e27-b82c-4112-aa6f-5561f2f9c7ae -v 3
+root      9012  0.0  0.2 156796  5572 ?        Ss   13:08   0:00 sshd: chyi [priv]
+root      1134  0.0  0.2 219596  4876 ?        SNl  Nov05   0:16 ./bcm-agent
+chyi      9015  0.0  0.1 116636  3412 pts/3    Ss   13:08   0:00 -bash
+root       381  0.0  0.1  39080  3360 ?        Ss   Nov05   0:00 /usr/lib/systemd/systemd-journald
+root      1092  0.0  0.1 222760  3168 ?        Ssl  Nov05   0:05 /usr/sbin/rsyslogd -n
+
+[chyi@zong ~]$ ps -aux --sort +pmem | head -n 10        # 前10个内存使用最少的进程
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         2  0.0  0.0      0     0 ?        S    Nov05   0:00 [kthreadd]
+root         4  0.0  0.0      0     0 ?        S<   Nov05   0:00 [kworker/0:0H]
+root         6  0.0  0.0      0     0 ?        S    Nov05   0:04 [ksoftirqd/0]
+root         7  0.0  0.0      0     0 ?        S    Nov05   0:00 [migration/0]
+root         8  0.0  0.0      0     0 ?        S    Nov05   0:00 [rcu_bh]
+root         9  0.0  0.0      0     0 ?        R    Nov05   0:02 [rcu_sched]
+root        10  0.0  0.0      0     0 ?        S<   Nov05   0:00 [lru-add-drain]
+root        11  0.0  0.0      0     0 ?        S    Nov05   0:00 [watchdog/0]
+root        13  0.0  0.0      0     0 ?        S    Nov05   0:00 [kdevtmpfs]
+
+17. kill - send a signal to a process or a group of processes. 
+   -9, -SIGKILL: Kill signal
+
+18. killall - kill processes by name 
+    -9, -SIGKILL: kill signal
+
+19. tar - manipulate tape archives
+    -c, --create : create a new archive containing the specified items.
+    -v, --verbose: Produce verbose output.
+    -f file, --file file: Read the archive from or write the archive to the specified file.
+    -x, --extract, --get: extract files from an archive
+    -z, --gzip: filter the archive through gzip
+    -j, --bzip2: filter the archive through bzip2  
+    -Z, --compress, --uncompress: filter the archive through compress
+           Note: You might need to install external program (lzip/ncompress/lzma...) to use some of these compression options
+    -tvf archive.tar: List all files in archive.tar verbosely.
+
+[chyi@zong ~]$ tar -cvf nohup.tar *.out         # tar -xvf nohup.tar 
+nohup.out
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar  sleep.sh
+
+[chyi@zong ~]$ tar -czf nohup.tar.gz *.out      # tar -xzf nohup.tar.gz 
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar.gz  sleep.sh
+
+[chyi@zong ~]$ tar -cjf nohup.tar.bz2 *.out     # tar -xjf nohup.tar.bz2 
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar.bz2  sleep.sh
+
+[chyi@zong ~]$ tar -cZf nohup.tar.Z *.out       # tar -xZf nohup.tar.Z 
+[chyi@zong ~]$ ls
+nohup.out  nohup.tar.Z  sleep.sh
+
+20. zip - package and compress (archive) files 
+
+21. cron - daemon to execute scheduled commands
+
+22. at, batch, atq, atrm - queue, examine or delete jobs for later execution.
+
+23. crontab - maintains crontab files for individual users 
+    -e : Edits the current crontab using the editor specified by the VISUAL or EDITOR environment variables.
+    -r : Removes the current crontab.
+    -u : Appends the name of the user whose crontab is to be modified.
+    -l : Displays the current crontab on standard output.
+
+24. ssh - OpenSSH SSH client (remote login program)
+
+25. scp - secure copy (remote file copy program)
+
+26. wget - The non-interactive network downloader.
+    -b, --background: Go to background immediately after startup. If no output file is specified via the -o, output is redirected to wget-log.
+    -O , --output-document=file : The documents will not be written to the appropriate files, but all willbe concatenated together and written to file.
+    -c, --continue : Continue getting a partially-downloaded file. This is useful when you want to finished up a download started by a previous instance of Wget, or by another program. 
+
+27. ip - show / mainpulate routing, devices, policy routing and tunnels
+    ip addr : Shows addresses assigned to all network interfaces. 
+
+28. netstat - Print network connections, routing tables, interface statistics, masquerade connections, and multicast memberships 
+    -t, --tcp: 
+    -u, --udp:
+    -n, --numeric: Show numerical addresses instead of trying to determine symbolic host, port or user names.
+
+[chyi@zong ~]$ netstat -tn | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n      # 查看服务器IP连接数
+      1 100.67.8.32
+      1 100.67.8.33
+      1 101.88.222.63
+      1 Address
+      1 servers)
+      2 100.67.8.25
+      2 127.0.0.1
+      2 58.247.91.82
+
+29. awk, gawk - pattern scanning and processing language.
+    
+30. cut - remove sections from each line of files.
+    -d, --delimiter=DELIM: use DELIM instead of TAB for field delimiter 
+    -f, --fields=LIST: select only these fields; also print ant line that contains no delimiter character, unless the -s option is specified.    
+
+31. sort - sort lines of text files
+    -n, --numeric-sort: compare according to string numerical value 
+    -r, --reverse: reverse the result of comparisons 
+
+32. uniq - report or omit repeated lines 
+    -c, --count: prefix lines by the number of occurrences.
+
+33. tail - output the last part of files 
+    -f, --follow: output appended data as the file grows
+    -c, --bytes=K: output the last K bytes; or use -c +K to output bytes starting with the Kth of each file.
+    -n, --lines=K: output the last K lines, instead of the last 10; or use -n +K to output starting with the Kth.
+```
+
 ![Linux Performance Tools](/imgs/raspberrypi/Linux101/linux_perf_tools_full.png?raw=true)
 ```
 在Linux不同子系统出现性能问题后，应该用什么样的工具来观测和分析.
@@ -549,3 +892,54 @@ Percentage of the requests served within a certain time (ms)
             -p 指定php-fpm进程号21027
 
 ```
+
+Signal numbering for standard signals
+-------------------------------------
+* signal - overview of signals
+```
+DESCRIPTION:
+    Linux supports both POSIX reliable signals (hereinafer "standard signals") and POSIX real-time signals.
+```
+
+> The numberic value for each signal is given in the table below. As show in the table, many signals have different numberic values on different architectures. The first numberic value in each table row shows the signal number on x86, ARM, and most other architectures; the second value is for Alpha and SPARC; the third is for MIPS; and the last is for PARISC. A dash (-) doniotes that a signal is absent on the corresponding architecture.
+
+| Signal    | x86/ARM | Alpha/SPARC | MIPS  | PARISC | Notes                                                                   |
+| --------- | :-----: | :---------: | :---: | :----: | :---------------------------------------------------------------------- |
+| SIGHUP    |    1    |      1      |   1   |   1    | Hangup detected on controlling terminal or death of controlling process |
+| SIGINT    |    2    |      2      |   2   |   2    | Interrupt from keyboard                                                 |
+| SIGQUIT   |    3    |      3      |   3   |   3    | Quit from keyboard                                                      |
+| SIGILL    |    4    |      4      |   4   |   4    | Illegal Instruction                                                     |
+| SIGTRAP   |    5    |      5      |   5   |   5    | Trace/breakpoint trap                                                   |
+| SIGABRT   |    6    |      6      |   6   |   6    | Abort signal from abort(3)                                              |
+| SIGIOT    |    6    |      6      |   6   |   6    | IOT trap. A synonym for SIGABRT                                         |
+| SIGBUS    |    7    |     10      |  10   |   10   | Bus error (bad memory access)                                           |
+| SIGEMT    |    -    |      7      |   7   |   -    | Emulator trap                                                           |
+| SIGFPE    |    8    |      8      |   8   |   8    | Floating-point exception                                                |
+| SIGKILL   |    9    |      9      |   9   |   9    | Kill signal                                                             |
+| SIGUSR1   |   10    |     30      |  16   |   16   | User-defined signal 1                                                   |
+| SIGSEGV   |   11    |     11      |  11   |   11   | Invalid memory reference                                                |
+| SIGUSR2   |   12    |     31      |  17   |   17   | User-defined signal 2                                                   |
+| SIGPIPE   |   13    |     13      |  13   |   13   | Broken pipe: write to pipe with no readers; see pipe(7)                 |
+| SIGALRM   |   14    |     14      |  14   |   14   | Timer signal from alarm(2)                                              |
+| SIGTERM   |   15    |     15      |  15   |   15   | Termination signal                                                      |
+| SIGSTKFLT |   16    |      -      |   -   |   7    | Stack fault on coprocessor (unused)                                     |
+| SIGCHLD   |   17    |     20      |  18   |   18   | Child stopped or terminated                                             |
+| SIGCLD    |    -    |      -      |  18   |   -    | A synonym for SIGCHLD                                                   |
+| SIGCONT   |   18    |     19      |  25   |   26   | Continue if stopped                                                     |
+| SIGSTOP   |   19    |     17      |  23   |   24   | Stop process                                                            |
+| SIGTSTP   |   20    |     18      |  24   |   25   | Stop typed at terminal                                                  |
+| SIGTTIN   |   21    |     21      |  26   |   27   | Terminal input for background process                                   |
+| SIGTTOU   |   22    |     22      |  27   |   28   | Terminal output for background process                                  |
+| SIGURG    |   23    |     16      |  21   |   29   | Urgent condition on socket (4.2BSD)                                     |
+| SIGXCPU   |   24    |     24      |  30   |   12   | CPU time limit exceeded (4.2BSD); see setrlimit(2)                      |
+| SIGXFSZ   |   25    |     25      |  31   |   30   | File size limit exceeded (4.2BSD); see setrlimit(2)                     |
+| SIGVTALRM |   26    |     26      |  28   |   20   | Virtual alarm clock (4.2BSD)                                            |
+| SIGPROF   |   27    |     27      |  29   |   21   | Profiling timer expired                                                 |
+| SIGWINCH  |   28    |     28      |  20   |   23   | Window resize signal (4.3BSD, Sun)                                      |
+| SIGIO     |   29    |     23      |  22   |   22   | I/O now possible (4.2BSD)                                               |
+| SIGPOLL   |         |             |       |        | Pollable event (Sys V). Synonym for SIGIO                               |
+| SIGPWR    |   30    |    29/-     |  19   |   19   | Power failure (System V)                                                |
+| SIGINFO   |    -    |    29/-     |   -   |   -    | A synonym for SIGPWR                                                    |
+| SIGLOST   |    -    |    -/29     |   -   |   -    | File lock lost (unused)                                                 |
+| SIGSYS    |   31    |     12      |  12   |   31   | Bad system call (SVr4); see also seccomp(2)                             |
+| SIGUNUSED |   31    |      -      |   -   |   31   | Synonymous with SIGSYS                                                  |

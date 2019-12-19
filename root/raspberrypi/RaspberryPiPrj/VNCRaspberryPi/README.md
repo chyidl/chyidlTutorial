@@ -21,3 +21,54 @@ $ tightvncserver -geometry 800x600 -depth 24
 
 # Of course, the bigger the desktop and the higher the colour depth, the more data needs to be sent to Pi to Mac, and the slower and less responsive the remote system will feel. Experment to find the size you prefer.
 ```
+
+Install and Configure VNC on Ubuntu 
+-----------------------------------
+```
+$ uname -a 
+Linux RPi3BPlus 4.15.0-1049-raspi2 #53-Ubuntu SMP PREEMPT Wed Oct 2 01:04:00 UTC 2019 aarch64 aarch64 aarch64 GNU/Linux
+
+# set up a VNC server on an Ubuntu 18.04 server and connect to it securely through an SSH tunnel. TightVNC, a fast and lightweight remote control package. will ensure vnc connection will be smooth and stable even on slower internet connections.
+
+Step 1 - Installing the Desktop Environment and VNC Server 
+    $ sudo apt update   # update list of package 
+    $ sudo apt install xfce4 xfce4-goodies  # install Xfce desktop environment  
+    $ sudo apt install tightvncserver   # install TightVNC server 
+    # Complete the VNC server's initial confuguration, use the vncserver command to set up a secure password and create the initial configuration files:
+    $ vncserver     # set up a secure password and create the initial configuration files (password must be between six and eight characters long, Passwords more than 8 characters will be truncated automatically)
+
+Step 2 - Configuring the VNC Server 
+    $ vncserver -kill :1    # stop the VNC server instance that is running on port 5901
+    $ vim ~/.vnc/xstartup 
+        #!/usr/bin/env bash 
+        xrdb $HOME/.Xresources          # .Xresources is where a user can make change to certain settings of the graphical desktop, like terminal colors, cursor themes, and font rendering.
+        startxfce4 &                    # launch Xfce 
+    $ vncserver     # Restart the VNC server 
+
+Step 3 - Connecting the VNC Desktop Securely 
+    VNC itself doesn't use secure protocols when connecting. We'll use an SSH tunnel to connect securely to our server, and then tell our VNC client to use that tunnel rather than making a direct connection. 
+    ... 
+
+Step 4 - Running VNC as a System Service 
+    Set up the VNC server as a systemd service
+    $ sudo vim /etc/systemd/system/vncserver@.service       # The @ symbol at the end of the name will let us pass in an argument we can use in the service configuration. we will use this to specify the VNC display port we want to use when we manage the service 
+[Unit]
+Description=Start TightVNC server at startup 
+After=syslog.target network.target 
+
+[Service]
+Type=forking
+User=pi
+Group=pi 
+WorkingDirectory=/home/pi
+PIDFile=/home/pi/.vnc/%H:%i.pid
+ExecStartPre=-/usr/bin/vncserver -kill :i > /dev/null 2>&1          # stop VNC if it's already running 
+ExecStart=/usr/bin/vncserver -depth 24 -geometry 1920x1080 :%i 
+ExecStop=/usr/bin/vncserver -kill :%i 
+
+[Install]
+WantedBy=multi-user.target
+    $ sudo systemctl daemon-reload  # make the system aware of the new unit file 
+    $ sudo systemctl enable vncserver@1.service 
+    $ sudo systemctl start|status| vncserver@1
+```

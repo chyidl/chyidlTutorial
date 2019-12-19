@@ -41,6 +41,9 @@ $ echo $SHELL
 
 # Handling Upgrades 
 $ sudo chown -R $(whoami):admin /usr/local 
+
+(Linux)
+$ chsh -s $(which zsh)
 ```
 
 Oh-My-Zsh + Bullet Train Theme 
@@ -186,6 +189,20 @@ Oh My Tmux!Pretty & versatile tmux configuration(Fork: https://github.com/gpakos
 ----------------------------------------------------------------------------------------
 > tmux is a terminal multiplexer: it enables a number of terminals to be created, accessed, and controlled from a single screen.
 ```
+# 会话与进程
+命令行的典型使用方式是，打开一个终端窗口(terminal window),输入命令，用户与计算机这种临时的交互，称为一次“会话”session.
+
+会话的一个重要特点是，窗口与其中启动的进程是连在一起的，打开窗口，会话开始，关闭窗口，会话结束，会话内部的进程也会随之终止，不管有没有运行完.
+
+为了解决这个问题,会话与窗口可以“解绑”：窗口关闭时，会话并不终止，而是继续运行，等到以后需要的时候，再让会话“绑定”其他窗口.
+
+Tmux的作用就是会话与窗口的“解绑”工具:
+    1. 允许在单个窗口中，同时访问多个会话，对于同时运行多个命令行程序很有用
+    2. 可以让新窗口“接入”已经存在的会话
+    3. 允许每个会话有多个连接窗口，因此可以多人实时共享会话
+    4. 支持窗口的垂直和水平拆分
+类似的终端复用器还有 GNU Screen. 
+
 * Installation 
 Requirements:
 	1. tmux **`>= 2.1`** running inside Linux, Mac, OpenBSD 
@@ -334,9 +351,7 @@ Chris johnsen created the [`reattach-to-user-namespace` utility](https://github.
 To install `reattach-to-user-namespace`, use either [MacPorts][] or [Homebrew][]:
     
     $ port install tmux-pasteboard
-
 or 
-
     $ brew install reattach-to-user-namespace 
 
 Once installed, `reattach-to-usernamespace` will be automatically detected.
@@ -345,20 +360,21 @@ Once installed, `reattach-to-usernamespace` will be automatically detected.
 [Homebrew]: http://brew.sh/
 
 ### tmux shortcuts & cheatsheet 
-
 ```
 $ tmux					# start new  
 $ tmux new -s name		# start new with session name 
-$ tmux a				# attch 
-$ tmux a -t myname		# attach to named 
+$ tmux a				# attch  -- 用于重新接入某个已存在的会话
+$ tmux a -t myname		# attach to 会话名称
 $ tmux ls				# list sessions 
 $ tmux kill-session -t myname # kill session 
 $ tmux ls | grep : | cut -d. -f1 | awk '{print substr($1, 0, length($1)-1)}' | xargs kill  # kill all the tmux sessions 
+$ tmux switch -t 0      # 使用会话编号
+$ tmux switch -t <session-name> # 使用会话名称 
 
 Sessions 
 :new <CR> new session 
 <prefix> s	# list sessions 
-<prefix> $ name session 
+<prefix> $ name session     # 重命名当前会话
 
 Windows (Tabs)
 <prefix> c	# create window 
@@ -411,9 +427,7 @@ set -g status-justify centre
 unbind Up bind Up new-window -d -n tmp \; swap-pane -s tmp.1 \; select-window -t tmp 
 unbind Down 
 bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
-
 ```
-
 - [.tmux.conf](/root/ilikeit/Vim%2BTmux/tmux.conf)
 - [.tmux.conf.local](/root/ilikeit/Vim%2BTmux/tmux.conf.local)
 
@@ -454,4 +468,97 @@ $ make distclean  # if you built Vim before
 $ make -j4 
 $ sudo make install 
 $ cp -ru vim/src/vim /usr/bin # overwrites /usr/bin/vim w/o confirmation 
+```
+
+Screen Vs. Tmux 
+---------------
+```
+# Introduction
+Screen or GNU Screen is a terminal multiplexer. In other words, it means that you can start a screen session and then open any number of windows (virtual terminals) inside that session. Processes running in Screen will continue to run when their window is not visible event if you get disconnected.
+
+# Install Linux GNU Scrren 
+$ screen --version 
+Screen version 4.06.02 (GNU) 23-Oct-17
+
+# Starting Named Session (Named sessions are useful when you run multiple screen sessions.)
+$ screen -S session_name 
+
+# Working with Linux Screen Windows 
+$ screen -S session_name 
+
+# Working With Linux Screen Windows
+    Ctrl+a  c   : Create a new window (with shell)
+    Ctrl+a "    : List all window 
+    Ctrl+a 0    : Switch to window 0 (by number)
+    Ctrl+a A    : Rename the current window 
+    Ctrl+a S    : Split current region horizontally into two regions 
+    Ctrl+a |    : Split current region vertically into two regions  
+    Ctrl+a tab  : Switch the input focus to the next regions
+    Ctrl+a Ctrl+a: Toggle between the current and previous region 
+    Ctrl+a Q    : Close all regions but the current one 
+    Ctrl+q X    : Close the current region 
+
+# Detach from Linux Screen Session 
+$ Ctrl+a d  # detach from the screen session at any time typing 
+
+# Reattach to a Linux Screen 
+```
+
+vim+tmux - OMG!Code
+-------------------
+* Why vim?
+    - highly customizable 
+    - runs everywhere 
+    - works with many programming languages
+    - scriptable
+* Features 
+    - Model editing 
+```
+Model editing 
+    change the meaning of the keys in each mode of operation 
+    -> Normal Mode - navigate the structure of the file
+        1. Don't use arrow keys 
+        2. Don't use the mouse 
+        You're a programmer Strive to be lazy 
+        h j k l - left up down right
+        -> ^E - scroll the window down 
+        -> ^Y - scroll the window up 
+        -> ^F - scroll down one page 
+        -> ^B - scroll up one page 
+        -> H  - move cursor to the top of the window 
+        -> M  - move cursor to the middle of the window 
+        -> L  - move cursor to the bottom of the window 
+        -> gg - go to top of file
+        -> G  - go to bottom of file 
+        The secret sauce 
+            -> text objects and motions 
+                Think of a file as more than individual characters 
+                text objects 
+                    -> w - words
+                    -> e - end of word
+                    -> s - sentences 
+                    -> p - paragraphs 
+                    -> t - tags 
+                Motions 
+                    -> a - all 
+                    -> i - in 
+                    -> t - 'til
+                    -> f - find forward 
+                    -> F - find backward
+                Combine with commands 
+                Commands
+                    -> d - delete(also cut)
+                    -> c - change(delete, then place in insert mode)
+                    -> y - yank (copy)
+                    -> v - visually select
+                {command}{text object or motion}    
+                    -> diw - delete in word 
+                    -> caw - change all word
+                    -> yi) - yank all text inside parentheses 
+                        
+            -> the DOT command 
+            -> macros 
+    -> Insert Mode - eidting the file 
+    -> Visual Mode - highlight portions of the file to manipulate at once 
+    -> Ex Mode - Command mode 
 ```

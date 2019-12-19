@@ -13,6 +13,8 @@ Git Crash Course
 # Mac Install Git 
 $ brew install git 
 
+$ git help <command>    # 显示command 
+
 # Git Config --global 参数表示全局有效
 $ git config --system --list  # 查看系统config 
 $ git config --global --list  # 查看当前用户 global 配置
@@ -68,7 +70,7 @@ $ git reflog
 $ git diff HEAD -- readme.txt  # 查看工作区和版本库最新版本的区别
 
 # Discard changes in working directory 撤销文件在工作区的修改
-$ git checkout -- <file>  # 回到最近一次git commit 或 git add时的状态 
+$ git checkout -- <file>  # 抛弃工作区的修改
 
 # git reset HEAD <file> 可以把暂存区的修改撤销掉(unstage),重新放回到工作区 
 # git reset 命令可以会退版本，也可以把暂存区的修改回退到工作区，使用HEAD时，表示最新的版本 
@@ -193,7 +195,7 @@ $ git checkout master
 $ git tag v1.0  
 
 # git tag 查看所有的标签,标签不是按照时间顺序列出，而是按照字母顺序 
-# git show <tag name> 查看标签信息 
+# git show <tag name> 标签信息 显示某次提交的内容
 
 # 创建带有说明的标签，用-a 指定标签名,-m 指定说明文字, 标签总是指向commit，如果这个commit既出现在master分支，又出现在dev分支，那么这两个分支都可以看到这个标签
 $ git tag -a v0.1 -m "version 0.1 released" 1094adb
@@ -264,7 +266,59 @@ $ git check-ignore -v App.class
 
 Use vimdiff as git mergetool
 ----------------------------
+* Step 1: Git Config 
+> This will set vimdiff as the default merge tool.
 ```
+$ git config --global merge.tool vimdiff 
+$ git config --global merge.conflictstyle diff3 
+$ git config --global mergetool.prompt false 
+```
+* Step 2: Creating merge conflict 
+```
+$ mkdir zoo 
+$ cd zoo 
+$ git init 
+$ vim animals.txt 
+
+# Let's add some animals 
+    cat
+    dog
+    octopus 
+    octocat
+
+# Save the file.
+$ git add animals.txt       # 将工作区文件提交到暂存区
+$ git commit -m "Initial commit"
+$ git branch octodog
+$ git checkout octodog 
+$ vim animals.txt   # let's change octopus to octodog 
+$ git add animals.txt 
+$ git commit -m "Replace octopus with an octodog"
+$ git checkout master 
+$ vim animals.txt   # let's change octopus to octoman 
+$ git add animals.txt 
+$ git commit -m "Replace octopus with an octoman"
+$ git merge octodog     # merge octodog into master
+# That's where we get a merge error:
+    Auto-merging animals.txt
+    CONFLICT (content): Merge conflict in animals.txt
+    Automatic merge failed; fix conflicts and then commit the result.
+$ git mergetool 
+```
+![vimdiff as git mergetool](/imgs/ilikeit/GitCrashCourse/vimdiff_mergetool.png?raw=true)
+* Resolving merge conflict with vimdiff 
+```
+Let's assume that wen want to keep the "octodog" change (from REMOTE). For that, move to the MERGED file(Ctrl + w, j), move your cursor to a merge conflict area and then:
+
+:diffg  RE  " get from REMOTE 
+:diffg  BA  " get from BASE 
+:diffg  LO  " get from LOCAL
+
+$ git clean -f 
+
+Save the file and quit (a fast way to write and quit multiple files is :wqa)
+$ git commit -m "message"
+
 Vimdiff is nice diff tool. 
 $ man git-diff: Show changes between commits, commit and working tree, etc
 
@@ -275,11 +329,21 @@ $ git diff --stat   :   see an overview of changes
 $ git log --pretty=format:"[%h] %ae, %ar: %s" --stat    :   which shows commit history with the files that were changed.
 
 $ vimdiff file1 file2 [file3 [file4]]   :   starts Vim in diff mode 
+```
 
-# Git Settings 
-get Vimdiff working with Git, To Tell Git to always use Vimdiff
-$ git config --global diff.tool vimdiff 
-$ git config --global merge.tool vimdiff
+How to remove local untracked files from the current Git branch
+---------------------------------------------------------------
+```
+# If you want to see which files will be deleted you can use the -n option before you run the actual command:
+$ git clean -n 
+
+# Then when you are comfortable (because it will delete the files for real!)
+$ git clean -f 
+
+# Here are some more options for you to delete directories, files, ignored and non-ignored files 
+$ git clean -fd     # To remove directories 
+$ git clean -fX     # To remove ignored files 
+$ git clean -fx     # To remove ignored and non-ignored files 
 ```
 
 At what time of day do famous programmers work?
@@ -336,4 +400,29 @@ $ git log --author="Linus Torvalds" --date=iso | perl -nalE 'if (/^Date:\s+[\d-]
 21 -    8 *********************************
 22 -    8 *********************************
 23 -    6 *************************
+```
+
+Git Common Commands
+-------------------
+```
+1. help <command> - Display help information about Git 
+
+2. show - Show various types of objects 
+
+3. checkout - Switch branches or restore working tree files 
+
+4. add -  Add file contents to the index 
+
+5. rm - Remove files from the working tree and from the index 
+    --cached: Use this option to unstage and remove paths only from the index. Working tree files, whether modified or not, will be left alone.
+
+6. reset - Reset current HEAD to the specified state 
+    --hard: Resets the index and working tree. Any changes to tracked files in the working tree since <commit> are discarded.
+
+7. commit - Record changes to the repository
+    --amend: Replace the tip of the current branch by creating a new commit.
+
+8. revert - Revert some existing commits 
+
+9.  
 ```

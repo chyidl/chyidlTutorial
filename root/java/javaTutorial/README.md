@@ -144,8 +144,19 @@ Java语言支持的变量类型:
     局部变量: 类的方法中的变量，访问修饰符不能用于局部变量，局部变量只在声明他的方法、构造方法或者语句块中可见，局部变量是在栈上分配的，局部变量没有默认值，所以局部变量被声明后，必需经过初始化，才可以使用.
 ```
 
-Java 修饰符
------------
+Controlling Access to Members of a Class
+----------------------------------------
+> Access level modifiers determine whether other classes can use a particular fields or invoke a particular method. There are two levels of access control:
+> At the top level - public, or package-private (no explicit modifier)
+> At the member level - public, private, protected, or package-private (no explicit modifier)
+
+| modifier    | Class | Package | Subclass | World |
+| :---------- | :---- | :------ | :------- | :---- |
+| public      | Y     | Y       | Y        | Y     |
+| protected   | Y     | Y       | Y        | N     |
+| no modifier | Y     | Y       | N        | N     |
+| private     | Y     | N       | N        | N     |
+
 ```
 访问修饰符
     default: 在同一个包内可见，不使用任何修饰符，使用对象：类，接口。变量，方法
@@ -327,25 +338,800 @@ Java是一种面向对象的语言
         Error是程序正常情况下不大可能出现的情况，绝大部分的Error都会导致程序(JVM本身)处于非正常、不可恢复状态。比如OutOfMemoryError
         Object -> Throwable -> Error  [OutOfMemoryError,StackOverflowError,VirtualMachineError,NoClassDefFoundError,ExceptionInInitializerError]
                             -> Exception [IOException, RuntimeException, NullPointerException,ClassCastException,SecurityException]
-    NoClassDefFoundError和ClassNotFoundException区别?
-        ...
+
     try-catch-finally, throw, throws
     try-with-resources, multiple catch. 
         try (BufferedReader br = new BufferedReader(...); BufferedWriter writer = new BufferedWriter())
 ```             
-
-* 2. Java进阶
+    - ClassNotFoundException vs. NoClassDefFoundError?
 ```
+    > ClassNotFoundException, It is an exception. It is of type java.lang.Exception. It occurs when an application tries to load a class at run time which is not updated in the classpath. It is thrown by the application itself. It is thrown by the methods like Class.forName(), loadClass() and findSystemClass(). It occurs when classpath is not updated with required JAR files.
+
+    > NoClassDefFoundError: It is an error. It is of type java.lang.Error. It occurs when Java runtime system doesn't find a class definition, which is present at compile time, but missing at run time. It is thrown by the Java Runtime System. It occurs when required class definition is missing at runtime.
+```
+    - final、finally、finalize?
+```
+    1. final可以用来修饰类、方法、变量:
+        final修饰class代表不可以继承扩展
+        final修饰方法不可以重写(override)
+        final修饰变量不可以修改
+
+    2.finally是Java保证代码一定被执行的一种机制
+        try-finally 或 try-catch-finally进行类似关闭JDBC连接、保证unblock锁
+    
+    3. finalize是基础java.lang.Object的方法，目的是保证对象在被垃圾收集前完成特定资源的回收。finalize机制已不推荐使用，并在JDK9开始被标记deprecated.
+        Java平台目前逐步使用java.lang.ref.Cleaner来替代原有的finalize实现. Cleaner的实现利用了幻想引用(PhantomReference).
+资源用完即显式释放、或者利用资源池来尽量重用
+```
+    - 强引用、软引用、弱引用、幻想引用?
+```
+不同的引用类型，主要体现的是对象不同的可达性reachable状态和对垃圾收集的影响
+    Strong Reference: 强引用: 最常见的普通对象引用，只要还有强引用指向一个对象，就能表明对象“还活着”，垃圾收集不会回收次对象。
+
+    Soft Reference: 软引用,是一种相对于强引用弱化一些的引用，可以让对象豁免一些垃圾回收，只有当JVM认为内存不足，才会试图回收软引用指向的对象。JVM会确保抛出OutOfMemoryError之前，清理软引用指向的对象。软引用通常用来实现内存敏感的缓存，
+
+    Weak Reference:弱引用,不能使对象豁免垃圾收集，仅仅能提供一种访问在弱引用状态下对象的途径。维护一种非强制的映射关系
+
+    幻想引用，不能通过它访问对象，幻想引用仅仅是提供了一种确保对象被finalize以后，做某些事情的机制。
+
+    Java定义的不同可达性级别(reachability level):
+        Strong Reachable 强可达： 就是当一个对象可以有一个或多个线程可以不通过各种引用访问到的情况
+        Softly Reachable:软可达,只能通过软引用才能访问到对象的状态 
+        Weakly Reachable:弱可达: 只能通过弱引用访问的状态
+        Phantom Reachable: 幻想可达，
+        unreachable:不可达: 意味着对象可以被清除
+    
+    对于软引用、弱引用、垃圾收集可能会存在二次确认的问题，保证处于弱引用状态的对象，没有改变为强引用
+
+    Reference Queue:引用队列:
+```
+    - String, StringBuffer, StringBuilder?
+```
+String：典型Immutable类的实现，被声明成为final class.所有属性也都是final.
+
+StringBuffer:可以用append或者add方法，把字符串添加到已有序列的末尾或者指定位置。StringBuffer本质是一个线程安全的可修改字符序列，(线程安全是通过把各种修改数据的方法都加上synchronized关键字实现的) 保证了线程安全。随之带来额外的性能开销，除非有线程安全的需要，不然还是推荐使用后继者，StringBuild.
+
+StringBuilder: 能力上和StringBuffer没有本质区别，唯一缺少线程安全。
+
+“过早优化是万恶之源”，考虑可靠性、正确性和代码可读性才是大多数引用开发最重要的因素
+StringBuffer 和 StringBuild底层都是利用可修改的char数组(JDK 9以后是byte数组)，二者都继承AbstractStringBuilder. 里面包含基本操作，区别仅在于最终的方法是否加上symchronized.
+
+数组扩容会产生多重开销，因为要抛弃原有数组，查创建新的数组，还要进行array copy.
+
+$ javac # JAVA编译
+$ javap -v # JAVA反编译
+JDK8中，字符串拼接操作会自动被javac转换为StringBuilder操作.
+JDK9里面因为Java9为更加统一字符串操作优化，提供StringConcatFactory. 作为一个统一的入口
+
+String在Java 6以后提供intern()方法，目的是提示JVM将响应字符串缓存起来，以备重复使用,JVM会将所有类似“abc”这样的文本字符串、或者字符串常量之类缓存起来
+
+Java历史字符串是使用char数组来存储数据，Java中的char是两个bytes大小; Java9中引入Compact Strings设计，对字符串数组存储方式从char数组，改变为一个byte数组加上一个标识编码的所谓coder.
+```
+    - Java反射机制、动态代理的原理?
+```
+编程语言中的
+    动态类型和静态类型就是区分语言类型信息是在运行时检查还是编译时检查.
+    强类型和弱类型就是不同类型变量赋值时，是否需要显式地(强制)进行类型转换
+
+Java语言属于静态强类型语言，但是因为提供类似反射机制，具备了部分动态类型语言的能力
+
+反射机制时Java语言提供的一种基础功能,赋予程序在运行时自省(introspect)的能力，通过反射可以直接操作类或者对象
+
+动态代理是一种方便运行时动态构建代理，动态处理代理方法调用的机制，
+```
+    - int vs. Integer?
+```
+Java 语言原始数据类型和包装类
+    Java 8个原始数据类型(Primitive Types):
+        boolean, byte, short, char, int, float, double, long 
+        Boolean, Bytes, Short， Character, Integer, Float, Double, Long, (BigInteger, BigDecimal没有响应的基本类型，主要用于高精度运算)
+    
+    Integer包装类型中静态工厂方法valueOf会利用缓存机制, 缓存-128-127之间
+    自动装箱boxing, Integer.valueOf() 放生在编译阶段，生成的字节码是一致的
+    自动拆箱unboxing, Integer.intValue()
+
+    AtomicInteger, AtomicLong 线程安全类
+```
+    - Vector, ArrayList, LinkedList?
+```
+Vector, ArrayList, LinkedList都是实现集合框架中的list(有序集合)接口.    
+    Vector是Java早期提供的线程安全的动态数组, Vector内部是使用对象数组来保存数据，当数组已满时会创建新的数组，并拷贝原有数组数据 Vector扩容会提高一倍
+    ArrayList是应用更加广泛的动态数组实现，线程不安全，ArrayList扩容则增加50%
+    LinkedList是Java提供的双向链表,线程不安全
+
+    Vector和ArrayList作为动态数组适合，内部元素以数组形式顺序存储，适合随机访问
+    LinkedList，插入+删除比较高效，但是随机访问性能则比动态数组慢 
+
+Collection接口: 
+    List有序集合:
+        AbstratcList:几种各种List操作的通用部分
+    Set不允许重复元素
+        TreeSet是利用TreeMap实现
+        HashSet是利用HashMap实现
+        TreeSet支持自然顺序访问，添加、删除、包含操作比较低效log(n) 
+        HashSet利用哈希算法，可以提供常数时间的添加、删除、包含操作，不保证有序
+        LinkedHashSet:内部构建一个记录插入顺序的双向链表，提供按照插入顺序便利的能力，
+    Queue/Deque: 队列接口 FIFO(First In First Out); LIFO(Last In First Out)
+
+    Java提供的默认排序算法:
+        Arrays.sort() 
+        Collections.sort() 
+        对于原始数据类型，目前使用的是所谓双轴快速排序(Dual-Pivot QuickSort) --改进版快速排序 
+        对于对象数据类型，目前使用TimSort() 归并和二分插入排序,
+
+    Java8 之后，Java平台支持Lambda和Stream, 
+
+    java.util.concurrent: 线程安全容器
+```
+    - Hashtable, HashMap, TreeMap?
+```
+Hashtable, HashMap, TreeMap常见的一些Map实现，是以键值对的形式存储和操作数据的容器类型
+    Hashtable线程安全，不支持null键
+    HashMap不是同步的，支持null键和值，HashMap进行put和get操作时间复杂度O(1)
+    TreeMap基于红黑树的一种提供顺序访问的Map, get,put,remove操作时间复杂度O(log(n))
+
+    HashMap的性能表现依赖于哈希码的有效性，hashCode和equals的基本约束
+        equals相等，hashCode一定相等
+        重写hashCode也要重写equals
+        hashCode需要保持一致性，状态改变返回的哈希值仍然要一致
+        equals的对称、反射、传递等特性
+    LinkedHashmap提供遍历顺序符合插入顺序，
+    TreeMap顺序是由键的顺序关系决定,通过Comparator或Comparable自然顺序决定
+
+    HashMap源码分析：
+        capcity容量 
+        load factor:负载系数 
+        树化
+        HashMap内部结构可以看作数组(Node[] table)和链表结合组合的复合结构,数组被分为一个个桶bucket.哈希值相同的键值对则以链表形式存储，如果链表大小如果超过阀值(TREEIFY_THRESHOLD, 8).链表会被改造为树形结构
+
+        负载因子 * 容量 > 元素数据
+```
+    - 集合线程安全、ConcurrentHashMap如何实现高效线程安全?
+```
+Java语言的并发包java.util.concurrent，提供线程安全容器类
+    并发容器 ： ConcurrentHashMap, CopyOnWriteArrayList
+    线程安全队列(Queue/Deque): ArrayBlockingQueue, SynchronousQueue.
+    各种有序容器的线程安全版本
+
+Synchronized Wrapper同步包装器
+保证线程安全:synchronize方式、分离锁实现的ConcurrentHashMap,
+
+ConcurrentHashMap vs. Hashmap:
+    Hashtable比较低效，实现基本将put,get,size方法加上"synchronized",导致并发操作都要竞争同一把锁，一个线程在进行同步操作，其他线程只能等待，大大降低并发操作的效率. Hashtable和同步包装版本只适合非高度并发的场景下
+
+    ConcurrentHashMap:
+        早期ConcurrentHashMap实现:
+            分离锁,就是将内部进行分段Segment, 里面则是HashEntry的数组，和HashMap类似，哈希相同的条目也是链表形式存放 
+            HashEntry内部使用volatile的value字段来保证可见性,也利用不可变对象的机制以改进利用Unsafe提供的底层能力.
+            Segment的数量由concurrentcyLevel决定,默认是16.
+        Java 8 版本ConcurrentHashMap操作
+            数据存储利用volatile保证可见性 
+            使用CAS操作，在特定场景进行无锁并发操作 
+            使用Unsafe, LongAdder底层手段进行极端情况的优化
+
+    synchronized比ReentrantLock使用更少的内存消耗
+```
+    - IO, NIO?
+```
+    java.io包基于流模型实现，提供一些IO功能: 
+        File抽象、输入输出流;交互方式是同步、阻塞的方式
+    java.net提供的部分网络API，Socket、ServerSocket、HttpURLConnection也是同步阻塞IO类，因为网络通信同样是IO行为
+    java.nio包提供Channel、Selector、Buffer新的抽象，可以构建多路复用、同步非阻塞IO程序；Java7引入AIO(Asynchronous IO)异步非阻塞IO方式,异步IO操作基于事件和回调机制
+
+区分同步/异步(synchronous/asynchronous)：同步是一种可靠的有序运行机制、异步通过事件、回调机制实现任务次序关系
+区分阻塞/非阻塞(blocking/non-blocking),进行阻塞操作时，当前线程回处于阻塞状态,非阻塞是不管IO操作是否结束，直接返回，响应操作在后台继续处理
+    IO操作包括文件操作和Socket通信
+    输入流/输出流(InputStream/OutputStream)用于读取或写入字节，操作图片文件 
+    Reader/Writer用于操作字符，增加字符编码等功能
+    BufferedOutputStream带有缓冲区的实现，可以避免频繁的磁盘读写，提高IO处理效率，flush 
+
+Java NIO:
+    Buffer, 高效的数据容器，除了布尔类型，所有原始数据类型都有相应的Buffer实现
+    Channel,类似Linux之类操作系统上看到的文件描述符，是NIO中被用来支持批量式IO操作的一种抽象
+        File,Socket比较高层次的抽象，Channel比较系统底层的一种抽象。
+    Selector, 是NIO实现多路复用的基础，提供一种高效的机制，可以检测到注册在Selector上的多个Channel是有有Channel处于就绪状态，进而实现单线程对多个Channel的高效管理
+    Charset,提供Unicode字符串定义，NIO也提供相应的编解码器
+
+Java语言目前的线程实现比较重量级，启动或者销毁一个线程有明显开销.每个线程都有单独的线程栈等结构，需要占用非常明显的内存;这是同步阻塞方式地扩展性劣势
+```
+    - Java文件拷贝方式 
+```
+1. 利用java.io类库,直接为源文件构建一个FileInputStream读取，目标文件构建一个FileOutputStream.
+2. 利用java.nio类库,提供transferTo或transferFrom方式实现 
+
+拷贝实现机制分析:
+    用户态空间User Space和内核态空间Kernel Space；使用输入输出流进行读写时，实际上时进行多次上下文切换，比如应用读取数据时，现在内核态将数据从磁盘读取到内核缓存，在切换到用户态将数据从内核缓存读取到用户缓存.
+    基于NIO transferTo的实现，会使用零拷贝技术，数据传输不需要用户态参与，省去上下文切换的开销和不必要的内存拷贝
+    java.nio.file.Files.copy: 
+
+如何提高拷贝IO操作的性能?
+    1. 使用缓存机制，减少IO次数 
+    2. 使用transferTo机制，减少上下文切换和额外IO操作 
+    3. 减少不必要的转换过程，编码解码，对象序列化反序列化，
+
+Buffer：[ByteBuffer, CharBuffer, DoubleBuffer, FloatBuffer, IntBuffer, LongBuffer, ShortBuffer]
+    capcity: Buffer，数组的长度 
+    position: 要操作的数据起始位置
+    limit:操作的限额 
+    mark:上一次postion的位置
+
+Direct Buffer: 创建和销毁过程中，都会比一般的堆内Buffer增加部分开销，所以通常都建议用于长期使用、数据较大的场景
+MappedByteBuffer: 
+垃圾收集过程中，不会主动收集Direct Buffer，显式调用System.gc()强制触发;
+JVM堆外内存不仅仅只有Direct Buffer
+JDK 8之后，使用Native Memory Tacking(NMT)进行诊断Direct Buffer;
+```
+    - 接口和抽象类?
+```
+接口和抽象类时Java面向对象设计的两个基本机制.
+    接口是对行为的抽象,是抽象方法的集合,利用接口可以达到API定义和实现分离的目的。接口不能实例化，不能包含任何非常量成员，任何field都是隐含着public static final的意义。只能有抽象方法和静态方法。
+    抽象类是不能实例化的类，
+
+Java类实现interface使用implements关键字，继承abstract class则是使用extends关键词.
+Java不支持多继承，Java8增加函数式编程的支持,
+面向对象编程: SOLID
+    单一职责(Single Responsibility): 
+throw 抛出异常，throws声明函数抛出异常  
+```
+    - 设计模式?
+```
+设计模式是人们为软件开发中相同表征的问题，抽象出的可重复利用的解决方案，在某种程度上，设计模式代表了特定情况的最佳实践.
+    1. 创建型模式:是对对象创建过程的各种问题和解决方案的总结
+        工厂模式(Factory, Abstract Factory)
+        单例模式(Singlton)
+        构建器模式(Builder)
+        原型模式(protoType)
+    2. 结构型模式:对软件设计结构的总结，关注类、对象继承、组合方式的实践经验
+        桥接模式(Bridge)
+        适配器模式(Adaptor)
+        装饰者模式(Decorator)
+        代理模式(Proxy)
+        组合模式(Composite)
+        外观模式(Facade)
+        享元模式(Flyweight)
+    3. 行为型模式:是对类或对象之间的交互
+        策略模式(Strategy)
+        解释器模式(Interpreter)
+        命令模式(Command)
+        观察者模式(Observer)
+        迭代器模式(Iterator)
+        模版方法模式(Template Method)
+        访问者模式(Visitor)
+
+Spring 框架?
+    BeanFactory和ApplicationContext应用了工厂模式 
+    在Bean的创建中，Spring也为不同scope定义的对象，提供单例和原型等模式实现
+    AOP领域是使用了代理模式、装饰器模式、适配器模式
+    事件监听，使用观察者模式
+    JdbcTemplate应用了模版模式 
+```
+
+* 2. Java进阶 
+    - synchronized vs. ReentrantLock?
+```
+synchronized是Java内建的同步机制，Intrinsic Locking.固有锁,提供互斥的语义和可见性.当一个线程已经获取当前锁时，其他试图获取的线程只能等待或阻塞
+ReentrantLock是重复锁，再入锁通过代码直接调用lock()方法获取，调用unlock释放
+
+线程安全的定义? <Java Concurrency in Practice>
+    线程安全是一个多线程环境下正确性的概念，保证多线程环境下共享的、可修改的状态的正确性
+    保证线程安全的两种方法: 
+        1. 封装: 通过封装可以将对象内部状态隐藏、保护起来 
+        2. 不可变:final, immutable
+    线程安全需要保证：
+        1. 原子性: 相关操作不会中途被其他线程干扰，可以通过同步机制实现
+        2. 可见性: 一个线程修改某个共享变量、其状态能够立即被其他线程知晓，将线程本地状态反映到主内存上，volatile负责保证可见性
+        3. 有序性: 保证线程内串行语义，避免指令重排
+synchronized: 无法进行公平性的选择，synchronized代码是由一对monitorrenter/monitorexit指令实现，Minitor对象是同步的基本实现单元
+    所谓的synchronzied锁的升级、降级就是JVM优化synchronized运行的机制，当JVM检测到不同的竞争状况，会自动切换到适合的锁实现，这种切换就是锁的升级、降级
+    JVM提供三种不同的Monitor实现:
+        1. 偏斜锁Biased Locking : 没有竞争出现，默认使用偏斜锁,JVM利用CAS(Compare and Swap)在对象头上Mark word部分设置线程ID。表示对象偏向于当前线程
+        2. 轻量级锁 : 当另外线程试图锁定某个已经被偏斜过的对象,JVM需要撤销revoke偏斜锁,切换到轻量级锁实现,轻量级锁依赖CAS操作Mark Word试图获取锁，如果成功就使用普通轻量级锁，否则进入重量级锁
+        3. 重量级锁: 
+    锁的降级当JVM进入安全点(SafePoint)时候，会检查是否有闲置的Monitor，然后试图进行降级 
+    synchronized是JVM内部的Intrinsic Lock,偏斜锁、轻量级锁、重量级锁的实现不再核心类库，而是在JVM代码中
+    ReentrantReadWriteLock: 读写锁实现
+    StampedLock:提供读写锁的同时还支持优化读模式。优化读基于假设，大多数情况下操作并不会和写操作冲突，其逻辑是先试着修改，然后通过validate方法确认是否进入写模式，如果没有进入，就成功避免开销，如果进入，则尝试获取读锁
+
+ReentrantLock: 再入锁：表示当一个线程试图获取一个他已经获取的锁时，这个获取动作就自动成功，这是对锁获取粒度的一个概念，就是锁的持有是以线程为单位而不是基于调用次数。
+    ReentrantLock fairlock = new ReentrantLock(true);   // 再入锁设置公平性 fairness 
+    公平性是指在竞争场景中，当公平性为真时，会倾向于将锁赋予等待时间最久的线程，公平性时减少线程“饥饿”.
+自旋锁(spin-wait, busy-waiting):
+```
+    - 线程的声明周期和状态切换
+```
+Java线程不允许启动两次，第二次start()调用会抛出java.lang.IllegalThreadStateException,运行时异常，多次调用被认为是编译错误.
+java.lang.Thread.State: 枚举类型
+    NEW: 新建表示线程被创建出来还没有真正启动的状态,可以认为是Java内部状态 
+    RUNNABLE:就绪，表示线程已经在JVM中执行，在就绪队列中排队等待分配计算资源 
+    RUNNING:
+    BLOCKED:阻塞，阻塞表示线程在等待Monitor lock
+    WAITING：等待,表示正在等待其他线程采取操作，Thread.join()会让线程进入等待状态
+    TIMED_WAIT:计时等待 public final native void wait(long timeout) throws InterruptedException; 
+    TERMINATED:终止，
+
+线程是操作系统调度的最小单元,一个进程可以包含多个线程，作为任务的真正运作者，有自己的栈Stack,寄存器Register,本地存储Thread Local.会和进程内其他线程共享文件描述符、虚拟地址空间
+线程分为内核线程、用户线程: Java 1.2之后JDK已经抛弃所谓的Green Thread(用户调度的线程) 现在的模型是一对一映射到操作系统内核线程
+线程中的yield是告诉调度器，主动让出CPU.
+基类Object提供一些基础wait/notify/notifyAll方法，
+并发类库中，CountDownLatch.await()会让当前线程进入等待状态，知道latch被基数为0，可以看作线程间通信的Signal.
+ThreadLocal:Java提供的一种保存线程私有信息的机制，在整个线程声明周期内有效。
+```
+    - 死锁
+```
+死锁是一种特定的程序状态,指两个或多个线程之间，由于相互持有对方需要的锁，而永久处于阻塞的状态
+定位死锁常使用jstack工具获取线程栈,然后定义相互之间的依赖关系。JConsole可以在通行界面进行有限的死锁检测
+线程调度依赖于操作系统调度器，可以通过优先级进行影响但是具体是不确定
+
+首先使用jps或ps确定进程ID (jps - Monitoring Tools)
+然后调用jstack获取线程栈 $ jstack your_pid
+FindBugs: 静态代码分析
+```
+    - Java并发包工具类 
+```
+java.util.concurrent包 
+    1.提供比synchronized更加高级的各种同步结构, 
+        CountDownLatch(倒计时锁存器): 不可重置，无法重用，countDown/await; CountDownLatch操作的是事件
+        CyclicBarrier(循环屏障):可以重用， await, 当所有都调用await，才会继续进行任务，并自动进行重置
+        Semaphore(信号量): 通过控制一定数量的允许(permit)的方式，来达到限制通用资源访问的目的
+    2.各种线程安全的容器: 
+        ConcurrentHashMap: 侧重放入或者获取速度，不在乎顺序
+        ConcurrentSkipListMap: 大量数据非常频繁的修改，(O(nlogn))
+        CopyOnWriteArrayList:  
+        CopyOnWriteArraySet:是通过包装CopyOnWriteArrayList实现的
+        CopyOnWrite: 任何修改操作(add, set, remove)都会拷贝原数据，修改后替换原来的数据 - 这种数据结构适合读多写少的操作
+    3.各种并发队列实现: ArrayBlockingQueue, SynchronousQueue, PriorityBlockingQueue 
+    4.Executor框架,可以创建各种不同类型的线程池，调度任务运行
+```
+    - ConcurrentLinkedQueue vs. LinkedBlockingQueue 
+```
+Concurrent类型基于lock-free,在常见的多线程访问场景，一般可以提供较高吞吐量
+LinkedBlockingQueue内部则基于锁，并提供BlockingQueue等待性方法
+java.util.concurrent包提供的容器(Queue, List, Set)、Map从名称区分为
+    Concurrent: 没有类似CopyOnWrite容器相对较重的修改开销;提供较低的遍历一致性
+    CopyOnWrite: 
+    Blocking
+Deque: 支持对队列头尾进行插入和删除
+    尾部插入: addLast(e), offerLast(e)
+    尾部删除: removeLast(), pollLast()
+    ConcurrentLinkedDeque:基于CAS无锁技术，不需要在每次操作时候使用锁，所以扩展性表现更优异
+    LinkedBlockingDeque
+ArrayBlockingQueue:是最典型的有界队列,内部final数组保存数据，数组的大小决定队列的边界,
+LinkedBlockingQueue:容易被误解为无边界，其实行为和内部代码都是基于有界的逻辑实现，只不过我们没有在创建队列时指定容量，那么容量限制自动被设置为Integer.MAX_VALUE.成为无界队列
+SynchronousQueue:每个删除操作都要等待插入操作，每个插入操作都要等待删除操作，内部容量是0, 是Executors.newCachedThreadPool()的默认队列
+PriorityBlockingQueue:无边界的优先队列，
+DelayedQueue和LinkedTransferQueue:无边界队列，put操作不会出现BlockingQueu那种等待情况
+
+Queue被广泛使用在生产者-消费者场景
+ArrayBlockingQueue要比LinkedBlockingQueue空间利用率要紧凑，不需要创建所谓节点，初始化分配阶段需要一段连续的空间，所以初始化内存需求比较大
+LinkedBlockingQueue吞吐量优于ArrayBlockingQueue,因为实现更加细粒度的锁操作 
+ArrayBlockingQueue实现比较简单，性能更好预测，表现稳定
+```
+    - Java并发类库中线程池有哪些?
+```
+线程是不能够重复启用，创建和销毁线程存在一定的开销，可以利用线程池技术来提高系统资源利用率，并简化线程管理
+Executors目前提供5种不同的线程池创建配置
+    newCachedThreadPool(): 用于处理大量短时间工作任务的线程池，会试图缓存线程并重用，当无缓存线程可用时，就会创建新的工作线程,如果线程闲置的时间超过60秒，则被终止并移出缓存，长时间闲置时，这种线程池不会消耗资源，内部使用SynchronousQueue作为工作队列.
+    newFixedThreadPool(int nThreads): 重用指定数目nThreads的线程，使用的无界的工作队列，任何时候最多有nThreads工作线程是活跃的，使用LinkedBlockingQueue.
+    newSingleThreadExecutor(): 工作线程数目限制为1，操作一个无界的工作队列，保证所有任务都是被顺序执行，最多会有一个任务处于活动状态，并且不允许使用者更改线程池实例
+    newSingleThreadScheduledExecutor() vs. newScheduledThreadPool(int corePoolSize): 创建一个ScheduledExecutorService,可以进行定时或周期行的工作调度，区别在于单一工作线程还是多个工作线程.
+    newWorkStealingPool(int parallelism): Java8加入，内部构建ForkJoinPool,利用Work-Stealing算法，并行处理任务，不保证处理顺序
+
+ThreadPoolExecutor: 
+ScheduledThreadPoolExecutor: 是ThreadPoolExecutor的扩展，主要增加了调度逻辑
+ForkJoinPool: 是为ForkJoinTask定制的线程池，
+
+应用于线程池交互和线程池内部工作过程
+    应用 --> [提交新任务 execute()/submit()] --> 工作队列 --> [WorkerThread...] 工作线程管理(ThreadFactory) 
+线程池需要在运行过程中管理线程创建、销毁
+    corePoolSize: 核心线程数
+    maximumPoolSize: 线程不够时能够创建的最大线程数
+    keepAliveTime TimeUnit: 指定额外的线程能够闲置多久
+    workQueue: 工作队列，必须是BlockingQueue.
+
+线程池容易出现的问题:
+    1. 避免任务堆积: newFixedThreadPool是创建指定数目的线程，但是工作队列是无界，如果工作线程数目太少，导致处理更不上入队的速度，很有可能占用大量的系统内存，甚至出现OOM，诊断可以使用jmap工具，查看是否有大量的任务对象入队
+    2. 避免过度扩展线程: jstack工具检查当前线程，避免死锁。尽量避免使用线程池时操作ThreadLocal
+如果线程任务主要进行CPU密集型计算,通常建议按照CPU核数目N或者N+1
+如果较多的IO操作较多，可以参考Brain Goetz推荐
+    线程数 = CPU核心数 * （1 + 平均等待时间/平均工作时间）
+```
+    - AtomicInteger CAS
+```
+AtomicInteger是对int类型的封装,提供原子性的访问和更新操作，其原子性的实现是基于CAS(compare-and-swap)技术
+CAS(Compare and swap): 利用CAS指令进行更新，如果当前数值未变，代表没有其他线程进行并发修改，则成功更新，否则可能进行重试或者返回失败结果
+CAS是Java并发中所谓lock-free机制的基础
+atomic包提供最常用的原子性数据类型，甚至是引用、数组等相关原子类型和更新操作工具,是很多线程安全程序的首选
+AQS(AbstractQueuedSynchronized) : 
+```
+    - 类加载过程 
+```
+Java通过引入字节码和JVM机制，提供强大的跨平台能力
+Java类加载过程:
+    1. 加载(loading)阶段:是Java将字节码数据从不同的数据源(jar文件、class文件、网络数据源)读取到JVM中，并映射为JVM认可的数据结构(Class 对象);如果输入的数据不是ClassFile的结构，则会抛出ClassFormatError 
+        加载阶段(Loading)是用户参与的阶段，可以自定义类加载器，实现自己的类加载过程
+    2. 链接(Linking)阶段: 
+        2.1: 验证(Verification): JVM需要验证字节信息符合Java虚拟机规范;防止恶意信息或者不合规的信息危害JVM运行,验证阶段可能触发更多class的加载
+        2.2: 准备(Preparation): 创建类或接口中的静态变量，并初始化静态变量的初始值。分配所需要的内存空间，不去执行更进一步的JVM指令
+        2.3: 解析(Resolution): 将常量池中的符号引用symbolic reference替换为直接引用.
+    3. 初始化(Initialization)阶段: 直接执行类初始化的代码逻辑，包括静态字段赋值动作,以及执行类定义中的静态初始化内的逻辑，
+
+双亲委派模型:当类加载器(Class-Loader)试图加载某个类型的时候，除非父加载器找不到响应类型，否则尽量将这个任务代理给当前加载器的父加载器去做，使用委派模型的目的是避免重复加载Java类型
+
+Oracle JDK 内建的类加载器
+    Bootstrap(启动类加载器): 加载jre/lib下面的jar文件
+    Extension or Ext Class-Loader(扩展类加载器): 负责加载放在jre/lib/ext/目录下面的jar包，这就是所谓的extension机制
+    Application or App Class-Loader(应用类加载器):就是加载classpath的内容，
+
+类加载器三个基本特征:
+    双亲委派模型: 上下文加载器 
+    可见性: 子类加载器可以访问父加载器加载的类型，反过来是不允许
+    单一性: 由于父加载器的类型对于子加载器是可见的，所以父加载器中加载过的类型，不会在子加载器中重复加载。
+
+Java平台模块化系统(JPMS):Java SE的源代码被划分为一系列模块
+
+自定义加载器过程:
+    通过指定名称，找到二进制实现;然后创建Class对象，并完成类加载过程(二进制信息到Class对象的转换通常依赖defineClass) 
+```
+    - 运行时动态生成Java类
+```
+通常的开发过程是，开发者编写Java代码，调用javac编译成class文件，然后通过类加载再入JVM，就称为应用运行时可以使用的Java类。
+    ProcessBuilder启动javac进程
+    Java Compiler API是JDK提供的标准API，提供与javac对等的编译器功能
+```
+    - JVM内存区域划分 
+```
+    JVM内存区域:
+        1. 程序计数器(PC, Program Counter Register): JVM中每个线程都有自己的程序计数器，并且任何时间一个线程都只有一个方法在执行，程序计数器会存储当前线程正在执行的Java方法的JVM指令地址。如果是在执行本地方法，则是未指定值undefined
+        2. Java虚拟机栈(Java Virtual Machine Stack): JVM中每个线程创建都会创建一个虚拟机栈，其内部保存一个个的栈帧(Stack Frame),对应一次次Java方法调用.JVM直接对Java栈的操作只有两个，栈帧的入栈和出栈。 
+        3. 堆(Heap): Java内存管理的核心区域,存放Java对象实例,堆被所有线程共享，虚拟机启动指定的"Xmx"之类参数就是指定最大堆空间指标
+            堆是垃圾收集器终点照顾的区域，堆内空间被不同垃圾收集器进一步细分，最有名的就是新生代、来年代的划分 
+        4. 方法区(Method Area):JVM所有线程共享的内存区域,存储元(Meta)数据,例如类结构信息、运行时的常量池、字段、方法代码；又称为永久代(Permanent Generation) JDK 8移除永久代，增加元数据区(Metaspace)
+        5. 运行时常量池(Run-Time Constant Pool): Java常量池可以存放各种常量信息，不管是编译期生成的各种字面量,还是需要在运行时决定的符号引用。
+        6. 本地方法栈(Native Method Stack): 每个线程都创建一个
+    
+    直接内存(Direct Memory)区域: Direct Buffer直接分配的内存
+    Code Cache: JIT Compiler在运行时对热点方法进行编译
+
+OOM (OutOfMemoryError):没有空闲内存，并且垃圾收集器也无法提供更多内存
+除了程序计数器，其他区域都有可能会因为空间不足发生OutOfMemoryError
+    堆内存不足是最常见的OOM原因: java.lang.OutOfMemoryError:Java heap space. 
+    Java虚拟机栈和本地方法栈:如果无限递归调用，JVM会抛出StackOverFlowError，如果JVM试图扩展占空间的时候失败，会抛出OutOfMemoryError.
+    java.lang.OutOfMemoryError: PermGen space 
+    java.lang.OutOfMemoryError: Metaspace 
+
+监控和诊断JVM堆内和堆外内存使用?
+    综合图形化工具JConsole、VisualVM(Oracle JDK 9开始，VisualVM不包含在JDK安装包中)
+    jstat和jmap工具提供命令行运行时检查
+    Tomcat(Java EE 服务器) 内存管理相关功能
+    GC日志
+    NMT(Native Memory Tracking)：堆外内存中的直接内存
+    JMC(Java Mission Control):
+
+Java堆划分:
+    1. 新生代(Young Generation): 是大部分对象创建和销毁的区域，
+        Eden: Hotspot JVM有一个概念叫做Thread Local Allocation Buffer (TLAB):JVM为每一个线程分配一个私有缓存区域
+        S0:
+        S1:
+        Vitual: 
+    2. 老年代(Old Generation): 放置长生命周期的对象，都是从Survivor区域拷贝过来的对象
+    3. 永久代(Permanent Generation): 早期Hotspot JVM的方法区实现方式,存储Java类元数据、常量池、Intern字符串缓存
+JVM参数：
+    -Xmx value : 最大堆体积 
+    -Xms value : 初始的最小堆体积 
+    -XX:NewRatio=value  : 老年代和新生代的比例 default = 3,意味着老年代是新生代的3倍大，换句话说，新生代是堆大小的1/4 
+    -XX:NewSize=value: 设定新生代大小 
+    -XX:SurvivorRatio=value: Eden和Survivor的大小是按照比例设置，如果SurvivorRatio是8，那么Survivor区域是Eden的1/8，也就是新生代的1/10. YoungGen = Eden + 2 * Survivor
+Virtual区域代表就是暂时不可用uncommitted的空间
+    -XX:MaxMetaspaceSize=value  # 调整Class内存占用(Java类元数据所占用的空间)
+    -XX:InitialBootClassLoaderMetaspaceSize=value   # 调整启动类加载器元数据区
+    -XX:NativeMemoryTracking=summary    # 开启NMT
+    -XX:+UnlockDIagnosticVMOptions -XX:PrintNMTStatistics   # 应用退出时打印NMT统计信息
+    -XX:InitialCodeCacheSize=value  # 限制初始值的大小
+    -XX:ReservedCodeCacheSize=value # 
+    -XX:MaxTenuringThreshold=<N>    # 阀值设定
+➜  learn-java java -XX:NativeMemoryTracking=summary -XX:+UnlockDiagnosticVMOptions -XX:+PrintNMTStatistics HelloWorld
+Hello World!
+
+Native Memory Tracking:
+
+Total: reserved=268766KB, committed=20174KB
+-                 Java Heap (reserved=225280KB, committed=14336KB)          # Java堆
+                            (mmap: reserved=225280KB, committed=14336KB)
+
+-                     Class (reserved=4455KB, committed=2511KB)             # Java类元数据占用的空间
+                            (classes #497)
+                            (  instance classes #433, array classes #64)
+                            (malloc=55KB #530)
+                            (mmap: reserved=4400KB, committed=2456KB)
+                            (  Metadata:   )
+                            (    reserved=4400KB, committed=2456KB)
+                            (    used=2370KB)
+                            (    free=86KB)
+                            (    waste=0KB =0.00%)
+
+-                    Thread (reserved=3809KB, committed=261KB)  # Java线程(包括程序主线程、Cleaner线程)
+                            (thread #10)
+                            (stack: reserved=3776KB, committed=228KB)
+                            (malloc=20KB #62)
+                            (arena=12KB #19)
+
+-                      Code (reserved=33032KB, committed=1556KB)    # JIT cimpiler存储编译热点
+                            (malloc=8KB #161)
+                            (mmap: reserved=33024KB, committed=1548KB)
+
+-                        GC (reserved=754KB, committed=74KB)
+                            (malloc=14KB #137)
+                            (mmap: reserved=740KB, committed=60KB)
+
+-                  Compiler (reserved=99KB, committed=99KB)     # JIT开销
+                            (malloc=1KB #22)
+                            (arena=98KB #3)
+
+-                  Internal (reserved=185KB, committed=185KB)
+                            (malloc=153KB #811)
+                            (mmap: reserved=32KB, committed=32KB)
+
+-                    Symbol (reserved=835KB, committed=835KB)
+                            (malloc=315KB #2271)
+                            (arena=520KB #1)
+
+-    Native Memory Tracking (reserved=47KB, committed=47KB)
+                            (malloc=1KB #38)
+                            (tracking overhead=46KB)
+
+-               Arena Chunk (reserved=204KB, committed=204KB)
+                            (malloc=204KB)
+
+-                   Logging (reserved=2KB, committed=2KB)
+                            (malloc=2KB #178)
+
+-                 Arguments (reserved=9KB, committed=9KB)
+                            (malloc=9KB #452)
+
+-                    Module (reserved=40KB, committed=40KB)
+                            (malloc=40KB #1027)
+
+-              Synchronizer (reserved=11KB, committed=11KB)
+                            (malloc=11KB #123)
+
+-                 Safepoint (reserved=4KB, committed=4KB)
+                            (mmap: reserved=4KB, committed=4KB)
+```
+    - Java常见垃圾收集器
+```
+Oracle JDK:
+    垃圾收集器(GC, Garbage Collector): 
+        Serial GC: "Serial"体现在收集器工作是单线程，并且在垃圾收集过程中会进入"Stop-The-World"状态, Client模式下JVM的默认选择.
+            老年代实现 Serial Old: 标记-整理(mark-Compact)算法 
+            -XX:+UseSerialGC    # Serial GC对应的JVM参数 
+        ParNew GC: 实际是Serial GC多线程版本，配合老年代CMS GC工作
+            -XX:+UserConcMarkSweepGC -XX:+UseParNewGC 
+        CMS(Concurrent Mark Sweep) GC: 基于标记-消除(Mark-Sweep)算法,设计目标是尽量减少停顿时间，存在内存碎片化问题，所以难以避免在长时间运行情况下发生full GC，导致停顿。并发(Concurrent)，CMS占用更多CPU资源，和用户线程争抢。
+        Parrallel GC: 早期JDK8版本中，是server模式JVM的默认GC选择,称作吞吐量优先的GC，特点是新生代和老生代GC并行进行
+            -XX:+UseParallelGC # 开启Parrallel GC 
+            -XX:MaxGCPauseMillis=value  # 设定暂停时间 
+            -XX:GCTimeRatio=N   # GC时间和用户时间比例 = 1/(N+1)
+        G1 GC: Oracle JDK 9以后默认GC选项
+    
+自动垃圾收集:
+    1. 对象实例收集,主要是两种基本算法,应用计数和可达性分析
+        引用计数算法: Java中没有选择引用计数，是因为其存在一个基本的难题，很难处理循环引用关系
+        可达性分析: JVM会把虚拟机栈和本地方法栈中正在引用的对象、静态属性引用的对象和常量,作为GC Roots.
+
+常见的垃圾收集算法:
+    复制Copying算法: 将活着的对象复制到to区域，拷贝过程中将对象顺序放置，可以避免内存碎片化
+    标记-清除(Mark-Sweep)算法: 首先进行标记工作，标识出要回收的对象，然后进行清除。
+    标记-整理(Mark-Compact)算法: 类似于标记-清除,但为避免内存碎片化,会在清理过程中将对象移动，确保移动后的对象占用连续的内存空间.
+老年代GC又叫做Major GC.
+对整个堆进行清理叫做Full GC.
+Epsilon GC: 这是个不做垃圾收集的GC
+ZGC: 
+Zing: 低延迟GC 
+Shanandoah:
+```
+    - GC调优
+```
+内存占用(footprint): 
+延时(latency):
+吞吐量(throughput):
+jstat查看GC相关状态,开启GC日志，
+
+G1 GC内部结构和主要机制:
+    Eden:
+    Survivor:
+    Old:
+    Humongous: 超过region 50% 大小的对象归类为Humongous对象
+G1 GC选择是复合算法:
+    新生代: G1采用是并行的复制算法，会发生Stop-The-World暂停 
+    老年代: 大部分情况下都是并发标记，而整理Compact则是和新生代GC时捎带进行，并且不是整体性的整理，而是增量进行
+        老年代回收则依靠Mixed GC,
+新生代GC(Young GC)叫做Minor GC 
+老年代GC(Old GC)叫做Major GC
+
+G1 GC很多开销都是来源与Remembered Set.
+```
+    - Java内存模型 
+```
+Java Memory Model, JMM (Java内存模型): 
+    Happen-before是Java内存模型中保证多线程操作可见性的机制
+    线程中执行的每个操作，都保证happen-before后面的操作，保证基本的程序顺序规则
+    对于volatile变量的写操作，保证happen-before在随后该变量的读取操作
+    对于一个锁的解锁操作，保证happen-before加锁操作
+    对象构建完成，保证happen-before于finalizer的开始动作 
+```
+    - Java 运行在Docker容器环境 
+```
+Docker的内存和CPU资源限制是通过CGroup(Control Group)实现
+    基于namespace,Docker为每个容器提供单独的命名空间,对网络、PID、用户、IPC通信、文件系统挂载点实现隔离 
+    基于CGroup，Docker管理CPU、内存、磁盘IO等计算机资源
+Ergonomics机制
+    JVM会根据检测到的内存大小，设置最初启动时堆大小为系统内存的1/64， 并将堆最大值设置为系统内存的1/4 
+    JVM检测到系统CPU核心数，直接影响到Parallel GC的并行线程数据和JIT compiler线程数目
+```
+    - Java应用开发的注入攻击
+```
+Inject(注入式): 基本特征是程序允许攻击者将不可信的动态内容注入到程序中，并将其执行，
+原则上提供给动态执行能力的语言特征需要提防发生注入攻击
+    SQL注入攻击:
+    操作系统命令注入:
+    XML注入攻击: 
+运行时安全机制: 
+    类加载过程中，进行字节码验证，以防止不合规的代码影响JVM运行或载入其他恶意代码
+Java提供的安全框架API:
+    加密、解密API
+    授权、鉴权API
+JDK继承安全工具:
+    keytool: 可以管理安全场景中不可或缺的秘钥、证书 
+    jarsigner: 对jar文件签名和验证
+哈希碰撞发起拒绝服务攻击(DOS, Denial-Of-Service attack)
+
 ```
 
 * 3. Java应用开发扩展
 ```
+
 ```
 
 * 4. Java安全基础 
 ```
+DOS(拒绝服务)攻击
+    DoS是一种常见的网络攻击，最常见的表现是利用大量机器发送请求，将目标网站的带宽或者其他资源耗尽，导致其无法响应正常用户的调用.
+    哈希碰撞攻击: 耗尽有限CPU和线程资源
+    类似加密、解密、徒刑处理等计算密集型任务、都需要防范被恶意滥用，以免攻击者利用直接调用或者间接调用接触方式，耗尽系统资源
+    利用Java构建类似上传文件或者接受输入的服务，需要对消耗系统内存或存储的上限控制
+    Java程序中明确��放资源:(文件描述符、数据库连接、再入锁)
+序列化仍然是个安全问题频发的场景
+    敏感信息不要序列化, transient关键字将其保护起来
+
+1. 早期设计阶段， 就由安全专家组对新特性进行风险评估 
+2. 开发过程中，code review阶段，引用OpenJDK自身定制的代码规范 
+3. 利用多种静态分析工具FindBugs, Parfait，帮助早期发现潜在的安全风险，并对响应问题采取零容忍态度
+
+JFR(Java Flight Recorder): 监控应用是否大量出现某种类型的异常 
+监控Java服务自身，GC日志中是否观察到Full GC等恶劣情况出现
+jstat:工具获取内存使用统计信息
+jstack:检查是否出现死锁
+尽量少暴露信息
 ```
 
 * 5. Java性能基础
 ```
+性能分析方法论:
+    1. 自上而下: 从应用的顶层、逐步深入到具体的不同模块，或者更近一步的技术细节单元
+    2. 自下而上：从类似CPU这种硬件底层判断类似Cache-Miss之类的问题和调优机会,出发点是指令级别优化
+系统性能分析:
+    CPU: 使用top命令查看负载状况
+        top -H  # -H代表thread模式
+        vmstat: 查看上下文切换的数量
+        iostat: 查看磁盘状况
+    JVM内存性能分析  
+        利用JMC，JConsole工具进行运行时监控
+        GC日志、诊断Full GC, Minor GC 或者引用堆积
+    应用Profiling:利用侵入式手段，收集程序运行时的细节，定位性能问题瓶颈
+        生产环境使用JFR+JMC做Profiling
+        $ jcmd <pid> JFR.start duration=120s filename=myrecording.jfr 
+        使用JMC打开.jfr文件进行分析
+
+lambda: 不算语法糖，是一种新的工作机制，首次调用时，JVM需要为其构建CallSite实例，
+
+基准测试的目的和特征 
+    基准测试可以定义性能对比的明确条件、具体的指标、进而保证得到定量的、可重复的对比数据
+    微基准测试(Micro-Benchmark): 
+        大多数是API级别的验证
+构建微基准测试:
+    JMH:是Hotspot JVM团队开发,除了支持完整的基准测试过程、包括预热、运行、统计和报考
+
+JVM优化Java代码?
+    运行时(runtime)优化:解释执行和动态编译通用的一些机制
+    即时编译(JIT)优化:热点代码以方法为单位转换成机器码，直接运行在底层硬件之上
+
+JVM回根据统计信息，动态决定什么方法被编译、什么方法解释执行
+即时编译器(JIT)对Java编译的整个单元是整个方法，通过对方法调用的技术统计，甄别出热点方法，编译为本地代码
+JIT可以看作是基于两个计数器实现，方法计数器和回边计数器提供给JVM统计数据。用以定位热点代码
+
+-XX:+PrintCompilation   # 打印编译发生的细节
+-XX:UnlockDiagnosticVMOptions -XX:+LogCompilation -XX:LogFile=<your_file_path>  # 输出更多编译的细节
+-XX:+PrintInlining  # 打印内联的发生
+-XX:CompileThreashold=N     # 调整JIT默认门限
+-XX:-UseCounterDecay    # 关闭计数器衰减
+JIT编译的代码是存储在Code Cache中，Code Cache 是存在大小限制，而且不会动态调整  
+-XX:ReservedCodeCacheSize=<SIZE>
+-XX:InitialCodeCacheSize=<SIZE> # 调整Code Cache初始值
+
+JVM的编译器线程数目与我们选择的模式有关，选择client模式默认是只有一个编译线程；server模式则默认是两个；分层编译模式会根据CPU内核数据计算C1 和 C2的数值
+-XX:CICompilerCount=N 
+-XX:UseBiasedLocking    # 关闭偏斜锁
+```
+```
+Isolation Level(隔离级别):
+    MySQL InnoDB引擎基于MVCC(Multi-Versioning Concurreny Control)和锁的复合实现
+    读未提交(Read uncommited): 事务可以看到其他尚未提交的修改，允许脏读出现
+    读已提交(Read commited): 事务能够看到其他事务已经提交的修改,保证不会看到任何中间性状态，不保证再次读取时能够获取同样的数据，允许不可重复读和幻想读出现
+    可重复读(Repeatable reads): 保证同一事务中多次读取的数据是一致的，这是MySQL InnoDB引擎的默认隔离级别
+    串行化(Serializable):并发事务之间是串行化，读取获取共享读锁，更新需要获取排他写锁，SQL使用WHERE语句需要获取区间锁(MySQL以GAP锁形式实现),可重复读级别默认也会使用
+
+悲观锁和乐观锁?
+    "悲观锁":操作共享数据时，认为数据出现冲突的可能性更大
+        SELECT ... FOR UPDATE 
+    “乐观锁”:操作共享数据时，大部分情况下不会出现冲突，进而决定是否采取排他措施
+        利用CAS机制，并不会对数据加锁，而是通过对比数据的时间戳或者版本号，实现乐观锁需要的版本判断
+
+高并发场景中的数据库解决方案:
+    读写分离、分库分表、适应缓存
+
+Hibernate: O/R Mapping 框架 
+    数据库到Java对象的映射，提供强大的持久化功能，大量使用Lazy-load等技术，为了屏蔽数据库差异和降低维护开销，Hibernate提供了类SQL和HQL，可以自动生成某种数据库特定的SQL语句
+
+MyBaties: 更加以SQL为中心，侧重SQL和存储过程
+
+Spring JDBC Template: 更加接近SQL层面
+
+Spring Bean的生命周期和作用域?
+    Spring Bean的生命周期比较复杂，可以分为创建和销毁两个过程
+        创建Bean
+            1. 实例化Bean对象 
+            2. 设置Bean属性 
+            3. 通过Aware接口声明依赖关系，会注入Bean对容器基础设施层面的依赖，具体包括BeanNameAware,BeanFactoryAware,ApplicationContextAware,分别注入Bean ID,Bean Factory,Applicaion Context.
+            4. 调用BeanPostProcessor的前置初始化方法postProcessBeforeInitialization. 
+            5. 如果实现了InitializingBean接口，则会调用afterPropertiesSet方法
+            6. 调用Bean自身定义的init方法
+            7. 调用BeanPostProcessor的后置初始化方法postProcessAfterInitialization. 
+        销毁：Spring Bean销毁过程会依次调用DisposableBean的destroy方法和Bean自身定制的destroy方法。 
+
+Spring Bean五个作用域:
+    Singleton: 这是Spring默认作用域，为每个IOC容器创建唯一一个Bean实例(适合无状态的情况)
+    Prototype: 针对每一个getBean请求，容器都会单独创建一个Bean实例(适合有状态的Bean)
+    (Web容器-支持另外三种作用域)
+    Request: 为每个HTTP请求创建单独的Bean实例 
+    Session:
+    GlobalSession:用于Portlet容器
+
+Spring基本机制
+    控制反转(Inversion of Control)或依赖注入(Dependency Injection): 
+    AOP(切面编程机制):切面编程为了更好地模块化，通过AOP机制可以将横跨多个不同模块的代码抽离出来
+        Aspect: 方面:是跨不同Java类层面的横切性逻辑，可以是XML文件中配置的普通类，也可以是类代码中用"@Aspect"注解去声明，在运行时，Spring框架会创建Advisor指代它，其内部会包括切入时机Pointcut和切入的动作Advice.
+        Join Point: 是Aspec可以切入的特定点，在Spring里面只有方法可以作为Join Point.
+        
+Spring是Spring Framework，内部包含依赖注入、事件机制核心模块，事务、 O/R Mapping等功能组成是的数据访问模块，以及Spring MVC等Web框架
+
+Spring Boot: 提供典型应用领域的快速开发基础，是以应用为中心的一个框架集合 
+Spring Cloud: 提供构建分布式系统的通用模块，包含服务发现和服务注册，分布式配置管理、负载均衡、分布式诊断、可以简化微服务的构建
+
+Java标准NIO类库
+    Netty在基础的NIO类库之上进行很多改进
+        1. 更加优雅Reactor模式实现、灵活的线程模型、利用EventLoop创新性的机制
+        2. 充分利用Java的Zero-copy机制，
+    
+Netty > java.nio + java.net!
+    网络协议：Netty除了支持传输层的UDP、TCP、SCTP协议，也支持HTTPs、WebSocket等多种应用层协议
+    应用中:需要将数据从Java对象转换成为各种应用协议的数据格式，或者进行反向的转换，Netty为此提供一系列的编码加码框架
+    扩展了Java NIO Buffer,提供自己的ByteBuf实现，并且深度支持Direct Buffer技术
+```
+
+
+Using JConsole
+--------------
+> The JConsole graphical user interface is a monitoring tool that compiles to the Java Management Extensions(JMX) specification. 
+```
+https://github.com/aalansehaiyang/technology-talk
 ```

@@ -65,24 +65,46 @@ $ ls
 10. Copy binaries
 $ cd build/opt/mongo 
 $ sudo cp mongo mongod mongos /usr/loca/mongodb3.2.22/bin/
-
 ```
 
-Install MongoDB 4.0.9 on Ubuntu 18.04 ARM64 RaspberryPi
--------------------------------------------------------
+Install MongoDB 4.2.x(64-bit) on Ubuntu 18.04 ARM64 RaspberryPi
+---------------------------------------------------------------
 > The latest release MongoDB community edition is an open source NoSQL database system written in C++ that provides scalability, high performance/availability. NoSQL database systems are often referred to as Document-oriented databases. MongoDB common use case is storage and management of Big Data-sized collections of literal documents like text documents, email message, XML documents and many others.
 ```
 There are two ways of installing MongoDB on Ubuntu systems.
 
 Step1: Import MongoDB public GPG Key:
-$ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+$ wget -qO - https://www.mongodb.org/static/pgp/server-4.2.asc | sudo apt-key add -
 
 Step2: Create a list file for MongoDB
-$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+$ echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.2 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.2.list
 
 Step3: Install mongodb 
 $ sudo apt-get update
-$ sudo apt-get install -y openssl libcurl3 mongodb-org 
+$ sudo apt-get install -y  mongodb-org 
+
+Check that "mongod" and "mongo" 
+$ mongod --version
+db version v4.2.1
+git version: edf6d45851c0b9ee15548f0f847df141764a317e
+OpenSSL version: OpenSSL 1.1.1  11 Sep 2018
+allocator: tcmalloc
+modules: none
+build environment:
+    distmod: ubuntu1804
+    distarch: aarch64
+    target_arch: aarch64
+
+$ mongo --version 
+MongoDB shell version v4.2.1
+git version: edf6d45851c0b9ee15548f0f847df141764a317e
+OpenSSL version: OpenSSL 1.1.1  11 Sep 2018
+allocator: tcmalloc
+modules: none
+build environment:
+    distmod: ubuntu1804
+    distarch: aarch64
+    target_arch: aarch64
 
 The service name is, mongod, you can start the application by running
 $ sudo systemctl start mongod 
@@ -101,7 +123,6 @@ $ ss -tunelp | grep 27017
 ```
 
 * MongoDB main configuration file is /etc/mongod.conf You can tweak the settings to your linking, but remember to restart mongod service whenever you make a change.
-
 ```
 $ cat /etc/mongod.conf
 # mongod.conf
@@ -127,16 +148,15 @@ systemLog:
 # network interfaces
 net:
   port: 27017
-    # bindIp: 127.0.0.1
-
+  bindIp: 0.0.0.0
 
 # how the process runs
 processManagement:
   timeZoneInfo: /usr/share/zoneinfo
 
-  security:
-    # security.authorization, Enable of disable Role-Based Access Control (RBAC) to given each user's access to database resources and operations.
-      authorization: enabled
+security:
+  # security.authorization, Enable of disable Role-Based Access Control (RBAC) to given each user's access to database resources and operations.
+  authorization: "enabled"
 
 #operationProfiling:
 
@@ -149,9 +169,4 @@ processManagement:
 #auditLog:
 
 #snmp:
-```
-
-* What's the different between /lib/systemd/system vs /etc/systemd/system?
-```
-Basically, files that ships in packages downloaded from distribution repository go into `/usr/lib/systemd/`. Modifications done by system administrator (user) go into `/etc/systemd/system/`.
 ```

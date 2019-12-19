@@ -40,3 +40,6 @@ A delightfully devilish tour through various metaprogramming features of Python.
 - [CS50 on Twitch - Spell Checker](/root/python/PythonPyCon/SpellChecker/README.md)
 
 - [A Beginner's Guide to WebSockets](/root/python/PythonPyCon/WebSockets/README.md)
+
+- [A Talk Near the Future of Python (a.k.a., Dave live-codes a WebAssembly Interpreter)](/root/python/PythonPyCon/TheFuturePython/README.md)
+- [Distributed Systems - Tim Berglund](/root/python/PythonPyCon/DistributedSystem/README.md)

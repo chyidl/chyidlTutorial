@@ -1,7 +1,13 @@
-MySQL Crash Course(Everything before the word "but" is horse shit)
+MySQL Crash Course
 ==================
 > The offical way to pronounce "MySQL" is "My Ess Que Ell" is an open source relational database management system (RDBMS).
 > MySQL is written in C and C++. Its SQL parser is written in yacc, but it uses a home-brewed lexical analyzer.
+```
+(MacOSX)
+$ brew install mysql-client 
+$ vim ~/.zshrc
+add /usr/local/opt/mysql-client/bin/mysql to path 
+```
 
 Install MySQL 5.7 on CentOS
 ---------------------------
@@ -346,10 +352,20 @@ MySQL Architecture and Components
             - Innodb log buffer 
             - Innodb General/undo/temp_tablespace.
 ```
+客户端 --> 连接器 --> 分析器 --> 优化器 --> 执行器
+            |             |
+            |-> 查询缓存 <-|
 Client --> Connector --> Query Cache --> Analyzer --> Optimizer --> Executor --> Storage Engine.
+MySQL可以分为Server层和存储引擎层:
+    1. Server层:连接器、查询缓存、分析器、优化器、执行器、(内置函数日期、时间、数学、加密函数),所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图
+        内置函数:
+
+    2. 存储引擎层:负责数据的存储和提取
+        InnoDB: It provides transaction-safe(ACID compliant) tables, supports FOREIGN KEY referential-integrity constraints. It supports commit, rollback, and crash-recovery ccapabilities to protect data. It also support row-level locking. It's "consistent nonlocking reads" increases performance when used in a multiuser environment. It stores data in clustered indexes which reduces I/O for queries based on primary keys.
+        MyISAM:
+        Memory:
 
 **Connector连接器**
-
     * $ mysql -h$host -P$port -u$user -p 
     * After the user successfully establishes the connection, the modification of the user rights will not affect the existing connection, and only the newly established connection will use the new permission setting.
     * mysql> SHOW PROCESSLIST; show which threads are running 
@@ -993,10 +1009,35 @@ MySQL做排序时成本比较高的操作，
 覆盖索引是指，索引上的信息足够满足查询请求，不需要再回到主键索引上取数据.
 ```
 
+SQL - DDL, DQL, DCL and TCL Commands 
+------------------------------------
 ```
-SQL语言分为DDL, DML, DCL三大类。
-https://blog.csdn.net/chenlycly/article/details/21302073
-
+SQL(Structured Query Language) commands are mainly categorized into four categories as:
+    1. DDL(Data Definition Language): can be used to define the database schema.
+        CREATE - is used to create the database or its objects (like table, index, function, views, store procedure and triggers)
+        ALTER - is used to alter the structure of the database.
+        DROP - is used to delete objects from the database.
+        RENAME - is used to rename an object existing in the database.
+        TRUNCATE - is used to remove all records from a table, including all spaces allocated for the records are removed.  
+        COMMENT - is used to add comments to the data dictionary. 
+    2. DQI(Data Query Language) - is to get some schema relation based on the query passed to it.
+        SELECT - is used to retrieve data from the a database.
+    3. DML(Data Manipulation Language): 
+        INSERT - is used to insert data into a table 
+        UPDATE - is used to update existing data within a table
+        DELETE - is used to delete records from a database table
+        MERGE, 
+        CALL, 
+        EXPLAIN PLAIN, 
+        LOCK TABLE 
+    4. DCL(Data Control Language) - mainly deals with the rights, permissions and other controls of the database system.
+        GRANT - gives user's access privileges to database.
+        REVOKE - withdraw user's access privileges given by using the GRANT command.
+    5. TCL(Transaction Control Language): deals with the transaction within the database
+        COMMIT - commits a Transaction 
+        ROLLBACK - rollbacks a transaction in case of any error occurs. 
+        SAVEPOINT - sets a savepoint within a transaction
+        SET TRANSACTION - specify characteristics for the transaction. 
 ```
 
 MySQL 查看表结构
@@ -1186,7 +1227,7 @@ MySQL 数据库优化
         net_write_timeout=180
         wait_timeout=86400
         interactive_timeout = 86400
-        max_allowed_packet = 128M 
+        max_allowed_packet = 128M     
         
         max_connections = 151 -- 同时处理最大连接数，推荐设置最大连接数是上限连接数的80%左右
         sort_buffer_size = 2M -- 查询排序时缓冲区大小，只对ORDER BY 和 GROUP BY起作用，可增大此值为16M 
@@ -2148,6 +2189,13 @@ $ vim /etc/my.cnf
     $ vim /etc/my.cnf   // 修改expire_logs_days,表示自动删除的天数 
         expire_logs_days=7  // 日志自动删除的天数,默认值为0,表示"没有自动删除"
 
+# Disable MySQL binary logging with log_bin variable 
+    $ vim /etc/my.cnf   // 
+        [mysqld]
+        skip-log-bin    // You can add skip- as a prefix to other opitios to disable them in this way too.
+    (mysql8)
+        disable_log_bin // 
+
 mysql> show variables  like 'expire_logs_days';
 +------------------+-------+
 | Variable_name    | Value |
@@ -2157,4 +2205,192 @@ mysql> show variables  like 'expire_logs_days';
 1 row in set, 1 warning (0.00 sec)
 
 $ systemctl restart mysql 
+```
+
+How to Open A Port In CentOS/REHL 7 
+-----------------------------------
+> A TCP/IP network connection may be either blocked, dropped, open, or filtered. These actions are generally controlled by the IPtables firewall the system uses and is independent of ant process or program that may be listening on a network port. This port will outline the steps to open a port required by application.
+```
+# Server details are as below:
+$ uname -a 
+Linux local-machine199 3.10.0-957.el7.x86_64 #1 SMP Thu Nov 8 23:39:32 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+$ cat /etc/redhat-release 
+CentOS Linux release 7.7.1908 (Core)
+
+1. Check Port Status 
+$ netstat -an | grep 3306 
+tcp6       0      0 :::3306                 :::*                    LISTEN     
+tcp6       0      0 :::33060                :::*                    LISTEN  
+
+2. Check Port Status in iptables 
+$ iptables-save | grep 3306 
+-A INPUT -p tcp -m tcp --dport 3306 -j DROP
+
+3. Add the port 
+# Add the test port in /etc/services file and allow the port to accept packets. Test port can be added by editing /etc/services file in below format:
+$ vim /etc/services 
+# service-name  port/protocol  [aliases ...]   [# comment]
+mysql           3306/tcp                        # MySQL
+mysql           3306/udp                        # MySQL
+
+4. Open firewall ports 
+# Add Firewall rule to allow the port to accept packets 
+$ iptables -A INPUT -p tcp -m tcp --dport 3306 -j ACCEPT
+$ iptables -F   # --flush the selected chain (all the chains in the table if none is given). This is equivalent to deleting all the rules one by one.
+
+5. Check newly added port status 
+$ netstat -an | grep 3306 
+tcp6       0      0 :::3306                 :::*                    LISTEN      127783/mysqld       
+tcp6       0      0 :::33060                :::*                    LISTEN      127783/mysqld       
+tcp6       0      0 192.168.1.199:3306      192.168.1.251:50908     ESTABLISHED 127783/mysqld 
+```
+
+Show Users, Privileges and Passwords
+------------------------------------
+
+| Tables | SqlString                                               | Notes                                                                                                                 |
+| ------ | :------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------- |
+| mysql> | SELECT user FROM mysql.user;                            | Show all MySQL users                                                                                                  |
+| mysql> | SELECT DISTINCT user FROM mysql.user;                   | List only unique user names                                                                                           |
+| mysql> | SELECT user, host FROM mysql.user;                      | Show MySQL users and hosts they are allowed to connect from                                                           |
+| mysql> | SELECT user,host,authentication_string FROM mysql.user; | Show MySQL users, their passwords and hosts                                                                           |
+| mysql> | SHOW GRANTS;                                            | Show privileges granted to the current MySQL user.                                                                    |
+| mysql> | SHOW GRANTS FOR 'user_name';                            | Show privileges granted to the MySQL user(if you dontt specify a host for the user name, MySQL assumes % as the host) |
+| mysql> | SHOW GRANTS FOR 'user_name'@'host';                     | Show privileges granted to a particular MySQL user account from a given host;                                         |
+
+Auto-Restart MySQL When It Crashes During a Brute Force Attack
+--------------------------------------------------------------
+```
+# Using a simple cronjob to check and restart MySQL if it is down
+# Load the crontab editor in the terminal 
+$ crontab -e 
+
+* * * * * systemctl status mysql > /dev/null || systemctl restart mysql 
+
+This checks If MySQL is running every minute and redirects stdout to null. Starting the service will not output anything unless something goes wrong, so there is no need to add the null redirect on the last command. 
+The double pipe || means OR and will execute the second command only if the first command fails. 
+
+In other words: If MySQL's status returns an exit code greater than zero(first command), start MySQL(second command).
+
+*/5 * * * * systemctl status mysql > /dev/null || systemctl restart mysql 
+```
+
+Recovering From Corrupted InnoDB tables
+--------------------------------------
+```
+Step 1 - Bring up your database in recovery mode 
+    - should bring down database (kill the process)
+    - In order to bring back database will need to start it in recovery mode, with innodb_force_recovery. You should know this recovery mode makes your database read only. 
+    - $ vim /etc/my.cnf
+        [mysqld]
+        # force the InnoDB storage engine to start up while preventing background operations from running, 
+        # start InnoDB and dump your tables.
+        # values of 4 or greater can permanently corrupt data files.
+        # 0 - by default(normal startup without forced recovery)
+        # 1 (SRV_FORCE_IGNORE_CORRUPT) - Let's the server run even if it detects a corrupt page. Tries to make SELECT * FROM tb1_name jump over corrupt index records and pages, which helps in dumping tables. 
+        # 2 (SRV_FORCE_NO_BACKGROUND) - Prevents the master thread and any purge threads from running, If a crash would occur during the purge operation, this recovery value prevents it.
+        # 3 (SRV_FORCE_NO_TRX_UNDO) -  Does not run transaction rollbacks after crash recovery.
+        # 4 (SRV_FORCE_NO_IBUF_MERGE) - Prevents insert buffer merge operations, if they would cause a crash, does not do them. Does not calculate table statistics. This calue can permanently corrupt data files. After using this value, be prepared to drop and recreate all secondary indexes.
+        # 5 (SRV_FORCE_NO_UNDO_LOG_SCAN) - Does not look at undo logs when starting the database: InnoDB treats even incomplete transactions as committed. This value can permanently corrupt data files.
+        # 6 (SRV_FORCE_NO_LOG_REDO) - Does not do the redo log roll-forward in connection with recovery. This value can permanently corrupt data files. Leaves database pages in an obsolete state, which in turn may introduce more corruption into B-Trees and other database structures.
+        innodb_force_recovery = 1
+        innodb_purge_threads=0
+
+Step 2 - Check which tables are corrupted and make a list 
+    # find out which tables got corrupted. 
+    $ mysqlcheck -h hostname -uroot -p<> -Pxx --all-databases 
+    Check for lines where it says table is Corrupted. Write down all tables / databases that got you an error. You will need to mysqldump them in recovery mode and reimport them after you boot back into normal MySQL mode. 
+
+Step 3 - Backup and drop corrupted tables 
+    # Once you got the list of corrupted tables, you should mysqldump them to their own.sql files. that way you will have backup for reimport.
+    $ mysqldump my_database table > database.table.sql 
+    # After you have the backup, drop your corrupted tables by executing 
+    $ drop table database.table;
+    # Now, you have now cleaned up your MySQL database so it's time to boot it up back without recovery mode.
+
+Step 4 - Restart MySQL in normal mode.
+    # When we don't have any corrupted tables left in our database, we should remove the my.cnf settings that we added in Step 1. Don't remove the port setting yet, because your database is still missing tables you backed up and need to be reimported. Restart your MySQL.
+
+Step 5 - Import backup.sql 
+    $ mysql database < database.table.sql 
+
+Step 6 - Change port
+    Once your finished importing your tables, you are free to change port setting in your my.cnf.
+    Of course reboot MySQL afterwards. It should come back and start working just as before the crash.
+``` 
+
+Enable MySQL slow query log and analyze 
+---------------------------------------
+* Enable the MySQL slow query log in the MySQL configuration file my.cnf 
+```
+$ sudo vim /etc/my.cnf 
+    # Add the records below under the [mysqld] section 
+    slow_query_log = 1
+    slow_query_log_file = /var/log/mysql-slow.log 
+    # long_query_time - time taken by an SQL query to be executed in seconds. If a query takes longer than the value specified, this query will be recorded in the slow query log file.
+    long_query_time = 10  
+
+Create the slow query logfile /var/log/mysql-slow.log and adjust ownership on it:
+    $ touch /var/log/mysql-slow.log
+    $ chown mysql:mysql /var/log/mysql-slow.log
+
+Restart MySQL. 
+    $ sudo systemctl restart mysqld 
+
+Start monitoring the slow query logfile. Use the command mysqldumpslow to analyze it and print summary of the slow query logfile.
+    $ mysqldumpslow -a /var/log/mysql-slow.log 
+```
+
+MySQL binlog
+------------
+```
+binlog 就是 binary log, 二进制日志文件，这个文件记录了MySQL所有的DML操作，通过binlog日志可以做数据恢复、主从复制
+
+$ sudo vim /etc/my.cnf 
+    [mysqld]
+    # 打开binlog日志 
+    log_bin=ON 
+    # binlog日志的基本文件名,后面追加标识表示每一个文件
+    log_bin_basename=/var/lib/mysql/mysql-bin
+    # binlog文件的索引文件，管理所有的binlog文件的目录
+    log_bin_index=/var/lib/mysql/mysql-bin.index 
+
+    # binlog记录SQL语句的原文
+    binlog_format=statement
+
+    # mysql version 5.7+ 
+    server-id="SOME CHARACTER"
+
+# 重启mysql 
+$ sudo systemctl restart mysqld 
+
+mysql> show variables like '%log_bin%';
++---------------------------------+--------------------------------+
+| Variable_name                   | Value                          |
++---------------------------------+--------------------------------+
+| log_bin                         | ON                             |
+| log_bin_basename                | /var/lib/mysql/mysql-bin       |
+| log_bin_index                   | /var/lib/mysql/mysql-bin.index |
+| log_bin_trust_function_creators | OFF                            |
+| log_bin_use_v1_row_events       | OFF                            |
+| sql_log_bin                     | ON                             |
++---------------------------------+--------------------------------+
+6 rows in set (0.30 sec)
+
+mysql()> show binlog events in 'mysql-bin.000002';
+| mysql-bin.000002 | 2017 | Anonymous_Gtid |         0 |        2082 | SET @@SESSION.GTID_NEXT= 'ANONYMOUS'         |
+| mysql-bin.000002 | 2082 | Query          |         0 |        2169 | BEGIN                                        |
+| mysql-bin.000002 | 2169 | Query          |         0 |        2328 | use `chyi`; delete from t /* comment */ where a >= 4 and t_modified<='2018-11-10' limit 1                                                                         |
+| mysql-bin.000002 | 2328 | Xid            |         0 |        2359 | COMMIT /* xid=23 */                          |
+
+mysql()> show binlog events in 'mysql-bin.000001';
+| mysql-bin.000001 | 425 | Anonymous_Gtid |         0 |         490 | SET @@SESSION.GTID_NEXT= 'ANONYMOUS'  |
+| mysql-bin.000001 | 490 | Query          |         0 |         570 | BEGIN                                 |
+| mysql-bin.000001 | 570 | Table_map      |         0 |         617 | table_id: 105 (chyi.t)                |
+| mysql-bin.000001 | 617 | Delete_rows    |         0 |         665 | table_id: 105 flags: STMT_END_F       |
+| mysql-bin.000001 | 665 | Xid            |         0 |         696 | COMMIT /* xid=12 */                   |
++------------------+-----+----------------+-----------+-------------+---------------------------------------+
+12 rows in set (0.04 sec)
+
 ```

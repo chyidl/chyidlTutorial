@@ -1,9 +1,13 @@
-SSH TUNNELLING
-==============
+SSH PORT FORWARDING 
+===================
 > Secure Shell(better known as SSH) is a cryptographic network protocol which allows users to securely perform a number of network services over an unsecured network.SSH keys provide a more secure way of logging into a server with SSH than using a password alone. While a password can eventually be creaked with a brute force attack, SSH keys are nearly impossible to decipher by brute force alone.
 
-Set Up SSH Keys
----------------
+WHAT IS SSH PORT FORWARDING, AKA (AS KNOW AS) SSH TUNNELING?
+------------------------------------------------------------
+> SSH port forwarding is a mechanism in SSH for tunneling application ports from the client machine to the server machine, or vice versa. It can be used for adding encryption to legacy applications, going through firewalls, and some system administrators and IT professionals use it for opening backdoors into the internal network from their home machines
+
+SSH Keys
+--------
 ```
 Step One -- Create the RSA Key Pair 
 $ ssh-keygen -t rsa 
@@ -14,10 +18,17 @@ Step Three -- Copy the Public Key
 $ ssh-copy-id -i ~/.ssh/lplus_id_rsa.pub -p xx root@xx
 ```
 
-Local vs Remote SSH port forwarding
------------------------------------
+LOCAL FORWARDING
+----------------
+> Local forwarding is used to forward a port from the client machine to the server machine. Basically, the ssh client listens for connections on a configured port, and when it receives a connectionm it tunnels the connection to an SSH server. The server connects to a configurated destination port, possibly on a different machine than the SSH server.
 ```
-* Local Port Forwarding: relay a port from a remote server to your local machine with **ssh -L** (-L: forward to local machine)
+# Typical uses for local port forwarding include:
+
+    1. Tunneling sessions and file transfers through jump servers 
+    2. Connecting to a service on an internal network from the outside
+    3. Connecting to a remote file share over the Internet.
+
+# Local Port Forwarding: relay a port from a remote server to your local machine with **ssh -L** (-L: forward to local machine)
     - For Example: If your rmeote server has a MySQL database daemon listening on port 3306 and you want to access this daemon from your local computer.
     # Remote MySQL server (remote port 3306) to local machine on local port 5000:
     $ ssh -L 5000:remote_ip:3306 -p xx user@remote_ip 
@@ -32,13 +43,30 @@ $ ssh -L [<LocalAddress>]:<LocalPort>:<RemoteHost>:<RemotePort> sshUser@remoteSe
     sshUser: This is the SSH username you have on the remote server 
     remoteServer: The address (IP or hostname) by which your remote server is reachable via ssh.
 
+# By default, anyone (even on different machines) can connect to the specified port on the SSH client machine. However, this can be restricted to programs on the same host by supplying a bind address:
+    $ ssh -L 127.0.0.1:5000:remote_ip:3306 -p xx user@remote_ip 
+
 # Check all interface for Port 
 $ netstat -an | grep 3306 | grep LISTEN 
+```
 
+REMOTE FORWARDING
+-----------------
+```
 * Remote Port Forwarding: make your local port available on a remote server with **ssh -R** (-R: forward to remote machine)
     - For Example: If your want to make your local web-srever available on a port of a public server. So that someone can quickly check what your local web-server provides without having to deploy it somewhere publicly.
     # Local web-server (local port 80) to rmeote server on remote port 5000:
     $ ssh -R 5000:localhost:80 -p xx user@remote_ip 
+
+# By default, OpenSSH only allows connecting to remote forwarded ports from the server host. However, the GatewayPorts option in the server configuration file sshd_config can be used to control this.
+    GatewayPorts no     # This prevents connecting to forwarded ports from outside the server computer.
+    GatewayPorts yes    # This allows anyone to connect to the forwarded ports, If the server is on the public Internet, anyone on the Internet can connect to the port.
+    GatewayPorts clientspecified  # This means that the client can specify an IP address from which connections to the port are allowed. 
+
+# Enabled GateWayPorts option (on remote server):
+$ vim /etc/ssh/sshd_config 
+    GatewayPorts yes  (most employees do not have fixed IP addresses at home, so they cannot restrict the IP address)
+$ service sshd restart 
 
 # Remote port forwarding (Make a local port available remotely)
 # In this exmaple we are going to make our local web-server(Port 80) available on a remote server on Port 5000.
@@ -52,10 +80,6 @@ $ ssh -R [<RemoteAddress>]:<RemotePort>:<LocalHost>:<LocalPort> sshUser@remoteSe
 $ ssh -R remote_ip:5000:localhost:8080 -p xx user@remote_ip 
 # You can now simply reach your local webserver via http://remote_ip:5000
 
-# Enabled GateWayPorts option (on remote server):
-$ vim /etc/ssh/ssh_config 
-GatewayPorts yes 
-
 # Ports below 1024 
 #Every system user can allocate ports above and including 1024 (high ports). Ports below that require root privileges.
 
@@ -64,6 +88,21 @@ $ sudo ssh -L 10:remote_ip:3306 -p xx user@remote_ip
 
 # As you allocate a low port on the remote server, you will need to ssh into the machine as root 
 $ ssh -R 10:localhost:8080 -p root@remote_ip 
+```
+
+OPENING BACKDOORS INTO THE ENTERPRISE
+-------------------------------------
+```
+Remote SSH port forwarding is commonly used by employees to open backdoors into the neterprise. 
+```
+
+SERVER - SIDE CONFIGURATION
+---------------------------
+```
+The AllowTcpForwarding option in the OpenSSH server configuration file must be enabled on the server to allow port forwarding.
+$ sudo vim /etc/ssh/sshd_config 
+    AllowTcpForwarding yes  # allow all TCP forwarding 
+    AllowStreamLocalForwarding yes  # allow all unix domain sockets 
 ```
 
 TUNNEL OPTIONS
@@ -144,7 +183,7 @@ $ vim ~/.ssh/config
         Port    xxx 
         IdentifyFile ~/.ssh/id_rsa 
         LocalForward 5000 remote_ip:3306 
-        ServerAliveInterval 30 
+        ServerAliveInterval 30  # 发送空包保持TCP长链接，默认值为0,
         ServerAliveCountMax 3 
 
 # If you recall all the ssh options we had used already, we can not simply start the autossh tunnel like so:
@@ -171,7 +210,7 @@ User=pi
 Type=simple
 # How long ssh must be up before we consider it a successful connection. Default is 30 seconds. If set to 0, this behaviour is disabled. and as well, autossh will retry even on failure of first attempt to run ssh
 Environment="AUTOSSH_GATETIME=0"
-ExecStart=/usr/bin/autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR '*:xxxx:localhost:xx' user@           remote_ip -p xx
+ExecStart=/usr/bin/autossh -M 0 -o "ServerAliveInterval 30" -o "ServerAliveCountMax 3" -NR '*:xxxx:localhost:xx' user@remote_ip -p xx
 ExecReload=/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always
@@ -243,5 +282,5 @@ Host *
     UseRoaming no 
 
 # Useful tools 
-    
+http://www.netcan666.com/2016/09/28/ssh隧道反向代理实现内网到公网端口转发/
 ```

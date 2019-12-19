@@ -2,7 +2,6 @@ Raspberry Pi Awesome Project
 ============================
 
 - [Raspberry Pi Intro](/root/raspberrypi/RaspberryPiPrj/Intro/README.md)
-- [TensorFlow Object Detection on the RaspberryPi](/root/raspberrypi/RaspberryPiPrj/TensorflowObjectDetection/Tensorflow_Object_Detection_on_the_RaspberryPi.md)
 - [AM2302 Temperature & Humidity](/root/raspberrypi/RaspberryPiPrj/AM2302/README.md)
 - [MLX90614 IR Sensor](/root/raspberrypi/RaspberryPiPrj/MLX90614/README.md)
 - [BMP180 Air Pressure Sensor](/root/raspberrypi/RaspberryPiPrj/BMP180/README.md)
@@ -18,6 +17,7 @@ Raspberry Pi Awesome Project
 - [Measure Performance in Linux](/root/raspberrypi/RaspberryPiPrj/MeasurePerformance/README.md)
 - [Build your own Private GitLab](/root/raspberrypi/RaspberryPiPrj/PrivateGitRepository/README.md)
 - [Build Ghost Blog on Raspberry](/root/raspberrypi/RaspberryPiPrj/GhostPi/README.md)
+- [Build GitLab Server on Raspberry](/root/raspberrypi/RaspberryPiPrj/GitlabPi/README.md)
 - [Kindle + Raspberry = Anything](/root/raspberrypi/RaspberryPiPrj/KindlePiPrj/README.md)
 - [YahooWeatherAPI](/root/raspberrypi/RaspberryPiPrj/YahooWeatherAPI/README.md)
 - [Homebridge HomeKit Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/homebridgeHomeKitRaspberryPi/README.md)
@@ -42,6 +42,18 @@ Raspberry Pi Awesome Project
 - [DNS Server](/root/raspberrypi/RaspberryPiPrj/DNSServer/README.md)
 - [Use Fail2ban to Secure Your Server](/root/raspberrypi/RaspberryPiPrj/Fail2ban/README.md)
 - [Getting Started and Securing Your Server](/root/raspberrypi/RaspberryPiPrj/GettingStartedServer/README.md)
+- [SHANGHAI FUTURES EXCHANGE - CTP C++](/root/raspberrypi/RaspberryPiPrj/CTP_DEMO/README.md)
+- [Twisted - Event-driven netorking engine written in Python](/root/raspberrypi/RaspberryPiPrj/TwistedSrc/README.md)
+- [Aria2 Downloader Pi](/root/raspberrypi/RaspberryPiPrj/Aria2PiPrj/README.md)
+- [YApi - local deployment](/root/raspberrypi/RaspberryPiPrj/YApiPi/README.md)
+- [gRPC - A high performace, open-source universal RPC framework](/root/raspberrypi/RaspberryPiPrj/gRPC/README.md)
+- [Swap on Linux](/root/raspberrypi/RaspberryPiPrj/SwapLinux/README.md)
+- [FONA 808 Cellular + GPS Breakout + Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/FONA808Pi/README.md)
+- [Generate Random Password](/root/raspberrypi/RaspberryPiPrj/RandPassword/README.md)
+- [GeekTime-DL Convert GeekTime article to Kindle](/root/raspberrypi/RaspberryPiPrj/GeekTime-DL/README.md)
+- [gost HTTPS Server](/root/raspberrypi/RaspberryPiPrj/gostHttpss/README.md)
+- [Portable Computer Vision: TensorFlow 2.0 on a RaspberryPi](/root/raspberrypi/RaspberryPiPrj/TensorFlowPi/README.md)
+- [Install Go Lang on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/GoLangPi/README.md)
 
 Download all history Magpi Magazine PDF files
 - [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)
