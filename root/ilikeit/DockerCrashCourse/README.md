@@ -1,5 +1,11 @@
 Docker Crash Course
 ===================
+> It works on my machine.
+```
+Virtual Machine: 虚拟机
+    1. 资源占用多(独占部分内存和硬盘空间)
+    2. 启动慢(启动操作系统多久，启动虚拟机就需要多久,然后应用程序才能真正运行)
+```
 
 Introduction Conceptual Guides Containers, VMs and Docker
 ---------------------------------------
