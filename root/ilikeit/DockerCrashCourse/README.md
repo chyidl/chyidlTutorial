@@ -5,11 +5,176 @@ Docker Crash Course
 Virtual Machine: 虚拟机
     1. 资源占用多(独占部分内存和硬盘空间)
     2. 启动慢(启动操作系统多久，启动虚拟机就需要多久,然后应用程序才能真正运行)
+
+Linux 容器(Containers):
+    1. Linux容器不是模拟一个完整的操作系统，而是对进程进行隔离，或者说，在正常进程的外面套一个保护层，对于容器里面的进程来讲，接触到的各种资源都是虚拟的，从而实现底层的隔离.
+    2. 容器是进程级别的，相比虚拟机有很多优势
+        启动快: 容器里面的应用直接就是底层系统的一个进程，而不是虚拟机内部的进程，所以，启动容器相当于启动本级的一个进程，而不是启动一个操作系统
+        资源占用少: 容器只占用需要的资源，不占用那些没有用的资源，虚拟机由于是完整的操作系统，不可避免要占用所有资源 
+        体积小: 容器只包含用到的组件，而虚拟机是整个操作系统的打包，所以容器文件比虚拟机文件要小很多 
+
+Docker 是Linux容器的一种封装, 提供简单使用的容器使用接口
+Docker 将应用程序于该程序的依赖，打包在一个文件里面，运行这个文件就会生成一个虚拟容器
+
+Docker 主要用途:
+    提供一次性的环境: 本地测试他人的软件，持续集成的时候提供单元测试和构建的环境 
+    提供弹性的云服务: 因为Docker容器可以随开随用，很适合动态扩容和缩容
+    组建微服务架构: 通过多个容器，一台机器可以跑出多个服务，因此在本机就可以模拟出微服务架构 
+
+Community Edition: CE 社区版
+Enterprise Edition: EE 企业版 
+```
+
+Install Docker in CentOS
+------------------------
+```
+1. Install required packages.
+    $ sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+2. Use the following command to set up the stable repository 
+    $ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+3. Instal Docker Engine - Community 
+    $ sudo yum install docker-ce docker-ce-cli containerd.io 
+4. Start Docker
+    $ sudo systemctl start docker 
+5. Verify that Docker Engine - Community is installed correctly by running the hello-world image.
+    $ sudo docker run hello-world 
+    $ sudo docker version 
+    or 
+    $ sudo docker info 
+6. Docker需要用户具有sudo权限，为了避免每次命令都输入sudo,可以将用户加入docker用户组 
+    $ sudo usermod -aG docker $USER 
+
+➜  ~ docker info                 
+Client:
+ Debug Mode: false
+
+Server:
+ERROR: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get http://%2Fvar%2Frun%2Fdocker.sock/v1.40/info: dial unix /var/run/docker.sock: connect: permission denied
+errors pretty printing info
+1. Create the docker group 
+    $ sudo groupadd docker 
+2. Add your user to the docker group 
+    $ sudo usermod -aG docker $USER 
+3. Logout and login again and run (that doesn't work you may need to reboot your machine first)
+    $ docker run hello-world 
+
+Docker 是服务器-客户端架构，命令行运行docker命令的时候，需要本机有docker服务
+    $ sudo systemctl enable docker 
+    $ sudo systemctl start docker 
+
+Image文件
+    Docker把应用程序及其依赖打包在image文件里面，只有通过这个文件，才能生成Docker容器
+    image文件是二进制文件，实际开发中一个image文件往往继承另一个image文件，加上一些个性化设置而生成
+    # 列出本机的所有image文件
+    $ docker image ls 
+    
+    # 删除 image 文件
+    $ docker image rm [imageName] 
+
+Docker官方仓库Docker Hub是最重要最常用的image仓库 
+# 将image文件从仓库抓取到本地 
+$ docker image pull hello-world 
+
+# 本机查看image文件 
+$ docker image ls 
+
+# 运行这个image文件 
+$ docker container run hello-world 
+
+# 安装运行Ubuntu的image
+# docker container run -it ubuntu bash 
+
+$ docker stop containID 
+
+容器文件:
+    image文件生成的容器实例本身也是一个文件，称为容器文件；
+    # 列出本机正在运行的容器
+    $ docker container ls 
+    
+    # 列出本机所有容器，包括终止运行的容器 
+    $ docker container ls -all 
+
+    # 终止运行的容器文件,并删除
+    $ docker container rm containerID 
+
+Dockerfile 文件:
+    文本文件，用来配置image,Docker根据该文件生成二进制image文件 
+
+制作自己的Docker容器:
+以koa-demos项目为例，介绍怎么写Dockerfile文件,实现让用户在Docker容器里运行Koa框架
+    $ git clone https://github.com/ruanyf/koa-demos.git 
+    $ cd koa-demos 
+新建一个文本文件 .dockerignore
+    $ vim .dockerignore  # 下面路径作为需要排除,不需要打包进入image文件 
+        .git 
+        node_modules 
+        npm-debug.log 
+新建文件 Dockerfile
+    $ vim Dockerfile 
+        FROM node:8.4   # 该image文件继承官方的 node image,冒号表示标签,8.4版本的node
+        COPY . /app     # 将当前目录下所有文件(除了.dockerignore排除的路径),都拷贝进入image文件的/app目录 
+        WORKDIR /app    # 指定接下来的工作路径为/app 
+        RUN npm install --registry=https://registry.npm.taobao.org 
+        EXPOSE 3000     # 将容器3000端口暴露出来,允许外部连接这个端口 
+创建image文件 
+    $ docker image build -t koa-demo . 
+        -t: 指定image文件的名字，后面还可以用冒号指定标签 
+查看新生成的image文件koa-demo 
+    $ docker image ls 
+生成容器 
+    $ docker container run -p 8000:3000 -it koa-demo bash 
+        -p: 容器的3000端口映射到本机8000端口 
+        -it: 容器的shell映射到当前的shell,然后你在本机窗口输入的命令就会传入容器 
+    $ node demos/01.js 
+
+Node进程运行在Docker容器的虚拟环境里面，进程接触到的文件系统和网络接口都是虚拟的，于本机的文件系统和网络接口是隔离的，因此需要定义容器于物理机的端口映射(map)
+
+    $ docker container run --rm -p 8000:3000 -it koa-demo bash 
+
+Dockerfile可以包含多个RUN命令,但是只能又一个CMD命令
+CMD命令: 在容器启动后执行，
+RUN命令: 在image文件的构建阶段执行，执行结果都会打包进入image文件
+指定CMD命令后，docker container run命令不能附加命令否则会覆盖CMD命令 
+    $ docker container run --rm -p 8000:3000 -it koa-demo:0.0.1 
+
+发布image文件
+    # hub.docker.com 注册并登陆
+    $ docker login 
+    
+    # 为本地的image标注用户名和版本 
+    $ docker image tag koa-demos ruanyf/koa-demos 
+
+    # 发布image文件 
+    $ docker image push username/repository 
+
+其他命令:
+    $ docker container start [containerID] # 启动已经生成，已经停止运行的容器文件 
+    $ docker container run [containerID]   # 新建容器，每次运行一次就会新建一个容器
+    $ docker container kill [containerID]  # 终止容器运行，相当于向容器里面的祝进程发送SIGKILL信号 
+    $ docker container stop [containerID]  # 终止容器运行，相当于向容器里面的主进程发送SIGTERM信号 过段时间再发送 SIGKILL信号 
+    $ docker container log [containerID]   # 查看docker容器的输出，即容器里面Shell的标准输出
+    $ docker container exec -it [containerID] /bin/bash  # 进入正在运行的docker 容器
+    $ docker container cp [containID]:[/path/to/file] .  # 用于从正式运行的Docker容器里面将文件拷贝到本机 
+
+微服务很适合使用Docker容器实现，每个容器承载一个服务，一台计算机同时运行多个容器，从而就能很轻松地模拟复杂的微服务架构 
+    业务+数据库的容器架构具有通用性，许多应用程序都可以复用 
+
+修改image默认仓库镜像网址:
+(CentOS):
+    $ sudo vim /usr/lib/systemd/system/docker.service 
+    $ sudo find / -iname docker.service 
+(Debian):
+    $ sudo vim /etc/default/docker 
+        DOCKER_OPTS="--registry-mirror=https://registry.docker-cn.com"
+    $ sudo service docker restart 
+
+
+
+
 ```
 
 Introduction Conceptual Guides Containers, VMs and Docker
----------------------------------------
-
+---------------------------------------------------------
 ```
 1. What are "Containers" and "VMs"? 
     Containers and VMs are similar in their goals: to isolate an application and its dependencies into a self-contained unit that can run anywhere.
@@ -397,4 +562,3 @@ Docker registry是存储容器镜像的仓库，用户可以通过Docker client�
 # Pull an image or a repository from a registry
 $ sudo docker pull
 ```
->>>>>>> 17e65b27933a988ecb5aa15f7047add37944e12c

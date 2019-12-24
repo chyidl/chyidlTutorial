@@ -685,3 +685,7 @@ RabbitMQ本身没有绝对的消息顺序机制，单个queue在多消费者下�
 关于消息重复执行:
     1. 消费任务超时，或者没有即时返回状态
 ```
+
+Apache Kafka and RabbitMQ ?
+---------------------------
+> Apache Kafka and RabbitMQ are two open-source and commerically-supported pub/sub systems, readily adopted by enterprises. 

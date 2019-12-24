@@ -90,10 +90,55 @@ Sort
 - [Python3 sort_quick_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/sort_quick_array_implement.py)
 * Programming to achieve the Kth element of a set of data within O(n) time complexity
 
+* 线性排序(Linear sort) - 桶排序、计数排序、基数排序
+```
+桶排序 (Bucket sort):
+    1. 将要排序的数据分到几个有序的桶里，每个桶里的数据在单独进行排序，桶内排序完之后，再把每个桶里的数据按照顺序依照次序取出，组成的序列就是有序.
+    2. 桶排序比较适合在外部排序中 
+
+计数排序 (Counting sort):
+    1. 计数排序只能用在数据范围不大的场景中,如果数据范围k比排序的数据大很多，就不使用
+
+基数排序 Radix sort:
+    基数排序要求数据可以划分为高低位， 位之间的有递进关系，比较两个数
+```
+
+* 排序的优化
+```
+    理想的分区点: 被分区点分开的两个分区中，数据的数量差不多
+        1. 三数取中法
+        2. 随机选取分区点 
+    
+```
+
 Binary search 
 -------------
+```
+二分查找针对是一个有序的数据集合: 
+    时间复杂度 - O(logn)
+    二分查找依赖顺序表结构 -- 数组 
+    二分查找针对的是有序数据
+    二分查找只能用于插入、删除操作不频繁，一次排序多次查询的场景中 
+
+IP地址库查找 
+    1. 查找第一个值等于给定值的元素
+    2. 查找最后一个值等于给定值的元素
+    3. 查找第一个大于等于给定值的元素
+    4. 查找最后一个小于等于给定值的元素 
+
+```
 * Implement a binary search algorithm with ordered array 
+- [Python3 binary_search_array_implement.py](/root/os/DSAA/DataStructuresAndAlgorithms/python/binary_search_array_implement.py)
 * Implement fuzzy binary search algorithm (Such as the first element greater than or euqal to the given value)
+
+* Skip List 
+```
+跳表：动态数据结构，可以支持快速的插入、删除、查找操作，甚至可以代替红黑树 Red-black Tree 
+Redis:
+    Sort Set:有序集合 就是使用跳表实现 
+    链表加上多级索引的结构，就是跳表 
+    
+```
 
 Hash list
 ---------

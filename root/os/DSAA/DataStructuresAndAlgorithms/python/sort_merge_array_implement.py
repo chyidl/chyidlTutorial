@@ -41,7 +41,6 @@ Time Complexity: Sorting arrays on different machines. Merge Sort is a
 recursive algorithm and time complexity can be expressed as following
 recurrence relation.
     T(n) = 2T(n/2) + o(n)
-
 Auxiliary Space O(n)
 """
 import numpy as np

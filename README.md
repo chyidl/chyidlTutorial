@@ -82,6 +82,7 @@ chyidlTutorial
 - [Redis Crash Course](root/ilikeit/RedisCrashCourse/README.md)
 - [Nginx Crash Course](root/ilikeit/NginxCrashCourse/README.md)
 - [Docker Crash Course](root/ilikeit/DockerCrashCourse/README.md)
+- [RPC Crash Course](root/ilikeit/RPCCrashCourse/README.md)
 - [Continuous Integration, Continuous Delivery](root/ilikeit/CICD/README.md)
 - [Process Monitoring with Supervisord](root/ilikeit/SupervisordCrashCourse/README.md)
 - [Cryptography](root/ilikeit/Cryptography/README.md)

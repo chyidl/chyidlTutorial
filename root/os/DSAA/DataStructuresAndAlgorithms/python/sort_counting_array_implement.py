@@ -81,7 +81,8 @@ def countSort(arr):
     return ans
 
 
-# Driver program to test above function
-arr = "geeksforgeeks"
-ans = countSort(arr)
-print("Sorted character array is {}".format(ans))
+if __name__ == '__main__':
+    # Driver program to test above function
+    arr = "geeksforgeeks"
+    ans = countSort(arr)
+    print("Sorted character array is {}".format(ans))
