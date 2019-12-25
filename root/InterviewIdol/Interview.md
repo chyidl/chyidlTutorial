@@ -261,6 +261,16 @@ https://zhuanlan.zhihu.com/p/54430650
 
 28. 数据库优化查询的方法
     外键、索引、联合索引、选择特定字段 
+
+29. 正则表达式匹配中 (.*) 和 (.*?)匹配区别?
+    (.*)贪婪匹配，会把满足正则的尽可能多的往后匹配 
+    (.*?)非贪婪匹配,会把满足正则的尽可能少匹配
+
+30. 简述Django 的ORM:
+    ORM- Object Relation Mapping对象关系映射 
+    实现数据模型与数据库的接触耦合，通过简单的配置可以轻松更换数据库，不需要修改代码只需要面向对象编程；ORM操作本质上会根据对接的数据库引擎，翻译成对应的SQL语句，所有使用Django开发项目无需关心程序底层使用的MySQL、Oracle\sqlite
+
+
     CREATE TABLE `t_user` (
   `User_Id` bigint(20) NOT NULL COMMENT '用户 编号',
   `Lgn_Nm` varchar(20) DEFAULT NULL COMMENT '登录名',
@@ -305,9 +315,8 @@ https://zhuanlan.zhihu.com/p/54430650
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户'
 ```
 
-Java --- 生态
--------------
+Java 面试题
+==========
 ```
-Java 继承关系单一非多承 
-Java -> 字节码 -> 
+
 ```
