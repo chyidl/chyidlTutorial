@@ -66,7 +66,7 @@ First of all export some paths, and save them in your .zshrc or .bashrc files fo
 # Go development 
 # Set variables in .zshrc file
 # don't forget to set path correctly!
-export GOPATH=$HOME/golang
+export GOPATH=$HOME/.go
 export GOROOT="$(brew --prefix golang)/libexec"
 export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
 $ test -d "${GOPATH}" || mkdir "${GOPATH}"
@@ -75,6 +75,10 @@ $ test -d "${GOPATH}/src/github.com" || mkdir -p "${GOPATH}/src/github.com"
 # Also a bunch of dev tools!
 $ go get golang.org/x/tools/cmd/godoc 
 $ go get github.com/golang/lint/golint 
+
+ # HTTP proxy
+ export HTTP_PROXY=127.0.0.1:1087
+ export HTTPS_PROXY=127.0.0.1:1087
 
 Setting up the VS Code text editor for Go 
 Open VS Code via spotlight. Press Command + Space and type "VS Code" then press enter 

@@ -1357,7 +1357,7 @@ character_set_server = utf8
 concurrent_insert = 1
 connect_timeout = 10
 default_storage_engine = InnoDB
-default_time_zone = SYSTEM
+default_time_zone = SYSTEM      // 或者使用 default_time_zone = '+8:00' 东8区
 default_week_format = 0
 delayed_insert_limit = 100
 delayed_insert_timeout = 300

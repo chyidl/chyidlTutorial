@@ -2,7 +2,17 @@ Adafruit FONA 808 Cellular + GPS Breakout + Raspberry Pi
 ========================================================
 > Adafruit FONA 808 MiniGSM + GPS, an all-in-one cellular phone module with that lets you add location-tracking, voice, text, SMS and data 
 
-* GSM cellular module
+Terminology
+-----------
+* GSM(Global System for Mobile Communications) is a standard for second generation or 2G cellular phone networks. The GSM standard replaced the 1st generation analog cell phone networks a number of years ago. Although GSM is now an old standard, GSM networks are still prevalent and available almost anywhere around the world.
+
+* GPRS(General Packet Radio Service) is a standard for sending data over a GSM cellular network. FONA supports a 2G GRPS data connection.
+
+* PPP (Point-to-Point Protocol) is an old standard for connecting a computer to a network through a serial link. You might have used PPP to connect your computer to the internet through a serial modem or DSL connection years ago! With FONA a PPP connection can be created to talk to the GPRS network through FONA's serial connection with your hardware.
+
+* APN (Access Point Name) is a name to identify the gateway between a GRPS network and the internet. You will need to find the APN for the cellular network you're using with FONA.
+
+* GSM
     - Quad-band 850/900/1800/1900MHz - connect onto any global GSM network with any 2G SIM
     - Fully-integrated GPS (MT3336 chipset with -165 dBm tracking sensitivity) that can be controlled and query over the same serial port.
     - Make and receive voice calls using a headset or an external 32Ω speaker + electreu microphone
@@ -46,6 +56,8 @@ Wiring Raspberry Pi + Fona 808
 ```
 Make sure that everything is powered down and unplugged before you start connecting anything!
     Connect the Fona's GND to the Pi's GND (Row 2, Pin 3) AND the Fona's Key(I ended up soldering 3 tie lines together to do this, but you can prototype with a breadboard)
+    Connect the Fina's Key to the Pi;s GND 
+        - Note this wiring will force FONA to stay active all the time the Raspberry Pi has power.
     Connect the Fona's Vio to the Pi's 3.3V power (Row 1, Pin 1)
     Connect the Fona's TX to the Pi's RX(Row 2, Pin 5)
     Connect the Fona's RX to the Pi's TX(Row 2, Pin 4)
@@ -59,14 +71,14 @@ By default any Raspberry Pi uses its hard-ware serial pins for the kernel serial
 
 $ sudo vim /boot/config.txt 
     enable_uart=1   # Add this line to the end of the file 
+$ reboot
 
-# install PPP and the serial console "screen"
+# To test the serial connection, we are going to install PPP and the serial console "screen"
 $ sudo apt-get update 
 $ sudo apt-get install ppp screen 
-
 $ sudo screen /dev/serial0 115200 
-> AT 
-< OK
+> AT  # Type in 
+< OK  # FONA talking back
 > Ctrl-A and typing :quit 
 
 Using the Cellular Connection 

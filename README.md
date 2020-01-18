@@ -80,6 +80,7 @@ chyidlTutorial
 - [Mongo Crash Course](root/ilikeit/MongoDBCrashCourse/README.md)
 - [MQ Crash Course](root/ilikeit/MQCrashCourse/README.md)
 - [Redis Crash Course](root/ilikeit/RedisCrashCourse/README.md)
+- [Disque, an in-memory, distributed job queue](root/ilikeit/DisqueCrashCourse/README.md)
 - [Nginx Crash Course](root/ilikeit/NginxCrashCourse/README.md)
 - [Docker Crash Course](root/ilikeit/DockerCrashCourse/README.md)
 - [Continuous Integration, Continuous Delivery](root/ilikeit/CICD/README.md)
