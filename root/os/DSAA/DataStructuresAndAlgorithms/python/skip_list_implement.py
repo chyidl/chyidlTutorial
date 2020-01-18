@@ -102,7 +102,9 @@ import random
 
 # Python3 code for inserting element in skip list
 class Node:
+    """A node from a"""
     # Class to implement node
+
     def __init__(self, data, level):
         self.data = data
 

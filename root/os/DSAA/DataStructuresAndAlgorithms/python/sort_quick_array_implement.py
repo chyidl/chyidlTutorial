@@ -48,6 +48,17 @@ Pseudo Code for recursive QuickSort function:
 
 Partition Algorithm:
 """
+# Function to do Quick sort
+
+
+def quickSort(arr, low, high):
+    if low < high:
+        # pi is partitioning index, arr[p] is now at right place
+        pi = partition(arr, low, high)
+
+        # Separately sort elements before partition and after partiton
+        quickSort(arr, low, pi-1)
+        quickSort(arr, pi+1, high)
 
 
 # Python program for implementation of Quicksort Sort
@@ -55,9 +66,11 @@ Partition Algorithm:
 # at its correct position in sorted array, and places all smaller (smaller
 # than pivot) to left of pivot and all greater elements to right of pivot
 def partition(arr, low, high):
-    i = low   # index of smaller element
+    i = low  # index of smaller element
+    # 获取分区点
     pivot = arr[high]  # pivot
 
+    # 遍历数据
     for j in range(low, high):
         # If current element is smaller than or equal to pivot
         if arr[j] <= pivot:
@@ -72,21 +85,13 @@ def partition(arr, low, high):
 # arr[] --> Array to be sorted,
 # low --> Starting index
 # high --> Ending index
-
-
-# Function to do Quick sort
-def quickSort(arr, low, high):
-    if low < high:
-        # pi is partitioning index, arr[p] is now at right place
-        pi = partition(arr, low, high)
-
-        # Separately sort elements before partition and after partiton
-        quickSort(arr, low, pi-1)
-        quickSort(arr, pi+1, high)
-
-
-# Driver code to test above
-arr = [10, 7, 5, 8, 9, 1, 5]
-print("Original array is {}".format(arr))
-quickSort(arr, 0, len(arr)-1)
-print("Sorted array is {}".format(arr))
+if __name__ == '__main__':
+    """
+    递推公式: quick_sort(p...r) = quick_sort(p...q-1) quick_sort(q+1...r)
+    终止条件 p >= r
+    """
+    # Driver code to test above
+    arr = [10, 7, 5, 8, 9, 1, 5]
+    print("Original array is {}".format(arr))
+    quickSort(arr, 0, len(arr)-1)
+    print("Sorted array is {}".format(arr))

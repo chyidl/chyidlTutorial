@@ -72,3 +72,10 @@ Spring Boot Actuator:
         http://localhost:8080/actuator/health   
         http://localhost:8080/actuator/beans
 ```
+
+| 修饰符    | 当前类 | 同包  | 子类  | 其他包 |
+| :-------- | :----: | :---: | :---: | :----: |
+| public    |   ✅    |   ✅   |   ✅   |   ✅    |
+| protected |   ✅    |   ✅   |   ✅   |   🚫   |
+| default   |   ✅    |   ✅   |  🚫   |   🚫   |
+| private   |   ✅    |  🚫   |  🚫   |   🚫   |
