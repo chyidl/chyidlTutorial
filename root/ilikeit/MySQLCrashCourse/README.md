@@ -103,7 +103,7 @@ $ sudo apt update # Refresh your apt package cache
 $ sudo apt-get install mysql-server 
 
 # You can set the root password later using the mysql_secure_installation 
-$ sudo mysql_secure_installtion
+$ sudo mysql_secure_installation
 
 #Starting and Stopping the MySQL Server
 

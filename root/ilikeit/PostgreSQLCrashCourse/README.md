@@ -1,20 +1,47 @@
 PostgreSQL Crash Course
 =======================
+> PostgreSQL Slogan "世界上最先进的开源关系型数据库"
 > Relational database management systems are a key component of many web sites and applications. They provide a structured way to store, organize, and access information.
 
 > PostgreSQL, is a relational database management system that provides an implementation of the SQL querying language. supporting reliable transactions and concurrency without read locks.
+```
+RDBMS: 关系型数据库存储和管理大数据量；建立在关系模型基础上的数据库，
+ORDBMS: 对象关系数据库系统 
+  数据库：关系表的集合
+  数据表: 数据的矩阵
+  冗余：存储多组数据，冗余降低性能，提高数据的安全性
+  主键：数据表中只能包含一个主键
+  复合键：将多列作为索引键 
+  索引：使用索引可以快速访问数据表中特定的信息，索引是对数据表中一列或多列的值进行排序的一种结构
+  参照完整性:参考的完整性要求关系中不允许引用不存在的实体
+  实体完整性: 保证数据的一致性
+  函数: 可以在数据库服务器执行指定程序
+  触发器: 触发器是由SQL语句查询所触发的事件 触发器通常是由INSERT、UPDATE语句触发 
+  多版本并发控制MVCC(Multiversion concurrency control) 系统进行并发控制，该系统向每个用户提供一个数据库的“快照” 用户在事务内所做的每个修改对于其他用户都不可见，直到该事务成功提交
+  数据类型:文本、任意精度的数值数组、JSON数据、枚举类型、XML数据
+  全文搜索: Tsearch2 或 OpenFTS 
 
+```
 Step1 - Installing PostgreSQL
 -----------------------------
 ```
 $ sudo apt-get update 
 # postgresql-contrib package that adds additional utilities and functionality
-$ sudo apt-get install postgresql postgresql-contrib 
+$ sudo apt-get install postgresql postgresql-contrib postgresql-client
+
+# 安装完成系统默认创建超级用户postgres,密码空
+$ sudo -i -u postgres
 
 # Checking postgreSQL status 
 $ sudo systemctl status postgresql.service 
 or 
 $ sudo systemctl status postgresql@10-main 
+
+# enable remote access to PostgreSQL server
+# edit the postgresql.conf 
+$ vim /etc/postgresql/10/main/postgresql.conf
+# Uncomment the listen_addresses parameter by removing the. replace the 'localhost' with the IP address of the PowerRecon Server or specify '*'
+# Restart the PostgreSQL service
 ```
 
 Step2 - Using PostgreSQL Roles and Databases
