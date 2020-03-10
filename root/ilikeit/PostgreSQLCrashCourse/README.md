@@ -37,11 +37,27 @@ $ sudo systemctl status postgresql.service
 or 
 $ sudo systemctl status postgresql@10-main 
 
-# enable remote access to PostgreSQL server
-# edit the postgresql.conf 
+# Allow remote access to PostgreSQL server
+# Step 1 - Update postgresql.conf 
 $ vim /etc/postgresql/10/main/postgresql.conf
-# Uncomment the listen_addresses parameter by removing the. replace the 'localhost' with the IP address of the PowerRecon Server or specify '*'
-# Restart the PostgreSQL service
+# search for postgresql.conf 
+$ sudo find / -name "postgresql.conf"
+# - Connection Settings - 
+# What IP address(es) to listen on;
+# comma-separated list of addresses;
+# default to 'localhost'; use '*' for all 
+listen_addresses = '*'
+
+# Step 2. Configuring pg_hba.conf 
+# Add the following line in the pg_hba.conf file to allow access to all databases for all users with an encrypted passworde, also change address 
+# from IPv4 127.0.0.1/32 to 0.0.0.0/0 and IPv6 from ::1/128 to ::0/0. 
+$ vim /etc/postgresql/10/main/pg_hba.conf 
+
+# Step 3. Restart PostgreSQL Server 
+$ sudo systemctl restart postgresql 
+
+# Step 4. Adjusting Firewall (optional)
+$ sudo ufw allow 5432/tcp 
 ```
 
 Step2 - Using PostgreSQL Roles and Databases
@@ -50,6 +66,7 @@ Step2 - Using PostgreSQL Roles and Databases
 PostgreSQL use "roles" to handle in authentication and authorization. 
 
 The installation procedure created a user account called postgres that is associated with the default Postgres role. In order to use Postgres, you can log into that account.
+
 
 # Switching Over to the postgres Account
 $ sudo -i -u postgres
