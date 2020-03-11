@@ -219,3 +219,15 @@ pi=# SELECT * FROM playground;
          2 | swing | red   | northwest | 2019-04-27
 (1 row)
 ```
+
+JSONB vs JSON
+```
+jsonb: stores data in a decomposed binary format, bianry code.
+  more efficiency 
+  significantly faster to process 
+  supports indexing (which can be a significant advantage)
+
+json: is stored as an exact copy of the JSON input text.
+
+https://www.compose.com/articles/faster-operations-with-the-jsonb-data-type-in-postgresql/
+```
