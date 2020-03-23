@@ -1,56 +1,127 @@
-" #  >> Copyright 2018- chyidl (@Chyi Yaqing)
+"  >> Copyright 2020- chyidl (@Chyi Yaqing)
+" Terminal font == Hack Nerd Font 
+" :set paste in vim before you paste to disable automated indenting, 
+" :set nopaste after you've pasted the content.
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" Automatic installation vim-plug 
+" vim-plug : A minimalist Vim plugin manager
+if empty(glob('~/.vim/autoload/plug.vim'))
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif 
 
-" alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+" alternatively, pass a path where vim-plug should install plugins
+call plug#begin('~/.vim/plugged')
 
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+" Color Scheme 
+Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
 
-" All of your Plugins must be added before the following line
-Plugin 'vim-scripts/mru.vim'    " Plugin to manage Most Recently Used (MRU) files 
-Plugin 'scrooloose/nerdtree'    " A Tree explore plugin for Vim
-Plugin 'Xuyuanp/nerdtree-git-plugin'    " A Plugin of NERDTree showing git status 
-Plugin 'junegunn/goyo.vim'      " Distraction-free writing in Vim 
-Plugin 'mileszs/ack.vim'        " Vim Plugin for the Perl module / CLI script 'ack'
-Plugin 'ctrlpvim/ctrlp.vim'     " Active fork of kien/ctrlp.vim—Fuzzy file, buffer, mru, tag, etc finder. 
-Plugin 'itchyny/lightline.vim'  " A light and configurable statusline/tabline plugin for Vim
-Plugin 'MarcWeber/vim-addon-mw-utils' "
-Plugin 'tomtom/tlib_vim'
-Plugin 'garbas/vim-snipmate'    " snipMate.vim aims to be a concise vim script that implements some of TextMate's snippets features in Vim 
-Plugin 'w0rp/ale'               " Asynchronous linting/fixing for Vim and Language Server Protocol (LSP) integration
-Plugin 'vim-syntastic/syntastic' " Syntax checking hacks for vim
-Plugin 'keith/swift.vim'        " Vim runtime files for Swift
-Plugin 'tmhedberg/SimpylFold'   " folding for Vim 
-Plugin 'nvie/vim-flake8'        " add PEP 8 checking with this nify little plugin 
+" Status Bar 
+Plug 'itchyny/lightline.vim'                " A light and configurable statusline/tabline plugin for Vim
 
-" Color Schemes 
-Plugin 'jnurmine/Zenburn'
-Plugin 'altercation/vim-colors-solarized' 
+" File Explorer.
+Plug 'preservim/nerdtree'                   " A tree explorer plugin for vim  
+Plug 'Xuyuanp/nerdtree-git-plugin'          " A plugin of NERDTree showing git status
+Plug 'ryanoasis/vim-devicons'               " Adds file type icons to Vim Plugins
+
+" Intellisense engine for vim8, full language server protocol support as VSCode 
+" Install nodejs 
+" $ curl -sL install-node.now.sh/lts | bash
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Visualization Enchange 
+Plug 'Yggdroot/indentLine'                  " A vim plugin to display the indention levels with thin vertical lines
+
+" Show a diff using Vim its sign column 
+Plug 'mhinz/vim-signify', { 'branch': 'master' }
+
+" Vim plugin, insert or delete brackets,parens,quotes in pair 
+"Plug 'jiangmiao/auto-pairs'
+
+" Comment stuff out 
+Plug 'tpope/vim-commentary'                 " Type '\\' aka <Leader><Leader> to quick (un)comment line(s)
+
+" True Sublime Text Style multiple selections for Vim 
+Plug 'terryma/vim-multiple-cursors'
+
+" Lightning fast left-right movement in Vim 
+Plug 'unblevable/quick-scope'
+
+" ALE(Asynchronous Lint Engine) is a plugin prividing linting(syntax cheacking and semantic errors)
+Plug 'dense-analysis/ale'
+
+" A command-line fuzzy finder 
+" PlugInstall and PlugUpdate will clone fzf in ~/.fzf and run the install script 
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+
+" Language: Javascript 
+" Vastyly improved Javascript indentation and syntax support in Vim.
+Plug 'pangloss/vim-javascript'
+
+" Language: Python 
+" Python syntax highlighting for Vim 
+Plug 'vim-python/python-syntax'
+
+" Language: C/C++ 
+" Additional Vim syntax highlighting for C++ (including C++11/14/17)
+Plug 'octol/vim-cpp-enhanced-highlight'
+
+" Language: Go 
+" Go development plugin for Vim 
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+" Language: Rust 
+" Vim configuration for Rust 
+Plug 'rust-lang/rust.vim'
+
+" Language: Markdown 
+" Markdown for Vim: a complete environment to create Markdown files with a syntax highlight that doesn't suck! 
+Plug 'gabrielelana/vim-markdown'
+
+" Language: Misc 
+" A better JSON for Vim: distinct highlighting of keywords vs values, JSON-specific (non-JS) warnings, quote concealing. Pathpgen-friendly 
+Plug 'elzr/vim-json'
+
+" Vim support for editing fish scripts 
+Plug 'dag/vim-fish'
+
+" Vim syntax for TOML 
+Plug 'cespare/vim-toml'
+
+" Override vim syntax for yaml files 
+Plug 'stephpy/vim-yaml'
+
+" An up-to-date jinja2 syntax file. 
+Plug 'Glench/Vim-Jinja2-Syntax'
+
+" Your Swiss Army Knife for Protocol Buffers 
+Plug 'uber/prototool', { 'rtp': 'vim/prototool' }
+
+" Language: Qml 
+" QML syntax highlighting for VIM 
+Plug 'peterhoeg/vim-qml'
+
+" Language: Typescript 
+" Typescript syntax files for Vim 
+Plug 'leafgarland/typescript-vim'
+
+" Initialize plugin system
+call plug#end()                     " required
+" :Brief help
+" :PlugInstall [name ...] [#threads]    -   Install plugins 
+" :PlugUpdate [name ...] [#threads]     -   Install or update plugins 
+" :PlugClean[!]     - confirms removal of unlisted plugins; append `!` to auto-approve removal
+" :PlugUpgrade                          -   Upgrade vim-plug itself
+" :PlugStatus                           -   Check the status of plugins
+" :PlugDiff                             -   Examine changes from the previous update and the pending changes
+" :PlugSnapshot[!] [output path]        -   Generate script for restoring the current snapshot of the plugins
 
 
-" vimtex is a Vim plugin that provides support for writing LaTeX documents
-Plugin 'lervag/vimtex'
-
-call vundle#end()               " required
-
-"
-"  Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " BASIC  
 " Sections:
@@ -73,11 +144,37 @@ call vundle#end()               " required
 " => General
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Highlight trailing whitespaces as red. 
+highlight ExtraWhitespace ctermbg=red guibg=#EC7063
+match ExtraWhitespace /\s\+$/
+
 " Sets how many lines of history VIM has to remember 
 set history=500
 
-" Set number line 
+" Disable bells 
+set noeb 
+
+" Force vim to use a older version of regex engine and it is actually FASTER. 
+set re=1
+
+" Show line numbers.
 set nu
+
+" Don't perform highlight on lines that are longer than 180 chars. 
+set synmaxcol=180 
+syntax sync minlines=256
+
+" Don't show command in the last line of screen. 
+set noshowcmd 
+
+" If in Insert, Replace or Visual mode put a message on the last line. 
+set showmode 
+
+" Lines longer than the width of window will wrap and displaying continues on the next line. 
+set nowrap
+
+" Auto switch current working directory to current editing file's directory. 
+set autochdir
 
 " Enable filetype plugins 
 filetype plugin indent on    " required
@@ -127,18 +224,15 @@ endif
 " Always show current position 
 set ruler
 
-" Height of the command bar 
-set cmdheight=2
-
-" A buffer becomes hidden when it is abandoned
-set hid 
-
 " Configure backspace so it acts as it should act 
 set backspace=eol,start,indent
 set whichwrap+=<,>,h,l
 
 " Ignore case when searching 
 set ignorecase 
+
+" The :s/<search-target>/<to-replace-with>/ is s///g by default 
+set gdefault 
 
 " Highlight search results 
 set hlsearch 
@@ -155,6 +249,9 @@ set magic
 " Show matching brackets when text indicator is over them 
 set showmatch 
 
+" Tenths of a second to show the matching paren. 
+set matchtime=1 
+
 " How many tenths of a second to blink when matching brackets
 set mat=2
 
@@ -169,20 +266,37 @@ if has("gui_macvim")
 	autocmd GUIEnter * set vb t_vb=
 endif
 
+set nofoldenable
+
 " Add a bit extra margin to the left 
-set foldcolumn=1
+set foldcolumn=2
 
 " Enable folding 
 set foldmethod=indent
-set foldlevel=99 
+set foldlevel=5
 
-" Enable folding with the spacebar
-" you have to type za to fold(and unfold)
 
+" which commands trigger auto-unfold 
+set foldopen=block,hor,insert,jump,mark,percent,quickfix,search,tag,undo 
+
+" Close all folds (which level>foldlevel) automatically when cursor leaves. 
+set foldclose=all
+
+" Enable fold for programming languages. 
+autocmd FileType c,go,python,javascript,bitproto,protobuf setlocal foldenable
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Makes terminal title is set by vim. 
+set title 
+
+" Restore old title after leaving vim. 
+set titleold=
+
+" Cursor which always stays in the middle of screen is cool. 
+set scrolloff=9999
 
 " Enable syntax highlighting 
 syntax enable 
@@ -194,19 +308,28 @@ if has("gui_running")
 	set t_Co=256
 	set guitablabel=%M\ %t
     set background=dark
-    colorscheme solarized 
+    colorscheme challenger_deep
 else
 	set t_Co=256
-    colorscheme zenburn 
+    set background=dark
+    colorscheme challenger_deep
 endif
 
 " Set utf8 as standard encoding and en_US as the standard language
 set encoding=utf-8
 
+" Encoding that creating new files 
+set fencs=utf-8
+
+" Encoding that output to terminal 
+set termencoding=utf-8 
+
+" Encoding that saving files 
+set fileencoding=utf-8 
+
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
-colorscheme desert
 " highlight the current line and the cursor
     
 set cursorline
@@ -216,12 +339,20 @@ highlight CursorColumn guibg=lightblue ctermbg=8
 " Dark grey, better you can get if you don't support 256 colors
 highlight CursorLine cterm=NONE ctermbg=8 ctermfg=NONE
 
+" Editing :: Copy/Paste 
+" Tmux copy 
+set clipboard=unnamed 
+
+" Editing :: Completion. 
+set completeopt=longest,menu 
+set cpt=.,w,b
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
 set nowb
 set noswapfile
 
@@ -230,7 +361,7 @@ set noswapfile
 " => Text, tab and indent related
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Use spaces instead of tabs 
+" Use spaces instead of tabs, by default (Python user's must-have).
 set expandtab 
 
 " Be smart when using tabs ;)
@@ -239,13 +370,22 @@ set smarttab
 " 1 tab == 4 spaces 
 set shiftwidth=4
 set tabstop=4
+" Number of spaces that a <Tab> counts for while editing. 
+set softtabstop=4   
+
+" Show tabs via listchars below, and display end sign after endo fline. 
+set list 
+set listchars=tab:▸\ ,eol:¬,extends:❯,precedes:❮ "Chars that to display list.
+
 
 " Linebreak on 500 characters 
 set lbr
 set tw=500
 
-set ai "Auto indent 
-set si "Smart indent 
+" Autoindent makes Cmd+V works wired, so when pasting something from clipboard into vim: 
+" :set paste and the Cmd+V, and rollback paste settings via :set paste. 
+"set autoindent "Auto indent 
+set smartindent "Smart indent 
 set wrap "Wrap lines
 
 
@@ -257,7 +397,6 @@ set wrap "Wrap lines
 " Super useful! From an idea by Michael Naumann 
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers 
@@ -271,10 +410,12 @@ map <c-space> ?
 map <silent> <leader><cr> :noh<cr>
 
 " Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" convinient keys instead of annoying Control + W
+" now control + h/j/k/l will move around the windows
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-H> <C-W>h
+nnoremap <C-J> <C-W>l
 
 " Close the current buffer 
 map <leader>bd :Bclose<cr>:tabclose<cr>gT 
@@ -318,8 +459,9 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " => Status line
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Always show the status line 
+" Always show the status line on the last window 
 set laststatus=2
+
 
 " Format the status line 
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
@@ -358,7 +500,6 @@ if has("autocmd")
     autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
 endif 
 
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -371,7 +512,6 @@ map <leader>sn ]s
 map <leader>sp [s
 map <leader>sa zg 
 map <leader>s? z= 
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -389,6 +529,9 @@ map <leader>x :e ~/buffer.md<cr>
 " Toggle paste mode on and off 
 map <leader>pp :setlocal paste!<cr>
 
+" Press F5 in normal mode or in insert mode to insert the current datestamp 
+nnoremap <F5> "=strftime("%Y-%m-%d %H:%M:%S %Z")<CR>P
+inoremap <F5> <C-R>=strftime("%Y-%m-%d %H:%M:%S %Z")<CR>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
@@ -448,120 +591,42 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => FILETYPES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tab settings for different language filetypes. 
+autocmd FileType text setlocal textwidth=79
+autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=90
+autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
+autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
+autocmd FileType coffee,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
+autocmd FileType html,htmldjango,xhtml,haml setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=0
+autocmd FileType sass,scss,css setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
+
 
 " Shell Section 
 if exists('$TMUX')
     if has('mvim')
         set termguicolors
+        " Make vim to use /bin/sh instead of $SHELL 
+        set shell=/bin/sh 
     else
+        set shell=/bin/sh 
         set term=screen-256color
     endif
 endif
 
-" Python section 
-
-
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => PLUGINS CONFIG
+" => lightline.vim 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" MRU Plugin Config 
-"
-" The Most Recently Used (MRU) plugin provides an easy access to a list of
-" recently opened/edited files in Vim. This plugin automatically stores the 
-" file names as you open/edit them in Vim. 
-"
-" To list and edit files from the MRU list, you can use the ':MRU' command.
-" The ':MRU' command displays the MRU file list in a temporary Vim Window.
-map <leader>f :MRU<CR>
-"
-" By default, the plugin will remember the names of the last 100 used files.
-" You can set the 'MRU_Max_Entries' variable to remember more file namess.
-let MRU_Max_Entries = 100
-let MRU_File = $HOME . '/.vim/.vim_mru_files'
-
-" NERDTree Plugin Config
-"
-" The NERDTree is a file system explorer for the Vim editor. Using this 
-" plugin, users can visually browse complex directory hierarchies
-" quickly open files for reading or editing, and perform basic file system
-" operations.
-" 
-" Open NERDTree when start vim with no command line arguments
-autocmd StdinReadPre * let s:std_in=1
-autocmd vimenter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-"
-" Open and Close NERDTree 
-map <leader>nn :NERDTreeToggle<cr>
-"
-" Quickly perform operations with NERDTreeFind
-map <leader>nf :NERDTreeFind<cr>
-"
-" automatically close NERDTree When you open a file
-let NERDTreeQuitOnOpen = 0
-"
-" automatically delete the buffer of the file just deleted with NERDTree
-let NERDTreeAutoDeleteBuffer = 1
-let g:NERDTreeWinPos = "left"
-let NERDTreeShowHidden=0
-let NERDTreeIgnore = ['\.pyc$','__pycache__']
-let g:NERDTreeWinSize=35
-
-" NERDTree-git Plugin Config 
-"
-" A plugin of NEERDTree showing git status flags.
-let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "✹",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "✖",
-    \ "Dirty"     : "✗",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '☒',
-    \ "Unknown"   : "?"
-    \ }
-
-" CTRL-P Plugin Config 
-" Full path fuzzy file, buffer, mru, tag,...finder for Vim 
-"
-" mapping command to invoke CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-"
-" CtrlP working directory according to this variable
-let g:ctrlp_working_path_mode = 0   " disable this feature 
-let g:ctrlp_max_height = 20
-"
-" open it again in a new pane instead of switching to the existing pane 
-let g:ctrlp_switch_buffer = 'et'
-"
-" if custom listing command is being used, exclusions are ignored
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip    " MacOSX/Linux 
-set wildignore+=*\\tmp\\*,*.swp,*.zip,*.exe " Windows 
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-let g:ctrlp_custom_ignore = {
-    \   'dir':  '\v[\/]\.(git|hg|svn)$',
-    \   'file': '\v\.(exe|so|dll)$',
-    \   'link': 'some_bad_symbolic_clinks',
-    \   }
-
-" lightline Plugin Config 
-"
-" A light and configurable statusline/tabline plugin for Vim 
-"
-" Colorscheme configuration. using wombat colorscheme
 let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ }
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
+      \ 'colorscheme': 'challenger_deep',
       \ 'active': {
       \   'left': [ ['mode', 'paste'],
       \             ['fugitive', 'readonly', 'filename', 'modified'] ],
-      \   'right': [ [ 'lineinfo' ], ['percent'] ]
+      \   'right': [ [ 'lineinfo' ], 
+      \              ['percent'], 
+      \              [ 'fileformat', 'fileencoding', 'filetype', 'charvaluehex' ] ]
       \ },
       \ 'component': {
       \   'readonly': '%{&filetype=="help"?"":&readonly?"🔒":""}',
@@ -577,58 +642,378 @@ let g:lightline = {
       \ 'subseparator': { 'left': ' ', 'right': ' ' }
       \ }
 
-" snipMate Plugin Config 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NERDTree Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Open NERDTree when start vim with no command line arguments
+autocmd StdinReadPre * let s:std_in=1
+autocmd vimenter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" close vim if the only window left open is a NERDTree? 
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Open and Close NERDTree 
+map <leader>nn :NERDTreeToggle<cr>
 "
-" snipMate.vim aims to be a concise vim script that implements some of TextMate's snippets features in Vim 
-" SnipMate aims to provide support for textual snippets, similar to TextMate or other Vim Plugins like UltiSnips.
+" Quickly perform operations with NERDTreeFind
+map <leader>nf :NERDTreeFind<cr>
+
+" automatically close NERDTree When you open a file
+let NERDTreeQuitOnOpen = 0
 "
-" show available snips by default bound to <C-R><Tab>in insert model
-ino <c-j> <c-r>=snipMate#TriggerSnippet()<cr>
-snor <c-j> <esc>i<right><c-r>=snipMate#TriggerSnippet()<cr>
+" automatically delete the buffer of the file just deleted with NERDTree
+let NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeWinPos = "left"
+" Show hidden files, 
+let NERDTreeShowHidden=1
+let NERDTreeShowFiles=1
+" Show line numnber for nerdtree 
+let NERDTreeShowLineNumbers=1
+" Don't display these files:
+let NERDTreeIgnore = ['\.pyc$','\.o$', '\~$', '__pycache__', '\.mypy_cache', '\.DS_Store',
+            \ '^\.git$', '\.o$', '.so$', '.egg$', '\.pytest_cache', '.swp$', '.swo$', '\.swn$']
+" NERDtree window's width.
+let g:NERDTreeWinSize=35
+" Highlight the selected entry in the tree 
+let NERDTreeHighlightCursorlin=1
 
-" ALE (Asynchronous Lint Engine) Plugin Config 
-"
-" Asynchronous Lint Engine is a plugin for providing linting in Vim 8 while you edit your text files,
-" and acts as a Vim Language Server Protocol client.
-"
-" By default, all available tools for all supported languages will be run.
-" If you want to only select a subset of the tools, you can define. g:ale_linters globally
-"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NERDTree-git Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
 
-" Syntastic Plugin Config 
-" Syntax checking hacks for vim 
-" Recommanded settings
-set statusline+=%#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}
-set statusline+=%*
 
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_auto_loc_list = 1
-let g:syntastic_check_on_open = 1
-let g:syntastic_check_on_wq = 0
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => coc.nvim Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" if hidden is not set, TextEdit might fail. 
+set hidden
 
-" swift.vim Plugin Config 
-" Vim runtime files for Swift 
-let g:syntastic_swift_checkers = ['swiftpm', 'swiftlint']
+" Some servers have issues with backup files 
+set nobackup
+set nowritebackup
 
-" SimpyIFold 
-" No-BS Python code folding for Vim 
-" enable docstring preview in fold text 
-let g:SimpylFold_docstring_preview = 1
+" Better disaply for messages
+set cmdheight=2
 
-" vim-flake8 runs the currently open file through Flake8, a static syntax and style checker for Python 
-" Press <F7> to run flake8 on it 
+" default updatetime 4000ms is not good for async update
+set updatetime=100
 
-" Running Python code in Vim 
-" :w !python3  # writing Python code using Vim, and every time want to run code
+" don't give |ins-completion-menu| messages.
+set shortmess+=c
 
-" Using template files in Vim
-if has("autocmd")
-    augroup templates 
-        autocmd BufNewFile *.* silent! execute '0r ~/.vim/templates/skeleton.'.expand("<afile>:e")
-        autocmd BufNewFile * %substitute#\[:VIM_EVAL:\]\(.\{-\}\)\[:END_EVAL:\]#\=eval(submatch(1))#ge
-    augroup END 
+" always show signcolumns 
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+      let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight symbol under cursor on CursorHold
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Remap for rename current word
+nmap <leader>rn <Plug>(coc-rename)
+
+" Remap for format selected region
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap for do codeAction of current line
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Fix autofix problem of current line
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Create mappings for function text object, requires document symbols feature of languageserver.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Use <TAB> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+
+" Use `:Format` to format current buffer
+command! -nargs=0 Format :call CocAction('format')
+
+" Use `:Fold` to fold current buffer
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" use `:OR` for organize import of current buffer
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add status line support, for integration with other plugin, checkout `:h coc-status`
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+au FileType go,python,c,javascript,rust nmap <silent> gd <Plug>(coc-definition)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => indentLine Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" indentLine overwrite conceal color with grey by default, highlight conceal concel color with your colorscheme 
+" let g:indentLine_char = '|'
+let g:indentLine_setColors = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => auto-pairs Plugin Config 
+" ""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Auto close pairs ((),{},[])
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-commentary Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd FileType python,shell,coffee set commentstring=#\ %s 
+autocmd FileType java,c,cpp,go set commentstring=//\ %s 
+" gcc   comment out a line (takes a count)
+" gc    comment out the target of a motion
+" gcap  comment out a paragraph 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-multiple-cursors Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" It's great for quick refactoring
+" Mapping 
+" let g:multi_cursor_use_default_mapping=0 
+" Default mapping 
+" let g:multi_cursor_start_word_key         = '<C-n>'
+" let g:multi_cursor_select_all_word_key    = '<A-n>'
+" let g:multi_cursor_start_key              = 'g<C-n>'
+" let g:multi_cursor_select_all_key         = 'g<A-n>'
+" let g:multi_cursor_next_key               = '<C-n>'
+" let g:multi_cursor_prev_key               = '<C-p>'
+" let g:multi_cursor_skip_key               = '<C-x>'
+" let g:multi_cursor_quit_key               = '<Esc>'
+augroup MultipleCursorsSelectionFix
+    autocmd User MultipleCursorsPre  if &selection ==# 'exclusive' | let g:multi_cursor_save_selection = &selection | set selection=inclusive | endif
+    autocmd User MultipleCursorsPost if exists('g:multi_cursor_save_selection') | let &selection = g:multi_cursor_save_selection | unlet g:multi_cursor_save_selection | endif
+augroup END
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" =>  Asynchronous Lint Engine Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_linters_explicit = 1
+let g:ale_linters = {
+    \   'javascript': ['standard'],
+    \   'python': ['black', 'mypy', 'valture'],
+    \   'c':    ['clang-format'],
+    \   'cpp':  ['clang-format'],
+    \   'proto': ['prototool'],
+    \}
+let g:ale_fixers_explicit = 1
+let g:ale_fixers = {
+    \   'javascript': ['standard'],
+    \   'python': ['black'],
+    \   'c': ['clang-format'],
+    \   'cpp': ['clang-format'],
+    \}
+let g:ale_fix_on_save = 1
+let g:ale_python_vulture_options = '--min-confidence 80 --exclude "*pb2.py,*pb2_grpc.py,*.egg-info,dist/*,"'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" =>  fzf - a command-line fuzzy finder Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! s:find_git_root()
+    return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+endfunction 
+
+command! ProjectFiles execute 'Files' s:find_git_root() 
+nmap <c-p> :ProjectFiles<CR>
+" Customize fzf colors to match your color scheme 
+let g:fzf_colors =
+	\ { 'fg':    ['fg', 'Normal'],
+	\ 'bg':      ['bg', 'Normal'],
+	\ 'hl':      ['fg', 'Comment'],
+	\ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+	\ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+	\ 'hl+':     ['fg', 'Statement'],
+	\ 'info':    ['fg', 'PreProc'],
+	\ 'border':  ['fg', 'Ignore'],
+	\ 'prompt':  ['fg', 'Conditional'],
+	\ 'pointer': ['fg', 'Exception'],
+	\ 'marker':  ['fg', 'Keyword'],
+	\ 'spinner': ['fg', 'Label'],
+	\ 'header':  ['fg', 'Comment'] }
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => pangloss/vim-javascript Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let javascript_enable_domhtmlcss = 1
+let g:javascript_plugin_jsdoc = 1
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => fatih/vim-go Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+
+"let g:go_def_mode = 'godef'
+"let g:go_code_completion_enabled = 0
+" Disable vim-go 'gd'
+let g:go_def_mapping_enabled = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-python/python-syntax Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let python_highlight_all = 1
+let python_slow_sync = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => rust-lang/rust.vim Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rustfmt_autosave = 1 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-json Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:vim_json_syntax_conceal = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => unblevable/quick-scope Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+highlight QuickScopePrimary ctermfg=119 cterm=underline guifg='#afff5f' gui=underline
+highlight QuickScopeSecondary ctermfg=81 cterm=none guifg='#5fffff' gui=underline
+" Max number of chars to highlight in one line. 
+let g:qs_max_chars=180 
+let g:qs_lazy_highlight = 1 
+let g:qs_accepted_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+    \ 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
+    \ '4', '5', '6', '7', '8', '9']
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => junegunn/vim-slash Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has('timers')
+    " Blink 2 times with 50ms interval 
+    noremap <expr> <plug>(slash-after) slash#blink(2,50)
 endif
 
-" Running Python code in Vim 
-autocmd FileType python nnoremap <buffer> <F5> :exec '!clear && python3' shellescape(@%, 1)<cr>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => mhinz/vim-signify Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+highlight SignColumn ctermbg=NONE cterm=NONE guibg=NONE gui=NONE 
+highlight SignifySignAdd ctermfg=yellow ctermbg=green guifg=#F7DC6F guibg=#1E8449
+highlight SignifySignChange ctermfg=yellow ctermbg=blue guifg=#F7DC6F guibg=#2874A6
+highlight SignifySignDelete ctermfg=yellow ctermbg=red guifg=#F7DC6F guibg=#EC7063
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => gabrielelana/vim-markdown Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:markdown_enable_spell_checking = 0 
+let g:markdown_enable_conceal = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Mappings to easily toggle fold levels Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Mappings to easily toggle fold levels
+nmap z0 :set foldlevel=0<CR>
+nmap z1 :set foldlevel=1<CR>
+nmap z2 :set foldlevel=2<CR>
+nmap z3 :set foldlevel=3<CR>
+nmap z4 :set foldlevel=4<CR>
+nmap z5 :set foldlevel=5<CR>
+nmap z6 :set foldlevel=6<CR>
+nmap z7 :set foldlevel=7<CR>
+nmap z8 :set foldlevel=8<CR>
+nmap z99 :set foldlevel=99<CR>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" some small tool 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nmap <F3> i<C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR><Esc>
+imap <F3> <C-R>=strftime("%Y-%m-%d %a %I:%M %p")<CR>
+
+" press jk to exit from insert mode
+imap jk <Esc>
+
+" Go To Definition 
+set tags=tags 
+
+" indentLine 
+vnoremap < <gv
+vnoremap > >gv

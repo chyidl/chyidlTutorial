@@ -149,3 +149,37 @@ $ ps axo stat,ppid,pid,comm | grep -w defunct   #
 $ sudo kill -s SIGCHLD PID    # signals the zombie's parent process to kill the command 
 $ sudo kill -9 PID
 ```
+
+Scientific Internet
+-------------------
+```
+Google 
+Google Scholar 
+Github 
+Wikipedia
+Travis-ci 
+
+Stackoverflow 
+Golang 
+Reddit 
+Medium 
+Quora
+Blogs
+
+Mac 
+  $ brew install fish 
+  $ brew install vim 
+  $ brew install tmux 
+  $ brew install wget
+
+Move faster in Shell:
+  Ctrl-A : Start 
+  Ctrl-E : End 
+  Ctrl-F : Forware 
+  Ctrl-B : Backward 
+  Ctrl-P : Previous 
+  Ctrl-N : Next 
+  Ctrl-R: Backward Search
+
+
+```
