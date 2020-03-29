@@ -388,3 +388,13 @@ Docker可在容器内部快速自动化部署应用，并通过操作系统内�
 Meetup: 聚会 
 OCI(open Container Initiative) 实现容器标准化
 ```
+
+K8S 集群配置
+```
+1. 安装kubectl 和 helm  
+$ brew install kubectl kubernetes-helm 
+# kubectl is a command line tool for controlling Kubernetes clusters 
+# kubectl looks for a files named config in the $HOME/.kube directory
+$ kubectl version 
+$ helm version 
+```
