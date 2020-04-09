@@ -237,3 +237,4 @@ Reset auto increment counter in postgres
   - If you created the table product with an id colume, then the sequence is not simply called product, but rather product_id_seq (that is, ${table}_${table}_${colume}_seq)
   ALTER SEQUENCE product_id_seq RESTART WITH 1;
 ```
+
