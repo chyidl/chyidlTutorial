@@ -16,6 +16,17 @@ Linux RPi3BPlus 4.15.0-1034-raspi2 #36-Ubuntu SMP PREEMPT Fri Apr 5 06:21:41 UTC
 
 ```
 
+* Ubuntu Change Hostname 
+```
+Ubuntu change hostname command 
+  1. sudo vim /etc/hostname 
+  2. sudo vim /etc/hosts 
+  3. sudo roboot 
+
+Display the current Ubuntu hostname 
+  $ hostname
+```
+
 * How to determine python 32bit or 64bit mode
 ```
 ne way is to look at sys.maxsize
@@ -31,9 +42,37 @@ $ python3 -c 'import sys;print("%x" % sys.maxsize, sys.maxsize > 2**32)'
 
 > Create a sudo user "$ sudo adduser new_user", and add "new_user" to "sudo" group, "$ sudo usermod -aG sudo new_user"
 
-* Setting on-board Wi-Fi up on Raspberry Pi via the command line  
+* Set Up WiFi on Ubuntu 18.04 LTS Server 
+```
+  Using netplan 
+  $ sudo vim /etc/netplan/50-cloud-init.yaml 
+
+# This file is generated from information provided by
+# the datasource.  Changes to it will not persist across an instance.
+# To disable cloud-init's network configuration capabilities, write a file
+# /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg with the following:
+# network: {config: disabled}
+network:
+    version: 2
+    ethernets:
+        eth0:
+            optional: true
+            dhcp4: true
+    # add wifi setup information here ...
+    wifis:
+        wlan0:
+            optional: true
+            access-points:
+                "CMCC-TqrU":
+                    password: "lhp123456."
+            dhcp4: true
+
+Later execute the netplan
+$ sudo netplan try
 ```
 
+* Setting on-board Wi-Fi up on Raspberry Pi via the command line  
+```
 Setup WiFi on Raspberry Pi 2B Using USB Dongle
 1. Check for USB WiFi Dongle Hardware
 # To check whether the Raspberry Pi detected the WiFi Dongle hardware that is plugged in to the USB port, type the following command in the terminal and hit enter.
