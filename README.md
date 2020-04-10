@@ -1,6 +1,6 @@
 chyidlTutorial
 ==============
-
+## TODAY I LEARNED
 > Sometimes I write notes to remind myself what I've learned and sometimes I write them because someone else shares something and I want to remember that better.
 
 ## Directory Structure 

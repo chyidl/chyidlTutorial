@@ -384,3 +384,10 @@ def set_interface_style(dark: bool):
 if __name__ == '__main__':
     set_interface_style(not is_dark_mode())
 ```
+
+## Find the Process Using A Specific Port On Mac 
+> The netstat utility is often recommended for finding the PID (process ID) bound to a specific port. Unfortunately, Mac's version of netstat does not support the -p (process) flag. Instead, you'll want to use the lsof utility.
+```
+$ sudo lsof -i tcp:4567
+# Running this will produce a nicely formatted response that tells you several pieces of information about the process bound to :4567 including the PID
+```
