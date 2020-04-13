@@ -36,7 +36,18 @@ $ which zsh
 $ zsh --version 
 zsh 5.7.1 (x86_64-apple-darwin18.2.0)
 
-# oh-my-zsh (A Zsh prompt for Astronauts)
+
+# Confirm You're Running Brew zsh 
+$ echo $SHELL 
+
+# Handling Upgrades 
+$ sudo chown -R $(whoami):admin /usr/local 
+
+(Linux)
+$ chsh -s $(which zsh)
+```
+
+# Oh-My-Zsh + SpaceShip Theme
 ```
 oh-my-zsh 
 
@@ -47,16 +58,6 @@ Symlink spaceship.zsh-theme to your oh-my-zsh custom themes directory:
   $ ln -s "$ZSH_CUSTOM/themes/spaceship-prompt/spaceship.zsh-theme" "$ZSH_CUSTOM/themes/spaceship.zsh-theme"
 
 Set ZSH_THEME="spaceship" in your .zshrone https://github.com/denysdovhan/spaceship-prompt.git "$ZSH_CUSTOM/themes/spaceship-prompt"
-```
-
-# Confirm You're Running Brew zsh 
-$ echo $SHELL 
-
-# Handling Upgrades 
-$ sudo chown -R $(whoami):admin /usr/local 
-
-(Linux)
-$ chsh -s $(which zsh)
 ```
 
 Oh-My-Zsh + Bullet Train Theme 
