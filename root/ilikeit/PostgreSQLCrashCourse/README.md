@@ -238,3 +238,25 @@ Reset auto increment counter in postgres
   ALTER SEQUENCE product_id_seq RESTART WITH 1;
 ```
 
+PostgreSQL List Indexes using pg_indexes view 
+---------------------------------------------
+```
+  schemaname: stores the name of the schema that contains tables and indexes. 
+  tablename: stores name of the table to which the idnex belongs.
+  indexname: stores name of the index.
+  tablespace: stores name of the tablespace that contains indexes.
+  indexdef: stores index definition command in the form of CREATE INDEX statement. 
+
+The following statement lists all indexes of the schema public in the current database. 
+  SELECT 
+    tablename,
+    indexname,
+    indexdef
+  FROM 
+    pg_indexes 
+  WHERE 
+    schemaname = 'public'
+  ORDER BY 
+    tablename,
+    indexname;
+```
