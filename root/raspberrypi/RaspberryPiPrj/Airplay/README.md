@@ -7,23 +7,46 @@ Configure the Airplay Server
 * 1.Install Dependencies
 ```
     First off, you'll need to install some dependencies so you can build the Airplay server application., Run the following:
-    $ sudo apt-get update
-    $ sudo apt-get install autoconf automake avahi-daemon build-essential git libasound2-dev libavahi-client-dev libconfig-dev libdaemon-dev libpopt-dev libssl-dev libtool xmltoman 
+    $ sudo apt-get update && sudo apt-get upgrade
+    (Separately, If you haven't done so alredy, consider using the raspi-config tool to expand the file system to use the entire card.)
+    $ sudo apt-get install build-essential git xmltoman autoconf automake libtool libpopt-dev libconfig-dev libasound2-dev avahi-daemon libavahi-client-dev libssl-dev libsoxr-dev
 ```
 
 * 2.Build & Install shairport-sync 
 ```
     shairport-sync turns your Linux machine into an Apple Airplay server. One of the best things about it is that it runs entirely on the command line, and while it has a million configuration options, it's surprisingly easy to get working out of the box.
     
+    Remove Old Copies 
+    > Before you begin building Shairport Sync, it's best to search for and remove any exitsing copies of the application, called shairport-sync. Use the command $ which shairport-sync to find them. For example, if shairport-sync has been installed previously, this might happen.
+    $ which shairport-sync 
+
+    Remove it as follows:
+    $ sudo rm /usr/local/bin/shairport-sync
+
+    Remove Old Startup Scripts:
+    > Should also remove the startup script files /etc/systemd/system/shairport-sync.service and /etc/init.d/shairport-sync if they exist - new ones will be installed in necessary.
+
+    Reboot after Cleaning Up 
+    > If you removed any installations of Shairport Sync or any of its startup script files in the last two steps. You should rebot. 
+
     First grab it from github:
     $ git clone https://github.com/mikebrady/shairport-sync.git 
     $ cd shairport-sync 
-    $ autoreconf -i -f 
-    $ ./configure --with-alsa --with-avahi --with-ssl=openssl --with-systemd --with-metadata 
-    
+    $ autoreconf -fi
+    $ ./configure --sysconfdir=/etc --with-alsa --with-soxr --with-avahi --with-ssl=openssl --with-systemd --with-metadata 
     Finally build and install the application
     $ make -j4 
     $ sudo make install
+
+    Now to configure Shairport Sync. Here are the important options for the Shairport Sync configuration file at /etc/shairport-sync.conf 
+    // Sample Configuration File for Shairport Sync on a Raspberry Pi using the built-in audio DAC 
+    general = {
+      volume_range_db = 60;  
+    };
+    alsa = {
+      output_device = "hw:0";
+      mixer_control_name = "PCM";
+    };
 ```
 
 * 3.Configure the Audio Output
@@ -48,15 +71,18 @@ Configure the Airplay Server
 ```
     start servicely manually: want shairport-sync to run as soon as the Pi has booted
     $ sudo systemctl enable shairport-sync
+
+    the Shairport Sync AirPlay service should now appear on the network with a service name made from the Pi's hostname with the first letter capitalised.
 ```
 
 * 7.Prevent Wifi Dropouts
+> turn off wifi power management 
 ```
-    The Raspberry Pi wifi will tend to go into power-saving mode periodically, which can cause serious audio glitching when using Airplay.
-    $ sudo vim /etc/network/interfaces
-    Go to the end of the file and add the lines:
-        # Disable wifi power management 
-        wireless-power off 
+The Raspberry Pi wifi will tend to go into power-saving mode periodically, which can cause serious audio glitching when using Airplay.
+$ sudo iwconfig wlan0 power off 
+
+WIFI Power Management will put the WiFi system in low-power mode when the WiFi system considered inactive, and in this mode it may not respond to events initiated from the network, such as AirPlay requests. Hence, WiFi Power Management should be turned off.
+
 ```
 
 Show Artist & Song Metadata Using Airplay on Raspberry Pi
