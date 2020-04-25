@@ -104,7 +104,7 @@ $ git branch
 
 # git checkout -b chyi-feature 
 
-# 
+# 可讲一个分支融入到另一个分支
 $ git merge chyi-feature  
 Auto-merging readme.txt
 CONFLICT (content): Merge conflict in readme.txt
@@ -423,6 +423,58 @@ Git Common Commands
     --amend: Replace the tip of the current branch by creating a new commit.
 
 8. revert - Revert some existing commits 
+```
 
-9.  
+* git merge 
+```
+  git merge (fast-forward)(--ff):
+    Git|Merging (fast-forward)
+      Default behavior when the merging branch has all of the current branch's commits 
+      Doesn't create a new commit, thus doesn't modify existing branches.
+
+  git merge (no-fast-forward)(--no-ff):
+    Git|Merging (no-fast-forward)(--no-ff):
+      Default behavior when current branch contains commits that the merging branch doesn't have  
+      Creates a new commit which merges two branches together without modifying existing branches.
+```
+
+* git rebase 
+```
+  > git rebase 会将当前分支的提交复制到指定的分支之上 
+  $ git rebase master 
+  Git|Rebasing 
+    Copies commits on top of another branch
+    without creating a commit, which keeps a linear history 
+  rebase分支总是含有我们想要保留的最新近修改，这样我们不会遇到任何合并冲突，而且可以保留一个漂亮的、线性Git历史记录 
+```
+
+* git rebase -i (interactive rebase) 
+```
+  $ git rebase -i HEAD~3 
+  reword: 修改提交信息 
+  edit: 修改此提交 
+  squash: 将提交融合到前一个提交中 
+  fixup: 将提交融合到前一个提交中，不保留该提交的日志消息 
+  exec: 在每个提交上运行我们想要的rebase命令 
+  drop: 移除提交 
+```
+
+* git reset 
+```
+   git reset 能让我们不再使用当前台面上的文件，可以控制HEAD应该指向的位置
+   $ git reset --soft HEAD~2 
+   Keeps changes that have been made since the new commit that HEAD points to, and keeps the modifications in the working directory. 
+
+   $ git reset --hard HEAD~2 
+   Git|Hard reset 
+   Points HEAD to the specified commit 
+  
+   Discards changes that have been made since the new commit that HEAD points to, and deletes changes in working directory. 
+```
+
+* git reverting 
+```
+  Git|Reverting 
+  Reverts the changes that commits introduce.
+  Creates a new commit with the reverted changes.
 ```

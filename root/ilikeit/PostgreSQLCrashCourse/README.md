@@ -260,3 +260,16 @@ The following statement lists all indexes of the schema public in the current da
     tablename,
     indexname;
 ```
+
+Disk space unreleased after cleaning up rows from PG table 
+----------------------------------------------------------
+```
+In postgresql, an update or delete of a row does not immediately remove the old version of the row. This approach is necessary to gain the benefits of multiversion concurrency control (MVCC,) The row version must not be deleted while it is still potentially visible to other transactions. But eventually, an outdated or deleted for
+
+So essentially, only operations that internally cause the table's heap to be rewritten reclaim space. 
+  CLUSTER 
+  VACUUM FULL 
+  TRUNCATE 
+  ALTER TABLE 
+
+```

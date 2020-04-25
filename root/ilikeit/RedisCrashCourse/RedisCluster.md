@@ -30,11 +30,22 @@ $ make -j4
 $ make test 
 ```
 
+* Redis Cluster 
+```
+In practical terms, Redis Cluster provides the ability to 
+  * Automatically split your dataset amoung multiple nodes.
+  * Continue operations when a subset of the nodes are experiencing failures or are unable to communicate with the rest of the cluster.
+
+In order to remain available when a subset of master nodes are failing or are not able to communicate with the amjority of nodes, Redis Cluster uses a master-slave model where every master node has N replicas or slaves nodes. The minimal cluster that works as expected requires to contain at least three nodes. We will start with a six nodes cluster with three masters and three slaves.
+```
+
 * Running Redis in Cluster mode
 ```
 # The configuration file in which you should define all cluster configuration paramters
+(When you will setup on different machines and connect them remotely, you need to specify the bind address in redis.conf file)
 $ sudo vim redis-5.0.8/redis.conf 
-  port 6379 
+  port 6001,6002,6003
+  bind 192.168.1.6/192.168.1.2/192.168.1.7
   cluster-enabled yes 
   cluster-config-file nodes-6379.conf
   cluster-node-timeout 5000 
