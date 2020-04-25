@@ -478,3 +478,19 @@ Git Common Commands
   Reverts the changes that commits introduce.
   Creates a new commit with the reverted changes.
 ```
+
+* Semantic Commit Messages 
+> Change to your commit message style can make you a better programmer. 
+```
+Format: <type>(scope): <subject> 
+  <scope>: is optional 
+
+<type>: 
+  feat: new feature for the user
+  fix: bug fix for the user 
+  docs: changes to the documentation 
+  style: formatting, missing semi colons
+  refactor: refactoreing production code 
+  test: adding missing tests, refactoring tests 
+  chore: updating grunt tasks 
+```
