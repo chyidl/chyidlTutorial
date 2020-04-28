@@ -365,3 +365,34 @@ Set Up Hacking Linux Kit on Raspberry Pi
 ----------------------------------------
 ```
 ```
+
+Install and Use Docker on Ubuntu 18.04 on RPi4B 
+-----------------------------------------------
+> Docker is an application taht simplifies the process of managing application processes in containers. Containers let you run your applications in resource-isolated priocesses.
+```
+Step 1 - Installing Docker:
+  Install Docker from the official Docker repository. To do that, add new package source, and the GPG key from Docker to ensure the downloads are valid, and the install the package. 
+
+# First, updeate existing list of packages:
+$ sudo apt update 
+
+# Install a few prerequisite packages which let apt use pakcages over HTTPS 
+$ sudo apt install apt-transport-https ca-certificates curl software-properties-common
+
+# add teh GPG key for the official Docker repositiory to your system:
+$ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# Add the Docker repository to APT sources:
+$ sudo add-apt-repository "deb [arch=armhf] https://download.docker.com/linux/ubuntu bionic stable"
+
+# update the package database with the docker packages from the newly added repo:
+$ sudo apt update
+
+# Make sure you are about to install from the Docker
+$ sudo apt update 
+
+# Make sure install from the Docker repo instead of the default Ubuntu repo:
+$ sudo apt-cache policy docker-ce
+
+
+```

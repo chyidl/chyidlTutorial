@@ -2392,5 +2392,156 @@ mysql()> show binlog events in 'mysql-bin.000001';
 | mysql-bin.000001 | 665 | Xid            |         0 |         696 | COMMIT /* xid=12 */                   |
 +------------------+-----+----------------+-----------+-------------+---------------------------------------+
 12 rows in set (0.04 sec)
+```
 
 ```
+Internally a MySQL timestamp column is stored as UTC but when selecting a date MySQL will automatically convert it to the current session timezone.
+```
+
+DB、DBS 、DBMS 
+--------------
+```
+DBMS: Database Management System: 数据库管理系统(DBMS = 多个数据库DB + 管理程序)
+DB: DataBase 数据库 数据库是存储数据的集合 
+DBS: DataBase System: 数据库系统 包括数据库、数据库管理系统、数据库管理人员DBA
+
+关系型数据库RDBMS 就是建立在关系模型基础上的数据库,SQL 就是关系型数据库的查询语句
+键值型数据库: Key-Value 键值的方式存储数据 Redis是最流行的键值型数据库
+文档型数据库: 在数据库中文档作为处理信息的基本单元，一个文档就相当于一条记录MonoDB是最流行的文档型数据库
+全文搜索引擎 Elasticsearch, Solr 搜索引擎的优势采用全文搜索的技术，核心原理是"倒排索引"
+列式数据库: 将数据按照列存储到数据库中适用于分布式文件系统
+图形数据库：图数据结构存储实体之间的关系，数据模型主要以节点和边关系来实现
+
+SQL 属于声明式语言:
+  
+SQL 语句在Oracle中执行步骤:
+  1. 语法检查: 检查SQL拼写是否正确
+  2. 语义检查: 检查SQL中访问对象是否存在
+  3. 权限检查: 检查访问权限 
+  4. 共享池检查: Shared Pool: 是一块内存池;缓存SQL语句和该语句的执行计划
+    共享池中，Oracle对SQL进行Hash运算,根据Hash值在库缓存Library Cache中查找，如果存在SQL语句的执行计划，直接拿来执行，直接进入执行器的环，软解析 
+    没有找到SQL语句的执行计划，Oracle需要创建解析树进行解析，生成执行计划，创建解析树进行解析，生成执行计划，进入优化器
+
+SQL语句的MYSQL执行:
+  MySQL 是典型的C/S架构: Client/Server架构 服务端程序使用mysqld,整体的MySQL流程
+  连接层 -> SQL 层 -> 存储引擎层 
+  SQL层:
+    SQL语句 -> 解析器 -> 优化器 -> 执行器 -> 输出结果 
+      查询缓存 -> MySQL 8.0抛弃查询缓存功能  
+    解析器: 对SQL语句进行语法分析，语义分析 
+    优化器: 确定SQL语句的执行路径，
+    执行器：
+  InnoDB存储引擎: 默认的存储引擎支持事务，行级锁，外键约束
+  MyISAM存储引擎: 不支持事务处理，不支持外键 
+  Memory存储引擎: 使用系统内存作为存储介质
+  NDB 存储引擎: NDB cluster 存储引擎 主要用于MySQL Cluster分布式集群环境 
+  Archive存储引擎: 很好的压缩机制，用于文档归档 
+
+  MySQL支持表采用不同的存储引擎 
+
+MySQL 中对SQL语句执行时间分析:
+  mysql> select @@profiling; 
+  mysql> set profiling=1; # 打开;
+  mysql> select * from test; 
+  mysql> show profiles; # 查看当前会话产生的所有Profiles
++----------+------------+-----------------------------------------------------+
+| Query_ID | Duration   | Query                                               |
++----------+------------+-----------------------------------------------------+
+|        1 | 0.00074775 | select @@profiling                                  |
+|        2 | 0.00545325 | SELECT DATABASE()                                   |
+|        3 | 0.00065925 | SELECT DATABASE()                                   |
+|        4 | 0.00296025 | show databases                                      |
+|        5 | 0.00166325 | show tables                                         |
+|        6 | 0.00201800 | show tables                                         |
+|        7 | 0.00118175 | select * from test                                  |
+|        8 | 0.11499125 | insert into test (id, name) VALUES(1, 'ChyiYaqing') |
+|        9 | 0.00123525 | select * from test                                  |
+|       10 | 0.00033150 | show profiling                                      |
++----------+------------+-----------------------------------------------------+
+
+mysql> select * from test;
++------+------------+
+| id   | name       |
++------+------------+
+|    1 | ChyiYaqing |
++------+------------+
+1 row in set (0.00 sec)
+
+mysql> show profile; # 查询上一次查询的执行时间 
++----------------------+----------+
+| Status               | Duration |
++----------------------+----------+
+| starting             | 0.000255 |
+| checking permissions | 0.000060 |
+| Opening tables       | 0.000075 |
+| init                 | 0.000081 |
+| System lock          | 0.000053 |
+| optimizing           | 0.000040 |
+| statistics           | 0.000066 |
+| preparing            | 0.000121 |
+| executing            | 0.000024 |
+| Sending data         | 0.000178 |
+| end                  | 0.000029 |
+| query end            | 0.000045 |
+| closing tables       | 0.000051 |
+| freeing items        | 0.000092 |
+| cleaning up          | 0.000059 |
++----------------------+----------+
+15 rows in set, 1 warning (0.00 sec)
+
+mysql> show profile for query 2; 
+
+mysql> select version();
++-----------------------------+
+| version()                   |
++-----------------------------+
+| 5.7.29-0ubuntu0.18.04.1-log |
++-----------------------------+
+1 row in set (0.00 sec)
+
+DDL中常用的功能是增删改,分别对应命令CREATE, DROP ALTER; 
+mysql> DROP TABLE IF EXISTS `player`;
+Query OK, 0 rows affected (0.07 sec)
+
+mysql> CREATE TABLE `player` (`player_id` int(11) NOT NULL AUTO_INCREMENT, `team_id` int(11) NOT NULL, `player_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL, `height` float(3, 2) NULL DEFAULT 0.00, PRIMARY KEY(`player_id`) USING BTREE, UNIQUE INDEX `player_name` (`player_name`) USING BTREE) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+Query OK, 0 rows affected (0.13 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_chyi |
++----------------+
+| player         |
+| test           |
++----------------+
+2 rows in set (0.00 sec)
+
+mysql> desc player;
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| player_id   | int(11)      | NO   | PRI | NULL    | auto_increment |
+| team_id     | int(11)      | NO   |     | NULL    |                |
+| player_name | varchar(255) | NO   | UNI | NULL    |                |
+| height      | float(3,2)   | YES  |     | 0.00    |                |
++-------------+--------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec) 
+
+修改表结构:
+  1. 增加字段:
+    ALTER TABLE player ADD (age int(3));
+  2. 修改字段名 
+    ALTER TABLE player RENAME COLUME age to player_age; 
+  3. 修改字段的数据类型 
+    ALTER TABLE player MODIFY (player_age float(3,1));
+  4. 删除字段，删除添加的player_age字段  
+    ALTER TABLE student DROP COLUMN player_age; 
+
+主键约束: 唯一表识记录，不重复，不为空 
+外键约束: 确保表与表之间引用的完整性  
+唯一性约束表明字段在表中的数值是唯一 
+NOT NULL约束:表明字段不应为空
+DEFAULT: 字段默认值约束  
+CHECK约束: 检查特定字段取值范围的有效性 
+```
+
+
