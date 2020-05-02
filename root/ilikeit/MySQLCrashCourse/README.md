@@ -2542,6 +2542,9 @@ mysql> desc player;
 NOT NULL约束:表明字段不应为空
 DEFAULT: 字段默认值约束  
 CHECK约束: 检查特定字段取值范围的有效性 
+
+MySQL 在Linux环境下，数据库名，表名，变量名是严格区分大小写 
+
 ```
 
 

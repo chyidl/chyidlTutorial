@@ -1027,6 +1027,7 @@ localhost:6379> EVAL 'local val="Hello Compose" return val' 0
 -------------------
 > 
 ```
+./redis-benchmark --threads 8 -c 150 -t get -n 10000000 
 ```
 
 Appendix
