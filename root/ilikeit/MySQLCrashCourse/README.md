@@ -2544,7 +2544,119 @@ DEFAULT: 字段默认值约束
 CHECK约束: 检查特定字段取值范围的有效性 
 
 MySQL 在Linux环境下，数据库名，表名，变量名是严格区分大小写 
+  1. 关键字和函数名称全部大写
+  2. 数据库名、表名、字段名全部小写
+  3. SQL语句必须分号结尾 
 
+聚集函数:
+  COUNT(): 总行数
+    - COUNT(*): 只统计数据行数 不管字段是否为NULL
+  MAX(): 最大值 
+  MIN(): 最小值 
+  SUM(): 求和
+  AVG(): 平均值。
+
+  MAX(),AVG(),MIN()等聚集函数会自动忽略值为NULL的数据行
+  GROUP BY(): 对数据进行分组
+  HAVING():分组的筛选使用HAVING
+
+SELECT查询中:
+  SELECT … FROM … WHERE … GROUP BY … HAVING … ORDER BY ...
+
+子查询: 查询结果集就是今天子查询 
+    - 非关联子查询: 子查询从数据表中查询了数据结果，如果这个数据结果只执行一次，然后这个数据结果作为主查询的条件进行执行
+    - 关联子查询:如果子查询需要执行多次，采用循环的方式，先从外部查询开始，每次都传入子查询 然后再将结果反馈给外部
+IN: 判断是否在集合中 
+ANY: 需要与比较操作符一起使用
+ALL: 需要与比较操作符一起使用,与子查询返回的所有值做比较
+SOME: 实际上是ANY的别名 as known as 
+
+SQL两种主要的标准:
+  SQL92:
+    1. 笛卡尔积: 所有组合- 交叉连接Cross Join - 返回左表中每一行与右表中每一行的组合
+    2. 等值连接: 两张表中都存在的列进行连接 - NATURAL JOIN - 
+      - 连接的表会采用JOIN进行连接,ON制定连接条件
+    3. 非等值连接: 
+    4. 外连接(左连接，右连接) - 内连接将多个表之间满足连接条件的数据行查询出来
+      左外连接: LEFT JOIN 或 LEFT OUTER JOIN 
+      右外连接: RIGHT JOIN 或 RIGHT OUTER JOIN 
+      全外连接: FULL JOIN 或 FULL OUTER JOIN 
+    5. 自连接
+  多表连接相当于嵌套for循环一样:
+    
+视图: 虚拟表，本身是不具有数据
+  - 视图作为一张虚拟表, 封装底层与数据表的接口
+    - CREATE VIEW: 创建视图 
+    - ALTER VIEW: 修改视图
+    - DROP VIEW: 删除视图
+  利用视图完成复杂的连接
+  利用试图对数据进行格式化
+  虚拟表:
+    - 基于底层数据表 
+    - 视图是对SQL查询的封装
+  临时表: 是真实存在的数据表,不用于长期存放数据，只为当前连接存在，关闭连接后，临时表会自动释放
+
+SQL存储过程: 是程序化的SQL，可以直接操作底层数据表
+  - 存储过程可以说是由SQL语句和流控制语句构成的语句集合，
+  - Stored Procedure: 存储过程
+    - CREATE PROCEDURE 存储过程名称 ([参数列表])
+    - BEGIN 
+      - 需要执行的语句
+    - END
+  - DROP PROCEDURE 
+  - ALTER PROCEDURE 
+  - DELIMITER 定义语句的结束符
+存储过程的三种参数类型:
+  1. IN类型: 向存储过程传入参数，存储过程中修改该参数的值，不能被返回 
+  2. OUT类型 : 把存储过程计算的结果放到该参数中，调用者可以得到返回值
+  3. INOUT类型: 
+
+流控制语句:
+  1. BEGIN … END: 
+  2. DECLARE: 声明变量 
+  3. SET: 赋值语句 - 用于对变量进行赋值
+  4. SELECT … INTO : 从数据表中查询的结果存放在变量中，也就是为变量赋值 
+  5. IF … THEN … ENDIF: 条件判断语句 
+  6. CASE: 用于多条件的分支判断 
+  7. LOOP: 循环语句 
+  8. LEAVE:跳出循环 
+  9. ITERATE: 进入下次循环 
+  10. REPEATE … UNTIL … END REPEAT : 循环语句，会执行一次循环，然后UNTIL进行表达式的判断，
+  11. WHILE DO END WHILE: 循环语句，和REPEATE循环不同的是，先进行条件判断，如果满足条件就进行循环
+
+存储过程：
+  - 一次编译多次使用: 只在创造时进行编译，之后的使用都不需要重新编译,减少网络传输量,
+  - 可移植性差，存储过程不能跨数据库移;调试困难，只有少数的DBMS支持存储过程的调试
+
+事务处理:
+  transaction:事务:保证数据库的数据一致性
+  事务的特性:ACID
+    A: Atomicity: 原子性 原子的概念就是不可分割
+    C: Consistency: 一致性- 当事务提交后，或者当事务发生回滚，数据库的完整性约束不能被破坏
+    I: Isolation 隔离性: 一个事务在提交之前对其他事务都是不可见 
+    D: Durability 持久性: 事务提交之后对数据的修改是持久性的，- 持久性是通过事务日志来保证 
+  SHOW ENGINES: 查看当前MySQL支持的存储引擎
+1. START TRANSACTION 或者 BEGIN; 显式开启事务
+2. COMMIT: 提交事务 
+3. ROLLBACK 或者 ROLLBACK TO [SAVEPOINT]: 回滚事务 
+4. SAVEPOINT: 事务中创建保存点 一个事务中可以存在多个保存点 
+5. RELEASE SAVEPOINT: 删除某个保存点 
+6. SET TRANSACTION: 设置事务的隔离级别
+
+SET @@completion_type = 1; 
+  1. completion = 0; 默认情况下，当执行COMMIT的时候提交事务，在执行下一个事务时，还需要使用START TRANSACTION 或者BEGIN开启 
+  2. completion = 1; 当提交事务后，相当于执行了COMMIT ADN CHAINl开启一个链式事务，即提交事务之后会开启一个相同隔离级别事务 
+  3. completion = 2; COMMIT = COMMIT AND RELEASE；提交后会自动与服务器断开连接
+
+事务并发处理可能存在的异常:
+  1. 脏读: Dirty Read : 读到其他事务还没有提交的数据
+  2. 不可重复读 Unrepeatable Read: 对某数据进行读取发现两次读取的结果不同
+  3. 幻读: Phantom Read: 
+事务隔离级别:
+  1. 读未提交READ UNCOMMITTED : 查询不使用锁，可能会产生脏读，不可重复读，幻读 
+  2. 读已提交 READ COMMITTED : 只能读已经提交的内容
+  3. 可重复读取 REPEATABLE READ 
+  4. 可串行化 SERIALIZABLE 
 ```
 
 

@@ -72,3 +72,106 @@ WantedBy=multi-user.target
     $ sudo systemctl enable vncserver@1.service 
     $ sudo systemctl start|status| vncserver@1
 ```
+
+Setup VNC Server on Ubuntu: Complete Ubuntu Remote Desktop Guide 
+----------------------------------------------------------------
+* WHAT IS VNC - VIRTUALIZING WITH VNC 
+```
+VNC stands for Virtual Network COmputing and is a great way of accessing your server remotely. 
+
+TightVNC is a free VNC software package that allows users to utilize the VNC protocolo on their network. 
+```
+
+* STEP 1: PREPARK YOUR SYSTEM FOR UBUNTU VNC SETUP 
+```
+Before installing VNC on Ubuntu update the system. 
+$ sudo apt-get update 
+$ sudo apt-get upgrade 
+```
+
+* STEP 2: INSTALL A LIGHTWEIGHT DESKTOP ENVIRONMENT
+```
+   Xfce Desktop Environment:
+    Xfce is very lightweight by nature, easy to use, and is one of the top choices for a VNC server. 
+    $ sudo apt-get install -y xfce4 xfce4-goodies 
+```
+
+* STEP 3: INSTALL VNC SERVER ON UBUNTU 
+```
+   Install VNC server on Ubuntu 
+   $ sudo apt-get -y install tightvncserver 
+```
+
+* STEP 4: CONFIGURE VNC SERVER ON UBUNTU 
+```
+   After you setup VNC Server on Ubuntu, there are things that need to be configured: VNC password and VNC session information. To configure VNC server on Ubuntu you need to first start it once using the following command:
+   $ vncserver 
+
+   Before configuring VNC SERVER for a specific desktop, you will have to kill all running instances of the TightVNC Server. The highlighted number in the image should be used on place pf "X" in the below command 
+   $ vncserver -kill :X 
+   $ ps -ef | grep Xtightvnc 
+   Before proceeding, lets make a copy of your existing / default VNC configuration using the following comnand:
+   $ cp ~/.vnc/xstartup ~/.vnc/xstartup_backup 
+```
+
+* Configure VNC Server for Xfce Desktop 
+```
+   # This should work for both Xfce or Xubuntu desktop, To configure TightVNC to use Xfce
+   $ sudo vim ~/.vnc/xstartup 
+    #!/bin/sh 
+    def 
+    export XKL_XMODMAP_DISABLE=1
+    unset SESSION_MANAGER 
+    unset DBUS_SESSION_BUS_ADDRESS 
+
+    xrdb $HOME/.Xresources 
+    xsetroot -solid grey 
+
+    startxfce4 &
+```
+
+* STEP 5: START VNC SERVER ON UBUNTU 
+```
+   Ubuntu VNC Server setup is now down. 
+  # By default, VNC server content in lowe resolution. If you want a higher resolution, you can specify the resolution while starting VNC Server
+   $ vncserver -geometry 1280x720 -depth 24 
+```
+
+* SETP 6: AUTOSTART VNC SERVER 
+```
+The easiest way to auto start VNC SERVER is through crontab and making it start during reboot. 
+$ crontab -e 
+Then add the following line to the end of your cron list:
+@reboot vncserver -geometry 1280x720 -depth 24 :1
+
+Now, VNC Server should start automatically during boot and be available for you at port 5901
+```
+
+* Autostart VNC Server using Systemd Service 
+```
+Cron restart method may not work for everybody because it does not create a service, which means you cannot start, stop, or restart VNC server. You will have to kill it and start again. 
+
+# Create a service file for VNC using the following command:
+$ sudo vim /etc/systemd/system/vncserver@.service 
+
+Add the following contents to it.
+[Unit]
+Description=Start TightVNC server at startup 
+After=syslog.target network.target 
+
+[Service]
+Type=forking 
+User=ubuntu 
+Group=ubuntu
+PIDFile=/home/ubuntu/.vnc/%H:%i.pid 
+ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1 
+ExecStart=/usr/bin/vncserver -depth 24 -geometry 1280x720 :%i 
+EXecStop=/usr/bin/vncserver -kill :%i 
+
+[Install]
+WantedBy=multi-user.target
+
+# sudo systemctl daemon-reload # make the system aware of the new unit file 
+# sudo systemctl enable vncserver@1.service 
+# sudo systemctl start|status|vncserver@1
+```
