@@ -2655,8 +2655,10 @@ SET @@completion_type = 1;
 事务隔离级别:
   1. 读未提交READ UNCOMMITTED : 查询不使用锁，可能会产生脏读，不可重复读，幻读 
   2. 读已提交 READ COMMITTED : 只能读已经提交的内容
-  3. 可重复读取 REPEATABLE READ 
-  4. 可串行化 SERIALIZABLE 
+  3. 可重复读取 REPEATABLE READ : 保证一个事务在相同查询条件下两次查询得到的数据结果是一致 - MySQL默认隔离级别是可重复读
+  4. 可串行化 SERIALIZABLE : 可以解决事务中所有可能出现的异常情况，但是牺牲系统的并发性
+
+
 ```
 
 

@@ -90,3 +90,35 @@ That should be enough swap to complete any future compiles I may do n the future
 
 
 ![Raspberry Start](/root/raspberrypi/RaspberryPiTutorial/RaspberryPi_Start.md)
+
+Failed to connect to raw.githubusercontent.com port 443 
+-------------------------------------------------------
+```
+RPi4B% sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+--2020-05-03 14:02:34--  https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+Resolving raw.githubusercontent.com (raw.githubusercontent.com)... 0.0.0.0, ::
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|0.0.0.0|:443... failed: Connection refused.
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|::|:443... failed: Connection refused.
+
+原因，GitHub的raw.githubusercontent.com 域名解析污染 
+
+解决:
+  查找真实IP https://www.ipaddress.com/ 查询 raw.githubusercontent.com 
+
+Hostname Summary:
+  Domain: githubusercontent.com 
+  IP Address: 199.232.68.133 
+  Web Server Location: United States
+
+修改Hosts 
+  $ sudo vim /etc/hosts 
+添加如下内容 
+  199.232.28.133 raw.githubusercontent.com 
+```
+
+Set DNS nameserver
+------------------
+```
+
+```

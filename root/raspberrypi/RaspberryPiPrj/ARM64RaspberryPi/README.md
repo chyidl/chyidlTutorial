@@ -393,6 +393,31 @@ $ sudo apt update
 
 # Make sure install from the Docker repo instead of the default Ubuntu repo:
 $ sudo apt-cache policy docker-ce
+```
 
+Set Up Automatic updates for Ubuntu Linux 
+-----------------------------------------
+```
+# Automatic updates for Ubuntu Linux:
+  1. Update the server, run:
+    $ sudo apt update && sudo apt upgrade 
+  2. Install unattended upgrades on Ubuntu. Type the following apt command
+    $ sudo apt install unattended-upgrades apt-listchanges bsd-mailx
+  3. Turn on unattended security updates 
+    $ sudo dpkg-reconfigure -plow unattended-upgrades 
+  4. Configures automatica updates
+    $ sudo vim /etc/apt/apt.conf.d/50unattended-upgrades 
+    # Set up alert email ID:
+    Unattended-Upgrade::Mail "user@gmail.com";
+    # Automatically reboot Ubuntu box WITHOUT CONFIRMATION for kenel updates:
+    Unattended-Upgrade::Automatic-Reboot "true"; 
+    # Finally edit the /ect/apt/listchanges.conf and set email ID: 
+    email_address=user@gamil.com 
+  5. Verify that it is working by running the following command:
+    $ sudo unattended-upgrades --dry-run 
 
+See automatic updates logs 
+  $ sudo cat /var/log/unattended-upgrades/unattended-upgrades.log 
+  $ sudo tail -f /var/log/unattended-upgrades/unattended-upgrades.log 
+  $ sudo grep 'linux-imgae' /var/log/unattended-upgrades/unattended-upgreds.log
 ```
