@@ -391,3 +391,21 @@ if __name__ == '__main__':
 $ sudo lsof -i tcp:4567
 # Running this will produce a nicely formatted response that tells you several pieces of information about the process bound to :4567 including the PID
 ```
+
+# Keyboard Shortcuts 
+```
+Shift + Command + 5: Open the Screenshot app 
+Command + tab : Switch between apps
+Command + 1~4 : Change file layout view in the Finder
+Command + multi click: Select multiple files
+Space : Open Quick Look
+Option + Shift + Command + V : Paste and match style 
+Control + Command D : Look up a word
+Control + Command + space : Open Character Viewer
+Command + Space : Open Spotlight
+Command + T : Open a new tab
+Command + w : Close a tab
+Control + tab : Switch active tabs
+Command + H : Hide active app 
+Shift + Command ? : Open the Help menu
+```
