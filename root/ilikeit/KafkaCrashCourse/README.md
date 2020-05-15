@@ -1,4 +1,7 @@
 Kafka Crash Course
 ==================
-> Kafka 有效隔离上下游业务，将上游突增的流量缓存起来，以平滑的方式传导到下游子系统中.
-> Kafka 作为消息引擎 实时流处理
+> Apache Kafka is a popular distributed message broker designed to efficiently handle large volumes of real-time data. A Kafka cluster is not only highly scalable and fault-tolerant, but it also has a much higher through compared to other message brokers such as ActiveMQ and RabbitMQ.
+
+Install Apache Kafka on Ubuntu
+------------------------------
+

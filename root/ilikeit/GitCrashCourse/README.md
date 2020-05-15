@@ -95,6 +95,7 @@ $ git checkout -b chyi-dev == git branch chyi-dev && git checkout chyi-dev
 
 # git branch # 查看当前分支,会列出所有分支，当前分支前面会标记*号
 $ git branch 
+$ git branch -r # list all remote branches 
 
 # git checkout master # 切换分支
 # git merge chyi-dev #  合并指定分支到当前分支，(Fast-forward)
