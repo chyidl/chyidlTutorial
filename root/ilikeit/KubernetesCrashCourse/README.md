@@ -398,3 +398,10 @@ $ brew install kubectl kubernetes-helm
 $ kubectl version 
 $ helm version 
 ```
+
+Make own Kubernetes cluster 
+---------------------------
+> https://medium.com/nycdev/k8s-on-pi-9cc14843d43
+```
+
+```

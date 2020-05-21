@@ -271,5 +271,13 @@ So essentially, only operations that internally cause the table's heap to be rew
   VACUUM FULL 
   TRUNCATE 
   ALTER TABLE 
+```
+
+```
+TEXT data type stores variable-length chracter data. 
+  range up to 1 Gb 
+
+Both Text and Varchart have the upper limit at 1 Gb, and there is no performance difference among them (according to the postgreSQL documentation)
+Text: in a value inserted to a Text column has trailing blanks, PostgreSQL does not truncate them, and they are significant in comparisons.
 
 ```
