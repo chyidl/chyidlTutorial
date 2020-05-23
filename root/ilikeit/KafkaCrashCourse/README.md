@@ -88,6 +88,23 @@ Kafka 调整参数：
    
   堆越小留给页面缓存的空间越大，这对Kafka是优势
 
+分区的作用提供负载均衡的能力
+  Kafka 分区 
+  MongoDB Shard 
+  HBase Region 
+  Cassandra Vnode 
+
+Kafka 分区策略：
+  分区策略决定生产者将消息发送到那个分区的算法 
+  1. Round-robin: 轮训策略 - 非常优秀的附在均衡表现，总能保证消息最大限度的被平均分配到所有的分区上
+  2. Randomness: 随机策略 
+  3. 按照消息键保序策略: 
+    Kafka允许每条消息定义消息键-Key 一旦消息定义Key,可以保证同一Key的所有消息进入相同的分区，
+
+Kafka 消息:
+  Message Set: 消息集合。
+    - record item: 日志项
+  Message: 消息
 
 ```
 

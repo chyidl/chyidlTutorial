@@ -129,3 +129,14 @@ any questions so far
 >
 key rebinding 
 
+Lecture 4: Data Wrangling 
+-------------------------
+```
+sed: 
+  sed -E  's/(ab)*//g'
+  sed . greed patern 
+  ? zero or one 
+  ^ begin
+  $ end 
+  capture group
+```
