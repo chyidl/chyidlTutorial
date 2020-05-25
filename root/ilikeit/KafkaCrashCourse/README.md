@@ -106,6 +106,41 @@ Kafka 消息:
     - record item: 日志项
   Message: 消息
 
+Kafka 压缩发生在：
+  生产者端
+  Borker端
+  Producer 端压缩，Broker端保持， Consumer端解压缩
+
+先把事情做对最重要，在做对的基础上，在考虑把事情做好做快
+各种压缩算法比对:
+  > 压缩算法指标(1.压缩比 2.压缩/解压缩吞吐量)
+  1. gzip: 
+  2. snappy: 
+  3. lz4:
+  4. zstandard:(zstd)
+
+Kafka 只对已提交的消息(committed message) 做有限度的持久化保证
+  1. 已提交的消息 
+  2. 有限度的持久化保证 
+
+Kafka producer 异步发送消息:
+  1. Producer.send(msg) -- fire and forget - "执行完操作后不管它结果是否成功"
+    - 网络抖动- 导致消息压根没有发送到Broker 
+    - 消息本身不合格导致Broker拒绝接收
+  2. Producer.send(msg, callback): 
+  acks = all : 表明所有副本Borker都要接收到消息，才算已经提交
+  Producer.retries: 重试次数 
+  unclean.leader.election.enable = false # 禁止竞选分区Leader
+  replication.factor >= 3 
+  min.insync.replicas > 1 
+
+Kafka Consumer:
+  Consumer端丢失数据体现在Consumer端消费的消息不见 
+  维持先消费消息(阅读)，再更新位移(书签)的顺序 
+  Consumer自动提交位
+  如果是多线程异步处理消费消息，Consumer程序不要开启自动提交位移，而是要要应用程序手动提交位移
+  enable.auto.commit = false 
+  采用手动提交位移的方式 
 ```
 
 Apache Kafka Security
