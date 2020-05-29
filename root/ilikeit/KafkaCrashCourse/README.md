@@ -141,6 +141,108 @@ Kafka Consumer:
   如果是多线程异步处理消费消息，Consumer程序不要开启自动提交位移，而是要要应用程序手动提交位移
   enable.auto.commit = false 
   采用手动提交位移的方式 
+
+Kafka 拦截器:
+  - 生产者拦截器 
+  - 消费者拦截器 
+  Kafka拦截器可以应用于包括客户端监控，端到端系统性能检测，消息审计等多种功能在内的场景
+  消息审计 Message audit: 
+    - 端到端的延时统计
+
+Apache Kafka 所有通信都是基于TCP：
+  - TCP提供多路复用请求，以及同时轮询多个连接的能力 
+
+KafkaProducer: 
+  1. 构造生产者对象所需的参数对象 
+    bootstrap.servers: 指定Producer启动连接Broker地址 
+  2. 创建KafkaProducer对象  -- 建立与Broker的TCP连接
+  3. KafkaProducer send 发送消息 
+  4. KafkaProducer close 关闭生产者并释放各种系统资源 
+  connections.max.idle.ms: 默认 
+  被动关闭场景: CLOSE_WAIT 
+
+  Producer 端管理TCP连接的方式:
+    1. KafkaProducer 实例创建时启动Sender线程，从而创建与bootstrap.servers 中所有Broker的TCP连接 
+    2. KafkaProducer实例首次更新元数据信息之后，还会再次创建与集群中所有Broker的TCP连接 
+    3. 如果Producer端发送消息到某台Broker时发现没有与Broker的TCP连接，那么也会立即创建连接 
+    4. 如果设置 Producer端connections.max.idle.ms 参数大于0，步骤1创建的TCP连接会被自动关闭
+
+Kafka 消息交付可靠性保障:
+  1. at most once: 最多一次 消息可能会丢失，但绝不会被重复发送
+  2. at least once: 至少一次，消息不会丢失，但有可能被重复发送 
+  3. exactly once: 消息不会丢失，也不会被重复发送 
+
+Kafka 幂等性 Idempotence 
+  幂等-源于数学领域中概念，指某些操作或函数能够被执行多次，但每次得到的结果都是不变
+  幂等性：可以安全地重试任何幂等性操作
+  Kafka Producer: 默认不是幂等性 props.put('enable.idempotence' true )
+  - Kafka Producer幂等性能够保证主题的单分区不出现重复消息，无法实现多分区的幂等性；只能实现单会话上的幂等性，不能实现跨会话的幂等性 
+  - 幂等性Producer只能保证单分区、单会话上的消息幂等性 
+Kafka 事务性 Transaction 
+  事务提供的安全保证是经典的ACID，原子性Atomicity, 一致性Consistency 隔离性isolation,持久性Durability 
+  read commited: 已提交数据 无脏读 
+  事务性Producer能够保证将消息原子性地写入多个分区中，消息要么全部写入成功，要么全部失败 
+  enable.idempotence = true 
+  transctional.id = 
+  initTransaction, beginTransaction, commitTransaction, abortTransaction 
+  事务幂等性能够保证跨分区、跨会话间的幂等性 
+
+
+消费组：
+  Consumer Group: Kafka提供的可扩展且具有容错性的消费者机制 
+  1. Consumer Group 可以有多个或者一个Consumer实例 
+  2. Group ID: 字符串标识唯一的Consumer Group 
+  3. Consumer Group 单个分区只能分配给组内某个Consumer实例消费，
+
+  Consumer Group: 订阅多个主题后，组内的每个实例只会消费部分分区中的消息 
+  理想情况下，Consumer实例的数量应该等于Group订阅主题的分区总数；一般不推荐设置大于总分区数的Consumer实例 设置多余的实例只会浪费资源 
+  Offset 位移
+  Consumer Group 是一组KV对， Key是分区，V对应Consumer消费该分区最新位移
+  老版本的COnsumer Group 位移保存在ZooKeeper中，Apache ZooKeeper是一个分布式协调服务框架，Kafka重度依赖它实现各种各样的协调管理,将位移保存在ZooKeeper外部系统的做法，减少Kafka Broker端状态保存开销，将服务器节点做成无状态，可以自由扩展缩容，实现超强的伸缩性 
+
+  Consumer Group 位移管理方式保存在Kafka内部主题，__consumer_offsets. 
+  Consumer Group 重平衡： Rebalance 触发条件：
+    1. 组成员数发生变更，新Consumer实例加入组或者离开组 抑或有Consumer实例崩溃 
+    2. 订阅主题数发生变更 consumer.subscribe(Pattern.compile("t.*.c")) 表明该Group订阅所有以字母t开头，字母c结尾的主题 
+    3. 订阅主题的分区数发生变更，Kafka当前只能允许增加一个主题的分区数
+
+  JVM垃圾回收机制
+    STW：Stop the world 
+
+__consumer_offsets: 置移主题 
+  key:<Group ID, 主题名，分区号> 
+  Kafka Consumer提交位移方式：
+    1. 自动提交位移
+      enable.auto.commit  true 
+      auto,commit.interval.ms 
+    2. 手动提交位移
+      enable.auto.commit = false 
+      consumer.commitSync 
+  Kafka 提供专门的后台线程定期巡检Compact主题，看看是否存在满足条件可删除数据 -- Log Cleaner 
+
+kafka为某个Consumer Group 确定Coordinator 所在的Broker算法
+  1. 确定位移主题的那个分区保存该Group数据 
+    partitionId = Math.abs(groupId.hashCode() % offsetsTopicPartitionCount)
+  
+  session.timeout.ms = 决定Consumer存活性的时间间隔 
+  heartbeat.interval.ms = 控制发送心跳请求频率 
+    - 保证Consumer实例被判定dead之前，能偶发送至少3轮心跳请求 
+  max.poll.interval.ms = 限定Consumer端应用程序两次调用poll方法的最大时间间隔 
+  GC 参数: 
+
+位移Offset: 下一条消息的位移 
+  自动提交 : Kafka Consumer 后台默认提交位移(enable.auto.commit - true)
+  手动提交 : KafkaConsumer#poll() 返回最新的位移 
+  同步提交 
+  异步提交
+
+时刻关注消费者的消费进度
+  Consumer Lag 
+  1. 使用Kafka自带的命令行工具，Kafka-consumer-groups 脚本 
+  2. 使用Kafka Java Consumer API 编程 
+  3. 使用Kafka 自带的JMX监控指标
+
+
 ```
 
 Apache Kafka Security

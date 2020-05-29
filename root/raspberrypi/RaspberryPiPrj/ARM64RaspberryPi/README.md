@@ -399,6 +399,9 @@ Set Up Automatic updates for Ubuntu Linux
 -----------------------------------------
 ```
 # Automatic updates for Ubuntu Linux:
+  软件包管理中心 -- 更改软件源 替换官方镜像源为mirrors.ustc.edu.cn 
+  sudo sed -i 's/ports.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+
   1. Update the server, run:
     $ sudo apt update && sudo apt upgrade 
   2. Install unattended upgrades on Ubuntu. Type the following apt command
