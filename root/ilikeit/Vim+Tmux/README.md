@@ -89,6 +89,13 @@ $ chsh -s $(which zsh)
 3. Install oh-my-zsh 
 $ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
+```
+Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|::|:443... failed: Connection refused.
+原因是github域名解析被污染，可以手动修改hosts 
+$ sudo vim /etc/hosts 
+199.232.28.133 raw.githubusercontent.com
+```
+
 4. Make sure terminal is using 256-colors mode add ~/.zshrc file with export TERM="xterm-256color"
 
 5. For oh-my-zsh users install bullet-train 
@@ -576,4 +583,30 @@ Model editing
     -> Insert Mode - eidting the file 
     -> Visual Mode - highlight portions of the file to manipulate at once 
     -> Ex Mode - Command mode 
+```
+
+* Terminal Proxy 
+```
+Mac OS X Terminal using proxy 
+$ vim ~/.zshrc 
+# proxy list 
+alias proxy='export all_proxy=sock5://127.0.0.1:1080'
+alias unproxy='unset all_proxy'
+
+$ source ~/.zshrc 
+
+# check public ip 
+$ curl cip.cc 
+IP	: 106.15.67.234
+地址	: 中国  上海
+运营商	: 阿里云/电信/联通/移动/铁通/教育网
+
+数据二	: 上海市 | 阿里云
+
+数据三	: 中国上海上海 | 阿里云
+
+URL	: http://www.cip.cc/106.15.67.234
+$ proxy 
+$ curl cip.cc 
+$ unproxy 
 ```
