@@ -2,6 +2,8 @@
 " Terminal font == Hack Nerd Font 
 " :set paste in vim before you paste to disable automated indenting, 
 " :set nopaste after you've pasted the content.
+" Vim Run omit any of your vimrc settings and plugins 
+" vim -u NONE
 
 set nocompatible              " be iMproved, required
 filetype off                  " required
@@ -58,6 +60,10 @@ Plug 'dense-analysis/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
+" An ack.vim alternative mimics Ctrl-Shift-F on Sublime Text 2
+" install ack, ag, pt, rg
+Plug 'dyng/ctrlsf.vim'
+
 " Language: Javascript 
 " Vastyly improved Javascript indentation and syntax support in Vim.
 Plug 'pangloss/vim-javascript'
@@ -108,6 +114,9 @@ Plug 'peterhoeg/vim-qml'
 " Language: Typescript 
 " Typescript syntax files for Vim 
 Plug 'leafgarland/typescript-vim'
+
+" LaTeX files - A modern vim plugin for editing 
+Plug 'lervag/vimtex'
 
 " Initialize plugin system
 call plug#end()                     " required
@@ -330,8 +339,8 @@ set fileencoding=utf-8
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
 
-" highlight the current line and the cursor
-    
+" highlight the current line and the cursor    
+" Very slow scroll with cursorline enabled in newer versions of Vim #2584
 set cursorline
 set cursorcolumn
 
@@ -410,12 +419,10 @@ map <c-space> ?
 map <silent> <leader><cr> :noh<cr>
 
 " Smart way to move between windows
-" convinient keys instead of annoying Control + W
-" now control + h/j/k/l will move around the windows
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-H> <C-W>h
-nnoremap <C-J> <C-W>l
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
 
 " Close the current buffer 
 map <leader>bd :Bclose<cr>:tabclose<cr>gT 
@@ -472,7 +479,9 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " Remap VIM 0 to first non-blank character 
+map H ^
 map 0 ^
+map L $
 
 " Move a line of text using ALT+[jk] or Command+[jk] on mac 
 nmap <M-j> mz:m+<cr>`z
@@ -696,7 +705,7 @@ let g:NERDTreeIndicatorMapCustom = {
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => coc.nvim Plugin Config
+" => coc.nvim Plugin Config -- 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " if hidden is not set, TextEdit might fail. 
 set hidden
@@ -987,6 +996,26 @@ highlight SignifySignDelete ctermfg=yellow ctermbg=red guifg=#F7DC6F guibg=#EC70
 let g:markdown_enable_spell_checking = 0 
 let g:markdown_enable_conceal = 0
 
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => dyng/ctrlsf.vim Plugin Config 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Key Maps
+" :CtrlSF [pattern] it will split a new window to show search result 
+" if you are doing an asynchronous searching, you can explore and edit other files in the mewnwhile, and can always press Ctrl-C to stop searching
+" In the result window, press O to open corresponding file, or press q to quit. 
+" Press p to explore file in a preview window if you only want a glance.
+" Press t open file in a new tab 
+" Press P open file in a preview window and switch focus to it. 
+" Press O leave CtrlSF window opening 
+" Press T focus CtrlSF window instead of new opened tab 
+" Press M switch result window between normal view and compact view 
+" Press q quit CtrlSF window 
+" <C-J> Move cursor to next match 
+" <C-K> Move cursor to previous match 
+" <C-C> Stop a backgroud searching process
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Mappings to easily toggle fold levels Plugin Config 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1014,6 +1043,18 @@ imap jk <Esc>
 " Go To Definition 
 set tags=tags 
 
-" indentLine 
+" continuously locked
 vnoremap < <gv
 vnoremap > >gv
+
+nnoremap <C-J> <C-W>j
+nnoremap <C-K> <C-W>k
+nnoremap <C-L> <C-W>l
+nnoremap <C-H> <C-W>h
+
+" Using tab pages 
+" gt    go to next tab 
+" gT    go to previous tab 
+" {i}gt go to tab in position i 
+nnoremap <C-Left> :tabprevious<CR>
+nnoremap <C-Right> :tabnext<CR>

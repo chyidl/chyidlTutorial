@@ -184,3 +184,33 @@ Title: "Adventure of a Lifetime".
 ```
 
 ![Airplay on Raspberry Pi](/imgs/raspberrypi/airplay-raspberrypi.png?raw=true)
+
+Audio Output
+------------
+```
+Audio output on the Raspberry Pi is done through either the HDMI connector or the 1/8" blue headphone connector. Control of which connector the audio is present on is done through the amixer command. 
+amixer is one of a suite of the ALSA control tools 
+ALSA: is the Advanced Linux Sound Architecture and provides a set of utilities to configure and control sound devices on Lnux computers. 
+
+$ sudo apt-get update 
+$ sudo apt-get install alsa-utils 
+$ sudo apt-get install mpg321 
+
+"PCM Playback Route" determines whether the audio goes out the HDMI connection (value=2), the 1/8" headphone jack(value=1) or auto detect (value=0). The "auto" setting defaults to HDMI. but if not nected will used the 1/8" headphone jack. 
+
+➜ sudo amixer controls
+numid=2,iface=MIXER,name='Headphone Playback Switch'  # control mutes and unmutes the Raspberry Pi 
+numid=1,iface=MIXER,name='Headphone Playback Volume'  # control sets the volume of the Raspberry Pi audio output
+
+➜ sudo amixer cget numid=1
+numid=1,iface=MIXER,name='Headphone Playback Volume'
+  ; type=INTEGER,access=rw---R--,values=1,min=-10239,max=400,step=0
+  : values=-2000
+  | dBscale-min=-102.39dB,step=0.01dB,mute=1
+
+➜ sudo amixer cset numid=1 70% # set the volume to 70% 
+numid=1,iface=MIXER,name='Headphone Playback Volume'
+  ; type=INTEGER,access=rw---R--,values=1,min=-10239,max=400,step=0
+  : values=-2791
+  | dBscale-min=-102.39dB,step=0.01dB,mute=1
+```
