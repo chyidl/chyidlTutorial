@@ -89,12 +89,10 @@ $ chsh -s $(which zsh)
 3. Install oh-my-zsh 
 $ sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 
-```
 Connecting to raw.githubusercontent.com (raw.githubusercontent.com)|::|:443... failed: Connection refused.
 原因是github域名解析被污染，可以手动修改hosts 
 $ sudo vim /etc/hosts 
-199.232.28.133 raw.githubusercontent.com
-```
+  199.232.28.133 raw.githubusercontent.com
 
 4. Make sure terminal is using 256-colors mode add ~/.zshrc file with export TERM="xterm-256color"
 

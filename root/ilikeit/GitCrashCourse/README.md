@@ -23,15 +23,15 @@ $ git config --global user.name "Your Name"
 $ git config --global user.email "email@example.com"
 
 # 仓库 repository 
-$ git init  # 把当前目录变成Git可以管理的仓库, 并创建.git目录
+$ git init  # initialize an existing directory as a Git repository
 
 # 所有版本控制系统,其实只能跟踪文本文件的改动，但是图片、视频这些二进制文件，虽然能够由版本控制系统管理，但没办法跟踪文件的变化，只能把二进制文件每次改动串起来。
 
 # 将文件添加到仓库
-$ git add file|. 
+$ git add file|.  # add a file as it looks now to your next commit (stage)
 
 # 查看仓库当前的状态
-$ git status 
+$ git status  # show modified files in working directory, staged for your next commit
 
 # 把文件提交到仓库 -m: 表示本次提交的说明
 $ git commit -m "wrote a readme file"
@@ -52,7 +52,7 @@ $ git diff somefile
 $ git log --pretty=oneline 
 
 # HEAD表示当前版本，上一版本HEAD^,上上版本HEAD^^,往前100版本HEAD-100
-$ git reset --hard HEAD^  
+$ git reset --hard HEAD^   # unstage a file while retaining the changes in working directory 
 
 # 查看历史命令，以便确定回到未来版本
 $ git reflog 
@@ -68,6 +68,8 @@ $ git reflog
 
 # Git跟踪并管理的是修改，而非文件 
 $ git diff HEAD -- readme.txt  # 查看工作区和版本库最新版本的区别
+$ git diff --staged  # diff of what is staged but not yet committed
+$ git diff # diff of what is changed but not staged 
 
 # Discard changes in working directory 撤销文件在工作区的修改
 $ git checkout -- <file>  # 抛弃工作区的修改
@@ -84,7 +86,7 @@ $ git push -u origin master  # 将本地库的内容推送到远程，第一次�
 $ git push origin master # 以后每次推送
 
 # Git支持多种协议，默认git://使用ssh协议,https://支持https协议,使用https除了速度慢，还有每次推送都必须输入口令，但是某些只开放http端口的公司内部无法使用ssh协议，而只能使用https。
-$ git clone git@github.com:xxx/xxx.git 
+$ git clone git@github.com:xxx/xxx.git  # retrieve an entire repository from a hosted location via URL
 
 # master分支, HEAD指向当前分支,master指向提交.最开始情况下，master分支是一条线，Git用master指向最新的提交，在用HEAD指向master,就能确定当前的分支，以及当前分支的提交点
 
@@ -94,11 +96,12 @@ $ git clone git@github.com:xxx/xxx.git
 $ git checkout -b chyi-dev == git branch chyi-dev && git checkout chyi-dev 
 
 # git branch # 查看当前分支,会列出所有分支，当前分支前面会标记*号
-$ git branch 
+$ git branch  # list your branches, a* will appear next to the currently active branch
+$ git branch [branch-name] # create a new branch at the current commit 
 $ git branch -r # list all remote branches 
 
-# git checkout master # 切换分支
-# git merge chyi-dev #  合并指定分支到当前分支，(Fast-forward)
+# git checkout master # 切换分支 # switch to another branch and check it out into your working directory
+# git merge chyi-dev #  合并指定分支到当前分支，(Fast-forward) # merge the specified branches history into the current one 
 # git branch -d chyi-dev # 删除chyi-dev分支 
 
 # 因为创建、合并和删除分支非常快，所以Git孤立你使用分支完成某个任务，合并后再删除分支，这和直接在master分支上工作效果是一样的，但过程更加安全
@@ -113,7 +116,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 # 手动解决冲突后再提交
 
-# git log --graph --pretty=oneline --abbrev-commit 查看分支合并图情况
+# git log --graph --pretty=oneline --abbrev-commit 查看分支合并图情况 # show all commits in the current branch's history 
 $ git log --graph --pretty=oneline --abbrev-commit
 
 *   be1e806 (HEAD -> master) conflict fixed
@@ -289,8 +292,8 @@ $ vim animals.txt
 
 # Save the file.
 $ git add animals.txt       # 将工作区文件提交到暂存区
-$ git commit -m "Initial commit"
-$ git branch octodog
+$ git commit -m "Initial commit" # commit your staged content as new commit snapshot
+$ git branch octodog 
 $ git checkout octodog 
 $ vim animals.txt   # let's change octopus to octodog 
 $ git add animals.txt 

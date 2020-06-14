@@ -122,3 +122,19 @@ Set DNS nameserver
 ```
 
 ```
+
+Add PIP sources 
+---------------
+```
+# aliyun: http://mirrors.aliyun.com/pypi/simple/ 
+# ustc: https://pypi.mirrors.ustc.edu.cn/simple/ 
+# douban: http://pypi.douban.com/simple/ 
+# tsinghua: https://pypi.tuna.tsinghua.edu.cn/simple/
+
+
+# Unix/Liunx 
+$ vim .pip/pip.conf 
+[global]
+timeout = 600
+index-url = http://pypi.mirrors.ustc.edu.cn/simple 
+```

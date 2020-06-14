@@ -2649,16 +2649,15 @@ SET @@completion_type = 1;
   3. completion = 2; COMMIT = COMMIT AND RELEASE；提交后会自动与服务器断开连接
 
 事务并发处理可能存在的异常:
-  1. 脏读: Dirty Read : 读到其他事务还没有提交的数据
-  2. 不可重复读 Unrepeatable Read: 对某数据进行读取发现两次读取的结果不同
-  3. 幻读: Phantom Read: 
+  1. 脏读: (Dirty Read) : 读到其他事务还没有提交的数据--
+  2. 不可重复读 (Unrepeatable Read): 对某数据进行读取发现两次读取的结果不同 -- 
+  3. 幻读: (Phantom Read): 
+
 事务隔离级别:
   1. 读未提交READ UNCOMMITTED : 查询不使用锁，可能会产生脏读，不可重复读，幻读 
   2. 读已提交 READ COMMITTED : 只能读已经提交的内容
   3. 可重复读取 REPEATABLE READ : 保证一个事务在相同查询条件下两次查询得到的数据结果是一致 - MySQL默认隔离级别是可重复读
   4. 可串行化 SERIALIZABLE : 可以解决事务中所有可能出现的异常情况，但是牺牲系统的并发性
-
-
 ```
 
 
