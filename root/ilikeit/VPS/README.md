@@ -180,6 +180,15 @@ Move faster in Shell:
   Ctrl-P : Previous 
   Ctrl-N : Next 
   Ctrl-R: Backward Search
+```
 
+ECS 
+---
+```
+net band: 1Mbps 
+cpu: 1 vCPU 
+ram: 2 GiB 
+IOPS: 2120 
+device: /dev/xvda 
 
 ```
