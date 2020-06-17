@@ -378,7 +378,11 @@ Redis (Remote Dictionary Service)
 ---------------------------------
 > Redis 本质上是一个数据结构服务器(data structures server)以高效的方式实现多种数据结构
 ```
-- String字符串
+- String字符串 [maximum length of 512MB]
+    * Redis Strings Use Cases
+    * Session Cache: which is crucial in that your users do not lose their data in the event they log out or lose connection
+    * Queues: Any application that deals with traffic congestion, messaging, data gathering, job management, or packer routing should consider a Redis Queue.
+    * Usage & Metered Billing: 
     * 字符串string是Redis最简单的数据结构，Redis所有的数据结构都是以唯一的key字符串作为名称，然后通过这个唯一的key值来获取响应的value数据，不同类型的数据结构的差异就在于value的结构不一样.
     * Redis字符串是动态字符串，内部结构实现类似Java的ArrayList,采用预分配冗余空间的方法来减少内存的频繁分配。内部当前字符串实际分配的空间capacity一般要高于实际字符串长度len,当字符串长度小于1M时，扩容都是加倍现有的空间，如果超过1M，扩容一次只会多扩1M空间,字符串最大长度为512M.
     * 字符串是由多个字节组成，每个字节是由8个bit组成，如此便可以将一个字符串看成很多bit的组合.bitmap[位图]数据结构
@@ -453,7 +457,13 @@ OK
 192.168.1.215:6379[1]> incr codehole
 (error) ERR increment or decrement would overflow
 ```
-- List列表
+- List列表: Lists contain strings that are sorted by their insertion order. 
+    * LPUSH command: insert an element an the head 
+    * RPUSH command: insert at the tail
+    Redis List Use Cases:
+      - Social Networking Sites: Redis Lists to populates timelines or homepage feeds. 
+      - RSS Feeds: 
+      - LeaderBoards:  积分榜
     * Redis的列表相当于Java语言中的LinkedList,Redis的list的插入和删除操作非常快，时间复杂度O(1),但是索引定位很慢，时间复杂度为O(n).当列表弹出最后一个元素之后，该数据结构自动被删除，内存被回收
     * Redis列表结构常用来做异步队列使用，将需要延后处理的任务结构序列化字符串塞进Redis的列表，另一个线程从这个列表中轮询数据进行处理
     * lindex: 相当于Java链表的get(int index)方法，需要对链表进行遍历，性能随着参数index增大而变差
@@ -506,11 +516,15 @@ OK
 192.168.1.215:6379[1]> llen books
 (integer) 0
 ```
-- Hash字典
+- Hashes: 
+    * 2^32-1: (more than 4 billion) 
     * Redis的字典相当于Java语言中的HashMap，属于无序字典，内部实现同Java中HashMap同样的(数组+链表二维)结构，第一维hash的数组位置碰撞时，就会将碰撞的元素使用联表串联起来.
     * Redis的字典值只能是字符串，Java的HashMap的字典很大时，rehash是耗时的操作,需要一次性全部rehash，Redis为了高性能，不能阻塞服务，采用渐进式rehash策略.渐进式rehash会在rehash的同时，保留新旧两个hash结构，查询时同时查询两个hash结构，然后在后续定时任务以及hash操作指令中，循序渐进将旧hash的内容一点点迁移到新的hash结构中，当搬迁完成后，就会使用新的hash结构取而代之.
     * hash移除最后一个元素之后，该数据结构自动被删除，内存被回收
     * hash结构的存储消耗要高于单个字符串
+    * Redis Hashes Use Case:
+      * User Profiles: 
+      * User Posts: 
 ```
 hash 字典
 192.168.1.215:6379[1]> hset books java "think in java"  # 命令行的字符串如果包含空格要用引号括起来
@@ -541,9 +555,15 @@ OK
 192.168.1.215:6379[1]> hincrby user age 1
 (integer) 27
 ```
-- Set集合
+- Sets集合
+    * Redis Sets are powerful data types intersections and unions.
+    * take the same time to add or remove items in a set.
+    * SADD 
     * Redis的集合相当于Java语言中HashSet, 内部实现相当于一个特殊的字典，字典中所有的value都是一个值NULL.
     * 集合中最后一个元素移除之后，数据结构自动删除，内存被回收
+    * Redis Sets Use Case:
+      * Analyzing Ecommerce Sales: 
+      * IP Address Tracking: analyze all of the IP addresses that visited a specific website page 
 ```
 set集合
 192.168.1.215:6379[1]> sadd books python
@@ -565,11 +585,17 @@ set集合
 192.168.1.215:6379[1]> spop books  # 弹出一个值
 "golang"
 ```
-- ZSet有序集合
+- Sorted Sets有序集合
+    * Sorted Sets associate every member with a scores.
     * Redis的zset类似于Java的SortedSet和HashMap的结合体，一方面是一个set,保证内部value的唯一性,另一方面可以给每个value赋于一个score，代表这个value的排序权重，内部实现用的是一种叫做跳跃列表(skiplist)的数据结构
     * zset中的最后一个value被移除后，数据结构自动删除，内存被回收
     * zset 内部的排序功能是通过[跳跃列表]数据结构实现的，因为zset需要支持随机的插入和删除，所以不能使用数组表示。当新元素需要查询，首先要定位到特定位置的插入点，这样才能保证联表的有序，通常会使用二分查找寻找插入点，但是二分查找的对象必须是数组，只有数组才能支持快速位置定位，链表做不到.
     * 跳跃表采用随机策略来决定新元素可以兼职到第几层; L0层肯定是100%,L1层50%,L2层只有25%,L3层只有12.5%
+    * Redis Sorted Sets Use Cases
+      * Q&A Platforms: ensure the best quality content is listed at the top of the page.
+      * Gaming App Scoreboards: Online gaming apps 
+      * Task Scheduling Service: Redis Sorted Sets are a great tool for a task scheduling service. 
+      * Geo Hashing: 
 ```
 zset集合
 192.168.1.215:6379[1]> zadd books 9.0 "think in java"
