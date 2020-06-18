@@ -23,7 +23,12 @@ $ git config --global user.name "Your Name"
 $ git config --global user.email "email@example.com"
 
 # 仓库 repository 
+# git init -- 在项目根目录下创建一个.git 子目录，用来保存版本信息
 $ git init  # initialize an existing directory as a Git repository
+
+$ ls .git 
+
+
 
 # 所有版本控制系统,其实只能跟踪文本文件的改动，但是图片、视频这些二进制文件，虽然能够由版本控制系统管理，但没办法跟踪文件的变化，只能把二进制文件每次改动串起来。
 
