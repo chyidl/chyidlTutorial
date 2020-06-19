@@ -56,7 +56,7 @@ Raspberry Pi Awesome Project
 - [Install Go Lang on Raspberry Pi](/root/raspberrypi/RaspberryPiPrj/GoLangPi/README.md)
 
 Download all history Magpi Magazine PDF files
-- [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagPiDownloader/RaspberryPiMagpiDownloader.py)
+- [MagPi Downloader](/root/raspberrypi/RaspberryPiPrj/MagiPiDownloader/RaspberryPiMagpiDownloader.py)
 
 Easter Egg Program
 - [easter egg program](/root/raspberrypi/RaspberryPiPrj/easterEgg/README.md)
