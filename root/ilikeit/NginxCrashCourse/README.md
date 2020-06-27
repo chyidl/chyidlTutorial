@@ -1,7 +1,4 @@
-Nginx Crash Course 
-==================
-
-* Nginx 
+Nginx 
     - 高并发、高性能
     - 扩展性好 : 模块化
     - 高可靠性 ：
@@ -934,3 +931,28 @@ Nginx配置文件分为四部分:
     3. upstream(上游服务设置: 主要为了反向代理、负载均衡相关配置): 
     4. location(URL配置特定位置后的设置): 
 ```
+
+Nginx 查看配置文件
+------------------ 
+> Nginx 的配置存放在nginx.conf 文件中,可以使用locate查看nginx.conf 文件
+```
+➜ sudo find / -name "nginx.conf"
+/etc/nginx/nginx.conf
+
+查看nginx 实际调用的配置文件
+1.查看nginx 路径 
+$ ps aux | grep nginx 
+root        3254  0.0  0.0   7992   804 ?        Ss   12:12   0:00 nginx: master process /usr/sbin/nginx -g daemon on; master_process on;
+www-data    3255  0.0  0.0   9340  3592 ?        S    12:12   0:00 nginx: worker process
+www-data    3256  0.0  0.0   9340  3592 ?        S    12:12   0:00 nginx: worker process
+www-data    3257  0.0  0.0   9340  3604 ?        S    12:12   0:00 nginx: worker process
+www-data    3258  0.0  0.0   9340  3592 ?        S    12:12   0:00 nginx: worker process
+ubuntu      4700  0.0  0.0   5956   680 pts/0    S+   13:09   0:00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox nginx
+
+2. 查看nginx配置文件路径
+使用nginx 的-t 参数进行配置检查 查看实际调用的配置文件路径是否调用有效
+➜ sudo /usr/sbin/nginx -t
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+

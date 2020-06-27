@@ -1,4 +1,7 @@
-# Redis Cluster 
+Redis Cluster 
+=============
+> Redis Cluster是一个Redis分布式部署的形式，使用数据分片的办法把数据分配到不同的节点,每个节点可以有自己的备份节点
+> 集群上Redis Sentinel 分布式组建用于提供丰富的HA能力
 > Redis is an open source (BSD licensed), in-memory data structure store, used as a database, cache and message broker. It supports data structures such as strings, hashes, lists, sets, sorted sets with range queries, bitmaps, hyperloglogs, geospatial indexes with radius queries and strems.
 ```
 1. Redis Sentinel: [哨兵]
@@ -6,6 +9,11 @@
 
 2. Redis Cluster: 
   It provides high availability plus clustering solution. Its an excellent choice to ensure high availability while keeping fast access speed in consideration to access data.
+```
+
+* 数据分片
+```
+Redis Cluster 使用Slot: 作为KV系统，把每个key的值hash成0 ~ 16383 之间的数, 这个hash值用来确定对应的数据存储在那个节点中。
 ```
 
 * Understanding redis 

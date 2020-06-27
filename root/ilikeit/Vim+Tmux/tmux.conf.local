@@ -1,4 +1,4 @@
-#  >> Copyright 2018- chyidl (@Chyi Yaqing)
+#  >> Copyright 2020 - chyidl (@Chyi Yaqing)
 
 # -- navigation ----------------------------------------------------------------
 
@@ -154,7 +154,7 @@ tmux_conf_theme_right_separator_sub='|'
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_status_left=' ❐ #S | ↑#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} '
-tmux_conf_theme_status_right='#{prefix}#{pairing}#(tmux-itunes-info)#(tmux-spotify-info)#{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %r , %d %b %y | #{hostname}'
+tmux_conf_theme_status_right='#{prefix}#{pairing}#(tmux-itunes-info)#(tmux-spotify-info) , #{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %r , %d %b %y , #{hostname}'
 
 # status left style
 tmux_conf_theme_status_left_fg='#282a36,#f8f8f2,#282a36'  # black, white , white
@@ -187,8 +187,8 @@ tmux_conf_theme_root_attr='bold,blink'
 # battery bar symbols
 tmux_conf_battery_bar_symbol_full='◼'
 tmux_conf_battery_bar_symbol_empty='◻'
-#tmux_conf_battery_bar_symbol_full='♥'
-#tmux_conf_battery_bar_symbol_empty='·'
+# tmux_conf_battery_bar_symbol_full='♥'
+# tmux_conf_battery_bar_symbol_empty='·'
 
 # battery bar length (in number of symbols), possible values are:
 #   - auto
@@ -217,18 +217,17 @@ tmux_conf_battery_vbar_palette='gradient'
 #tmux_conf_battery_vbar_palette='#ff5555,#ffb86c,#50fa7b'  # red, orange, green
 
 # symbols used to indicate whether battery is charging or discharging
-#tmux_conf_battery_status_charging='↑'       # U+2191
-#tmux_conf_battery_status_discharging='↓'    # U+2193
-tmux_conf_battery_status_charging='🔌'    # U+1F50C
-tmux_conf_battery_status_discharging='🔋' # U+1F50B
+tmux_conf_battery_status_charging='↑'       # U+2191
+tmux_conf_battery_status_discharging='↓'    # U+2193
+# tmux_conf_battery_status_charging='🔌'    # U+1F50C
+# tmux_conf_battery_status_discharging='🔋' # U+1F50B
 
 # clock style
-tmux_conf_theme_clock_colour='#8be9fd'  # light blue
+tmux_conf_theme_clock_colour='#f8f8f2'  # light gray
 tmux_conf_theme_clock_style='24'
 
 
 # -- clipboard -----------------------------------------------------------------
-
 # in copy mode, copying selection also copies to the OS clipboard
 #   - true
 #   - false (default)
@@ -239,7 +238,6 @@ tmux_conf_copy_to_os_clipboard=true
 
 # -- user customizations -------------------------------------------------------
 # this is the place to override or undo settings
-
 # increase history size
 set -g history-limit 10000
 
