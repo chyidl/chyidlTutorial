@@ -399,10 +399,17 @@ $ kubectl version
 $ helm version 
 ```
 
-
-
 Make own Kubernetes cluster 
 ---------------------------
 > https://medium.com/nycdev/k8s-on-pi-9cc14843d43
 ```
 ```
+
+Install Kubernetes on Ubuntu 
+----------------------------
+> Kubernetes is the productive, open source way to manage container and microservices, automating the time-consuming ta of installing, patching, upgrading, and carrying out cluster health checks.
+
+1. sudo snap install microk8s --classic 
+2. microk8s.status # verify it is ready
+3. microk8s.kubectl # 
+

@@ -1,7 +1,9 @@
 RPC Crash Course 
 ================
-
+> RPC 可以像调用本地一样发起远程调用
 ```
+分布式系统中的网络通信一般会采用四层TCP协议或者七层HTTP协
+
 RPC: Remote Procedure Call 远程过程调用
   1. 屏蔽远程调用根本地调用的区别
   2. 隐藏底层网络通信的复杂性
@@ -20,6 +22,7 @@ RPC 通信流程:
 
 RPC调用超时如何处理?
   重试机制、降级处理 
+RPC调用是否考虑开启压缩?
 
 接口设计兼容 
 qps 
@@ -29,8 +32,14 @@ qps
 动态规划 
 
 RPC/HTTP 属于应用层协议
+  HTTP协议属于无状态协议
+  RPC 不直接使用HTTP协议原因是无法实现请求跟相应关联
+调用方需要维护消息ID列表，然后和返回结果中的消息ID做匹配
+
+网络中传输都是二进制数据
 RPC 负责应用间的通信,性能要求高,HTTP协议属于无状态协议
-  
+
+整个协议拆分成两部分：协议头+协议体
   协议头 + 协议体 
   协议头: 是由一堆固定长度参数组成[协议长度，序列化方式，协议标示，消息ID，消息类型]
   协议体: 请求接口方式，请求业务参数值，扩展属性(协议体里面都是经过序列化出来)
@@ -42,8 +51,16 @@ RPC 负责应用间的通信,性能要求高,HTTP协议属于无状态协议
 支持协议体扩展 + 支持协议头扩展
 
 网络传输的数据必须是二进制数据
-序列化: 就是将对象转换成二进制数据的过程 
-反序列化:就是反过来将二进制转换为对象的过程
+  序列化: 就是将对象转换成二进制数据的过程 
+  反序列化:就是反过来将二进制转换为对象的过程
+
+Python:
+  pickle: -- implemebts binary protocols for serilizing and de-serialzing a python object structure
+  hmac: -- keyed hashing for message authentication
+Java:
+  ObjectOutputStream 
+  ObjectInputStream 
+
   JSON: 是典型的Key-Value方式，没有数据类型，是一种文本型序列化框架
     - JSON进行序列化的额外空间开销比较大
     - JSON没有类型,需要通过反射解决
