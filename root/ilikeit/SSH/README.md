@@ -284,3 +284,61 @@ Host *
 # Useful tools 
 http://www.netcan666.com/2016/09/28/ssh隧道反向代理实现内网到公网端口转发/
 ```
+
+SSH Certificate Authority 
+-------------------------
+```
+SSH 是服务器登陆工具，提供密码和密钥登陆，还有第三种登陆方式，证书登陆
+
+1. 非证书登陆
+  密码登陆需要输入服务器密码，存在被暴力破解的风险 
+  密钥登陆需要服务器保存用户的公钥，也需要用户保存服务器公钥的指纹，对于多用户、多服务器的大型机构不方便
+
+2. 证书登陆
+  证书颁发机构(Certificate authority) 对信任的服务器颁发服务器证书，对信任的用户颁发用户证书 
+  登陆时，用户和服务器不需要提前知道彼此的公钥，只需要交换各自的证书，验证是否可信即可 
+  1. 用户和服务器不用交换公钥
+  2. 证书可以设置到期时间，而公钥没有到期时间
+
+3. 证书登陆流程
+  SSH 证书登陆之前，如果还没有证书，需要生成证书
+  1. 用户和服务器都将自己的公钥发给CA 
+  2. CA使用服务器公钥生成服务器证书 发给服务器 
+  3. CA使用用户公钥 生成用户证书 发给用户 
+
+整个过程SSH自动处理，用户无感 
+  第一步: 用户登陆服务时，SSH自动将用户证书发给服务器 
+  第二步: 服务器检查用户证书是否有效，以及是否由可信的CA颁发。
+  第三步: SSH自动将服务器证书颁发给用户 
+  第四步: 用户检查服务器证书是否有效，以及是否由信任的CA颁发
+  第五步: 双方建立连接 服务器允许用户登陆
+
+生成CA密钥:
+  CA本质就是一对密钥，CA至少需要两对密钥，一对是用户证书的密钥 user_ca, 一对是签发服务器证书的密钥host_ca 
+  
+  # 生成CA签发用户证书的密钥 (user_ca 私钥， user_ca.pub 公钥)
+  $ ssh-keygen -t rsa -b 4096 -f ~/.ssh/user_ca -C user_ca 
+    -t rsa: 指定密钥算法 RSA 
+    -b 4096: 指定密钥位数 4096位 
+    -f ~/.ssh/user_ca: 指定生成密钥的位置和文件名 
+    -C user_ca: 指定密钥的识别字符串，相当于注释，可以随意设置
+
+  # 生成CA签发服务器证书的密钥 (host_ca 私钥, host_ca.pub 公钥)
+  $ ssh-keygen -t rsa -b 4096 -f ~/.ssh/host_ca -C host_ca 
+
+  签发服务器证书 -- CA密钥 + 服务器的公钥
+
+  # if /etc/ssh/ssh_host_rsa_key not exists -- 服务器公钥
+  # ssh_host_rsa_key (私钥) ssh_host_rsa_key.pub (公钥)
+  $ sudo ssh-keygen -f /etc/ssh/ssh_host_rsa_key -b 4096 -t rsa
+    
+  # 上传服务器公钥ssh_host_rsa_key.pub 到CA所在的服务器
+  scp -rf /etc/ssh/ssh_host_rsa_key.pub root@ca 
+
+  # CA使用host_ca 为服务器公钥ssh_host_rsa_key.pub 签发服务器证书 -- 生成服务器证书ssh_host_rsa_key-cert.pub(服务器公钥名字加上后缀-cert)
+  $ ssh-keygen -s host_ca -I host.example.com -h -n host.exmaple.com -V +52w ssh_host_rsa_key.pub 
+    -s: 指定CA签发证书的密钥 
+    -I: 身份字符串，可以随便设置 相当于注释 方便区分证书
+    -h: 指定证书是服务器证书 还是用户证书
+    -n: 
+```
