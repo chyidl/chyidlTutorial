@@ -1,4 +1,6 @@
 Nginx 
+=====
+> Nginx can be a web server, load balancer, content cache, and API gateway.
     - 高并发、高性能
     - 扩展性好 : 模块化
     - 高可靠性 ：
@@ -6,6 +8,260 @@ Nginx
     - BSD许可证 
 * Apache 
 * Tomcat 
+
+```
+# Install the prerequisties:
+$ sudo apt install curl gnupg2 ca-certificates lsb-release
+
+# To set up the apt repository for stable nginx packages, run the following command:
+  $ echo "deb http://nginx.org/packages/ubuntu `lsb_release -cs` nginx" \
+      | sudo tee /etc/apt/sources.list.d/nginx.list
+
+# Next, import an official nginx signing key so apt could verify the packages authenticity
+  $ curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo apt-key add -
+
+# Verify the you now have the proper key:
+  $ sudo apt-key fingerprint ABF5BD827BD9BF62
+
+# To install nginx, run the following commands:
+  $ sudo apt update 
+  $ sudo apt install nginx 
+
+# Verifying your installation 
+  $ nginx -v 
+
+# Show the Nginx version, build information and configuration arguments 
+  $ nginx -V 
+
+# Tests the Nginx configuration 
+  $ nginx -t 
+
+# Tests the NGINX configuration and prints the validated configuration to the screen
+  $ nginx -T 
+
+# Send a signal to the Nginx master process 
+  $ nginx -s signal 
+    stop: discontinues the Nginx process immediately 
+    quit: stops the nginx process after it finishes processing inflight requests 
+    reload: reloads the configuration 
+    reopen: instructs nginx to reopen log files
+
+# confirm Nginx 
+  $ ps -ef | grep nginx  
+  root     1065853       1  0 14:39 ?        00:00:00 nginx: master process /usr/sbin/nginx -c /etc/nginx/nginx.conf
+  nginx    1065854 1065853  0 14:39 ?        00:00:00 nginx: worker process
+
+# Nginx is return request correctly
+  $ curl localhost
+
+# Nginx files and directories:
+  /etc/nginx/ -- default configuration root for the Nginx server
+    /etc/nginx/nginx.conf -- the default configuration entry point used by the NGINX service
+  /etc/nginx/conf.d/ -- contains the default HTTP server configuration file
+  /var/log/nginx/ -- the default log location for Nginx 
+    access.log file: -- entry for each request Nginx server
+    error.log file: -- contain error events and debug information if the debug module is enabled
+
+# Graceful Reload 
+  > reload your configuration without dropping packets
+  $ sudo nginx -s reload  # send a signal to the master process
+
+# Horizontal scaling : 水平扩展
+
+Many modern web architectures employ state-less application tiers, storing state in shared memory or databases. 
+proxies and load balancers must be smart enough to detect failure of upstream servers and stop passing traffic to them.
+  Nginx health checks 
+    passive health checks monitor the connection or responses of the upstream server as clients make the request or connection.
+
+HTTP Load Balancing:
+  upstream backend {
+    server 10.10.12.45:80 weight=1;
+    server app.example.com:80 weight=2;
+    }
+  
+  The HTTP upstream module controls the load balancing for HTTP. 
+
+TCP Load Balancing:
+  Nginx stream module to load balance over TCP serves using the upstream block:
+  stream {
+    upstream mysql_read {
+      server read1.example.com:3306 weight=5; 
+      server read2.example.com:3306;
+      server 10.10.12.34:3306 backup;
+      }
+
+    server {
+      listen 3306; 
+      proxy_pass mysql_read;
+      }
+    }
+
+UDP Load Balancing 
+  > Use Nginx stream module to load balance over UDP servers using the upstream block defined as udp.
+  stream {
+    upstream ntp {
+      server ntp1.example.com:123 weight=2; 
+      server ntp2.example.com:123;
+      }
+
+      server {
+        listen 123 udp; 
+        proxy_pass ntp;
+        }
+    }
+  DNS, NTP, VoIP: UDP services 
+
+Load-Balancing Methods 
+  > Round-robin: default load-balancing method
+  > least connection : balances load by proxying the current request to the upstream server with the least number of open connectionsa [least_conn]
+  > least time : but favors the servers with the lowest averafe response times
+  > generic hash : Producing a hash for the current request and placing it against the upstream servers. [hash]
+  > random : select a random server from the group
+  > IP hash : works only for HTTP. uses the client IP address as the hash, this method ensures that clients are proxied to the same upstream server as long as that server is available, which is extremely helpful when the session state is of concern and not handled by shared 
+
+Passive Health Checks:
+  > use Nginx health checks with load balancing to ensure that only healthy upstream servers are utilized:
+  upstream backend {
+    server backend1.example.com:1234 max_fails=3 fail_timeout=3s; 
+    server backend2.exmaple.com:1234 max_fails=3 fail_timeout=3s;
+    }
+  Monitoring for health is important on all types of load balancing. 
+
+Slow Start:
+  > Your application needs to ramp up before taling on full production laod.
+  > gradually increase the number of connections over a specified time as a server is reintroduced to the upstream load-balancing pool
+  upstream {
+    zone backend 64k; 
+
+    server server1.example.com slow_start=20s; 
+    server server2.exmaple.com slow_start=15s;
+    }
+
+  # Slow start allows the application to warm up by populating caches, initiating database connections without being overwhelmed by connections as soon as it starts.
+  
+
+TCP Health Checks:
+  stream {
+    server {
+      listen 3306;
+      proxy_pass read_backed; 
+      health_check interval=10 passes=2 fails=3;
+      }
+    } 
+
+Traffic Management:
+  > Nginx ability to split client requests based on percentages, utilize geographocal location of the client, and control the flow of traffc in the form of rate, connection, and bandwidth limiting.
+
+A/B Test
+  split_clients "${remote_addr}AAA" $variant {
+    20.0%   "backendv2";
+    # The asterisk denotes the rest of the whole after all percentages are taken
+          * "backendv1";
+  }
+
+GeoIP Module 
+  > GeoIP database and enable its embedded variables within NGINX to log and specify to your application the location of your clients.
+  >
+
+Restricting Access Based on Country:
+  > restrict access from particular countris for contractual or application requirements
+  load_module "/usr/lib64/nginx/modules/ngx_http_geoip_module.so"
+  http {
+    map $geoip_country_code $country_access {
+      }
+  }
+
+Finding the Original Client:
+  > find the original client IP address because there are proxies in front of the Nginx server.
+  
+Limiting Connections:
+  > limit the number of connections based on a predefined key, such as the clinet's IP address. 
+  http {
+    limit_conn_zone $binary_remote_addr zone=limitbyaddr:10m; 
+    limit_conn_status 429; 
+
+    server {
+      limit_conn limitbyaddr 40;
+      }
+  }
+
+  the service is available, and 500-level response indicate server error wheras 400-level response indicate client error.
+
+Limiting Rate:
+  > limit the rate of requests by a predefined key, such as the client's IP address.
+  http {
+    limit_req_zone $binary_remote_addr zone=limitbyaddr:10m rate=1r/s; 
+    limit_req_status 429; 
+
+    server {
+      limit_req zone = limitbyaddr burst=10 nodelay;
+      }
+    }   
+    The rate-limiting module is vary powerful for protecting against abusive rapid request while still providing a quality service to everyone
+
+Limiting Bandwidth:
+  > limit download bandwidth per client for your assets
+  limit_rate and limit_rate_after
+  location /download/ {
+    # will be served to the client will be limited after 10 megabytes to a rate of 1 megabyte per second.
+    limit_rate_after 10m;
+    limit_rate 1m;
+  }
+
+Massively Scalable Content Caching
+  1. Caching Zones:
+    > need to cache content and need to define where the cache is stored
+    proxy_cache_path /var/nginx/cache 
+                      keys_zone=CACHE:60m 
+                      # The levels parameter defines how the file structure is created
+                      levels=1:2
+                      # The inactive parameter allows for control over the length of time a cache item will be hosted after its last use.
+                      inactive=3h 
+                      max_size=20g;
+    proxy_cache CACHE;
+
+    loads the cache keys into the shared memory zone from the files cached on disk
+
+Caching Hash Keys:
+  > how your content is cached and looked up.
+
+Cache Bypass:
+  > ability to bypass the caching.
+  # bypass the cache if the HTTP request header named cache_bypass is set to any value that is not 0.
+  proxy_cache_bypass $http_cache_bypass;
+
+Cache Performance:
+  > increase performance by caching on the client side.
+  location ~* \.(css|js)$ {
+    expires 1y;
+    add_header Cache-Control "public";
+    }
+
+Purging
+  > invalidate an object from the cache
+
+Cache Slicing:
+  > increase caching effiency by segmenting the file into fragments
+  proxy_cache_path /tmp/mycache keys_zone=mycache:10m; 
+  server {
+    proxy_cache mycache; 
+    slice 1m; 
+    proxy_cache_key $host$uri$is_args$args$slice_range;
+    proxy_set_header Range $slice_range;
+    proxy_http_version 1.1;
+    proxy_cache_valid 200 206 1h;
+
+    location / {
+      proxy_pass http://origin:80;
+    }
+  }
+
+Authentication:
+  JSON Web Tokens (JWTs)
+
+HTTP Basic Authentication:
+  
+```
 
 初始Nginx
 ---------

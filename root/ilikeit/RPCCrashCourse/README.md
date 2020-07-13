@@ -151,5 +151,26 @@ Grpc 源码:
   > gRPC 是由Google开发开源的一款高性能、跨语言的RPC框架，通信协议基于标准的HTTP/2设计，序列化支持PB(Protocol Buffer) 和JSON
 
 Python:
-  
+
+Go:
+
+Prerequisties:
+  1. release of Go 
+  2.1. Protocol buffer(compiler) protoc version 3
+    $ sudo apt install -y protobuf-compiler 
+    $ protoc --version 
+  2.2. how to install latest-protobuf 
+    <Protocol Buffers - Google's data interchange format>
+    $ sudo apt-get install autoconf automake libtool curl make g++ unzip -y
+    # get the source by git clone
+    $ git clone https://github.com/google/protobuf.git 
+    $ cd protobuf 
+    $ git submodule update --init --recursive 
+    $ ./autogen.sh 
+    # To build and install the C++ Protocol Buffer runtime and the Protocol Buffer compiler execute 
+    $ ./configure 
+    $ make -j4 
+    $ make check 
+    $ sudo make install 
+    $ sudo ldconfig  # refresh shared library cache.
 ```

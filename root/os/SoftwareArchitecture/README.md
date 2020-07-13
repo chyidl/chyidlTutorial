@@ -536,6 +536,9 @@ UML规范:
   活动图
 ```
 
+```
+You could leverage multi-threading, parallelization, fast executions and small memory overhead. 
+```
 
 Appendix
 --------
