@@ -260,7 +260,6 @@ Authentication:
   JSON Web Tokens (JWTs)
 
 HTTP Basic Authentication:
-  
 ```
 
 初始Nginx
@@ -1212,3 +1211,45 @@ nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
 nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
+Optimize Nginx Configuration
+============================
+1. Worker Processes and Worker Connections
+  Worker Processes: grep processor /proc/cpuinfo | wc -l 
+  Worker_connections:   
+    the default value is 768; however considerr that every browser usually opens up at least 2 connections/server, this number can half. This is why we need to adjust our worker connections to its full potential. 
+    $ ulimit -n 
+    worker_connections 1024; 
+
+2. Buffers 
+  > If the buffer size are too low, then Nginx will have to write to a temprary file causing the disk to read and write constantly. 
+  client_body_buffer_size: This handles the client buffer size. 
+  client_header_buffer_size: For all intents and purposes, 1K is usually a decent size for this directive.
+  client_max_body_size: The maximum allowed size for a client request. If the maximum size is exceeded, then Nginx will split out a 413 error or Request Entity Too Large.
+  large_client_header_buffers: The maximum number and size of buffers for large client headers.
+  
+3. Timeouts
+  > client_body_timeout, client_header_timeout are responsible for the time a server will wait for a client body or client header to be sent after request.
+  client_body_timeout 12; 
+  client_header_timeout 12; 
+  keepalive_timeout 15; 
+  send_timeout 10; 
+
+4. Gzip Compression 
+  > Gzip can help reduce the amount of network transfer Nginx deals with. However, be careful increasing the gzip_comp_level too high as the server will begin wasting cpu cycles. 
+  gzip on; 
+  gzip_comp_level 2; 
+  gzip_min_length 1000; 
+  gzip_proxied expired no-cache no-store private auth; 
+  gzip_types text/plain application/x-javascript text/xml text/css application/xml; 
+
+5. Static File Caching 
+  > It's possible to set expire headers for files that don't change and are served regularly. This directive can be added to the actual Nginx server block.
+  location ~* .(jpg|jepg|png|gif|ico|css|js)$ {
+    expires 365d;
+  }
+
+6. Logging 
+  > Nginx logs every request that hits the VPS to a log file.
+  access_log off; 
+
+  

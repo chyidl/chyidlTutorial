@@ -65,4 +65,4 @@ Restart=on-failure
 WantedBy=multi-user.target
 ```
 
-![webdav.png](imgs/raspberrypi/webdav/webdav.png?raw=true)
+![webdav.png](/imgs/raspberrypi/webdav/webdav.png?raw=true)
