@@ -6,5 +6,13 @@ Traefik
 
 * Edge Router: 
 ```
-Edge Router: Traefik is an Edge Router, it intercepts and routes every incoming request: it knows all the logic and every rule that datermine which services handle which reque
+Edge Router: Traefik is an Edge Router, it intercepts and routes every incoming request: it knows all the logic and every rule that datermine which services handle which requests (based on the path, the host, headers, and so on...).
+
+Auto Service Discovery:
+  > Deploying your services, attch information that tells Traefik the characteristics of the requests the services can handle. 
+  > You no longer need to create and synchronize configruation files cluttered with IP addresses or other rules.
+```
+
+* Quick Start 
+```
 ```

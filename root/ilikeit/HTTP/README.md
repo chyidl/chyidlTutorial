@@ -380,6 +380,137 @@ HTTP 传输的每个环节基本都会有缓存
   If-Match 
   If-Range 
 
+“没有消息就是好消息，没有请求的请求 才是最快的请求”
+
+HTTP代理:
+  代理服务本身不产生内容，而是处于中间位置转发上下游的请求和响应，具有双重身份
+  反向代理: 在传输链路中更靠近源服务器，为源服务器提供代理服务
+  "计算机科学领域的任何问题，都可以通过引入一个中间层来解决, 如果一个中间层解决不了问题，那就在一个中间层"
+  代理中负载均衡算法:
+    轮训:
+    一致性哈希:
+  代理服务器可以执行：
+    健康检查: 使用心跳机制监控后端服务器 
+    安全防护: 保护被代理的后端服务器 限制IP地址或流量
+    加密卸载: 对外网使用SSL/TLS加密通信认证，在安全的内网不加密，消除加解密成本 
+    数据过滤: 拦截上下行的数据 ，任意制定策略修改请求或响应。
+    内容缓存: 
+
+  Via: 标示代理身份 解决客户端和源服务器判断是否存在代理的问题 
+    服务器IP地址应该保密，关系到企业的内网安全
+    客户端的真实IP地址 方便访问控制 用户画像 统计分析
+    X-Forwarded-For: 为谁而转发, 追加请求方的IP地址 最左边IP地址就是客户端的地址 
+    X-Real-IP: 
+
+  代理协议:
+    The Proxy Protocol: 
+    HAProxy:定义的代理协议
+      v1: 明文 PROXY TCP4 请求方IP 应答方IP 请求方端口 应答方端口 \r\n 
+      v2: 二进制格式
+
+代理软件：
+  HAProxy
+  Squid 
+  Varnish 
+
+缓存代理:
+  RPS: Request per second: 
+  HTTP 服务器缓存功能主要由代理服务器来实现 源服务器系统内部虽然
+  缓存代理身份特殊，即是客户端、又是服务器 可以使用客户端缓存控制策略也可以用服务器端的缓存控制策略
+  区分客户端缓存和代理缓存 
+    private: 标示缓存只能在客户端保存 
+    public: 标示缓存完全开放
+    s-maxage: share maxage 限定代理上缓存多久
+    no-transform: 代理会对缓存下来的数据做优化
+
+max-stale:代理缓存过期也可以接收，但不能过期太多
+min-fresh:缓存必须有效 必须在x秒
+
+HTTP 天生明文特点，整个传输过程完全透明 任何人都能够在链路中截获 修改 或者伪造请求/响应报文 数据不具有可信性
+通信过程：
+  机密性: Secrecy/Confidentiality 
+    encrypt:加密
+      key: 密钥
+      plain text/clear text 明文 
+      cipher text: 密文 
+      decrupt: 解密 
+    对称加密:
+      加密和解密时使用的密钥都是同一个 
+      RC4、DES、3DES、AES、ChaCha20 
+      AES: Advanced Encryption Standard 高级加密标准 
+      加密分组模式: 算法使用固定长度的密钥加密任意长度的明文 
+      AEAD Autenticated Encryption with Associated Data: 
+      密钥交换问题: 只用对称加密算法 无法解决密钥交换的问题
+      分为块加密算法: block cipher : DES AES 块加密
+      流加密算法:stream cipher : RC4 Chacha20
+    非对称加密:
+      公钥：Public key 
+      私钥：Private key 
+      公钥和私钥单向性，都可以用来加密解密，但公钥加密后只能用私钥解密 反过来 私钥加密后只能用公钥解密
+      RSA - 推荐2048 bit -- 安全性基于“整数分解” 使用两个超大素数的乘积作为生成密钥的材料 
+      ECC (Elliptic Curve Cryptography) 是非对称加密的 基于“椭圆曲线离散对数”
+        ECC 在安全强度和性能上都有明显的优势 160位的ECC相当于1024位的RSA 224位的ECC相当于2048位的RSA
+    混合加密方式:
+      通信开始使用非对称加密：解决密钥交换的问题 
+      然后使用随机数产生对称算法使用"会话密钥 session key" 在用公钥加密，对方拿到密文后用私钥解密 取出会话密钥 然后双方实现对称加密的安全交换，后续就不再使用非对称加密，全都使用对称加密
+  $ openssl speed aes 
+  $ openssl speed rsa2048 
+
+  完整性: Integrity 数据在传输过程中没有被篡改 
+  身份认证: Authentication 
+  不可否认: Non-repudiation/Undeniable 
+
+HTTPS: HTTP over SSL/TLS 
+  HTTP运行在安全的SSL/TLS协议上 收发报文不在使用Socket API 而是调用专门的安全接口
+
+SSL/TLS: 
+  SSL: Secure Socket Layer 安全套接层 -- 会话层 
+  TLS: Transport Layer Security 传输层安全 
+    1. 记录协议 
+    2. 握手协议 
+    3. 警告协议 
+    4. 变更密码协议 
+    5. 扩展协议 
+  cipher suite: 加密套件 
+  OpenSSL:著名的开源密码学程序库和工具包 是SSL/TLS的具体实现
+  除了HTTP，SSL/TLS承载其它应用协议 FTP->FTPS LADP->LDAPS 
+
+实现完整性的手段是摘要算法Digest Algorothm:
+  > 能够把任意长度的数据“压缩”成固定长度 而且独一无二的“摘要”字符串
+  > 摘要算法理解成特殊的“单向”加密算法，只有算法，没有密钥 加密后的数据无法解密 不能从摘要逆推出原文
+  散列函数
+  哈希函数hash Function 
+  MD5 (Message-Digest 5)
+  SHA-1(Secure Hash Algo)
+  SHA-2: 是一系列摘要算法的统称：常用SHA224， SHA256， SHA384 
+
+摘要算法保证“数字摘要”和原文的完全等价，只需要在原文后附上摘要算法，就能保证数据的完整性 
+> 散列表、数据校验、大文件比较 
+
+哈希消息认证码(HMAC):
+
+私钥+摘要算法=能够实现数字签名 
+数字签名原理就是把公钥 私钥用法反过来，之前的公钥加密 私钥解密 转变为私钥加密 公钥解密；由于非对称加密效率太低，私钥只加密原文的摘要，这样运算量就小得多，而且得到的数字签名也很小，方便保管和传输 
+
+CA (Certificate Authority 证书认证机构):
+  DV: 域名级别可信 
+
+TLS 协议:
+  1. 记录协议: Record Protocol 所有的其它子协议都需要通过记录协议发出 记录数据可以在一个TCP包里一次性发出
+  2. 警报协议: Alert Protocol 
+  3. 握手协议: Handshake Protocl: 浏览器和服务器会在握手过程中协商TLS版本号，随机数，密码套件等信息，然后交换证书和密钥参数，最终双方协商得到会话密钥，用于后续的混合加密系统
+  4. 变更密码规范协议: Change Cipher Spec Protocol: 
+
+HTTPS:
+  1. 连接时的非对称加密握手 
+  2. 握手后的对称加密报文传输
+
+在TCP建立之后，正式数据传输之前，HTTPS比HTTP增加一个TLS握手的步骤，最长可以花费两个消息往返2-RTT 
+
+HTTPS连接是计算密集型 而不是IO密集型
+
+会话复用TLS session resumption:
+  Session ID 
 ```
 
 
