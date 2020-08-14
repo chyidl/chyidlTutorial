@@ -154,7 +154,7 @@ tmux_conf_theme_right_separator_sub='|'
 #     - #{username}
 #     - #{username_ssh}
 tmux_conf_theme_status_left=' ❐ #S | ↑#{?uptime_d, #{uptime_d}d,}#{?uptime_h, #{uptime_h}h,}#{?uptime_m, #{uptime_m}m,} '
-tmux_conf_theme_status_right='#{prefix}#{pairing}#(tmux-itunes-info)#(tmux-spotify-info) , #{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %r , %d %b %y , #{hostname}'
+tmux_conf_theme_status_right='#{prefix}#{pairing}#(tmux-itunes-info)#(tmux-spotify-info) , #{?battery_status, #{battery_status},}#{?battery_bar, #{battery_bar},}#{?battery_percentage, #{battery_percentage},} , %T , %d %B %y , #{hostname}'
 
 # status left style
 tmux_conf_theme_status_left_fg='#282a36,#f8f8f2,#282a36'  # black, white , white
