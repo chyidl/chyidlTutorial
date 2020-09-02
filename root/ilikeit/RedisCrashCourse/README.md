@@ -105,6 +105,7 @@ Description=Redis In-Memory Data Store
 After=network.target 
 
 [Service]
+Type=notify
 User=redis 
 Group=redis 
 ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf 
