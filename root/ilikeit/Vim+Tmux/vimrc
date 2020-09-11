@@ -118,6 +118,9 @@ Plug 'leafgarland/typescript-vim'
 " LaTeX files - A modern vim plugin for editing 
 Plug 'lervag/vimtex'
 
+" Vim syntax highlighting for Google's Protocol Buffers 
+Plug 'uarun/vim-protobuf'
+
 " Initialize plugin system
 call plug#end()                     " required
 " :Brief help
@@ -158,7 +161,7 @@ highlight ExtraWhitespace ctermbg=red guibg=#EC7063
 match ExtraWhitespace /\s\+$/
 
 " Sets how many lines of history VIM has to remember 
-set history=1000
+set history=500
 
 " Disable bells 
 set noeb 
@@ -167,15 +170,14 @@ set noeb
 set re=1
 
 " Show line numbers.
-" set number? -- check whether configuration is on of off
-set number
+set nu
 
 " Don't perform highlight on lines that are longer than 180 chars. 
 set synmaxcol=180 
 syntax sync minlines=256
 
 " Don't show command in the last line of screen. 
-set showcmd 
+set noshowcmd 
 
 " If in Insert, Replace or Visual mode put a message on the last line. 
 set showmode 
@@ -222,7 +224,6 @@ source $VIMRUNTIME/menu.vim
 
 " Turn on the Wild menu 
 set wildmenu 
-set wildmode=longest:list,full
 
 " Ignore compiled files
 set wildignore=*.o,*~,*.pyc
@@ -268,7 +269,7 @@ set mat=2
 
 " No annoying sound on errors 
 set noerrorbells
-set visualbell 
+set novisualbell 
 set t_vb=
 set tm=500
 
@@ -308,7 +309,6 @@ set titleold=
 
 " Cursor which always stays in the middle of screen is cool. 
 set scrolloff=9999
-set sidescrolloff=15
 
 " Enable syntax highlighting 
 syntax enable 
@@ -366,14 +366,7 @@ set cpt=.,w,b
 
 " Turn backup off, since most stuff is in SVN, git et.c anyway...
 set nowb
-" no create swap file  file name start with dot, end with .swp 
 set noswapfile
-" keep the revocation history: .un~ file name 
-set undofile 
-" set the storage location of backup files, swap files, and operation history files
-set backupdir=~/.vim/.backup//
-set directory=~/.vim/.swp//
-set undodir=~/.vim/.undo//
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -398,7 +391,7 @@ set listchars=tab:▸\ ,eol:¬,extends:❯,precedes:❮ "Chars that to display l
 
 
 " Linebreak on 500 characters 
-set linebreak
+set lbr
 set tw=500
 
 " Autoindent makes Cmd+V works wired, so when pasting something from clipboard into vim: 
@@ -522,8 +515,6 @@ endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Turn on spell check for English words
-set spell spelllang=en_us
 
 " Pressing ,ss will toggle and untoggle spell checking 
 map <leader>ss :setlocal spell!<cr>
@@ -613,14 +604,14 @@ endfunction
 " => FILETYPES
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tab settings for different language filetypes. 
-autocmd FileType text setlocal textwidth=80
-autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=80
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=80
-autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=80
-autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=80
-autocmd FileType coffee,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=80
+autocmd FileType text setlocal textwidth=79
+autocmd FileType go setlocal noexpandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=90
+autocmd FileType ruby setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
+autocmd FileType php setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
+autocmd FileType coffee,javascript setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
 autocmd FileType html,htmldjango,xhtml,haml setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=0
-autocmd FileType sass,scss,css setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=80
+autocmd FileType sass,scss,css setlocal tabstop=2 shiftwidth=2 softtabstop=2 textwidth=79
 
 
 " Shell Section 
@@ -947,6 +938,9 @@ let g:javascript_plugin_jsdoc = 1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => fatih/vim-go Plugin Config 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-go seems to be the most popular Vim plugin for working with go 
+" Open new Vim instance and run :GoInstallBinaries
+" The default configuration for vim-go is tun :GoFmt
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_structs = 1
@@ -957,6 +951,21 @@ let g:go_highlight_build_constraints = 1
 "let g:go_code_completion_enabled = 0
 " Disable vim-go 'gd'
 let g:go_def_mapping_enabled = 0
+" :GoBuild - Compile package 
+" :GoInstall - install 
+" :GoTest - test 
+" :GoTestFunc - Run a single test 
+" :GoRun - Quickly execute current file 
+" :GoDebugStart - Debug programs with integrated delve 
+" :GoDef - Go to symbol/declaration  
+" :GoDoc or :GoDocBrowser - Look up documentation 
+" :GoImport or :GoDrop - Easily import packages 
+" :GoRename - Precise type-safe renaming of identifiers 
+" :GoCoverage - See which code is covered by test 
+" :GoAddTags or :GoRemoveTags - Add or remove tags on struct fields 
+" :GoLint - Lint your code 
+" :GoVet: run your code through to catch static errors 
+" :GoErrCheck - make sure errors are checked 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => vim-python/python-syntax Plugin Config 
@@ -967,6 +976,7 @@ let python_slow_sync = 0
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => rust-lang/rust.vim Plugin Config 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" will enable automatic running of :RustFmt when your save a buffer
 let g:rustfmt_autosave = 1 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -1072,6 +1082,3 @@ nnoremap <C-H> <C-W>h
 " {i}gt go to tab in position i 
 nnoremap <C-Left> :tabprevious<CR>
 nnoremap <C-Right> :tabnext<CR>
-
-" :verbose set mm? mmt? mmp? 
-set mmp=5000
