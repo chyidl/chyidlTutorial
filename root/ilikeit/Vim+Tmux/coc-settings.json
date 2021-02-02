@@ -1,0 +1,110 @@
+{
+    "suggest.floatEnable": false,
+    "suggest.enablePreview": false,
+    "suggest.maxPreviewWidth": 65,
+    "suggest.echodocSupport": false,
+    "suggest.noselect": true,
+    "diagnostic.enable": true,
+    "diagnostic.messageTarget": "echo",
+    "diagnostic.virtualText": false,
+    "diagnostic.locationlist": false,
+    "diagnostic.errorSign": "X",
+    "diagnostic.warningSign": "W",
+    "diagnostic.hintSign": "H",
+    "diagnostic.displayByAle": true,
+    "diagnostic.refreshAfterSave": true,
+    "signature.enable": true,
+    "signature.target": "float",
+    "coc.preferences.jumpCommand": "split",
+    "coc.preferences.hoverTarget": "preview",
+    "coc.preferences.useQuickfixForLocations": false,
+    "languageserver": {
+        "go": {
+            "command": "gopls",
+            "rootPatterns": ["go.mod"],
+            "filetypes": ["go"]
+        },
+        "rust": {
+            "command": "rls",
+            "filetypes": ["rust"],
+            "rootPatterns": ["Cargo.toml"]
+        },
+        "ccls": {
+            "command": "ccls",
+            "filetypes": ["c", "cpp", "objc", "objcpp"],
+            "rootPatterns": [".ccls", ".git", ".hg"],
+            "initializationOptions": {
+                "cache": {
+                    "directory": "/tmp/ccls"
+                }
+            }
+        },
+        "python": {
+            "command": "python",
+            "cwd": ".",
+            "args": [
+                "-mpyls",
+                "-vv",
+                "--log-file",
+                "/tmp/lsp_python.log"
+            ],
+            "trace.server": "verbose",
+            "filetypes": [
+                "python"
+            ],
+            "rootPatterns": ["setup.py", ".git/", "pyproject.toml"],
+            "disableDiagnostics": true,
+            "settings": {
+                "pyls": {
+                    "enable": true,
+                    "trace": {
+                        "server": "verbose"
+                    },
+                    "commandPath": "",
+                    "plugins": {
+                        "jedi_completion": {
+                            "enabled": true
+                        },
+                        "jedi_hover": {
+                            "enabled": false
+                        },
+                        "jedi_references": {
+                            "enabled": true
+                        },
+                        "jedi_signature_help": {
+                            "enabled": true
+                        },
+                        "jedi_symbols": {
+                            "enabled": true,
+                            "all_scopes": true
+                        },
+                        "mccabe": {
+                            "enabled": false,
+                            "threshold": 15
+                        },
+                        "preload": {
+                            "enabled": true
+                        },
+                        "pycodestyle": {
+                            "enabled": false
+                        },
+                        "pydocstyle": {
+                            "enabled": false,
+                            "match": "(?!test_).*\\.py",
+                            "matchDir": "[^\\.].*"
+                        },
+                        "pyflakes": {
+                            "enabled": false
+                        },
+                        "rope_completion": {
+                            "enabled": false
+                        },
+                        "yapf": {
+                            "enabled": false
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
