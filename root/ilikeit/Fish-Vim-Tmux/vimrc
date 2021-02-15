@@ -1,0 +1,825 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ultimate Vim configuration all in one file (.vimrc)
+"
+" Maintainer:
+"  	© 2021-chyidl (ChyiYaqing)
+"
+" Terminal font == Hack Nerd Font
+" $ brew tap homebrew/cask-fonts
+" $ brew cask install font-hack-nerd-font
+"
+" Install ctags
+" $ brew install ctags
+"
+" modified /etc/hosts and below ip host
+"   199.232.68.133 raw.githubusercontent.com
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" junegunn/vim-plug -- 🌺 Minimalist Vim Plugin Manager
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+   \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" vim-plug configuration
+" For Mac/Linux users
+" Plugins will be download under the specified directory.
+call plug#begin('~/.vim/plugged')
+
+"""""""""""""""""""""""""""""
+" Declare the list of plugins.
+"""""""""""""""""""""""""""""
+
+" Vim help for vim-plug itself (e.g. :help plug-options), register vim-plug as
+" a plugin.
+Plug 'junegunn/vim-plug'
+
+" Color Scheme
+" Plug 'challenger-deep-theme/vim', { 'as': 'challenger-deep' }
+" Plug 'jacoborus/tender.vim'
+" Retro groove color scheme for Vim
+Plug 'morhetz/gruvbox'
+
+" File Explorer
+Plug 'preservim/nerdtree'                   " A tree explorer plugin for vim
+Plug 'Xuyuanp/nerdtree-git-plugin'          " A plugin of NERDTree showing git status
+Plug 'ryanoasis/vim-devicons'               " Adds file type icons to Vim Plugins
+
+" Status Line
+Plug 'vim-airline/vim-airline'              " Lean & mean status/tabline for vim that's light as air
+Plug 'vim-airline/vim-airline-themes'       " airline themes
+
+" Tag bar
+Plug 'preservim/tagbar'                     " Tagbar: a class outline viewer for vim
+
+" LeaderF
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }
+
+" Vimwiki
+" Plug 'vimwiki/vimwiki'                    " Personal Wiki for Vim
+
+" vim-startify
+Plug 'mhinz/vim-startify'                   " The fancy start screen for Vim.
+
+" rainbow_parentheses
+Plug 'kien/rainbow_parentheses.vim'         " Better Rainbow Parentheses
+
+" Auto Pairs
+Plug 'jiangmiao/auto-pairs'                 " Vim plugin, insert or delete brackets, parens, quotes in pair
+
+" Vim-easy-align
+Plug 'junegunn/vim-easy-align'              " A simple, easy-to-use Vim alignment plugin.
+
+" nerdcommenter
+Plug 'preservim/nerdcommenter'              " Vim plugin for intensely nerdy commenting powers
+
+" vim-surround
+Plug 'tpope/vim-surround'                   " quoting/parenthesizing made simple
+
+" quick-scope
+Plug 'unblevable/quick-scope'               " Lightning fast left-right movement in Vim
+
+" quick fix trailing whitespace
+Plug 'bronson/vim-trailing-whitespace'      " trailing whitespace to be highlighted in red
+
+" vim-visual-multi
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
+" dense-analysis/ale
+Plug 'dense-analysis/ale'                   " Asynchronous linting/fixing for Vim
+
+" Completeion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" uber/prototool
+Plug 'uber/prototool', { 'rtp':'vim/prototool' } " Your Swiss Army Knife for Protocol Buffers
+" bitproto -- yogorobot
+Plug '/Users/chyiyaqing/chyi/YoGoDir/bitproto/editors/vim/', {'as': 'bitproto'}
+
+" Black - any color you like
+Plug 'psf/black', { 'branch': 'stable' }
+
+"List ends here. Plugins become visible to Vim after this call.
+call plug#end()
+
+" reload vimrc config :source ~/.vimrc or restart vim
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-plug => Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" :PlugInstall -- install the plugins
+" :PlugUpdate  -- update the plugins
+" :PlugDiff    -- review the changes
+" :PlugClean   -- detect and remove undeclared plugins
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Basic Config
+" Put your non-Plugin stuff after this line
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+" Sections:
+" 	-> General
+" 	-> VIM user interface
+" 	-> Colors and Fonts
+" 	-> Files and backups
+" 	-> Text, Tab and indent related
+" 	-> Visual mode related
+" 	-> Moving around, tabs and buffers
+" 	-> Status line
+" 	-> Editor mappings
+" 	-> Vimgrep searching and cope displaying
+" 	-> Spell checking
+" 	-> Misc
+" 	-> Helper functions
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" This option has the effect of makring Vim either more Vi-Compatible, or make Vim behave in a more useful way.
+set nocompatible
+
+" Highlight trailing whitespaces as red.
+highlight ExtraWhitespace ctermbg=red guibg=#EC7063
+match ExtraWhitespace /\s\+$/
+
+" Sets how may lines of history VIM has to remember
+set history=2000
+
+" Always show line number
+set number
+
+" Enable filetype plugins
+filetype plugin on
+filetype indent on
+
+
+" Set to auto read when a file is changed from the outside
+set autoread
+au FocusGained,BufEnter * checktime
+
+" With a map leader it's possible to do extra key combinations
+" like <leader>w saves the current file
+let mapleader = ","
+
+" press jk to exit from insert mode
+imap jk <Esc>
+
+" Editing :: Copy/Paste
+" Tmux copy
+set clipboard=unnamed
+
+" :map 		-- listing key maps
+" :nmap 	-- Display normal mode maps
+" :imap 	-- Display insert mode maps
+" :vmap 	-- Display visual and select mode maps
+" :smap 	-- Display select mode maps
+" :xmap 	-- Display visual mode maps
+" :cmap 	-- Display command-line mode maps
+" :omap 	-- Display operator pending mode maps
+
+" Fast saving
+nmap <leader>w :w!<cr>
+
+" :W sudo saves the file
+" (useful for handling the permission-denied error)
+command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Set 7 lines to the cursor - when moving vertically using j/k
+set so=7
+
+" Avoid garbled characters in Chinese language windows OS
+let $LANG='en'
+set langmenu=en
+
+" Turn on the Wild menu
+set wildmenu
+
+" Ignore compiled files
+set wildignore=*.o,*~,*.pyc
+if has("win16") || has("win32")
+	set wildignore+=.git\*,.hg\*,.svn\*
+else
+	set wildignore+=*/.git/*,*/.hg/*,*/.svn/*,*/.DS_Store
+endif
+
+" Always show current position
+set ruler
+
+
+" Height of the command bar
+set cmdheight=1
+
+" A buffer becomes hidden when it is abandoned
+set hid
+
+" tl;dr Configure backspace so it acts as it should act
+" indent: Vim adds automatic indentation for many filetypes
+" eol: EOL markers (\n or = \r\n)
+" start: This means you can only delete text that you've inserted since mode
+" started, and you can't delete any text that was previously inserted
+set backspace=eol,start,indent
+" the left and right arrow keys, as well as h and l, to wrap when used at
+" beginning or end of lines (< >) are the cursor keys used in normal and
+" visual mode, and [ ] are the cursor keys in insert mode
+set whichwrap+=<,>,h,l,[,]
+
+" Ignore case when searching
+set ignorecase
+
+" When searching try to be smart about cases
+set smartcase
+
+" Highlight search results
+set hlsearch
+
+" Makes search act like search in modern browsers
+" By default, searching starts after you enter the string.
+set incsearch
+
+" Don't redraw while executing macros (good performance config)
+set lazyredraw
+
+" For regular expressions turn magic on
+set magic
+
+" Show matching brackets when text indicator is over them
+set showmatch
+
+" How many tenths of second ro blik
+set mat=2
+
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+" Properly disable sound on errors on MacVim
+if has("gui_macvim")
+	autocmd GUIEnter * set vb t_vb=
+endif
+
+" Add a bit extra margin to the left
+set foldcolumn=1
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Theme colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" If you have vim >= 8.0 or Neovim >= 0.1.5
+if (has("termguicolors"))
+	set termguicolors
+endif
+
+" Enable syntax highlighting
+syntax enable
+
+" To enable 256 colors in vim
+set t_Co=256
+
+try
+	colorscheme gruvbox
+    " 设置标记一列的背景颜色和数据一行颜色一致
+    hi! link SignColumn LineNr
+    hi! link ShowMarksHLl DiffAdd
+    hi! link ShowMarksHLu DiffChange
+catch
+endtry
+
+
+set background=dark
+
+" Set extra options when running in GUI mode
+if has("gui_running")
+	set guioptions-=T
+	set guioptions-=e
+	set t_Co=256
+	set guitablable=%M\ %t
+endif
+
+" Set utf8 as standard encoding and en_US as the standard language
+set encoding=utf8
+
+" Vim recognizes three file formats (unix, dos, mac) that determine what line
+" ending characters (line terminators) are removed from each line when a file
+" is read.
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+" highlight the current line and the cursor
+set cursorline
+set cursorcolumn
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Files, backups and undo
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Turn backup off, since most stuff is in SVN, git etc. anyway...
+" 'backup' 'writebackup' action
+"   off       off 	 no backup made
+"   off       on  	 backup current file, deleted afterwards (default)
+"   on 	      off 	 delete old backup, backup current file
+"   on 	      on 	 delete old backup, backup current file
+set nobackup
+set nowritebackup
+" To disable swap files permanently
+set noswapfile
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Use spaces instead of tabs
+set expandtab
+
+" Be smart when using tabs :)
+set smarttab
+
+" Number of spaces to use for each step of (auto)indent.
+set shiftwidth=4
+" Number of spaces that a <Tab> in the file counts for.
+set tabstop=4
+
+" Linebreak on 500 characters
+set linebreak
+set textwidth=500
+" Copy indent from current line when starting a new line.
+set autoindent
+" Do smart autoindenting when starting a new line
+set smartindent
+" This option changes how text is displayed
+set wrap
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Visual mode related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Visual mode pressing * or # searches for the current selection
+" Super useful!
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Moving around, tabs, windows and buffers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map <Space> to / (search) and Ctrl-<Space> to ? (backwards search)
+"map <space> /
+"map <C-space> ?
+
+" Disable highlight when <leader><cr> is pressed
+map <silent> <leader><cr> :noh<cr>
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+
+" Close the current buffer
+map <leader>bd :Bclose<cr>:tabclose<cr>gT
+
+" Close all the buffers
+map <leader>l :bnext<cr>
+map <leader>h :bprevious<cr>
+
+" Useful mappings for managing tabs
+map <leader>tn :tabnew<cr>
+map <leader>to :tabonly<cr>
+map <leader>tc :tabclose<cr>
+map <leader>tm :tabmove
+map <leader>t<leader> :tabnext
+
+" In normal mode
+" gt        go to next tab
+" gT        go to previous tab
+" {i}gt     go to tab in position i
+
+" let 'tl' toggle between this and the last accessed tab
+let g:lasttab = 1
+nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
+
+" Opens a new tab with the current buffer's path
+" Super useful when editing files in the same directory
+map <leader>te :tabedit <C-r>=expand("%:p:h")<cr>/
+
+" Switch CWD to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>:pwd<cr>
+
+" Specify the behavior when switching between buffers
+try
+    set switchbuf=useopen,usetab,newtab
+    set stal=2
+catch
+endtry
+
+" Return to last edit position when opening files (You want this!)
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Status line
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+" Format the status line
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Editing mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Remap VIM 0 to first non-blank character
+map H ^
+map 0 ^
+map L $
+
+" Move a line of text using Shift + ⬆️ or Shift + ⬇️
+nnoremap <S-Down> :m+<CR>==࿿
+nnoremap <S-Up> :m-2<CR>==
+inoremap <S-Down> <Esc>:m+<CR>==gi
+inoremap <S-Up> <Esc>:m-2<CR>==gi
+vnoremap <S-Down> :m '>+1<CR>gv=gv
+vnoremap <S-Up> :m '<-2<CR>gv=gv
+
+" Delete trailing white space on save, useful for some filetypes :)
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
+
+if has("autocmd")
+    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffe :call CleanExtraSpaces()
+endif
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Spell checking
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Pressing ,ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
+
+" Shortcuts using <leader>
+" Move to next misspelled word after the cursor.
+map <leader>sn ]s
+" Like "]s" but search backwards
+map <leader>sp [s
+" Add word under the cursor as a good word to the first name in 'spellfile'
+map <leader>sa zg
+" For the word under/after the cursor suggest correctly spelled words
+map <leader>s? z=
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Misc
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Remove the Windows ^M - when the encodings gets messed up
+noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
+
+" Quickly open a buffer for scribble
+map <leader>q :e ~/buffer<cr>
+
+" Quickly open a markdown buffer for scribble
+map <leader>x :e ~/buffer.md<cr>
+
+" Toggle paste mode on and off
+map <leader>pp :setlocal paste!<cr>
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helper functions
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Returns true if paste mode is enabled
+function! HasPaste()
+    if &paste
+        return 'PASTE MODE  '
+    endif
+    return ''
+endfunction
+
+function! VisualSelection(direction, extra_filter) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", "\\/.*'$^~[]")
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'gv'
+        call CmdLine("Ack '" . l:pattern . "' " )
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Emoji shortcuts
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" using abbreviations
+ab :bomb: 💣
+ab :bulb: 💡
+ab :book: 📖
+ab :computer: 💻
+ab :construction: 🚧
+ab :email: 📧
+ab :info: 🛈
+ab :link: 🔗
+ab :pencil: 📝
+ab :pill: 💊
+ab :point_right: 👉
+ab :pushpin: 📌
+ab :telephone: 📞
+ab :warning: ⚠
+ab :white_check_mark: ✅
+ab :wrench: 🔧
+ab :up_arrow: ⬆️
+ab :down_arrow: ⬇️
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NERDTree Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Open NERDTree when start vim with no command line arguments
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd vimenter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" close vim if the only window left open is a NERDTree?
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Open and Close NERDTree
+map <leader>nn :NERDTreeToggle<cr>
+
+" Quickly perform operations with NERDTreeFind
+map <leader>nf :NERDTreeFind<cr>
+
+" automatically close NERDTree When you open a file
+let NERDTreeQuitOnOpen = 0
+
+" automatically delete the buffer of the file just deleted with NERDTree
+let NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeWinPos = "left"
+
+" Show hidden files,
+let NERDTreeShowHidden=1
+let NERDTreeShowFiles=1
+
+" Show line numnber for nerdtree
+let NERDTreeShowLineNumbers=1
+" Don't display these files:
+let NERDTreeIgnore = ['\.pyc$','\.o$', '\~$', '__pycache__', '\.mypy_cache', '\.DS_Store',
+            \ '^\.git$', '\.o$', '.so$', '.egg$', '\.pytest_cache', '.swp$', '.swo$', '\.swn$']
+" NERDtree window's width.
+let g:NERDTreeWinSize=35
+" Highlight the selected entry in the tree
+let NERDTreeHighlightCursorline=1
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NERDTree-git Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:NERDTreeGitStatusIndicatorMapCustom = {
+    \ "Modified"  : "✹",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "✗",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '☒',
+    \ "Unknown"   : "?"
+    \ }
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vim-Airline Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" 10% ☰ 10/100 ln : 20
+" 10%     - 10 percent down the top of the file
+" ☰ 10    - current line 10
+" /100 ln - of 100 lines
+" : 20    - current column 20
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_section_b = '%{strftime("%H:%M")}'
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Tagbar Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tagbar is a Vim plugin that provides an easy way to browser the tags of the current file and get an overview of its structure.
+" Tagbar is not a general-purpose tool for managing tags files. It only creates the tags it needs on-the fly in-memory without creating any files.
+nmap <F8> :TagbarToggle<CR>
+" autofocus on tagbar open
+let g:tagbar_autofocus = 1
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => LeaderF Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" :LeaderfInstallCExtension     " Install the C extension
+" :LeaderfUninstallCExtension   " Uninstall the C extension
+" echo g:Lf_fuzzyEngine_C       " if the value is 1, it means the C extension is loaded successfully
+" <C-K> <C-J> use to navigate the result list
+
+" To enable popup mode
+let g:Lf_WindowPosition = 'popup'
+
+" preview the result in a popup window
+let g:Lf_PreviewInPopup = 1
+
+let g:Lf_PopupPreviewPosition = "bottom"
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-startify Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Startify is a plugin that shows recently used files, bookmarks, commands and
+" sessions that were saved to a certain directory
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Rainbow_parentheses Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:rbpt_colorpairs = [
+    \ ['brown',       'RoyalBlue3'],
+    \ ['Darkblue',    'SeaGreen3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkgreen',   'firebrick3'],
+    \ ['darkcyan',    'RoyalBlue3'],
+    \ ['darkred',     'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['brown',       'firebrick3'],
+    \ ['gray',        'RoyalBlue3'],
+    \ ['black',       'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['Darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkred',     'DarkOrchid3'],
+    \ ['red',         'firebrick3'],
+    \ ]
+
+let g:rbpt_max = 16
+
+let g:rbpt_loadcmd_toggle = 0
+
+au VimEnter * RainbowParenthesesToggle          " Toggle it on/off
+au Syntax * RainbowParenthesesLoadRound         " (), the default when toggling
+au Syntax * RainbowParenthesesLoadSquare        " []
+au Syntax * RainbowParenthesesLoadBraces        " {}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => auto-pairs Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:AutoPairsCenterLine = 0
+let g:AutoPairsMultilineClose = 0
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => auto-pairs Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+vmap <leader>a <Plug>(EasyAlign)
+nmap <leader>a <Plug>(EasyAlign)
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-easy-align Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => NERD Commenter Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Comment functions so powerful-no comment necessary
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-surround Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" quoting/parenthesizing made simple
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => quick-scope Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Highlight on key press
+" Trigger a highlight in the appropriate direction when pressing these keys
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T', ';']
+
+" Customize colors
+highlight QuickScopePrimary guifg='#5FFFFF' gui=underline ctermfg=26 cterm=underline
+highlight QuickScopeSecondary guifg='#6EF6CC' gui=underline ctermfg=155 cterm=underline
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-multiple-cursors Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" normal mode/visual mode
+" start <C-n>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => vim-trailing-whitespace Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map <leader><space> :FixWhitespace<CR>
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => dense-analysis/ale Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Check syntax in Vim asynchronously and fix files, with Language Server Protocol (LSP) support
+" linting (syntax checking and semantic errors)
+" :ALEInfo -- configured the current file
+"
+" Only run linters named in ale_linters settings
+let g:ale_linters_explicit = 1
+
+" declare which linters you want to run
+let g:ale_linters = {
+    \   'javascript': ['prettier', 'eslint'],
+    \   'python': ['black', 'mypy', 'vulturel'],
+    \   'c': ['clang-format'],
+    \   'cpp': ['clang-format'],
+    \   'proto': ['prototool'],
+\}
+
+" ALE Fixing
+let g:ale_fixers = {
+    \   'javascript': ['prettier', 'eslint'],
+    \   'python': ['black'],
+    \   'c': ['clang-format'],
+    \   'cpp': ['clang-format'],
+    \   'go': ['gofmt'],
+\}
+
+" Set this variable to 1 to fix files when you save them.
+let g:ale_fix_on_save = 1
+
+" ALE provides an omni-completion function you can use for triggering completion manually with <C-x><C-o>
+set omnifunc=ale#completion#OmniFunc
+
+" ALE supports automatic imports from external modules
+let g:ale_completion_autoimport = 1
+
+" Keep the sign gutter open at all times
+let g:ale_sign_column_always = 1
+
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+" specify what text should be used for signs
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '>'
+
+let g:ale_python_vulture_options = '--min-confidence 80 --exclude "*pb2.py,*pb2_grpc.py,*.egg-info,dist/*,"'
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Coc.nvim Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+au FileType go,python,c,javascript,rust nmap <silent> gd <Plug>(coc-definition)
+au FileType go,python,c,javascript,rust nmap <silent> gy <Plug>(coc-type-definition)
+au FileType go,python,c,javascript,rust nmap <silent> gi <Plug>(coc-implementation)
+au FileType go,python,c,javascript,rust nmap <silent> gr <Plug>(coc-implementation)
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Black Plugin Config
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" :Black to format the entire file (ranges not supported)
+" :BlackUpgrade to upgrade Black inside the virtualenv
+" :BlackVersion to get the current version of Black inside the virtualenv
+" g:black_fast (default to 0)
+" g:black_linelength(defaults to 88)
+" g:black_skip_string_normalization (default to 0)
+" g:black_vertualenv (default to ~/.vim/black)
+" To run Black on save
+autocmd BufWritePre *.py execute ':Black'
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Vim Shortcuts
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ctrl-W-v: open new VIM window next to the existing
+" Ctrl-W-s: open new VIM window on the bottom of the currently selected window
+" Ctrl-W-l: Move to the right window from the left by pressing
+" Ctrl-W-h: Move to the left window
+
+" The Ultimate Vim configuration successfully! Enjoy :-)
