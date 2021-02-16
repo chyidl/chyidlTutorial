@@ -96,6 +96,7 @@ chyidlTutorial
 - [Vscode Tips](root/ilikeit/VSCODE/README.md)
 - [Process Monitoring with Supervisord](root/ilikeit/SupervisordCrashCourse/README.md)
 - [ZeroTier](/root/ilikeit/ZeroTier/README.md)
+- [V2Ray-WS-Nginx-TLS](/root/ilikeit/V2Ray-WS-Nginx-TLS/README.md)
 
 ### Interview Some EECS Idol
 

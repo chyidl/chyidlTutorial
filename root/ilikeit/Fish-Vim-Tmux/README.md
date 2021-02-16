@@ -1,6 +1,6 @@
 fish-shell
 ==========
-> The user-friendly command line shell.
+> Fish aka "the friendly interactive shell"
 ```
 fish can be installed:
 (ubuntu) $ sudo apt-get install fish
@@ -16,6 +16,9 @@ switching to fish
 * oh-my-fish
 > The Fish Shell Framework
 ```
+Install Powerline Font
+$ sudo apt-get install fonts-powerline
+
 $ curl -L https://get.oh-my.fish | fish
 
 Getting Started
@@ -27,11 +30,15 @@ Getting Started
     omf remove <name> : Remove a theme or package
 ```
 
-* spacefish
-> The fish shell prompt for astronauts
+* starship
+> The minimal, blazing-fast, and infinitely customizable prompt for any shell!
 ```
 Installation
-$ omf install spacefish
+$ curl -fsSL https://starship.rs/install.sh | bash
+
+Add the init script to your shell config file
+# ~/.config/fish/config.fish
+$ starship init fish | source
 ```
 
 Vimrc
