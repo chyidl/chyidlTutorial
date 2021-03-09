@@ -90,6 +90,7 @@ chyidlTutorial
 - [Software architecture](root/ilickit/SoftwareArchitecture/README.md)
 - [SSH - Secure Shell](/root/ilikeit/SSH/README.md)
 - [Supervisord Crash Course](/root/ilikeit/SupervisordCrashCourse/README.md)
+- [Fish+Vim+Tmux OMG](/root/ilikeit/Fish-Vim-Tmux/README.md)
 - [Vim+Tmux OMG!](/root/ilikeit/Vim+Tmux/README.md)
 - [Vim Tips](root/ilikeit/vim/README.md)
 - [VPS - Virtual Private Server](/root/ilikeit/VPS/README.md)
