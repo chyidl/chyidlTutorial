@@ -107,15 +107,15 @@ venv.bak/
 # PyCharm
 .idea/
 
-# java.gitignore 
+# java.gitignore
 # Compiled class file
-*.class 
+*.class
 
 # Log file
 *.log
 
-# BlueJ files 
-*.ctxt 
+# BlueJ files
+*.ctxt
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -127,7 +127,7 @@ venv.bak/
 *.ear
 *.zip
 *.tar.gz
-*.rar 
+*.rar
 
 # Virtual machine crash logs,
 hs_err_pid*
